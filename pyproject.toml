@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "floatsom-publication"
+version = "0.1.0"
+description = "FloatSOM publication and benchmark snapshot"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "pandas>=2.0.0",
+    "tifffile>=2023.0.0",
+    "Pillow>=10.0.0",
+    "imageio>=2.31.0",
+    "ray[default]>=2.6.0",
+    "zarr>=2.16.0",
+    "h5py>=3.9.0",
+    "networkx>=3.1",
+    "scikit-learn>=1.3.0",
+    "plotly>=5.14.0",
+    "seaborn>=0.12.0",
+    "PyWavelets>=1.4.0",
+    "ptwt>=0.1.0",
+    "psutil>=5.9.0",
+    "minisom>=2.3.0",
+    "optuna>=3.3.0",
+    "cupy-cuda13x>=13.6.0",
+    "nvidia-nccl-cu13>=2.27.7,<3",
+]
+
+[tool.setuptools]
+include-package-data = true
+packages = [
+    "floatsom",
+    "floatsom.adapters",
+    "floatsom.base",
+    "floatsom.benchmarks",
+    "floatsom.data",
+    "floatsom.evaluation",
+    "floatsom.processing",
+    "floatsom.processing.colour_operations",
+    "floatsom.processing.ray_ops",
+    "floatsom.processing.ray_ops.workers",
+    "floatsom.sampling",
+    "floatsom.topology",
+]
+
+[tool.setuptools.package-dir]
+floatsom = "."
+"floatsom.adapters" = "adapters"
+"floatsom.base" = "base"
+"floatsom.benchmarks" = "benchmarks"
+"floatsom.data" = "data"
+"floatsom.evaluation" = "evaluation"
+"floatsom.processing" = "processing"
+"floatsom.processing.colour_operations" = "processing/colour_operations"
+"floatsom.processing.ray_ops" = "processing/ray_ops"
+"floatsom.processing.ray_ops.workers" = "processing/ray_ops/workers"
+"floatsom.sampling" = "sampling"
+"floatsom.topology" = "topology"
+
+[tool.setuptools.package-data]
+floatsom = ["floatsom_min1000_tuned_defaults.json"]

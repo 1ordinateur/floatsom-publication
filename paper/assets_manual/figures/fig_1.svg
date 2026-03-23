@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 522 1171">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        font-size: 18.67px;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6 {
+        isolation: isolate;
+      }
+
+      .st0, .st2, .st3, .st5, .st6 {
+        font-family: ArialMT, Arial;
+      }
+
+      .st7 {
+        clip-path: url(#clippath-4);
+      }
+
+      .st8 {
+        fill: #f3a447;
+      }
+
+      .st1 {
+        font-family: Arial-BoldMT, Arial;
+        font-size: 10.67px;
+        font-weight: 700;
+      }
+
+      .st1, .st5 {
+        fill: #fff;
+      }
+
+      .st2 {
+        font-size: 16px;
+      }
+
+      .st9, .st10, .st11, .st12 {
+        fill: none;
+      }
+
+      .st13 {
+        clip-path: url(#clippath-1);
+      }
+
+      .st3 {
+        font-size: 14.67px;
+      }
+
+      .st14 {
+        clip-path: url(#clippath-3);
+      }
+
+      .st15, .st16 {
+        fill: #00b050;
+      }
+
+      .st16, .st17 {
+        fill-rule: evenodd;
+      }
+
+      .st5, .st6 {
+        font-size: 24px;
+      }
+
+      .st10 {
+        stroke: #dd7e0e;
+      }
+
+      .st10, .st11 {
+        stroke-dasharray: 3 3;
+        stroke-width: 3px;
+      }
+
+      .st10, .st11, .st12 {
+        stroke-miterlimit: 8;
+      }
+
+      .st11 {
+        stroke: #f8c891;
+      }
+
+      .st18 {
+        clip-path: url(#clippath-2);
+      }
+
+      .st19 {
+        clip-path: url(#clippath);
+      }
+
+      .st20 {
+        fill: #00b0f0;
+      }
+
+      .st12 {
+        stroke: #000;
+        stroke-width: 2px;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st9" x="49" y="600" width="103" height="50"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="st9" x="198" y="600" width="104" height="26"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <rect class="st9" x="198" y="600" width="104" height="26"/>
+    </clipPath>
+    <clipPath id="clippath-3">
+      <rect class="st9" x="346" y="600" width="127" height="26"/>
+    </clipPath>
+    <clipPath id="clippath-4">
+      <rect class="st9" x="346" y="600" width="127" height="26"/>
+    </clipPath>
+  </defs>
+  <rect class="st11" x="35.5" y="488.5" width="452" height="369"/>
+  <g>
+    <path class="st20" d="M212,536h7v4h-7v-4Z"/>
+    <path class="st20" d="M212,528h7v4h-7v-4Z"/>
+    <path class="st20" d="M212,544h7v4h-7v-4Z"/>
+    <path class="st20" d="M212,568h7v4h-7v-4Z"/>
+    <path class="st20" d="M212,560h7v4h-7v-4Z"/>
+    <path class="st20" d="M212,552h7v4h-7v-4Z"/>
+    <path class="st20" d="M281,560h7v4h-7v-4Z"/>
+    <path class="st20" d="M281,568h7v4h-7v-4Z"/>
+    <path class="st20" d="M281,552h7v4h-7v-4Z"/>
+    <path class="st20" d="M281,528h7v4h-7v-4Z"/>
+    <path class="st20" d="M281,544h7v4h-7v-4Z"/>
+    <path class="st20" d="M281,536h7v4h-7v-4Z"/>
+    <path class="st20" d="M252,512h4v7h-4v-7Z"/>
+    <path class="st20" d="M268,512h4v7h-4v-7Z"/>
+    <path class="st20" d="M260,512h4v7h-4v-7Z"/>
+    <path class="st20" d="M244,512h4v7h-4v-7Z"/>
+    <path class="st20" d="M228,512h4v7h-4v-7Z"/>
+    <path class="st20" d="M236,512h4v7h-4v-7Z"/>
+    <path class="st20" d="M236,581h4v7h-4v-7Z"/>
+    <path class="st20" d="M228,581h4v7h-4v-7Z"/>
+    <path class="st20" d="M244,581h4v7h-4v-7Z"/>
+    <path class="st20" d="M252,581h4v7h-4v-7Z"/>
+    <path class="st20" d="M260,581h4v7h-4v-7Z"/>
+    <path class="st20" d="M268,581h4v7h-4v-7Z"/>
+    <path class="st20" d="M237,537h26v26h-26v-26Z"/>
+    <path class="st20" d="M273,523h-46c-2.21,0-4,1.79-4,4v46c0,2.21,1.79,4,4,4h46c2.21,0,4-1.79,4-4v-46c0-2.21-1.79-4-4-4ZM267,567h-34v-34h34v34Z"/>
+  </g>
+  <text class="st1" transform="translate(238.83 554)"><tspan x="0" y="0">CPU</tspan></text>
+  <g>
+    <path class="st15" d="M372,536h7v4h-7v-4Z"/>
+    <path class="st15" d="M372,528h7v4h-7v-4Z"/>
+    <path class="st15" d="M372,544h7v4h-7v-4Z"/>
+    <path class="st15" d="M372,568h7v4h-7v-4Z"/>
+    <path class="st15" d="M372,560h7v4h-7v-4Z"/>
+    <path class="st15" d="M372,552h7v4h-7v-4Z"/>
+    <path class="st15" d="M441,560h7v4h-7v-4Z"/>
+    <path class="st15" d="M441,568h7v4h-7v-4Z"/>
+    <path class="st15" d="M441,552h7v4h-7v-4Z"/>
+    <path class="st15" d="M441,528h7v4h-7v-4Z"/>
+    <path class="st15" d="M441,544h7v4h-7v-4Z"/>
+    <path class="st15" d="M441,536h7v4h-7v-4Z"/>
+    <path class="st15" d="M412,512h4v7h-4v-7Z"/>
+    <path class="st15" d="M428,512h4v7h-4v-7Z"/>
+    <path class="st15" d="M420,512h4v7h-4v-7Z"/>
+    <path class="st15" d="M404,512h4v7h-4v-7Z"/>
+    <path class="st15" d="M388,512h4v7h-4v-7Z"/>
+    <path class="st15" d="M396,512h4v7h-4v-7Z"/>
+    <path class="st15" d="M396,581h4v7h-4v-7Z"/>
+    <path class="st15" d="M388,581h4v7h-4v-7Z"/>
+    <path class="st15" d="M404,581h4v7h-4v-7Z"/>
+    <path class="st15" d="M412,581h4v7h-4v-7Z"/>
+    <path class="st15" d="M420,581h4v7h-4v-7Z"/>
+    <path class="st15" d="M428,581h4v7h-4v-7Z"/>
+    <path class="st15" d="M397,537h26v26h-26v-26Z"/>
+    <path class="st15" d="M433,523h-46c-2.21,0-4,1.79-4,4v46c0,2.21,1.79,4,4,4h46c2.21,0,4-1.79,4-4v-46c0-2.21-1.79-4-4-4ZM427,567h-34v-34h34v34Z"/>
+  </g>
+  <text class="st1" transform="translate(398.01 554)"><tspan x="0" y="0">GPU</tspan></text>
+  <path d="M302,612h37.02v2h-37.02v-2ZM337.68,609l8,4-8,4v-8Z"/>
+  <path d="M151,612h41.07v2h-41.07v-2ZM190.73,609l8,4-8,4v-8Z"/>
+  <g class="st19">
+    <image id="img0" class="st4" width="103" height="75" transform="translate(49 600)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGcAAABLCAYAAABtL5m0AAAACXBIWXMAAAsSAAALEgHS3X78AAAC/ElEQVR4nO3cT2sddRSH8c/cOzGNTbSlrTSlUTEtloqCUMSNGxeC0J2gILjVN+DKlS+i67p3WRBcW7pQShCEgm3Fgn/TYNNomoQ0946L3w24lyNHOA8Ms3yY+8xcZvFlOnxr1F006iYiGHSGYWQwMu4ehzhgOozR6Ux03RDiaNcxnjmmIQ6YTOcN3u2Nuy2XV+e8tjwXIjqYcOsP7mzyzovjEAd8t8HGDpdO956aj3H88hdr93l9eezUkzEOuLLGb4+2euw5s8hLJ2JE+xO29tnYjXPA5l47nz/OyYUYxxMj7v3J6jFWlmIccKSntzeKMxT/loqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmIqTmB5MBg6Clj4HU6ZDO6IctGs4dER5Dh2TQMc/6E0ddXeThXHM1utg4IeHnfUdrv8c44DbmzzY63zz+2ApZuVlfYdftzs31wc/bsU4YPtx58DRDl9hDreDVD2exTJuBDngeTyNu3gU5DiJVXyPh0EOuIz34So+ChQtzESfBTrgPXyKlUDHJVzBxUAHrOFcvRAkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpuIkpscYJ7RpUQRHtEnRYqADTuEYzmrXFMEZLM3OO0EOmMe41360t2bCCHq8oE2WPg5ywHkc1wJtBzmewQVt5/cgyHHoWeyxi5u4FiSaxxuY4PMgB7yJ5/AF7gc5Lmg325e4F+SgPSy7PfZxR1t+RrCg/eWsBDpoi1L4Gj8FOXbwinYz3wpy0J78/XohSEzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUzFSUyvjeTe1oaFEcxpn8A6h0+CHPCytvJZQNSX6s7iVXwobn4Fp7HY4QPtA2+R30XsZsd/4Rhmx//VQVusXv0bPMae8imvvHAAAAAASUVORK5CYII="/>
+  </g>
+  <g class="st13">
+    <g class="st18">
+      <image id="img3" class="st4" width="102" height="26" transform="translate(198 600) scale(1.02 1)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAAAaCAYAAABb9hlrAAAACXBIWXMAAArrAAAK6wGCiw1aAAADKElEQVRoge2aW0gUURiAv1k395K163rPLpaaiWUhmQ/daCkFy0iyoNtLVwwswW4QUUIlXSSpIEMog4oUoyzowS4PZdZmRdmDhEVEbaRZpuxmuaP2YEVBkLrnxDzM9zQPw/8d5mMOM3AUwAWMAXzIww54/4PDA6gSHQ6gQ7IDIARwAveNgKfwwNGIxImTpdkKd2wmY9GKoNiEJGmOg7vzCU2cGzQ8fLQ0h+tiMV9m5llxyHMAULkJvnZ8BjACatSIUYyLHS/NZ7ZYCI+KZvTYOGmOwEAzVlsYw0KipTkMAUawjQBHjDQHAIoBfrylBrkmHX/RA2kcPZDG0QNpHD2QxtEDaZxBBVqyYDaXKs+KXgsAJXu3k786m6XzUqiuKJfiaLhxhptlBVw7up4X9dekOABKsuPoPDTTrxkDDnS56jwJE+T8cDY2PMZksVBy6hIVNY+4eK5MuKO95TXetmacaw+TmXeS57VVwh0GBZp2TuNd+zd6/Z01kJs/tX7g3OlS0jMX+an9O4nJKeQW7AFAVX0oEhxWWxgp8zegKAooCqBAr7+P8U96emFCUT3H7rjxt9CAAq3MyeBC9S3/jP2gYF0OOc5kNm4tFD57iMmKyWoDwN1YR+T4qT9CiaW7R0x0Y39vPF68j/3FJ1BVFZ+vC1X1oaoqRmO/R/wTX1cXhoAAisv6tp01i+eQNCWVoGE2YY6fNLmu0PzyKTOW7xI+WyT9frrut28o2rMDAK/XQ7eqYjKZWbh4mbDFuGpv8KH5PdnLVgMQHBKGp6NDeKBn18tRDAGajwMDCFR0pPTX9e1bNXxsbREaB2CGM5PCLeu4d7uG9rZPxCUkERk9SqijyXUV9/N67JEx3K86BIrCJOcqhgZHCPWIYlD70yxnuuh1/GL3YfFfbr8Tn5ZFfFqWVMdPOn09WLfd8WuG/qOqcfRAGkcPpHH0QBpHD6Rx9EAaRw+kcRTgwdS06al2h0Oa5JGrjpEx8djswdIcTx7WYbZHE2gJkuZoedWAGjURTPIcALy8C92+NOCBAuQCZqBLojKUvgN/Mh1hQLtkRzjQhtwDmACRQCng/g5xK9goUGz8qAAAAABJRU5ErkJggg=="/>
+    </g>
+  </g>
+  <g class="st14">
+    <g class="st7">
+      <image id="img6" class="st4" width="126" height="26" transform="translate(346 600)" xlink:href="data:image/png;base64,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"/>
+    </g>
+  </g>
+  <g>
+    <path d="M86,526h6v15h-6v-15Z"/>
+    <path d="M118,545h-36v-23h36v23ZM100,571c-5.5,0-10-4.5-10-10s4.5-10,10-10,10,4.5,10,10-4.5,10-10,10ZM130,516h-54l-10,10v54c0,2.2,1.8,4,4,4h60c2.2,0,4-1.8,4-4v-60c0-2.2-1.8-4-4-4Z"/>
+    <path d="M97,558h6v6h-6v-6Z"/>
+  </g>
+  <text class="st3" transform="translate(198.95 678)"><tspan x="0" y="0">Pinned Memory</tspan></text>
+  <text class="st3" transform="translate(352.94 669)"><tspan x="0" y="0">Loading / Compute</tspan></text>
+  <text class="st3" transform="translate(365.02 686)"><tspan x="0" y="0">CUDA streams</tspan></text>
+  <text class="st3" transform="translate(54.76 669)"><tspan x="0" y="0">Dynamic Disk</tspan></text>
+  <text class="st3" transform="translate(72.67 686)"><tspan x="0" y="0">Reading</tspan></text>
+  <rect class="st8" x="54" y="734" width="166" height="96"/>
+  <text class="st6" transform="translate(81.39 790)"><tspan x="0" y="0">Find BMUs</tspan></text>
+  <rect class="st8" x="295" y="734" width="174" height="96"/>
+  <text class="st6" transform="translate(333.25 776)"><tspan x="0" y="0">Compute</tspan></text>
+  <text class="st6" transform="translate(307.23 805)"><tspan x="0" y="0">Local Updates</tspan></text>
+  <path d="M220,780h64.7v4h-64.7v-4ZM282.7,776l12,6-12,6v-12Z"/>
+  <path d="M415.5,696v21.4H137l2-2v9.4h-4v-11.4h278.5l-2,2v-19.4h4ZM143,722.79l-6,12-6-12h12Z"/>
+  <path class="st15" d="M47,915h434.21v4H47v-4ZM47,917l8,10-20-10,20-10-8,10ZM481.21,917l-8-10,20,10-20,10,8-10Z"/>
+  <rect class="st15" x="229" y="883" width="170" height="67"/>
+  <text class="st5" transform="translate(282.8 910)"><tspan x="0" y="0">NCCL</tspan></text>
+  <text class="st5" transform="translate(242.37 939)"><tspan x="0" y="0">Sync Updates</tspan></text>
+  <path d="M103,863v120.55s4,0,4,0v-120.55s-4,0-4,0ZM99,981.55l6,12,6-12h-12Z"/>
+  <path d="M220,863v120.55h-4v-120.55h4ZM224,981.55l-6,12-6-12h12Z"/>
+  <path d="M406,863v120.55s4,0,4,0v-120.55s-4,0-4,0ZM402,981.55l6,12,6-12h-12Z"/>
+  <rect class="st8" x="32" y="993" width="455" height="93"/>
+  <text class="st6" transform="translate(79.13 1047)"><tspan x="0" y="0">Normalise &amp; Apply Weight Updates</tspan></text>
+  <text class="st2" transform="translate(407.07 846)"><tspan x="0" y="0">x</tspan></text>
+  <text class="st2" transform="translate(420.73 846)"><tspan x="0" y="0">nchunks</tspan></text>
+  <rect class="st10" x="22.5" y="440.5" width="474" height="699"/>
+  <text class="st2" transform="translate(405.84 1109)"><tspan x="0" y="0">x iterations</tspan></text>
+  <g>
+    <path d="M284,64c0,4.42-12.54,8-28,8s-28-3.58-28-8,12.54-8,28-8,28,3.58,28,8Z"/>
+    <path d="M276,84c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM256,76c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+    <path d="M276,104c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM256,96c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+    <path d="M276,124c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM256,116c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  </g>
+  <rect class="st15" x="61" y="344" width="87" height="67"/>
+  <text class="st5" transform="translate(72.22 385)"><tspan x="0" y="0">GPU 1</tspan></text>
+  <rect class="st15" x="174" y="344" width="88" height="67"/>
+  <text class="st5" transform="translate(185.51 385)"><tspan x="0" y="0">GPU 2</tspan></text>
+  <rect class="st15" x="365" y="344" width="87" height="67"/>
+  <text class="st5" transform="translate(375.7 385)"><tspan x="0" y="0">GPU n</tspan></text>
+  <path class="st16" d="M288,378c0-2.21,2.02-4,4.5-4s4.5,1.79,4.5,4-2.02,4-4.5,4-4.5-1.79-4.5-4Z"/>
+  <path class="st16" d="M308,378c0-2.21,2.24-4,5-4s5,1.79,5,4-2.24,4-5,4-5-1.79-5-4Z"/>
+  <path class="st16" d="M329,378c0-2.21,2.24-4,5-4s5,1.79,5,4-2.24,4-5,4-5-1.79-5-4Z"/>
+  <path class="st16" d="M133,250c0,4.42-12.54,8-28,8s-28-3.58-28-8,12.54-8,28-8,28,3.58,28,8Z"/>
+  <path class="st16" d="M125,270c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM105,262c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st17" d="M125,290c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM105,282c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st17" d="M125,310c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM105,302c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st17" d="M233,250c0,4.42-12.54,8-28,8s-28-3.58-28-8,12.54-8,28-8,28,3.58,28,8Z"/>
+  <path class="st17" d="M225,270c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM205,262c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st16" d="M225,290c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM205,282c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st17" d="M225,310c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM205,302c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st17" d="M435,254c0,4.42-12.54,8-28,8s-28-3.58-28-8,12.54-8,28-8,28,3.58,28,8Z"/>
+  <path class="st17" d="M427,274c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM407,266c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st17" d="M427,294c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM407,286c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path class="st16" d="M427,314c-1.2,0-2-.8-2-2s.8-2,2-2,2,.8,2,2-.8,2-2,2ZM407,306c-15.4,0-28-3.6-28-8v16c0,4.4,12.6,8,28,8s28-3.6,28-8v-16c0,4.4-12.6,8-28,8Z"/>
+  <path d="M103,411v56.99s4,0,4,0v-56.99s-4,0-4,0ZM99,465.99l6,12,6-12h-12Z"/>
+  <path d="M220,411v56.99h-4v-56.99h4ZM224,465.99l-6,12-6-12h12Z"/>
+  <path d="M406,411v56.99s4,0,4,0v-56.99s-4,0-4,0ZM402,465.99l6,12,6-12h-12Z"/>
+  <text class="st0" transform="translate(279.3 182)"><tspan x="0" y="0">Distribute data</tspan></text>
+  <text class="st0" transform="translate(279.3 205)"><tspan x="0" y="0">to local storage</tspan></text>
+  <path d="M258,142v63.62h-4v-63.62h4ZM262,203.62l-6,12-6-12h12Z"/>
+  <path class="st12" d="M105,244c0-13.26,17.29-24,38.62-24h224.75c21.33,0,38.62,10.74,38.62,24"/>
+  <path class="st12" d="M203,243c0-12.7,16.57-23,37.01-23h128.97c20.44,0,37.01,10.3,37.01,23"/>
+  <text class="st0" transform="translate(304.08 102)"><tspan x="0" y="0">Data store</tspan></text>
+  <path d="M397.22,99h4v-4h-4v4ZM405.22,99h4v-4h-4v4ZM413.22,99h4v-4h-4v4ZM421.22,99h2v-6h-4v4l2-2h0v4ZM423.22,89v-4h-4v4h4ZM423.22,81v-4h-4v4h4ZM423.22,73v-4h-4v4h4ZM423.22,65v-4h-4v4h4ZM423.22,57v-4h-4v4h4ZM423.22,49v-4h-4v4h4ZM423.22,41v-4h-4v4h4ZM423.22,33v-4h-4v4h4ZM420.95,23.27h-4v4h4v-4ZM412.95,23.27h-4v4h4v-4ZM404.95,23.27h-4v4h4v-4ZM396.95,23.27h-4v4h4v-4ZM388.95,23.27h-4v4h4v-4ZM380.95,23.27h-4v4h4v-4ZM372.95,23.27h-4v4h4v-4ZM364.95,23.27h-4v4h4v-4ZM356.95,23.27h-4v4h4v-4ZM348.95,23.27h-4v4h4v-4ZM340.95,23.27h-4v4h4v-4ZM332.95,23.27h-4v4h4v-4ZM324.95,23.27h-4v4h4v-4ZM316.95,23.27h-4v4h4v-4ZM308.95,23.27h-4v4h4v-4ZM300.95,23.27h-4v4h4v-4ZM292.95,23.27h-4v4h4v-4ZM284.95,23.27h-4v4h4v-4ZM276.95,23.27h-4v4h4v-4ZM268.95,23.27h-4v4h4v-4ZM260.95,23.27h-4v4h4v-4ZM252.95,23.27h-4v4h4v-4ZM244.95,23.27h-4v4h4v-4ZM236.95,23.27h-4v4h4v-4ZM228.95,23.27h-4v4h4v-4ZM220.95,23.27h-4v4h4v-4ZM212.95,23.27h-4v4h4v-4ZM204.95,23.27h-4v4h4v-4ZM196.95,23.27h-4v4h4v-4ZM188.95,23.27h-4v4h4v-4ZM180.95,23.27h-4v4h4v-4ZM172.95,23.27h-4v4h4v-4ZM164.95,23.27h-4v4h4v-4ZM155.11,25.43v4h4v-4h-4ZM155.11,33.43v4h4v-4h-4ZM155.11,41.43v4h4v-4h-4ZM155.11,49.43v4h4v-4h-4ZM155.11,57.43v4h4v-4h-4ZM155.11,65.43v4h4v-4h-4ZM155.11,73.43v4h4v-4h-4ZM155.11,81.43v4h4v-4h-4ZM155.11,89.43v4h4v-4h-4ZM155.11,97.43v4h4v-4h-4ZM155.11,105.43v4h4v-4h-4ZM155.11,113.43v4h4v-4h-4ZM155.11,121.43v4h4v-4h-4ZM155.11,129.43v4h4v-4h-4ZM155.11,137.43v4h4v-4h-4ZM155.11,145.43v4h4v-4h-4ZM155.11,153.43v4h4v-4h-4ZM155.11,161.43v4h4v-4h-4ZM155.11,169.43v4h4v-4h-4ZM155.11,177.43v4h4v-4h-4ZM155.11,185.43v4h4v-4h-4ZM155.11,193.43v4h4v-4h-4ZM155.11,201.43v4h4v-4h-4ZM155.11,209.43v4h4v-4h-4ZM155.11,217.43v4h4v-4h-4ZM155.11,225.43v4h4v-4h-4ZM155.11,233.43v4h4v-4h-4ZM155.11,241.43v4h4v-4h-4ZM155.11,249.43v4h4v-4h-4ZM155.11,257.43v4h4v-4h-4ZM155.11,265.43v4h4v-4h-4ZM155.11,273.43v4h4v-4h-4ZM155.11,281.43v4h4v-4h-4ZM155.11,289.43v4h4v-4h-4ZM155.11,297.43v4h4v-4h-4ZM155.11,305.43v4h4v-4h-4ZM155.11,313.43v4h4v-4h-4ZM155.11,321.43v4h4v-4h-4ZM155.11,329.43v4h4v-4h-4ZM155.11,337.43v4h4v-4h-4ZM155.11,345.43v4h4v-4h-4ZM155.11,353.43v4h4v-4h-4ZM155.11,361.43v4h4v-4h-4ZM155.11,369.43v4h4v-4h-4ZM155.11,377.43v4h4v-4h-4ZM155.11,385.43v4h4v-4h-4ZM155.11,393.43v4h4v-4h-4ZM155.11,401.43v4h4v-4h-4ZM155.11,409.43v4h4v-4h-4ZM155.11,417.43v4h4v-4h-4ZM155.11,425.43v4h4v-4h-4ZM155.11,433.43v4h4v-4h-4ZM155.11,441.43v4h4v-4h-4ZM155.11,449.43v4h4v-4h-4ZM155.11,457.43v4h4v-4h-4ZM155.11,465.43v4h4v-4h-4ZM155.11,473.43v4h4v-4h-4ZM155.11,481.43v4h4v-4h-4ZM155.11,489.43v4h4v-4h-4ZM155.11,497.43v4h4v-4h-4ZM155.11,505.43v4h4v-4h-4ZM155.11,513.43v4h4v-4h-4ZM155.11,521.43v4h4v-4h-4ZM155.11,529.43v4h4v-4h-4ZM155.11,537.43v4h4v-4h-4ZM155.11,545.43v4h4v-4h-4ZM159.83,552.71h4v-4h-4v4ZM167.83,552.71h4v-4h-4v4ZM175.83,552.71h4v-4h-4v4ZM183.83,552.71h4v-4h-4v4ZM191.83,552.71h.17v-4h-.17v4ZM190,556.71l12-6-12-6v12Z"/>
+  <text class="st0" transform="translate(91.69 184) rotate(-90)"><tspan x="0" y="0">Direct RAM Path</tspan></text>
+  <text class="st0" transform="translate(114.69 173) rotate(-90)"><tspan x="0" y="0">(Disk</tspan></text>
+  <text class="st0" transform="translate(114.69 132) rotate(-90)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st0" transform="translate(114.69 126) rotate(-90)"><tspan x="0" y="0">Loader</tspan></text>
+  <text class="st0" transform="translate(136.69 151) rotate(-90)"><tspan x="0" y="0">Bypass)</tspan></text>
+</svg>

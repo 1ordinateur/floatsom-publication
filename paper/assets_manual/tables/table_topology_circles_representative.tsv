@@ -1,0 +1,4 @@
+topology	train_time_s	iterations_completed	total_samples_processed	quantization_error	n_nodes	n_edges
+hexagonal	1.008956	10	300000	0.167769	100	180
+mst	0.117116	10	300000	0.158035	100	99
+rng	0.139637	10	300000	0.157230	100	145

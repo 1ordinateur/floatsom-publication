@@ -1,0 +1,48 @@
+{
+  "full": {
+    "hexagonal": {
+      "initial_radius": 1.026640962470433,
+      "initialization_method": "random",
+      "momentum_init": 0.6068704314721264,
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    },
+    "mst": {
+      "initial_radius": 1.4639217140723657,
+      "initialization_method": "random",
+      "momentum_init": 0.6146496522717336,
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    },
+    "rng": {
+      "initial_radius": 1.414751123359819,
+      "initialization_method": "pca",
+      "momentum_init": 0.612705387604851,
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    }
+  },
+  "random": {
+    "hexagonal": {
+      "initial_radius": 1.168417265991949,
+      "initialization_method": "random",
+      "momentum_init": 0.5843211452517211,
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    },
+    "mst": {
+      "initial_radius": 1.8177068157674101,
+      "initialization_method": "pca",
+      "momentum_init": 0.5932963157239808,
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    },
+    "rng": {
+      "initial_radius": 1.770450368802572,
+      "initialization_method": "pca",
+      "momentum_init": 0.5272565822346229,
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    }
+  }
+}

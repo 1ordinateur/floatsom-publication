@@ -1,0 +1,15 @@
+dataset_index,dataset,dimension_count,sample_size,dataset_type
+1,iris,4,150,real
+2,wine,13,178,real
+3,olivetti_faces,4096,400,real
+4,diabetes,10,442,real
+5,breast_cancer,30,569,real
+6,digits,64,1797,real
+7,california_housing,8,20640,real
+8,blobs,2,30000,synthetic
+9,circles,2,30000,synthetic
+10,moons,2,30000,synthetic
+11,s_curve,3,30000,synthetic
+12,swiss_roll,3,30000,synthetic
+13,kddcup99,41,494021,real
+14,covertype,54,581012,real

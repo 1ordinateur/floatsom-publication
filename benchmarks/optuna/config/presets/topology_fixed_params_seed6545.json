@@ -1,0 +1,50 @@
+{
+  "full": {
+    "hexagonal": {
+      "initial_radius": 0.988796,
+      "initialization_method": "pca_density",
+      "normalization": "xpysom",
+      "radius_decay_type": "asymptotic",
+      "topology_variant": "planar",
+      "use_momentum": true
+    },
+    "mst": {
+      "initial_radius": 1.61933,
+      "initialization_method": "random",
+      "normalization": "xpysom",
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    },
+    "rng": {
+      "initial_radius": 1.45435,
+      "initialization_method": "random",
+      "normalization": "xpysom",
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    }
+  },
+  "random": {
+    "hexagonal": {
+      "initial_radius": 0.929772,
+      "initialization_method": "pca_density",
+      "normalization": "xpysom",
+      "radius_decay_type": "asymptotic",
+      "topology_variant": "planar",
+      "use_momentum": true
+    },
+    "mst": {
+      "initial_radius": 1.60849,
+      "initialization_method": "pca",
+      "normalization": "xpysom",
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    },
+    "rng": {
+      "initial_radius": 1.57477,
+      "initialization_method": "pca",
+      "normalization": "xpysom",
+      "radius_decay_type": "asymptotic",
+      "use_momentum": true
+    }
+  }
+}

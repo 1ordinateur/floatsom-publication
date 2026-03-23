@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -N gpu_scaling_1_mb
+#PBS -q gpuvolta
+#PBS -P sj28
+#PBS -l ncpus=12
+#PBS -l mem=90GB
+#PBS -l ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -l storage=gdata/eu59+gdata/dk92+scratch/eu59
+#PBS -l jobfs=400GB
+#PBS -l wd
+#PBS -M tony.xu@anu.edu.au
+#PBS -m abe
+
+set -euo pipefail
+
+module use /g/data/dk92/apps/Modules/modulefiles/; module load rapids/25.06; cd /g/data/eu59/SIFEAN/sfa/
+
+RUN_DATE=$(date +%Y%m%d)
+OUTPUT_DIR="/g/data/eu59/SIFEAN/sfa/1gpu_scaling/results_20260321_ae27b561"
+
+python3 -m floatsom.benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
+  --mode all \
+  --cache_dir "/g/data/eu59/SIFEAN/sfa/8gpu_scaling_cache" \
+  --output_dir "${OUTPUT_DIR}" \
+  --temp_dir "/scratch/eu59/SIFEAN/sfa/1gpu_scaling/temp" \
+  --ray_local_storage_path "$PBS_JOBFS" \
+  --sampling_method full \
+  --sample_sizes 1000000 5000000 10000000 50000000 100000000 500000000 1000000000 \
+  --processing_methods batch \
+  --topologies hexagonal mst rng \
+  --minibatch_chunk_size 5000 \
+  --merge_existing \
+  --resume \
+  --resume_state "${OUTPUT_DIR}/resume_state.json" \
+  --gpu_counts 1 \
+  --ray_gpu_count 1
