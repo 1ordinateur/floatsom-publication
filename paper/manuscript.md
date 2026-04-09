@@ -198,25 +198,20 @@ We use Optuna-based multi-objective optimisation to determine the best attainabl
 
 Concretely, each dataset-topology-sampling configuration is optimized for 200 Optuna trials and replicated across 10 seeds to ensure robust results. Trials are executed sequentially within each run, with the current optimum updated after each completed trial. Batch mode is fixed to full-batch training in this protocol for the benchmark results reported in this manuscript. Operationally, this Optuna campaign uses the standard in-memory batch path rather than the Ray-distributed execution stack due to dataset size not requiring Ray. This corresponds to: 
 $$
-14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ SOM Runs}
+14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ Runs}
 $$
 
 Sampling comparisons in Section 5.2 use the hexagonal subset of this campaign for full-vs-random paired analyses, and include a focused full-vs-HDSSSOM pilot comparison under matched settings. Topology comparisons in Sections 5.3-5.4 use full-sampling runs across hexagonal, MST, and RNG and include all available full-sampling datasets in this subset (no dataset-size exclusion for Figures 4-5). Unless explicitly stated otherwise, the remaining analyses reported in this manuscript use full sampling with full-batch training.
 
 #### 4.1.1 Optuna benchmark datasets and preprocessing
 
-The Optuna quality benchmark uses a mixed synthetic/real dataset suite to expose the algorithm to a broad range of challenges and verify stable behavior across distinct data regimes. Synthetic datasets include: *swiss_roll, moons, circles, blobs, s_curve*, and real datasets include: *breast_cancer, wine, iris, digits, olivetti_faces, diabetes, california_housing, covertype, kddcup99*. Synthetic datasets are generated in accordance with the random seed selected, while real-world datasets are loaded from sklearn with native sample-feature structure. Across the Optuna protocol, inputs are standardized feature-wise to zero mean and unit variance using `StandardScaler` before deterministic seeded permutation and a fixed 70/30 train-holdout split. We retain both train and holdout partitions because they capture two different practical questions: how well the SOM represents the observed training population, and how well that same trained map transfers to previously unseen samples.
+The Optuna benchmark uses a mixture of synthetic and real datasets from scikit-learn [@pedregosaScikitlearnMachineLearning2011] to expose the algorithm to a broad range of challenges and verify stable behavior across distinct data regimes. Synthetic datasets include: *swiss_roll, moons, circles, blobs, s_curve*, and real datasets include: *breast_cancer, wine, iris, digits, olivetti_faces, diabetes, california_housing, covertype, kddcup99*. Synthetic datasets are generated in accordance with the random seed, while real-world datasets are loaded directly from sklearn. Across the Optuna protocol, inputs are standardized feature-wise to zero mean and unit variance using `StandardScaler` before deterministic seeded permutation and a fixed 70/30 train-holdout split. We retain both train and holdout partitions because they capture two different practical questions: how well the SOM represents the observed training population, and how well that same trained map transfers to previously unseen samples.
 
 #### 4.1.2 Optuna quality metrics
 
 Our primary quality metric is Quantization Error ($QE$), computed in the standard way with GPU distance kernels. We report both train and holdout $QE$, denoted $QE_T$ and $QE_H$, respectively. Here, $QE_T$ captures use cases where the full observed population is available and the map is intended to represent that same population, while $QE_H$ captures generalization settings where the trained SOM is projected onto previously unseen samples.
 
-Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$:
-$$
-QE_B=\frac{QE_T+QE_H}{2}.
-\tag{6}
-$$
-$QE_B$ is therefore a composite endpoint that weights representation fidelity (train) and transfer-to-unseen-data fidelity (holdout) equally. Unless stated otherwise, we report raw (non-normalized) $QE_B$. In the executed Optuna $QE$ runs with split-aware evaluation, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector. 
+Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_B$ is therefore a composite endpoint that weights representation fidelity (train) and transfer-to-unseen-data fidelity (holdout) equally. Unless stated otherwise, we report raw (non-normalized) $QE_B$. Again, note that in the Optuna runs, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector, with $QE_B$ only calculated *post hoc*. 
 
 ### 4.2 Speed-scaling benchmark protocol
 
@@ -228,13 +223,11 @@ For scaling-efficiency calculations, when a single-GPU baseline was missing at a
 
 Topology-speed comparisons include hexagonal, MST, and RNG, with harmonized workload settings so ratios isolate topology-associated runtime effects.
 
-Unless explicitly stated otherwise, speed benchmarking is reported under full sampling with the full available sample set used for training and no holdout partition. This benchmark is intended to measure systems/runtime behavior rather than train-versus-holdout algorithmic performance. A dedicated random-versus-full speed comparison is additionally reported at 1 GPU to isolate sampling runtime effects independent of multi-GPU scaling.
-
 #### 4.2.1 Scaling benchmark datasets
 
 The speed benchmark uses synthetic random matrices with uniform values in $[0,1]$ and evaluates scaling under controlled sample-size sweeps. No test-holdout split was used here because the objective is runtime rather than generalization, so all generated data are used for training.
 
-Compute resources are scaled with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run was terminated at a wall-clock timeout of 30 minutes (timeout). Per-GPU resource allocation was fixed at 12 CPU cores, 90 GB system RAM, and 32 GB VRAM.
+Compute resources are scaled with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run was terminated at a wall-clock timeout of 30 minutes (timeout). Per-GPU resource allocation was fixed at 12 CPU cores, 90 GB system RAM, and a NVIDIA V100 with 32 GB VRAM, with one full node composing of 4 GPUs and their associated CPUs, with 400GB of local associated disk storage.
 
 ### 4.3 Statistical analysis
 
@@ -254,13 +247,15 @@ Dataset-wise tuned-configuration-versus-untuned-reference summaries use two-side
 
 ### 4.5 Hyperparameter stability and dataset-type stratification
 
-Hyperparameter stability was evaluated from tuned top-1 trials selected separately per seed and topology within matched dataset, processing, sampling, and optional split units. We then compared within-topology seed-to-seed parameter variation and contrasted those stability scores between topology pairs.
+An additional aim was to determine whether the topology and sampling strategies considered here differ in hyperparameter stability. In this context, stability refers to the extent to which similar high-performing hyperparameter settings are recovered across repeated runs and matched experimental conditions, such that a single parameter configuration can be applied with confidence across a broad range of scenarios while still yielding near-optimal performance.
 
-For numeric parameters, stability was measured across within-topology seed pairs using the relative difference
+Hyperparameter stability was evaluated from the top-ranked tuned Optuna trial selected separately for each matched dataset, seed, topology, processing mode, sampling mode, and optional split. Stability was then quantified as the variation in those selected hyperparameter values across seeds within each topology, and these within-topology stability scores were compared between topology pairs. Greater stability is practically important because it reduces the need for user hyperparameter retuning and increases confidence in the robustness of the resulting map quality.
+
+For numeric parameters, stability was measured across within-topology seed pairs using the relative difference:
 $$
 \frac{|a-b|}{\max(|a|,|b|,\varepsilon)},
 $$
-with $\varepsilon=10^{-12}$, and then averaged over the compared numeric parameters; lower values indicate higher stability. For categorical parameters, stability was measured as the mean mismatch rate across the same seed pairs and the compared categorical parameters, again with lower values indicating higher stability. Topology comparisons report both per-parameter stability scores and an equal-weight overall summary.
+Where $a$ and $b$ are the values of a given numeric parameter for the two compared seeds, and with a small $\varepsilon=10^{-12}$. These relative differences were then averaged over the compared numeric parameters; lower values indicate higher stability. For categorical parameters, stability was measured as the mean mismatch rate across the same seed pairs and the compared categorical parameters, again with lower values indicating higher stability. Topology comparisons report both per-parameter stability scores and an equal-weight overall summary.
 
 For dataset-type stratification, we use the same synthetic/real group definitions introduced in Section 4.1.1. This enables direct synthetic-versus-non-synthetic interpretation for both tuning and topology-stability outcomes.
 
