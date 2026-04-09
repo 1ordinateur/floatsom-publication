@@ -132,14 +132,14 @@ D_{ij}^2 = \lVert w_i \rVert_2^2 + \lVert w_j \rVert_2^2 - 2 w_i^\top w_j.
 \tag{4}
 $$
 
-After distance construction, MST edges are extracted by CPU Kruskal, adjacency is built, and all-pairs graph distances are computed via chunked GPU Floyd-Warshall. The row chunk size is resolved from memory-budget controls (`_resolve_fw_row_chunk_size(...)`) to bound temporary allocations. Learning-time neighborhood influence is then evaluated on graph distances using Eq. (5).
+After distance construction, we build a minimum spanning tree over the prototypes and use shortest-path distances on that tree to evaluate the neighborhood influence in Eq. (5).
 
 $$
 h_{ij}(r_t) = \exp\!\left(-\frac{g_{ij}^2}{2\,(r_t/2)^2}\right).
 \tag{5}
 $$
 
-To amortize repeated topology queries, radii are deduplicated using a 10% threshold and influence matrices are cached by `(radius, influence_function)`. Topology refresh is controlled by fixed or dynamic update frequency. In dynamic mode, with progress variable $p_t=\min(t/T,1)$, the implemented schedule is:
+To avoid unnecessary recomputation, topology-derived influence matrices are cached. Topology refresh is controlled by fixed or dynamic update frequency. In dynamic mode, with progress variable $p_t=\min(t/T,1)$, the implemented schedule is:
 
 $$
 f_t = \mathrm{clip}_{[f_0,f_T]}\!\left(\mathrm{round}\!\left(f_0 + (f_T - f_0)\,\gamma(p_t)\right)\right).

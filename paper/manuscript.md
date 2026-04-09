@@ -40,27 +40,31 @@ To date, numerous subsampling strategies have been proposed. Beyond naive random
 
 Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates [@kohonenSelforganizingMap1990; @kohonenEssentialsSelforganizingMap2013]. Hexagonal grids are often preferred in the literature because their neighborhood geometry is more isotropic, tends to reduce directional bias, and produces more accurate results relative to rectangular grids [@whiteTopologyMattersNetwork2008; @kohonenEssentialsSelforganizingMap2013; @forestSurveyImplementationPerformance2020].
 
-At the same time, the SOM literature has explored alternatives to fixed lattices, considering that realistic data distributions often do not map cleanly onto fixed lattices. Consequently, this has yielded attempts to rectify this shortcoming by neighborhood function modification [@aokiSelforganizingMapsAsymmetric2007]. Other attempts include the development of dynamic maps which change their configuration, node number, or connections throughout the training cycle, such as in DBGSOM and AMSOM [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016]. Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work [@kangasVariantsSelforganizingMaps1990] and later smaller-scale MST-based analyses [@jangUseMinimalSpanning2009]. Nevertheless, both implementations are not publically available.
+At the same time, the SOM literature has explored alternatives to fixed lattices, considering that realistic data distributions often do not map cleanly onto fixed lattices. Consequently, this has yielded attempts to rectify this shortcoming by neighborhood function modification [@aokiSelforganizingMapsAsymmetric2007]. Other attempts include the development of dynamic maps which change their configuration, node number, or connections throughout the training cycle, such as in DBGSOM and AMSOM [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016]. Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work [@kangasVariantsSelforganizingMaps1990] and later smaller-scale MST-based analyses [@jangUseMinimalSpanning2009]. Relative Neighborhood Graphs (RNGs) provide another sparse geometry-driven topology that can be viewed as a middle ground between MST-style graph neighborhoods and regular lattices such as hexagonal grids, but to our knowledge this possibility has not been meaningfully examined in openly available SOM toolchains. Nevertheless, both implementations are not publically available.
 
-The shortcoming, then, is not a lack of topology ideas. Rather, topology-flexible SOM proposals and high-throughput SOM systems have mostly developed along separate tracks. Irregular neighborhoods are harder to construct, refresh, and query efficiently during training than fixed lattices, so openly usable implementations that make non-lattice topologies practical under modern large-scale execution remain uncommon.
+Together, these evince a need for topologcally-flexible SOM proposals in high-throughput SOM systems. Irregular neighborhoods are harder to construct, refresh, and query efficiently during training than fixed lattices, so openly usable implementations that make non-lattice topologies practical under modern large-scale execution remain elusive. 
 
 ### 2.4 Hyperparameter Optimization and Fair Comparison
 
-Model selection is a separate but closely related issue. SOM performance depends strongly on choices such as map size, initialization, learning-rate schedule, and neighborhood schedule, and prior work shows that these choices can materially affect observed performance and even the apparent advantage of one variant over another [@akindukoSOMStochasticInitialization2016; @forestSurveyImplementationPerformance2020]. This makes comparisons based only on untuned defaults difficult to interpret.
+SOM performance depends strongly on choices such as map size, initialization, learning-rate schedule, and neighborhood schedule. Prior work shows that these choices can materially affect observed performance and even the apparent advantage of one variant over another [@akindukoSOMStochasticInitialization2016; @forestSurveyImplementationPerformance2020]. This makes comparisons based only on untuned defaults difficult to interpret.
 
-Taken together, the literature provides strong components in isolation: accessible SOM libraries, accelerated batch implementations, classical and guided sampling schemes, and multiple alternatives to standard grid neighborhoods. What remains limited is an openly usable workflow that combines these pieces in one benchmarkable setting: support for both regular and irregular topologies, direct comparison of full, random, and guided sampling, and execution beyond a narrow single-device in-memory regime. FloatSOM is positioned against that combined gap; the implementation details used to address it are described in the Methods section rather than in this survey.
-
-The rest of the paper is structured as follows. Section 3 describes the methods used in this study, including the sampling formulations, topology constructions, and execution procedures. Section 4 presents the experimental setup, Section 5 reports quality results, Section 6 reports speed-scaling results, and Sections 7-8 discuss the findings and conclude.
+Currently, the literature provides strong components in isolation: accessible SOM libraries, accelerated batch implementations, classical and guided sampling schemes, and multiple alternatives to standard grid neighborhoods. What remains limited is an openly usable workflow that combines these pieces in one benchmarkable setting: support for both regular and irregular topologies, direct comparison of full, random, and guided sampling, and execution beyond a narrow single-device in-memory regime. Similarly, in combining these optimal configurations, empirically derived default hyperparameters are also essential for optimal hyperparameters. This evidence based derivation and analysis of performance impact is, to date, an unexplored area. 
 
 ## 3. Methods
 
-We present the methods in the same order as the results: sampling strategy, topology innovations (MST and RNG), systems acceleration methodologies, and hyperparameter optimization. Section 3.1 defines sampling selector mathematics, Section 3.2 defines MST, Section 3.3 defines RNG, Section 3.4 describes the multi-GPU and OOM-capable execution stack used to run these algorithms at scale, and Section 3.5 defines the TPE-based hyperparameter-optimization methodology used throughout the evaluation. Standard SOM primitives are assumed from prior literature and are not re-derived here.
+A standard Self-Organizing Map (SOM) can be viewed as a small set of interacting components: the selection of training samples at each iteration, the definition of neighbourhood relations between map units, the batch training step that updates the prototypes from those sampled data, and the compute framework used to execute those operations. In FloatSOM, the core batch training formulation is kept close to the standard SOM, while the main methodological changes are introduced in the sampling, topology, and execution components. Specifically, the sample component determines which data are presented at each iteration (`random`, `full`, or `HDSSSOM` in FloatSOM), the topology component defines the neighbourhood relations between map units (rectangular, hexagonal, MST, or RNG), and these two choices feed into the standard batch training procedure. The compute framework then determines how that same training procedure is executed in practice, ranging from local GPU execution to single-node multi-GPU and multi-node GPU settings. Hyperparameter optimization is treated as an additional methodological layer applied across these configurations. Figure 0 provides a schematic overview of these components and their FloatSOM options; the following subsections then describe each component in turn.
+
+Regardless of the selected topology, FloatSOM uses the same prototype initialization options. Initialization determines only the starting prototype values; neighbourhood relations are applied afterward according to the selected topology, keeping the initial state comparable across regular-lattice and graph-based runs.
+
+![Figure 0](assets_manual/figures/fig_0.svg)
+
+*Figure 0. Schematic overview of the FloatSOM methods framing used in this manuscript. Sample selection and topology definition have configurable components that feed into the standard batch SOM training step, while the compute framework determines how that same training procedure is executed in practice. The options shown here summarize the FloatSOM configurations discussed in the following subsections.*
 
 ### 3.1 Sampling Selector Mathematics
 
 This section formalizes the sampling policies evaluated in this work.
 
-Let the full dataset be $X=\{x_i\}_{i=1}^{N}$. The per-iteration sampling budget $m$ is either fixed directly or determined as a proportion $\rho$ of the dataset:
+Let the full dataset be $X=\{x_i\}_{i=1}^{N}$. Let $m$ denote the number of samples presented to the SOM in a given training iteration, or the 'sampling budget'. This budget is either fixed directly or determined as a proportion $\rho$ of the dataset:
 $$
 m=
 \begin{cases}
@@ -87,17 +91,19 @@ $$
 \tag{3}
 $$
 
-For hierarchical dynamic subset selection SOM (HDSSSOM) [@wetmoreSpeedingSelfOrganizingFeature2005], the dataset is partitioned into contiguous blocks, and each iteration ranks those blocks using a normalized combination of difficulty dispersion and sample age. Candidate exemplars are then drawn from the highest-scoring blocks using the same difficulty-age logic, with randomized top-score selection to preserve exploration. If this candidate pool exceeds the target budget $m$, the selector downsamples uniformly without replacement to return exactly $m$ samples. The core algorithm is kept from the original publication, and re-implemented here to be multi-GPU compatible. 
+For hierarchical dynamic subset selection SOM (HDSSSOM) [@wetmoreSpeedingSelfOrganizingFeature2005], the core algorithm is kept from the original publication and re-implemented here to be multi-GPU compatible. Briefly, HDSSSOM is an adaptive sampling strategy that aims to focus computation on informative regions of the dataset by preferentially revisiting samples that are difficult, under-trained, or stale, while still preserving exploration across training.
 
-After best-matching-unit (BMU) evaluation, processed samples update their stored difficulty through an exponentially decayed moving average of BMU distance and reset their age, while unprocessed samples retain their previous difficulty and continue aging. This recency-weighted difficulty tracking is the key mechanism by which HDSSSOM preferentially revisits hard or stale regions of the dataset.
+### 3.2 Topology Definition
 
-### 3.2 MST Topology Implementation
+We next define how neighbourhood structure is assigned in FloatSOM across regular-lattice and graph-based configurations.
 
-We next define the first topology contribution: MST neighborhoods computed from prototype geometry rather than fixed lattice adjacency. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance regarding neighborhood isotropy and reduced directional bias [@kohonenEssentialsSelforganizingMap2013; @forestSurveyImplementationPerformance2020], together with broader tessellation evidence favoring hexagonal over square neighborhood structures in related spatial and quantization settings [@whiteTopologyMattersNetwork2008].
+All topologies support the same node placement initialization options. Post initialization, neighbourhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance. For MST and RNG, neighbourhood structure is instead derived from the current prototype geometry using the below methodologies.
+
+#### 3.2.1 MST Topology Implementation
 
 MST topology replaces fixed lattice neighborhood distance with graph shortest-path distance on a minimum spanning tree built from current prototypes. For $P$ prototype nodes in feature dimension $d$, the pairwise prototype matrix is formed with the standard squared-distance Gram identity, which avoids 3D broadcast tensors and preserves $O(P^2 d)$ dense linear-algebra structure.
 
-After distance construction, MST edges are extracted on the central processing unit (CPU) with Kruskal's algorithm, adjacency is built, and all-pairs graph distances are computed via chunked graphics processing unit (GPU) Floyd-Warshall [@kruskalShortestSpanningSubtree1956; @floydAlgorithm97Shortest1962; @warshallTheoremBooleanMatrices1962]. The row chunk size is resolved from memory-budget controls to bound temporary allocations. Learning-time neighborhood influence is then evaluated on graph distances with the standard Gaussian neighborhood kernel. To amortize repeated topology queries, radii are deduplicated using a 10% threshold and influence matrices are cached by radius and influence function, with topology refresh handled by fixed or progress-adaptive update frequency.
+After distance construction, we build a minimum spanning tree over the prototypes and use shortest-path distances on that tree to evaluate the Gaussian neighborhood influence during learning [@kruskalShortestSpanningSubtree1956]. Topology-derived influence matrices are cached and refreshed at fixed or progress-adaptive intervals.
 
 Under this refresh policy, the topology path is simple: if the current iteration does not trigger recomputation, the previous graph state and cached influences are reused; otherwise, pairwise prototype distances are rebuilt on GPU, the MST is recomputed on CPU, graph distances are refreshed in chunked GPU fashion, and the influence cache is rebuilt for the deduplicated active radii.
 
@@ -118,15 +124,15 @@ Output: topology state (E_t, g_t, cached influences)
 ```
 *Algorithm 3. Dynamic MST topology update with refresh-triggered recomputation and cached influence reuse.*
 
-### 3.3 RNG Topology Implementation and Rationale
+#### 3.2.2 RNG Topology Implementation
 
-RNG is our second topology contribution. Relative Neighborhood Graphs are less constrained than MSTs because they are not restricted to a single spanning-tree backbone with exactly one route between connected prototypes. Instead, when local geometric evidence supports multiple neighborhood relations, RNG can retain those connections rather than forcing the structure through only one edge choice per region. We hypothesise this added flexibility will permit more faithful recovery of real data-local connections and, as a consequence, can yield superior results relative to MST when the underlying geometry is not well represented by a strictly tree-like topology.
+RNG is our second topology contribution. Our RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion [@toussaintRelativeNeighbourhoodGraph1980], and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling. In this sense, RNG serves here as an alternative sparse topology that sits between MST and regular lattice baselines such as the hexagonal grid.
 
-Our RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion [@toussaintRelativeNeighbourhoodGraph1980], and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling. 
+Relative Neighborhood Graphs are less constrained than MSTs as they are not restricted to a single spanning-tree backbone with exactly one route between connected prototypes. Instead, when local geometric evidence supports multiple neighborhood relations, RNG can retain those connections rather than forcing the structure through only one edge choice per region. Consequently, we hypothesise that this added flexibility will permit more faithful recovery of real data-local connections and, as a consequence, a superior topology relative to MST.
 
-Candidate elimination is evaluated in chunks to control memory pressure while preserving the direct strict blocker test. No post-hoc connectivity repair is applied after edge extraction; the topology is defined entirely by the canonical RNG criterion.
+We implement the RNG topology by evaluating candidate elimination in chunks to control memory pressure while preserving the direct strict blocker test. No post-hoc connectivity repair is applied after edge extraction; the topology is defined entirely by the canonical RNG criterion.
 
-### 3.4 Multi-GPU + OOM Methodology and Implementation
+### 3.3 Multi-GPU + OOM Methodology and Implementation
 
 After defining the algorithmic components, we describe the execution system used in experiments. This section covers how we distribute computation across GPUs, how data are streamed for large workloads, and how memory safeguards preserve progress under high-pressure regimes.
 
@@ -134,7 +140,7 @@ After defining the algorithmic components, we describe the execution system used
 
 *Figure 1. Multi-GPU data-loader and NVIDIA Collective Communications Library (NCCL) synchronization schematic. Solid disk-backed path: data are distributed from shared storage to worker-local shards on node-local storage, read in worker-local chunks (`n_chunks`) into pinned host memory, transferred to GPU while loading overlaps with compute, processed as chunked local BMU/update steps, synchronized by NCCL all-reduce, and normalized into one weight update per iteration. Dotted path: random-access memory (RAM) mode, where data are sharded directly into each worker's GPU-local CPU RAM and follow the same pinned-memory-to-GPU path without disk reads; this path is typically faster when data are already memory-resident because disk-read overhead is removed.*
 
-#### 3.4.1 General Multi-GPU Logic
+#### 3.3.1 General Multi-GPU Logic
 
 Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation [@moritzRayDistributedFramework2018]. At iteration $t$, the selected batch $X_t^{(s)}$ is partitioned across workers, and each worker computes local update/influence accumulators on its assigned shard. As illustrated in Fig. 1, that shard is processed within the worker as `n_chunks`; Eqs. (4)-(5) are written at the shard level, but in implementation the worker-local accumulators are built incrementally across those chunks before synchronization.
 
@@ -160,7 +166,7 @@ $$
 
 In implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker's `n_chunks` and synchronized once per iteration. Normalization and momentum are then applied with globally consistent denominators.
 
-#### 3.4.2 Multi-GPU Implementation Details
+#### 3.3.2 Multi-GPU Implementation Details
 
 As shown in Fig. 1, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU. In RAM mode, data are pre-sharded directly into each worker's GPU-local CPU RAM and fed into the same pinned-memory path, bypassing disk reading. In both cases, the worker processes its assigned shard as `n_chunks` rather than materializing the full shard on device.
 
@@ -168,17 +174,17 @@ The loader keeps only a small number of upcoming chunks in memory and fetches th
 
 After all `n_chunks` for the current iteration have been processed on each worker, NCCL performs a synchronous SUM all-reduce over the worker-local accumulators. Before synchronization, tensors are formatted consistently across workers so NCCL can aggregate them reliably. The synchronized tensors are then normalized and applied once per iteration. Weights remain resident on worker GPUs across iterations, and the driver exchanges lightweight metadata rather than full weight tensors except when an explicit topology refresh fetch is required.
 
-#### 3.4.3 OOM-Capable Strategy
+#### 3.3.3 OOM-Capable Strategy
 
 OOM robustness is implemented through two primary chunking controls, both applied on a per-worker basis within that worker's local shard. As illustrated by the chunked data path in Fig. 1, data chunking refers to the worker-local subdivision controlled by `n_chunks`: each worker processes its assigned shard in bounded sample chunks from disk-backed storage or distributed host memory, so its shard does not need to fit in device memory at once.
 
 Grid chunking applies the same idea to topology-side computations within each worker. When graph-distance or influence structures for MST or RNG would otherwise exceed a worker's memory budget, those computations are tiled and evaluated in bounded pieces rather than materialized at once. This topology-side chunking is separate from the data path shown in Fig. 1, but it follows the same per-worker bounded-memory execution rule.
 
-#### 3.4.4 XPySOM vs FloatSOM batch comparison
+#### 3.3.4 XPySOM vs FloatSOM batch comparison
 
 To quantify batch-update agreement in practice, we ran a direct XPySOM-versus-FloatSOM benchmark under matched settings, with the grid fixed to 32x32 and a training budget of 20 epochs over 10 seeds. The run used hexagonal topology and full-batch updates.
 
-### 3.5 Hyperparameter Optimization with TPE
+### 3.4 Hyperparameter Optimization with TPE
 
 Modern hyperparameter optimization workflows increasingly use Tree-structured Parzen Estimator (TPE) search, including Optuna's TPE-based optimization framework [@akibaOptunaNextgenerationHyperparameter2019]. In this work, we use TPE-driven optimization to derive hyperparameter sets for each FloatSOM configuration. The effective optimum depends on the selected topology, sampling regime, and processing mode, so tuning is treated as part of the evaluation methodology rather than as a fixed post hoc step. This allows us to examine the near-optimal performance each configuration can attain under its own tuned parameter set, helping disentangle gains attributable to architectural changes from gains due only to hyperparameter appropriateness.
 

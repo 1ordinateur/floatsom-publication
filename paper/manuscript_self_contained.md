@@ -40,7 +40,7 @@ Within that framing, random sampling usually appears in two forms. In a fixed-su
 
 Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates (Kohonen 1990; Kohonen 2013). Hexagonal grids are often preferred in the literature because their neighborhood geometry is more isotropic and tends to reduce directional bias relative to rectangular grids (Kohonen 2013; Forest et al. 2020). This preference is also consistent with broader tessellation work showing different, and often superior, behavior for hexagonal versus square neighborhood structures in spatial and quantization settings (White and Kiester 2008). More broadly, the dominance of regular grids in software is as much a systems convenience as it is an algorithmic preference.
 
-At the same time, the SOM literature has long explored alternatives to fixed lattices. Some work modifies neighborhood functions while retaining the lattice (Aoki and Aoyagi 2007). Other work allows the map to grow, move, or adapt during training, as in DBGSOM and AMSOM (Vasighi et al. 2017; Spanakis and Weiss 2016). Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work (Kangas et al. 1989, 1990) and later smaller-scale MST-based analyses (Jang et al. 2009). Relative Neighborhood Graphs provide another geometry-driven sparse graph family that is well established in computational geometry (Toussaint 1980), but has seen little adoption in openly available SOM toolchains.
+At the same time, the SOM literature has long explored alternatives to fixed lattices. Some work modifies neighborhood functions while retaining the lattice (Aoki and Aoyagi 2007). Other work allows the map to grow, move, or adapt during training, as in DBGSOM and AMSOM (Vasighi et al. 2017; Spanakis and Weiss 2016). Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work (Kangas et al. 1989, 1990) and later smaller-scale MST-based analyses (Jang et al. 2009). Relative Neighborhood Graphs provide another geometry-driven sparse graph family that is well established in computational geometry (Toussaint 1980) and can be viewed as a middle ground between MST-style graph neighborhoods and regular lattices such as hexagonal grids, but have seen little adoption in openly available SOM toolchains.
 
 The shortcoming, then, is not a lack of topology ideas. Rather, topology-flexible SOM proposals and high-throughput SOM systems have mostly developed along separate tracks. Irregular neighborhoods are harder to construct, refresh, and query efficiently during training than fixed lattices, so openly usable implementations that make non-lattice topologies practical under modern large-scale execution remain uncommon.
 
@@ -56,13 +56,15 @@ The rest of the paper is structured as follows. Section 3 describes the methods 
 
 ## 3. Methods
 
-We present the methods in the same order as the results: sampling strategy, topology innovations (MST and RNG), followed by systems acceleration methodologies. Section 3.1 defines sampling selector mathematics, Section 3.2 defines MST, Section 3.3 defines RNG, and Section 3.4 describes the multi-GPU and OOM-capable execution stack used to run these algorithms at scale. Standard SOM primitives are assumed from prior literature and are not re-derived here.
+We present the methods in the same order as the results: sampling strategy, topology innovations (MST and RNG), followed by systems acceleration methodologies. Section 3.1 defines sampling selector mathematics, Section 3.2 defines the topology framework with MST and RNG as subsections, and Section 3.3 describes the multi-GPU and OOM-capable execution stack used to run these algorithms at scale. Standard SOM primitives are assumed from prior literature and are not re-derived here.
+
+Regardless of the selected topology, FloatSOM uses the same prototype initialization options. Initialization determines only the starting prototype values; neighbourhood relations are applied afterward according to the selected topology, keeping the initial state comparable across regular-lattice and graph-based runs.
 
 ### 3.1 Sampling Selector Mathematics
 
 This section formalizes the sampling policies evaluated in this work.
 
-Let the full dataset be $`X=\{x_i\}_{i=1}^{N}`$. The per-iteration sampling budget $`m`$ is either fixed directly or determined as a proportion $`\rho`$ of the dataset:
+Let the full dataset be $`X=\{x_i\}_{i=1}^{N}`$. Let $`m`$ denote the per-iteration sampling budget, that is, the number of samples presented to the SOM in a given training iteration. This budget is either fixed directly or determined as a proportion $`\rho`$ of the dataset:
 ``` math
 m=
 \begin{cases}
@@ -93,13 +95,17 @@ For HDSSSOM (Wetmore et al. 2005), the dataset is partitioned into contiguous bl
 
 After BMU evaluation, processed samples update their stored difficulty through an exponentially decayed moving average of BMU distance and reset their age, while unprocessed samples retain their previous difficulty and continue aging. This recency-weighted difficulty tracking is the key mechanism by which HDSSSOM preferentially revisits hard or stale regions of the dataset.
 
-### 3.2 MST Topology Implementation
+### 3.2 Topology Definition
 
-We next define the first topology contribution: MST neighborhoods computed from prototype geometry rather than fixed lattice adjacency. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance regarding neighborhood isotropy and reduced directional bias (Kohonen 2013; Forest et al. 2020), together with broader tessellation evidence favoring hexagonal over square neighborhood structures in related spatial and quantization settings (White and Kiester 2008).
+We next define how neighbourhood structure is assigned in FloatSOM across regular-lattice and graph-based configurations.
+
+After initialization, neighbourhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance regarding neighborhood isotropy and reduced directional bias (Kohonen 2013; Forest et al. 2020), together with broader tessellation evidence favoring hexagonal over square neighborhood structures in related spatial and quantization settings (White and Kiester 2008). For MST and RNG, neighbourhood structure is instead derived from the current prototype geometry.
+
+#### 3.2.1 MST Topology Implementation
 
 MST topology replaces fixed lattice neighborhood distance with graph shortest-path distance on a minimum spanning tree built from current prototypes. For $`P`$ prototype nodes in feature dimension $`d`$, the pairwise prototype matrix is formed with the standard squared-distance Gram identity, which avoids 3D broadcast tensors and preserves $`O(P^2 d)`$ dense linear-algebra structure.
 
-After distance construction, MST edges are extracted by CPU Kruskal, adjacency is built, and all-pairs graph distances are computed via chunked GPU Floyd-Warshall (Kruskal 1956; Floyd 1962; Warshall 1962). The row chunk size is resolved from memory-budget controls to bound temporary allocations. Learning-time neighborhood influence is then evaluated on graph distances with the standard Gaussian neighborhood kernel. To amortize repeated topology queries, radii are deduplicated using a 10% threshold and influence matrices are cached by radius and influence function, with topology refresh handled by fixed or progress-adaptive update frequency.
+After distance construction, we build a minimum spanning tree over the prototypes and use shortest-path distances on that tree to evaluate the Gaussian neighborhood influence during learning (Kruskal 1956). Topology-derived influence matrices are cached and refreshed at fixed or progress-adaptive intervals.
 
 Under this refresh policy, the topology path is simple: if the current iteration does not trigger recomputation, the previous graph state and cached influences are reused; otherwise, pairwise prototype distances are rebuilt on GPU, the MST is recomputed on CPU, graph distances are refreshed in chunked GPU fashion, and the influence cache is rebuilt for the deduplicated active radii.
 
@@ -121,13 +127,15 @@ Output: topology state (E_t, g_t, cached influences)
 
 *Algorithm 3. Dynamic MST topology update with refresh-triggered recomputation and cached influence reuse.*
 
-### 3.3 RNG Topology Implementation
+#### 3.2.2 RNG Topology Implementation
 
-RNG is our second topology contribution. RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion (Toussaint 1980), and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling. Relative Neighborhood Graphs are less constrained than MSTs because they are not restricted to a single spanning-tree backbone with exactly one route between connected prototypes. Instead, when local geometric evidence supports multiple neighborhood relations, RNG can retain those connections rather than forcing the structure through only one edge choice per region. Our working hypothesis is that this added flexibility will permit more faithful recovery of real data-local connections and, as a consequence, can yield superior results relative to MST when the underlying geometry is not well represented by a strictly tree-like topology.
+RNG is our second topology contribution. RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion (Toussaint 1980), and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling. In this sense, RNG serves here as an alternative sparse topology that sits between MST and regular lattice baselines such as the hexagonal grid.
 
-Candidate elimination is evaluated in chunks to control memory pressure while preserving the direct strict blocker test. No post-hoc connectivity repair is applied after edge extraction; the topology is defined entirely by the canonical RNG criterion.
+Relative Neighborhood Graphs are less constrained than MSTs because they are not restricted to a single spanning-tree backbone with exactly one route between connected prototypes. Instead, when local geometric evidence supports multiple neighborhood relations, RNG can retain those connections rather than forcing the structure through only one edge choice per region. Our working hypothesis is that this added flexibility will permit more faithful recovery of real data-local connections and, as a consequence, can yield superior results relative to MST when the underlying geometry is not well represented by a strictly tree-like topology.
 
-### 3.4 Multi-GPU + OOM Methodology and Implementation
+We implement the RNG topology by evaluating candidate elimination in chunks to control memory pressure while preserving the direct strict blocker test. No post-hoc connectivity repair is applied after edge extraction; the topology is defined entirely by the canonical RNG criterion.
+
+### 3.3 Multi-GPU + OOM Methodology and Implementation
 
 After defining the algorithmic components, we describe the execution system used in experiments. This section covers how we distribute computation across GPUs, how data are streamed for large workloads, and how memory safeguards preserve progress under high-pressure regimes.
 
@@ -138,7 +146,7 @@ After defining the algorithmic components, we describe the execution system used
 
 *Figure 1. Multi-GPU data-loader and NCCL synchronization schematic. Solid disk-backed path: data are distributed from shared storage to worker-local shards on node-local storage, streamed in chunks into pinned host memory, transferred with overlapped loading/compute CUDA streams, processed as chunked local BMU/update steps, synchronized by NCCL all-reduce, and normalized into iteration-level weight updates. Dotted path: RAM mode, where data are sharded directly into each worker’s GPU-local CPU RAM and fed to GPU staging without disk-read queueing; this path is typically faster when data are already memory-resident because disk-read overhead is removed.*
 
-#### 3.4.1 General Multi-GPU Logic
+#### 3.3.1 General Multi-GPU Logic
 
 Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation (Moritz et al. 2018). Each worker computes local update/influence accumulators, followed by global summation.
 
@@ -164,7 +172,7 @@ H_j &= \sum_{g=1}^{G} H_j^{(g)}.
 
 Normalization and momentum are then applied with globally consistent denominators. Weights remain resident on worker GPUs across iterations, and the driver exchanges lightweight metadata rather than full weight tensors except when an explicit topology refresh fetch is required.
 
-#### 3.4.2 Multi-GPU Implementation Details
+#### 3.3.2 Multi-GPU Implementation Details
 
 The execution stack centers on a worker-local CPU-to-GPU staging pipeline coupled to distributed iteration control. Data placement is mode-specific (Fig. 1): in RAM mode, data are pre-sharded directly into each worker’s GPU-local CPU RAM; in streaming mode, data are distributed to worker-local disk shards and then consumed through a bounded chunked loader. This disk-backed path is the primary OOM mechanism for large workloads. In both cases, data are staged in bounded chunks rather than materialized as full-device arrays, and pinned host buffers are used to make host-to-device transfer deterministic at slot granularity.
 
@@ -176,11 +184,11 @@ GPU transfer/compute overlap is implemented as a multi-buffer stream pipeline co
 
 This end-to-end configuration is illustrated in Fig. 1. The solid branch corresponds to the bounded-memory chunk path used when full data cannot be resident in GPU memory: shard to node-local storage first, then stream into pinned-memory/H2D staging. The dotted branch denotes RAM mode: shard directly to each worker’s GPU-local CPU RAM, skip disk-read queueing, and feed chunks into the same pinned-memory/H2D staging pipeline. When source data are already memory-resident, this RAM branch is preferred because it removes disk-read overhead.
 
-#### 3.4.3 OOM-Capable Strategy
+#### 3.3.3 OOM-Capable Strategy
 
 OOM robustness is implemented through two primary chunking controls. First, data chunking processes datasets in bounded sample chunks from disk-backed storage or distributed host memory, so training can proceed even when full data do not fit in device memory. Second, grid chunking processes large neuron-grid computations in bounded tiles/chunks, keeping topology-side distance and influence operations within memory budgets.
 
-#### 3.4.4 XPySOM vs FloatSOM batch comparison
+#### 3.3.4 XPySOM vs FloatSOM batch comparison
 
 To quantify batch-update agreement in practice, we ran a direct XPySOM-versus-FloatSOM benchmark under matched settings, with the grid fixed to 32x32 and a training budget of 20 epochs over 10 seeds. The run used hexagonal topology and full-batch updates.
 
