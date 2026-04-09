@@ -247,13 +247,13 @@ Dataset-wise tuned-configuration-versus-untuned-reference summaries use two-side
 
 ### 4.5 Hyperparameter stability and dataset-type stratification
 
-An additional aim was to determine whether the topology and sampling strategies considered here differ in hyperparameter stability. In this context, stability refers to the extent to which similar high-performing hyperparameter settings are recovered across repeated runs and matched experimental conditions, such that a single parameter configuration can be applied with confidence across a broad range of scenarios while still yielding near-optimal performance.
+An additional aim was to determine whether the topology and sampling strategies considered here differ in hyperparameter stability. In this context, stability refers to the extent to which similar high-performing hyperparameter settings are replicated across repeated runs and matched experimental conditions, such that a single parameter configuration can be applied with confidence across a broad range of scenarios while still yielding good performance.
 
-Hyperparameter stability was evaluated from the top-ranked tuned Optuna trial selected separately for each matched dataset, seed, topology, processing mode, sampling mode, and optional split. Stability was then quantified as the variation in those selected hyperparameter values across seeds within each topology, and these within-topology stability scores were compared between topology pairs. Greater stability is practically important because it reduces the need for user hyperparameter retuning and increases confidence in the robustness of the resulting map quality.
+Hyperparameter stability was evaluated from the top-ranked tuned Optuna trial selected separately for each matched dataset, seed, topology, processing mode, sampling mode, and optional split. Stability was then quantified as the variation in those selected hyperparameter values across seeds within each topology. Greater stability is practically important because it reduces the need for user hyperparameter retuning and increases confidence in the robustness of the resulting map quality.
 
 For numeric parameters, stability was measured across within-topology seed pairs using the relative difference:
 $$
-\frac{|a-b|}{\max(|a|,|b|,\varepsilon)},
+\frac{|a-b|}{\max(|a|,|b|,\varepsilon)}
 $$
 Where $a$ and $b$ are the values of a given numeric parameter for the two compared seeds, and with a small $\varepsilon=10^{-12}$. These relative differences were then averaged over the compared numeric parameters; lower values indicate higher stability. For categorical parameters, stability was measured as the mean mismatch rate across the same seed pairs and the compared categorical parameters, again with lower values indicating higher stability. Topology comparisons report both per-parameter stability scores and an equal-weight overall summary.
 
@@ -261,7 +261,9 @@ For dataset-type stratification, we use the same synthetic/real group definition
 
 ## 5. Results
 
-### 5.1 XPySOM calibration (equivalence)
+### 5.1 XPySOM calibration (Equivalence)
+
+```[@Givanna] I see where you are coming from, but I think it's important to establish early on to the reader that they can have confidence in the Hexagonal FloatSOM baseline as being comparable to the current methodology. Therefore, we can validly compare everything else to come, what do you think?```
 
 Under matched-configuration XPySOM-versus-FloatSOM calibration on hexagonal $QE$ (Fig. S3), the two implementations are numerically equivalent up to expected floating-point accumulation-order effects (e.g., backend/kernel reduction order and host-device execution details), not algorithmic-update differences. Using the paired-testing pipeline defined in Section 4.3, we find that paired $QE$ differences remain small across datasets and splits in the hexagonal calibration (Supplementary Table S4). Accordingly, we treat FloatSOM batch as a valid proxy for XPySOM in the Optuna benchmarks that follow.
 
@@ -271,9 +273,7 @@ Observed $QE$ differences are small in magnitude, typically below 1%, and are co
 
 For runtime interpretation of this initial calibration, FloatSOM includes a small one-time startup cost from JIT kernel compilation. This overhead is most visible on small workloads, but is progressively amortized as sample count and workload size increase. On the largest benchmark datasets (covertype and kddcup99), runtime is on par with or faster than XPySOM under this matched protocol, consistent with compilation-cost amortization. This trend is expected to strengthen further as dataset scale increases (Sections 6.1-6.2).
 
-For completeness, we also ran default-setting FloatSOM MST and RNG configurations against XPySOM under the same seed-matched and split-matched protocol (Supplementary Figs. S1-S2). This was intentionally done with XPySOM-equivalent default batch settings for equivalence calibration, but those defaults are not the preferred operating regime for graph topologies: in our broader topology runs, MST and RNG generally prefer asymptotic radius decay with a substantially smaller initial radius than the batch default. Nevertheless, even under these conservative default-batch settings, both MST and RNG still outperform the default hexagonal baseline in these supplementary comparisons.
-
-### 5.2 Sampling Results
+### 5.2 Comparison of Different Sampling Methods 
 
 We examined HDSSSOM in smaller pilot studies (10 datasets, 5 seeds) while holding all other parameters fixed. Under the hexagonal setting, HDSSSOM was markedly worse than both full and random runs across all datasets (Fig. S4), so it was excluded from the remaining experiments. For full versus random, the key pattern is scale-dependent: above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes, consistent with reduced per-iteration sample support under random subsampling. This $>10{,}000$ split is an empirical breakpoint observed in the benchmark suite and is used descriptively rather than as a prespecified threshold. Accordingly, the topology analyses reported below use full-sampling-only paired comparisons, while this section preserves the dedicated paired sampling comparisons.
 
@@ -286,14 +286,18 @@ Combined with the runtime evidence in Fig. 8, this supports a scale-aware operat
 Regression of full-versus-random QE difference against dataset sample size (Fig. 2D-F) yielded: Balanced QE (Pearson R=-0.761, p=0.00158, n=14); Holdout QE (Pearson R=-0.743, p=0.00235, n=14); Train QE (Pearson R=-0.653, p=0.0113, n=14). The corresponding Fig. 2 dataset metadata table (dataset_index, dataset, dimension_count, sample_size, dataset_type) is exported as assets/tables/supp_table_figure_2_sampling_dataset_metadata.csv and listed in Supplementary Table S1.
 <!-- AUTO-SAMPLING-REGRESSION-STATS:END -->
 
-### 5.3 MST Results
+### 5.3 Topology Results
 
 Topology comparisons are reported with $QE$-only endpoints because distortion is unavailable for MST in this setup. We treat the Optuna hexagonal batch setting as the primary regular-topology baseline in this panel and compare MST and RNG against it.
+
+For completeness, we also ran default-setting FloatSOM MST and RNG configurations against XPySOM under the same seed-matched and train-holdout setup (Supplementary Figs. S1-S2). This was intentionally done with XPySOM-equivalent default batch settings for equivalence calibration. Even under those inherited hexagonal hyperparameters, both MST and RNG still outperform the default hexagonal baseline, indicating prima facie that both graph-based topologies are already favorable relative to the current regular-topology reference before topology-specific tuning is applied.
 
 To anchor the topology results qualitatively, Fig. 3 shows representative neighborhood overlays for hexagonal, MST, and RNG on a synthetic sklearn circles dataset. The regular hexagonal lattice preserves a fixed mesh, MST enforces a tree-structured neighborhood without cycles, and RNG allows locally mesh-like connectivity while also supporting freer non-mesh edges where prototype geometry becomes irregular. We use this representative panel only as geometric intuition for the topology comparisons that follow; the quantitative results remain the paired $QE$ analyses in Figs. 4-5 and Fig. S5. Across the tested top-$k$ range, these topology comparisons remain robust, indicating that the observed effects are stable across the tested top-$k$ sensitivity range; the corresponding sensitivity analyses are provided in Fig. S6 for Hexagonal versus MST, Fig. S7 for Hexagonal versus RNG, and Fig. S8 for MST versus RNG.
 
 ![Figure 3](assets_manual/figures/fig_3.svg)
 *Figure 3. Representative figure for XPySOM default run Hexagonal, MST, and RNG neighborhood node and connection overlays on a 30,000 datapoint synthetic sklearn circles dataset.*
+
+#### 5.3.1 MST
 
 We use dataset-wise paired improvement summaries (Hexagonal over MST) with the same reporting logic as Section 5.1, centered on $QE_B$. We report $QE_H$ and $QE_T$ separately for Hexagonal versus MST to expose train/holdout trade-offs. The main Hexagonal-versus-MST topology figure (Fig. 4) is an outcomes-only tripanel across $QE_B$, $QE_H$, and $QE_T$.
 
@@ -304,7 +308,9 @@ MST has lower QE than matched hexagonal on the reported endpoints (Fig. 4A-4C), 
 ![Figure 4](assets_manual/figures/fig_4.svg)
 *Figure 4. Hexagonal versus MST topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
-### 5.4 RNG Results
+#### 5.3.2 RNG
+
+We use the same paired reporting logic for Hexagonal versus RNG, again centered on $QE_B$ with $QE_H$ and $QE_T$ reported separately to expose train/holdout trade-offs. The main Hexagonal-versus-RNG topology figure (Fig. 5) is likewise an outcomes-only tripanel across $QE_B$, $QE_H$, and $QE_T$.
 
 <!-- AUTO-TOPOLOGY-RNG-PVALUES:START -->
 RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 5A-5C), with overall paired t-test p-values of Balanced QE (p=7.4e-10); Holdout QE (p=0.0232); and Train QE (p=4.69e-06). Supplementary Table S5 lists the per-dataset and overall hexagonal-comparison p-values for MST and RNG.
@@ -313,7 +319,7 @@ RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 5A-5C
 ![Figure 5](assets_manual/figures/fig_5.svg)
 *Figure 5. Hexagonal versus RNG topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
-### 5.5 Tuned Configuration-versus-untuned Reference Analysis
+### 5.4 Tuned Configuration-versus-untuned Reference Analysis
 
 The tuned-configuration-versus-untuned-reference $QE$ comparison is shown in Fig. 6, with topology-specific Hexagonal, MST, and RNG breakdowns provided in Fig. S9, Fig. S10, and Fig. S11, respectively.
 Here, the tuned configuration is a fixed hyperparameter setting derived from the Optuna workflow and then rerun on the datasets; it is not a per-seed best-trial oracle. This comparison therefore estimates the gain from adopting that tuned setting as the operating configuration, relative to an untuned reference configuration.
@@ -333,7 +339,7 @@ At the pooled overall level, the paired summaries across all matched tuned-confi
 The same tuning pattern is observed across topologies: mean Balanced-QE improvement is positive for hexagonal (10.35%), MST (6.46%), and RNG (7.97%), indicating that tuning affects all topology families rather than a single-architecture artifact.
 <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:END -->
 
-### 5.6 Hyperparameter stability under full versus random sampling
+### 5.5 Hyperparameter stability under full versus random sampling
 
 Hyperparameter stability analyses (Section 4.5) compare within-topology seed-to-seed tuned-parameter drift and then contrast those internal-stability scores between topology pairs. The resulting pattern indicates that MST and RNG reach lower stability scores than hexagonal when matching dataset, sampling mode, and seed structure. Fig. 7A summarizes the full-sampling stratum, and Fig. 7B shows the corresponding random-sampling analysis. The full-versus-random contrast is also directional: the full-sampling panel generally shows lower selected-parameter stability scores than the random-sampling panel for the same topology families, suggesting modestly better hyperparameter stability under full sampling.
 <!-- AUTO-DEFAULT-AWARE-STABILITY-REGRESSION:START -->
@@ -424,7 +430,7 @@ The key interpretation is that topology choice and hyperparameter choice are cou
 
 ### 7.4 Hyperparameter stability and dataset-type interpretation
 
-The stability analysis adds an operational layer to the quality results. Hexagonal maps appear more constrained because a fixed lattice must remain aligned with the data geometry across seeds and initializations, whereas graph topologies recompute connectivity from the evolving prototype configuration. That makes MST and especially RNG less sensitive to seed-level variation in the tuned region. One interpretation is that RNG may be easier to recover consistently in the tuned region. Like the $QE$ results, the dataset-size view suggests that larger datasets are generally more stable, but in Fig. 7 this pattern is carried mainly by the random-sampling regime rather than by full sampling: the full-sampling regressions summarized in Section 5.6 show no strong size relationship, whereas Fig. 7C shows that random-sampling stability improves as dataset size increases. This same logic, together with the synthetic-versus-non-synthetic stratification in Section 4.5, helps explain why graph topologies may be favorable in higher-dimensional, non-synthetic datasets, where forcing the data into the regular low-dimensional lattice prior of a classical SOM is likely to be a stronger geometric mismatch [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990].
+The stability analysis adds an operational layer to the quality results. Hexagonal maps appear more constrained because a fixed lattice must remain aligned with the data geometry across seeds and initializations, whereas graph topologies recompute connectivity from the evolving prototype configuration. That makes MST and especially RNG less sensitive to seed-level variation in the tuned region. One interpretation is that RNG may be easier to recover consistently in the tuned region. Like the $QE$ results, the dataset-size view suggests that larger datasets are generally more stable, but in Fig. 7 this pattern is carried mainly by the random-sampling regime rather than by full sampling: the full-sampling regressions summarized in Section 5.5 show no strong size relationship, whereas Fig. 7C shows that random-sampling stability improves as dataset size increases. This same logic, together with the synthetic-versus-non-synthetic stratification in Section 4.5, helps explain why graph topologies may be favorable in higher-dimensional, non-synthetic datasets, where forcing the data into the regular low-dimensional lattice prior of a classical SOM is likely to be a stronger geometric mismatch [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990].
 
 ### 7.5 Systems implications and limits
 
