@@ -48,6 +48,8 @@ Together, these evince a need for topologcally-flexible SOM proposals in high-th
 
 SOM performance depends strongly on choices such as map size, initialization, learning-rate schedule, and neighborhood schedule. Prior work shows that these choices can materially affect observed performance and even the apparent advantage of one variant over another [@akindukoSOMStochasticInitialization2016; @forestSurveyImplementationPerformance2020]. This makes comparisons based only on untuned defaults difficult to interpret.
 
+More generally, modern machine-learning workflows increasingly rely on automated hyperparameter optimization rather than manual tuning alone. Frameworks such as Optuna provide bounded search over large hyperparameter spaces and can support multi-objective optimization, allowing parameter settings to be selected with respect to several benchmark criteria simultaneously rather than collapsed into a single score [@akibaOptunaNextgenerationHyperparameter2019].
+
 Currently, the literature provides strong components in isolation: accessible SOM libraries, accelerated batch implementations, classical and guided sampling schemes, and multiple alternatives to standard grid neighborhoods. What remains limited is an openly usable workflow that combines these pieces in one benchmarkable setting: support for both regular and irregular topologies, direct comparison of full, random, and guided sampling, and execution beyond a narrow single-device in-memory regime. Similarly, in combining these optimal configurations, empirically derived default hyperparameters are also essential for optimal hyperparameters. This evidence based derivation and analysis of performance impact is, to date, an unexplored area. 
 
 ## 3. Methods
@@ -97,7 +99,7 @@ For hierarchical dynamic subset selection SOM (HDSSSOM) [@wetmoreSpeedingSelfOrg
 
 We next define how neighbourhood structure is assigned in FloatSOM across regular-lattice and graph-based configurations.
 
-All topologies support the same node placement initialization options. Post initialization, neighbourhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance. For MST and RNG, neighbourhood structure is instead derived from the current prototype geometry using the below methodologies.
+All topologies support the same node placement initialization options, and are initialised in an identical manner. Post initialization, neighbourhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance. For MST and RNG, neighbourhood structure is instead derived from the current prototype geometry using the below methodologies.
 
 #### 3.2.1 MST Topology Implementation
 
@@ -134,7 +136,7 @@ We implement the RNG topology by evaluating candidate elimination in chunks to c
 
 ### 3.3 Multi-GPU + OOM Methodology and Implementation
 
-After defining the algorithmic components, we describe the execution system used in experiments. This section covers how we distribute computation across GPUs, how data are streamed for large workloads, and how memory safeguards preserve progress under high-pressure regimes.
+This section covers how we distribute computation across GPUs, how data are streamed for large workloads, and how memory safeguards preserve progress under high-pressure regimes.
 
 ![Figure 1](assets_manual/figures/fig_1.svg)
 
@@ -142,7 +144,7 @@ After defining the algorithmic components, we describe the execution system used
 
 #### 3.3.1 General Multi-GPU Logic
 
-Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation [@moritzRayDistributedFramework2018]. At iteration $t$, the selected batch $X_t^{(s)}$ is partitioned across workers, and each worker computes local update/influence accumulators on its assigned shard. As illustrated in Fig. 1, that shard is processed within the worker as `n_chunks`; Eqs. (4)-(5) are written at the shard level, but in implementation the worker-local accumulators are built incrementally across those chunks before synchronization.
+Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation [@moritzRayDistributedFramework2018]. For every iteration, each worker processes its assigned shard locally. As illustrated in Fig. 1, that shard is processed within the worker as `n_chunks`; Eqs. (4)-(5) are written at the shard level, but in implementation the worker-local accumulators are built incrementally across those chunks before synchronization. Finally, upon worker-local computations being completed, influences are accumulated across workers via NCCL synchronisation. 
 
 For worker $g \in \{1,\dots,G\}$, let $X_{t,g}^{(s)}$ denote the worker-local shard of the selected iteration batch $X_t^{(s)}$. Let $j$ index prototype nodes, let $w_j^{(t)}$ denote the prototype vector of node $j$ at iteration $t$, let $b(x)$ denote the best-matching unit (BMU) of sample $x$ under the current weights, let $h_{j,b(x)}^{(t)}$ denote the iteration-$t$ neighborhood influence between node $j$ and the BMU of $x$, and let $\eta_t$ denote the learning rate at iteration $t$. The local accumulators are:
 
@@ -170,39 +172,45 @@ In implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker
 
 As shown in Fig. 1, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU. In RAM mode, data are pre-sharded directly into each worker's GPU-local CPU RAM and fed into the same pinned-memory path, bypassing disk reading. In both cases, the worker processes its assigned shard as `n_chunks` rather than materializing the full shard on device.
 
-The loader keeps only a small number of upcoming chunks in memory and fetches the next chunk scheduled after the current one. CUDA events coordinate the overlap so that, in steady state, one chunk can be under GPU compute while the next chunk is being transferred and another host buffer is being prepared. For each chunk, the worker performs BMU search and accumulates local update and influence tensors.
+The loader keeps only a small number of upcoming chunks in memory and fetches the next chunk scheduled after the current one. We operate multiple CUDA streams, so that, in steady state, one chunk can be under GPU compute while the next chunk is being transferred and another host buffer is being prepared. For each chunk, the worker performs BMU search and accumulates local update and influence tensors.
 
-After all `n_chunks` for the current iteration have been processed on each worker, NCCL performs a synchronous SUM all-reduce over the worker-local accumulators. Before synchronization, tensors are formatted consistently across workers so NCCL can aggregate them reliably. The synchronized tensors are then normalized and applied once per iteration. Weights remain resident on worker GPUs across iterations, and the driver exchanges lightweight metadata rather than full weight tensors except when an explicit topology refresh fetch is required.
+After all required data for the current iteration have been processed on each worker, NCCL performs a synchronous all-reduce over the worker-local accumulators, allowing for worker-local weight normalisation and updating. Consequently, weights remain resident on worker GPUs across iterations, instead the driver exchanges only lightweight metadata rather than full weight tensors.
 
-#### 3.3.3 OOM-Capable Strategy
+#### 3.3.3 OOM-Capable Topology Updates
 
-OOM robustness is implemented through two primary chunking controls, both applied on a per-worker basis within that worker's local shard. As illustrated by the chunked data path in Fig. 1, data chunking refers to the worker-local subdivision controlled by `n_chunks`: each worker processes its assigned shard in bounded sample chunks from disk-backed storage or distributed host memory, so its shard does not need to fit in device memory at once.
-
-Grid chunking applies the same idea to topology-side computations within each worker. When graph-distance or influence structures for MST or RNG would otherwise exceed a worker's memory budget, those computations are tiled and evaluated in bounded pieces rather than materialized at once. This topology-side chunking is separate from the data path shown in Fig. 1, but it follows the same per-worker bounded-memory execution rule.
+Additional larger-than memory support for topology updates is provided through topological chunking. Topological chunking applies the same idea to topology-side computations within each worker. When graph-distance or influence structures would otherwise exceed a worker's memory budget, those computations are tiled and evaluated in bounded pieces rather than materialized at once. This topology-side chunking is separate from the data path shown in Fig. 1, but it follows the same per-worker bounded-memory execution rule.
 
 #### 3.3.4 XPySOM vs FloatSOM batch comparison
 
-To quantify batch-update agreement in practice, we ran a direct XPySOM-versus-FloatSOM benchmark under matched settings, with the grid fixed to 32x32 and a training budget of 20 epochs over 10 seeds. The run used hexagonal topology and full-batch updates.
+FloatSOM offers the option for matching to XPySOM, to produce identical results when configured in the 'XPySOM' equivalence mode.  
 
-### 3.4 Hyperparameter Optimization with TPE
+### 3.4 Multi-Objective Hyperparameter Optimization
 
-Modern hyperparameter optimization workflows increasingly use Tree-structured Parzen Estimator (TPE) search, including Optuna's TPE-based optimization framework [@akibaOptunaNextgenerationHyperparameter2019]. In this work, we use TPE-driven optimization to derive hyperparameter sets for each FloatSOM configuration. The effective optimum depends on the selected topology, sampling regime, and processing mode, so tuning is treated as part of the evaluation methodology rather than as a fixed post hoc step. This allows us to examine the near-optimal performance each configuration can attain under its own tuned parameter set, helping disentangle gains attributable to architectural changes from gains due only to hyperparameter appropriateness.
+We use Optuna as an automated multi-objective hyperparameter optimization framework to derive near-optimal performance and corresponding hyperparameters for each FloatSOM configuration under a given sampling, topology, and processing combination [@akibaOptunaNextgenerationHyperparameter2019]. In this setting, multi-objective optimization means searching for parameter configurations that jointly balance the selected benchmark objectives rather than optimizing a single scalar criterion.
 
 ## 4. Experimental Setup
 
-### 4.1 Datasets and preprocessing
+We use two benchmark protocols: an Optuna quality benchmark and a speed-scaling benchmark. The first evaluates algorithmic quality and tuned attainable performance, and the second evaluates runtime and distributed scaling behavior. All production Optuna and speed benchmarks reported in this manuscript were executed on Gadi at the National Computational Infrastructure (NCI), Australia, on gpuvolta nodes [@HPCSystemsNCI], using a consistent multi-GPU environment across runs.
 
-We use two benchmark protocols: an Optuna quality benchmark and a speed-scaling benchmark. The first evaluates algorithmic quality, and the second evaluates runtime scaling.
+### 4.1 Optuna benchmark protocol
 
-#### 4.1.1 Optuna benchmark datasets
+The main Optuna benchmark evaluates all three topology families (hexagonal, MST, RNG) under the full and random sampling regimes, with seed-matched trials and split-aware objective evaluation. A separate focused HDSSSOM sampling pilot is reported later in Section 5.2. The objective of the Optuna benchmark is to determine the best functional performance attained by each configuration on the benchmark datasets together with the associated optimal hyperparameters.
 
-The Optuna quality benchmark uses a mixed synthetic/real dataset suite to expose the algorithm to a broad range of challenges and verify stable behavior across distinct data regimes. Synthetic datasets include: *swiss_roll, moons, circles, blobs, s_curve*, and real datasets include: *breast_cancer, wine, iris, digits, olivetti_faces, diabetes, california_housing, covertype, kddcup99*. Synthetic datasets are generated in accordance with the random seed selected, while real-world datasets are loaded from sklearn with native sample-feature structure. Across the Optuna protocol, inputs are standardized, [@nishinoCupyNumpycompatibleLibrary2017], and evaluated with deterministic seeded permutations and a fixed 70/30 train-holdout split.
+We use Optuna-based multi-objective hyperparameter optimization to optimise for both $QE_T$ and $QE_H$ simultaneously. This is done to derive near-optimal attainable performance and corresponding hyperparameters for each sampling, topology, and processing combination. Hyperparameter search is run with configuration constraints that depend on the selected algorithmic variant, so comparisons remain consistent across datasets while allowing variant-appropriate tuning spaces. For regular-lattice runs, we support both grid and hexagonal layouts while still treating hexagonal as the standard regular-topology reference.
 
-#### 4.1.2 Scaling benchmark datasets
+The executed analysis corresponds to
+$$
+14_{\text{Datasets}} \times 200_{\text{Trials}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SampleMethods}} = 168{,}000
+$$
+SOM runs. We chose to replicate each benchmark 10 times using different seeds to ensure robust results. Batch mode is fixed to full-batch training in this protocol for the benchmark results reported in this manuscript. Operationally, this Optuna campaign uses the standard in-memory batch path rather than the Ray-distributed execution stack due to dataset size not requiring Ray.
 
-The speed-benchmark protocol uses synthetic random matrices with uniform values in $[0,1]$ and evaluates scaling under controlled sample-size sweeps. Data are represented in `float32` and streamed through the same training data path used by the benchmark runtime pipeline. Sampling selector mathematics for full, random, and HDSSSOM is defined in Section 3.1. In this experimental setup, these same three modes are available in the Optuna pipeline; in the speed-scaling experiments reported here, sampling is fixed to full.
+Sampling comparisons in Section 5.2 use the hexagonal subset of this campaign for full-vs-random paired analyses, and include a focused full-vs-HDSSSOM pilot comparison under matched settings. Topology comparisons in Sections 5.3-5.4 use full-sampling runs across hexagonal, MST, and RNG and include all available full-sampling datasets in this subset (no dataset-size exclusion for Figures 4-5). Unless explicitly stated otherwise, the remaining analyses reported in this manuscript use full sampling with full-batch training.
 
-### 4.2 Metrics
+#### 4.1.1 Optuna benchmark datasets and preprocessing
+
+The Optuna quality benchmark uses a mixed synthetic/real dataset suite to expose the algorithm to a broad range of challenges and verify stable behavior across distinct data regimes. Synthetic datasets include: *swiss_roll, moons, circles, blobs, s_curve*, and real datasets include: *breast_cancer, wine, iris, digits, olivetti_faces, diabetes, california_housing, covertype, kddcup99*. Synthetic datasets are generated in accordance with the random seed selected, while real-world datasets are loaded from sklearn with native sample-feature structure. Across the Optuna protocol, inputs are standardized feature-wise to zero mean and unit variance using `StandardScaler` before deterministic seeded permutation and a fixed 70/30 train-holdout split. We retain both train and holdout partitions because they capture two different practical questions: how well the SOM represents the observed training population, and how well that same trained map transfers to previously unseen samples.
+
+#### 4.1.2 Optuna quality metrics
 
 Our primary quality metric is Quantization Error ($QE$), computed in the standard way with GPU distance kernels. We report both train and holdout $QE$, denoted $QE_T$ and $QE_H$, respectively. Here, $QE_T$ captures use cases where the full observed population is available and the map is intended to represent that same population, while $QE_H$ captures generalization settings where the trained SOM is projected onto previously unseen samples.
 
@@ -213,33 +221,25 @@ QE_B=\frac{QE_T+QE_H}{2}.
 $$
 $QE_B$ is therefore a composite endpoint that weights representation fidelity (train) and transfer-to-unseen-data fidelity (holdout) equally. Unless stated otherwise, we report raw (non-normalized) $QE_B$. In the executed Optuna $QE$ runs with split-aware evaluation, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector. 
 
-### 4.3 Optuna protocol (topology and sampling campaign)
+### 4.2 Speed-scaling benchmark protocol
 
-All production Optuna and speed benchmarks reported in this manuscript were executed on Gadi at the National Computational Infrastructure (NCI), Australia, on gpuvolta nodes [@HPCSystemsNCI], using a consistent multi-GPU environment across runs. The main Optuna campaign evaluates all three topology families (hexagonal, MST, RNG) under the full and random sampling regimes, with seed-matched trials and split-aware objective evaluation. A separate focused HDSSSOM pilot is reported in Section 5.2. 
+The speed-scaling benchmark evaluates runtime and distributed scaling behavior rather than train-holdout generalization. In the main scaling experiments, sampling is fixed to full, the entire generated sample set is used for training, and no holdout split is applied. A dedicated 1-GPU batch-mode random-versus-full comparison is additionally included to isolate sampling-specific runtime effects independently of the multi-GPU scaling runs. The objective of the speed-scaling benchmark is to characterize the speed behavior of different compute and algorithm configurations.
 
-We use Optuna-based hyperparameter optimization because achieved $QE$ depends materially on hyperparameter choice (Section 5.5). The goal is to estimate near-optimal attainable performance under a common bounded search budget rather than untuned behavior. Hyperparameter search is run with configuration constraints that depend on the selected algorithmic variant, including sampling and topology context, so comparisons remain consistent across datasets while allowing variant-appropriate tuning spaces. For regular-lattice runs, we support both grid and hexagonal layouts while still treating hexagonal as the standard regular-topology reference.
-
-The executed analysis corresponds to
-$$
-14_{\text{Datasets}} \times 200_{\text{Trials}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SampleMethods}} = 168{,}000
-$$
-SOM runs. We chose to replicate each benchmark 10 times using different seeds to ensure robust results. Batch mode is fixed to full-batch training in this protocol for the benchmark results reported in this manuscript. Operationally, this Optuna campaign uses the standard in-memory batch path rather than the Ray-distributed execution stack due to dataset size not requiring Ray.
-
-Sampling comparisons in Section 5.2 use the hexagonal subset of this campaign for full-vs-random paired analyses, and include a focused full-vs-HDSSSOM pilot comparison under matched settings. Topology comparisons in Sections 5.3-5.4 use full-sampling runs across hexagonal, MST, and RNG and include all available full-sampling datasets in this subset (no dataset-size exclusion for Figures 4-5). Unless explicitly stated otherwise, the remaining analyses reported in this manuscript use full sampling with full-batch training.
-
-### 4.4 Speed benchmark protocol
-
-Speed scaling is evaluated with harmonized runs across $G\in\{1,2,4,8\}$ GPUs under a fixed sample-scaling protocol. Runtime summaries are computed from repeated executions per configuration and reported as both absolute training time and topology runtime ratios. These scaling and multi-GPU/OOM-capable runs use the Ray-orchestrated distributed execution layer built on top of the standard FloatSOM training path [@moritzRayDistributedFramework2018]. Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path. 
+Speed scaling is evaluated with harmonized runs across $G\in\{1,2,4,8\}$ GPUs under a fixed sample-scaling protocol. Runtime summaries are computed from repeated executions per configuration and reported as both absolute training time and efficiency ratios relative to a 1GPU comparison. These scaling and multi-GPU/OOM-capable runs use the Ray-orchestrated distributed execution layer built on top of the standard FloatSOM training path [@moritzRayDistributedFramework2018]. Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path.
 
 For scaling-efficiency calculations, when a single-GPU baseline was missing at a given axis value due to timeout, we estimated that baseline by local linear extrapolation from the last available 1-GPU point on the same curve. That is, runtime was assumed to scale proportionally with the axis variable for the extrapolation step (for example, doubling sample count or doubling dimensionality doubles the estimated 1-GPU runtime). This assumption was used only to construct missing 1-GPU baselines for speedup/efficiency reporting and did not alter the observed multi-GPU runtime traces.
 
 Topology-speed comparisons include hexagonal, MST, and RNG, with harmonized workload settings so ratios isolate topology-associated runtime effects.
 
-Unless explicitly stated otherwise, speed benchmarking is reported under full sampling. A dedicated random-versus-full speed comparison is additionally reported at 1 GPU (batch mode) to isolate sampling runtime effects independent of multi-GPU scaling.
+Unless explicitly stated otherwise, speed benchmarking is reported under full sampling with the full available sample set used for training and no holdout partition. This benchmark is intended to measure systems/runtime behavior rather than train-versus-holdout algorithmic performance. A dedicated random-versus-full speed comparison is additionally reported at 1 GPU to isolate sampling runtime effects independent of multi-GPU scaling.
+
+#### 4.2.1 Scaling benchmark datasets
+
+The speed benchmark uses synthetic random matrices with uniform values in $[0,1]$ and evaluates scaling under controlled sample-size sweeps. No test-holdout split was used here because the objective is runtime rather than generalization, so all generated data are used for training.
 
 Compute resources are scaled with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run was terminated at a wall-clock timeout of 30 minutes (timeout). Per-GPU resource allocation was fixed at 12 CPU cores, 90 GB system RAM, and 32 GB VRAM.
 
-### 4.5 Statistical analysis
+### 4.3 Statistical analysis
 
 All Optuna comparisons were paired because the experimental design contains substantial between-run heterogeneity arising from dataset, seed, and split structure. Pairing therefore allows each comparison to be evaluated within a matched experimental context. 
 
@@ -249,7 +249,7 @@ Dataset-level forest and effect summaries report mean paired effects. Two-sided 
 
 Global aggregate summaries use the same paired $t$-test framework. The single global row is tested with a two-sided paired one-sample $t$-test on the paired effects contributing to that aggregate, together with the corresponding 95% confidence interval around the mean paired effect. The same paired $t$-test summary is used for top-$k$ sensitivity analyses. In this manuscript, wording such as "no detected difference" means failure to reject at the stated threshold under this paired $t$-test pipeline; it is not a formal equivalence claim.
 
-### 4.6 Tuned Default-versus-untuned Default Analysis
+### 4.4 Tuned Default-versus-untuned Default Analysis
 
 To quantify parameter-tuning benefit, we performed an explicit Tuned Default-versus-untuned Default paired analysis on seed-preserving Optuna exports. Pairing was defined within matched dataset, seed, optional split, topology, processing mode, sampling mode, and batch-mode units. Within each matched unit, the untuned comparator was the earliest completed trial and the Tuned Default comparator was the best trial by the target metric. This analysis therefore estimates the gain obtainable from bounded hyperparameter search relative to an untuned default within each matched context. We report both the default-minus-tuned difference, so positive values favor the Tuned Default condition for lower-is-better metrics, and the percent improvement relative to the default value.
 
