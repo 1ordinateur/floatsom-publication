@@ -290,14 +290,14 @@ Regression of full-versus-random QE difference against dataset sample size (Fig.
 
 Topology comparisons are reported with $QE$-only endpoints because distortion is unavailable for MST in this setup. We treat the Optuna hexagonal batch setting as the primary regular-topology baseline in this panel and compare MST and RNG against it.
 
-For completeness, we also ran default-setting FloatSOM MST and RNG configurations against XPySOM under the same seed-matched and train-holdout setup (Supplementary Figs. S1-S2). This was intentionally done with XPySOM-equivalent default batch settings for equivalence calibration. Even under those inherited hexagonal hyperparameters, both MST and RNG still outperform the default hexagonal baseline, indicating prima facie that both graph-based topologies are already favorable relative to the current regular-topology reference before topology-specific tuning is applied.
-
-To anchor the topology results qualitatively, Fig. 3 shows representative neighborhood overlays for hexagonal, MST, and RNG on a synthetic sklearn circles dataset. The regular hexagonal lattice preserves a fixed mesh, MST enforces a tree-structured neighborhood without cycles, and RNG allows locally mesh-like connectivity while also supporting freer non-mesh edges where prototype geometry becomes irregular. We use this representative panel only as geometric intuition for the topology comparisons that follow; the quantitative results remain the paired $QE$ analyses in Figs. 4-5 and Fig. S5. Across the tested top-$k$ range, these topology comparisons remain robust, indicating that the observed effects are stable across the tested top-$k$ sensitivity range; the corresponding sensitivity analyses are provided in Fig. S6 for Hexagonal versus MST, Fig. S7 for Hexagonal versus RNG, and Fig. S8 for MST versus RNG.
+To anchor the topology results qualitatively, Fig. 3 shows representative neighborhood overlays for hexagonal, MST, and RNG on a synthetic sklearn circles dataset. We use this panel only as geometric intuition for the topology comparisons that follow; the quantitative results remain the paired $QE$ analyses in Figs. 4-5 and Fig. S5.
 
 ![Figure 3](assets_manual/figures/fig_3.svg)
 *Figure 3. Representative figure for XPySOM default run Hexagonal, MST, and RNG neighborhood node and connection overlays on a 30,000 datapoint synthetic sklearn circles dataset.*
 
 #### 5.3.1 MST
+
+In Fig. 3, MST relaxes the fixed hexagonal mesh into a tree-structured neighborhood without cycles. For completeness, we also ran a default-setting FloatSOM MST configuration against XPySOM under the same seed-matched and train-holdout setup (Supplementary Fig. S1). This was intentionally done with XPySOM-equivalent default batch settings for equivalence calibration. Notwithstanding that these are inherited hexagonal hyperparameters, MST still outperforms the default hexagonal baseline, indicating prima facie that the MST topology is already favorable relative to the current regular-topology reference even before topology-specific tuning is applied.
 
 We use dataset-wise paired improvement summaries (Hexagonal over MST) with the same reporting logic as Section 5.1, centered on $QE_B$. We report $QE_H$ and $QE_T$ separately for Hexagonal versus MST to expose train/holdout trade-offs. The main Hexagonal-versus-MST topology figure (Fig. 4) is an outcomes-only tripanel across $QE_B$, $QE_H$, and $QE_T$.
 
@@ -305,16 +305,22 @@ We use dataset-wise paired improvement summaries (Hexagonal over MST) with the s
 MST has lower QE than matched hexagonal on the reported endpoints (Fig. 4A-4C), with overall paired t-test p-values of Balanced QE (p=1.12e-05); Holdout QE (p=0.15); and Train QE (p=0.0064). Supplementary Table S5 lists the per-dataset and overall hexagonal-comparison p-values for MST and RNG.
 <!-- AUTO-TOPOLOGY-MST-PVALUES:END -->
 
+Across the tested top-$k$ range, the Hexagonal-versus-MST comparison remains directionally stable, indicating that the observed effect is not an artifact of a single pairing cutoff; the corresponding sensitivity analysis is provided in Fig. S6.
+
 ![Figure 4](assets_manual/figures/fig_4.svg)
 *Figure 4. Hexagonal versus MST topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 #### 5.3.2 RNG
+
+In Fig. 3, RNG allows a less constrained graph neighborhood than MST, retaining locally mesh-like connectivity where geometry supports it while also permitting freer non-mesh edges where the prototype arrangement becomes irregular. Again, for completeness, we also ran a default-setting FloatSOM RNG configuration against XPySOM under the same seed-matched and train-holdout setup (Supplementary Fig. S2). Again, even under those inherited hexagonal hyperparameters, RNG still outperforms the default hexagonal baseline, again indicating the RNG topology's strong performance relative to the regular-topology reference even before topology-specific tuning is applied.
 
 We use the same paired reporting logic for Hexagonal versus RNG, again centered on $QE_B$ with $QE_H$ and $QE_T$ reported separately to expose train/holdout trade-offs. The main Hexagonal-versus-RNG topology figure (Fig. 5) is likewise an outcomes-only tripanel across $QE_B$, $QE_H$, and $QE_T$.
 
 <!-- AUTO-TOPOLOGY-RNG-PVALUES:START -->
 RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 5A-5C), with overall paired t-test p-values of Balanced QE (p=7.4e-10); Holdout QE (p=0.0232); and Train QE (p=4.69e-06). Supplementary Table S5 lists the per-dataset and overall hexagonal-comparison p-values for MST and RNG.
 <!-- AUTO-TOPOLOGY-RNG-PVALUES:END -->
+
+Similar to the MST results, across the tested top-$k$ range, the Hexagonal-versus-RNG comparison likewise remains directionally stable; the corresponding sensitivity analysis is provided in Fig. S7. The direct MST-versus-RNG sensitivity comparison is reported separately in Fig. S8.
 
 ![Figure 5](assets_manual/figures/fig_5.svg)
 *Figure 5. Hexagonal versus RNG topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
