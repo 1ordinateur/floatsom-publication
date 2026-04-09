@@ -1,0 +1,105 @@
+:root {
+  --paper-max-width: 42em;
+  --paper-padding-x: 32px;
+  --paper-padding-y: 44px;
+  --figure-bleed-screen: 24px;
+  --figure-bleed-print: 8mm;
+}
+
+html {
+  color: #1a1a1a;
+  background-color: #fdfdfd;
+}
+
+body {
+  margin: 0 auto;
+  max-width: var(--paper-max-width);
+  padding: var(--paper-padding-y) var(--paper-padding-x);
+  hyphens: auto;
+  overflow-wrap: break-word;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+svg {
+  height: auto;
+  max-width: 100%;
+}
+
+figure {
+  margin: 1.5em 0;
+}
+
+/* Let figures extend half a margin width on each side without widening captions. */
+figure > img,
+figure > svg {
+  display: block;
+  width: calc(100% + var(--figure-bleed-screen) + var(--figure-bleed-screen));
+  max-width: none;
+  margin-left: calc(-1 * var(--figure-bleed-screen));
+  margin-right: calc(-1 * var(--figure-bleed-screen));
+}
+
+figure > figcaption {
+  margin-top: 0.75em;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --paper-padding-x: 14px;
+    --paper-padding-y: 16px;
+    --figure-bleed-screen: 0px;
+  }
+
+  body {
+    font-size: 0.9em;
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm;
+  }
+
+  html {
+    background-color: white;
+  }
+
+  body {
+    background-color: transparent;
+    color: black;
+    max-width: none;
+    padding: 0;
+    font-size: 12pt;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3,
+  h4 {
+    page-break-after: avoid;
+  }
+
+  figure > img,
+  figure > svg {
+    width: calc(100% + var(--figure-bleed-print) + var(--figure-bleed-print));
+    margin-left: calc(-1 * var(--figure-bleed-print));
+    margin-right: calc(-1 * var(--figure-bleed-print));
+  }
+}

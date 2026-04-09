@@ -1,0 +1,12 @@
+from: markdown+tex_math_dollars
+to: html5
+standalone: true
+embed-resources: true
+html-math-method: mathjax
+citeproc: true
+bibliography:
+  - floatsom_bibliography.bib
+css:
+  - pandoc-paper.css
+resource-path:
+  - .

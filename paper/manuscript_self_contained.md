@@ -22,7 +22,7 @@ Our experimental program centers on five outcomes: 1. Above 10,000 samples, full
 
 ## 2. Related Work
 
-Sampling strategies in SOM pipelines are primarily motivated by computational efficiency. Full-data training can be expensive for large or high-dimensional datasets, so the practical objective is to approximate the effect of training on the full dataset while processing fewer observations. When the sampled data remain sufficiently representative, this can preserve map quality while reducing wall-clock time. This quality-throughput tradeoff is why sampling methodology is a first-order design choice in scalable SOM workflows.
+Sampling strategies in SOM pipelines are primarily motivated by computational efficiency. Full-data training can be expensive for large or high-dimensional datasets, so the practical objective is to approximate the effect of training on the full dataset while processing fewer observations. When the sampled data remain sufficiently representative, this can preserve map quality while reducing wall-clock time. This quality-throughput tradeoff is why sampling methodology is a first-order design choice in scalable SOM workflows. This sampling question is distinct from the separate online-versus-batch training choice: a SOM can use full or random sampling under either update regime, whereas online and batch refer to how updates are accumulated and applied.
 
 ### 2.1 Sampling Methodologies for SOM Training
 
@@ -32,7 +32,7 @@ Beyond naive random sampling, additional methods have aimed to improve quality-t
 
 ### 2.2 Python SOM Implementations
 
-Classical Python SOM usage has been influenced by MiniSom-style interfaces (Vettigli 2026). Within this ecosystem, XPySOM is a high-performance Python implementation and a useful contextual reference for batch-SOM behavior. XPySOM is explicitly described as a batch SOM derived from MiniSom with NumPy/CuPy backends, and reports algorithm-level optimization and acceleration in single-process execution while maintaining competitive $`QE`$ behavior (Mancini et al. 2020).
+Classical Python SOM usage has been influenced by MiniSom-style interfaces (Vettigli 2026). Within this ecosystem, XPySOM is a high-performance Python implementation and a useful contextual reference for batch-SOM behavior. XPySOM is explicitly described as a batch SOM derived from MiniSom with NumPy/CuPy backends, and reports algorithm-level optimization and acceleration in single-process execution while maintaining competitive $`QE`$ behavior (Mancini et al. 2020). More broadly, the open-source systems that have reached the largest workloads are predominantly batch-based rather than classical online/sample-wise trainers, because batch updates align more naturally with vectorized linear algebra, GPU kernels, and chunked memory management.
 
 We do not include MiniSom as a full benchmark baseline in the remaining experiments. This scope choice is based on two factors: prior literature already supports the expected batch-SOM behavior for this class of implementation, and MiniSom runtime becoming prohibitive at our target scale of millions of samples. Using iteration-matched training semantics, the standard benchmark configuration used in this manuscript, with $`10^7`$ samples, 50 dimensions, a $`32 \times 32`$ grid, and 10 iterations, requires MiniSom more than 12 hours to complete, making it impractical for the full comparative campaign.
 
