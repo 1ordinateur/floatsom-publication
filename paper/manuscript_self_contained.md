@@ -38,7 +38,7 @@ Within that framing, random sampling usually appears in two forms. In a fixed-su
 
 ### 2.3 Regular Grids and Alternative Topologies
 
-Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates (Kohonen 1990; Kohonen 2013). Hexagonal grids are often preferred in the literature because their neighborhood geometry is more isotropic and tends to reduce directional bias relative to rectangular grids (Kohonen 2013; Forest et al. 2020). More broadly, the dominance of regular grids in software is as much a systems convenience as it is an algorithmic preference.
+Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates (Kohonen 1990; Kohonen 2013). Hexagonal grids are often preferred in the literature because their neighborhood geometry is more isotropic and tends to reduce directional bias relative to rectangular grids (Kohonen 2013; Forest et al. 2020). This preference is also consistent with broader tessellation work showing different, and often superior, behavior for hexagonal versus square neighborhood structures in spatial and quantization settings (White and Kiester 2008). More broadly, the dominance of regular grids in software is as much a systems convenience as it is an algorithmic preference.
 
 At the same time, the SOM literature has long explored alternatives to fixed lattices. Some work modifies neighborhood functions while retaining the lattice (Aoki and Aoyagi 2007). Other work allows the map to grow, move, or adapt during training, as in DBGSOM and AMSOM (Vasighi et al. 2017; Spanakis and Weiss 2016). Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work (Kangas et al. 1989, 1990) and later smaller-scale MST-based analyses (Jang et al. 2009). Relative Neighborhood Graphs provide another geometry-driven sparse graph family that is well established in computational geometry (Toussaint 1980), but has seen little adoption in openly available SOM toolchains.
 
@@ -95,7 +95,7 @@ After BMU evaluation, processed samples update their stored difficulty through a
 
 ### 3.2 MST Topology Implementation
 
-We next define the first topology contribution: MST neighborhoods computed from prototype geometry rather than fixed lattice adjacency. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance regarding neighborhood isotropy and reduced directional bias (Kohonen 2013; Forest et al. 2020).
+We next define the first topology contribution: MST neighborhoods computed from prototype geometry rather than fixed lattice adjacency. For regular-lattice baselines, we support both grid and hexagonal layouts, but we treat hexagonal as the standard topology reference in this manuscript based on prior SOM guidance regarding neighborhood isotropy and reduced directional bias (Kohonen 2013; Forest et al. 2020), together with broader tessellation evidence favoring hexagonal over square neighborhood structures in related spatial and quantization settings (White and Kiester 2008).
 
 MST topology replaces fixed lattice neighborhood distance with graph shortest-path distance on a minimum spanning tree built from current prototypes. For $`P`$ prototype nodes in feature dimension $`d`$, the pairwise prototype matrix is formed with the standard squared-distance Gram identity, which avoids 3D broadcast tensors and preserves $`O(P^2 d)`$ dense linear-algebra structure.
 
@@ -123,7 +123,7 @@ Output: topology state (E_t, g_t, cached influences)
 
 ### 3.3 RNG Topology Implementation
 
-RNG is our second topology contribution. RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion (Toussaint 1980), and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling.
+RNG is our second topology contribution. RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion (Toussaint 1980), and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling. Relative Neighborhood Graphs are less constrained than MSTs because they are not restricted to a single spanning-tree backbone with exactly one route between connected prototypes. Instead, when local geometric evidence supports multiple neighborhood relations, RNG can retain those connections rather than forcing the structure through only one edge choice per region. Our working hypothesis is that this added flexibility will permit more faithful recovery of real data-local connections and, as a consequence, can yield superior results relative to MST when the underlying geometry is not well represented by a strictly tree-like topology.
 
 Candidate elimination is evaluated in chunks to control memory pressure while preserving the direct strict blocker test. No post-hoc connectivity repair is applied after edge extraction; the topology is defined entirely by the canonical RNG criterion.
 
