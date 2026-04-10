@@ -1119,10 +1119,13 @@ scales.</p>
 regime ( <span class="math inline">\(`&gt;`\)</span> RAM capacity).
 There, the dominant bottleneck shifts away from pure compute and toward
 disk-read behavior and transfer into node-local storage. In the current
-implementation, the random path still reads the full chunk before
-subsampling within it and also incurs an additional dataset-cloning
-cost, so the runtime reduction is no longer linearly proportional to the
-sampling fraction in that regime. We also retain a chunk-read-only
+implementation, the random path still reads each touched worker-local
+chunk before subsampling within it. Data are distributed as
+worker-local shards rather than cloned in full to every worker, so the
+limiting factor here is not per-worker dataset replication but the fact
+that each touched chunk still follows the same shard-read and staging
+path; the runtime reduction is therefore no longer linearly
+proportional to the sampling fraction in that regime. We also retain a chunk-read-only
 acceleration path as a possible further optimization, but its stability
 has not yet been tested and remains ongoing work. Because that path
 would restrict randomness to each loaded chunk, it should be treated as
@@ -1225,9 +1228,10 @@ work because global collectives occur once per iteration, after local
 chunk accumulation, rather than after each chunk.</p>
 <p>The random-sampling scaling behavior should be interpreted separately
 from that super-efficiency pattern. In the current implementation,
-random sampling still reads the full chunk before subsampling within
-that chunk and also incurs an additional dataset-cloning cost. Its
-scaling behavior therefore remains tied to the same I/O and staging path
+random sampling still reads each touched worker-local chunk before
+subsampling within that chunk. Data are distributed as worker-local
+shards rather than cloned in full to every worker, so its scaling
+behavior remains tied to the same shard-read, I/O, and staging path
 even though fewer samples are ultimately used, which is why random
 sampling does not preserve the stronger near-linear speedup seen at
 smaller scales. To address this shortcoming, we introduced a

@@ -1414,7 +1414,7 @@ def _sync_default_aware_stats_to_manuscript(
     conclusion_sentence = (
         "This manuscript reports four main findings: in iteration-matched comparisons, "
         "full and random show no meaningful paired QE difference in larger datasets (>10000 samples), "
-        "while random provides runtime gains and smaller datasets show greater random instability; "
+        "while random provides runtime gains on smaller datasets, where it also shows greater random instability; "
         "graph topologies show lower QE than fixed hexagonal structure, with RNG showing the lowest QE in these comparisons; "
         f"default-aware analyses over {pair_count_phrase}, drawn from {n_datasets} datasets, {n_seeds} seeds"
     )
