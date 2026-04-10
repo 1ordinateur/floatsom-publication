@@ -1451,11 +1451,12 @@ def test_sync_default_aware_stats_to_manuscript_updates_live_counts(
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
     assert (
-        "The tuned-versus-default pairing results in Fig. 6 show the same direction across the $QE$ endpoints, "
+        "The tuned-versus-reference pairing results in Fig. 7 show the same direction across the $QE$ endpoints, "
         "based on n=2 paired comparisons per $QE$ endpoint (n=6 total across all $QE$ variants "
         "$QE_B$/$QE_H$/$QE_T$) from 2 datasets, 2 seeds, and the full and random sampling modes."
     ) in updated_text
-    assert "The current matched Figure 6 source spans topologies hexagonal and rng." in updated_text
+    assert "The current matched Figure 6 source spans topologies" not in updated_text
+    assert "The current matched Figure 7 source spans topologies" not in updated_text
     assert (
         "Across the matched pairs, tuned settings improve Balanced QE in 1/2 pairs (1 ties), "
         "with median and mean improvements of 10.00% and 10.00%; Holdout QE in 1/2 pairs (1 worse), "

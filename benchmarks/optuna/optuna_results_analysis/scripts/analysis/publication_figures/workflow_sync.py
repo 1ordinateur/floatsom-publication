@@ -1333,22 +1333,8 @@ def _sync_default_aware_stats_to_manuscript(
     n_seeds = len(pair_metadata.get("seeds", [])) if pair_metadata is not None else 0
     sampling_modes_text = _plain_text_join(pair_metadata.get("sampling_modes", [])) if pair_metadata is not None else ""
 
-    def _format_topology_name(value: object) -> str:
-        text = str(value).strip().lower()
-        if text == "mst":
-            return "MST"
-        if text == "rng":
-            return "RNG"
-        return text
-
-    topologies_text = (
-        _plain_text_join([_format_topology_name(value) for value in pair_metadata.get("topologies", [])])
-        if pair_metadata is not None
-        else ""
-    )
-
     results_sentence = (
-        "The tuned-versus-default pairing results in Fig. 6 show the same direction across the $QE$ endpoints, "
+        "The tuned-versus-reference pairing results in Fig. 7 show the same direction across the $QE$ endpoints, "
         f"based on {pair_count_phrase} from {n_datasets} datasets, {n_seeds} seeds"
     )
     if sampling_modes_text:
@@ -1356,10 +1342,6 @@ def _sync_default_aware_stats_to_manuscript(
     results_sentence += "."
 
     fig6_lines = [results_sentence]
-    if topologies_text:
-        fig6_lines.append(
-            f"The current matched Figure 6 source spans topologies {topologies_text}."
-        )
     metric_phrases: List[str] = []
     for row in metric_rows:
         extras: List[str] = []
