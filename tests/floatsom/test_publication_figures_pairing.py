@@ -1629,16 +1629,24 @@ def test_sync_systems_scaling_stats_to_manuscript(
             {"mode_name": "sample_scaling", "mode_label": "Sample Scaling", "topology": "rng", "method": "batch", "axis_value": 500000000, "gpu_count": 2, "runtime_mean_s": 181.0, "runtime_std_s": 2.0, "n_repeats": 3, "log_count": 1, "staging_mode": "disk", "staging_modes": "disk", "any_repeat_disk": True, "all_repeats_disk": True},
             {"mode_name": "sample_scaling", "mode_label": "Sample Scaling", "topology": "rng", "method": "batch", "axis_value": 500000000, "gpu_count": 4, "runtime_mean_s": 141.0, "runtime_std_s": 2.0, "n_repeats": 3, "log_count": 1, "staging_mode": "disk", "staging_modes": "disk", "any_repeat_disk": True, "all_repeats_disk": True},
             {"mode_name": "sample_scaling", "mode_label": "Sample Scaling", "topology": "rng", "method": "batch", "axis_value": 1000000000, "gpu_count": 8, "runtime_mean_s": 543.21, "runtime_std_s": 2.0, "n_repeats": 3, "log_count": 1, "staging_mode": "disk", "staging_modes": "disk", "any_repeat_disk": True, "all_repeats_disk": True},
+            {"mode_name": "grid_size_scaling", "mode_label": "Grid-Size Scaling", "topology": "rng", "method": "batch", "axis_value": 64, "gpu_count": 1, "runtime_mean_s": 934.0, "runtime_std_s": 2.0, "n_repeats": 3, "log_count": 1, "staging_mode": "ram", "staging_modes": "ram", "any_repeat_disk": False, "all_repeats_disk": False},
+            {"mode_name": "grid_size_scaling", "mode_label": "Grid-Size Scaling", "topology": "rng", "method": "batch", "axis_value": 64, "gpu_count": 8, "runtime_mean_s": 881.0, "runtime_std_s": 2.0, "n_repeats": 3, "log_count": 1, "staging_mode": "ram", "staging_modes": "ram", "any_repeat_disk": False, "all_repeats_disk": False},
         ]
     ).to_csv(diagnostics_path, sep="\t", index=False)
+    pd.DataFrame(
+        [
+            {"topology": "floatsom", "method": "full", "sample_size": 1000000000, "gpu_count": 4, "train_time_mean_s": 952.18},
+            {"topology": "floatsom", "method": "random", "sample_size": 1000000000, "gpu_count": 4, "train_time_mean_s": 582.71},
+        ]
+    ).to_csv(assets_dir / "tables" / "xpysom_scaling_results_4gpu.csv", index=False)
 
     summary = publication_figures_module._sync_systems_scaling_stats_to_manuscript()
 
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
-    assert "all tested GPU counts eventually transition into disk mode" in updated_text
-    assert "1 GPU at 1,000 dimensions to 8 GPUs at 5,000 dimensions" in updated_text
-    assert "1 GPU at 100,000,000 samples to 8 GPUs at 1,000,000,000 samples" in updated_text
+    assert "The available staging diagnostics show that disk-backed execution is pushed to larger workloads as GPU count increases" in updated_text
+    assert "in dimension scaling, the crossover shifts from 1 GPU at 1,000 dimensions to 8 GPUs at 5,000 dimensions" in updated_text
+    assert "in sample scaling, it shifts from 1 GPU at 100,000,000 samples to 8 GPUs at 1,000,000,000 samples" in updated_text
     assert (
         "The 8-GPU RNG configuration processes 1,000,000,000 samples in 543.21 s (9.05 min), "
         "demonstrating billion-sample training at a runtime measured in minutes rather than hours "
@@ -1646,6 +1654,10 @@ def test_sync_systems_scaling_stats_to_manuscript(
         "distributed execution with data staged from shared non-local storage to node-local shards "
         "before training."
     ) in updated_text
+    assert "This links the Fig. 9 random-versus-full result to the multi-GPU/OOM scaling result" in updated_text
+    assert "moving from random to full adds 369.47 s (6.16 min) (+63.40%)" in updated_text
+    assert "The grid-size panel is the main exception" in updated_text
+    assert "runtime changes only from 934.00 s (15.57 min) on 1 GPU to 881.00 s (14.68 min) on 8 GPUs" in updated_text
     assert "stale systems block" not in updated_text
 
 
