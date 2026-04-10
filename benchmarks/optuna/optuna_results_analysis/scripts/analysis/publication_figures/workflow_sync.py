@@ -615,7 +615,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
                 qe_paragraph = (
                     "At the overall level, Fig. 11 shows median percentage improvements of "
                     + metric_text
-                    + " for tuned FloatSOM RNG relative to default XPySOM, capturing the combined "
+                    + " for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined "
                     "deployment effect of topology choice and tuning on $QE$."
                 )
                 qe_stats_source = str(deployment_summary_path)
@@ -631,9 +631,8 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
         }
 
     paragraph = (
-        "The targeted deployment-scale runs indicate that these quality gains are not purchased at the "
-        "cost of a qualitatively different runtime profile: applying the tuned defaults used in Fig. 11 "
-        "does not strongly alter the distributed scaling behavior established by the earlier results "
+        "In the deployment comparison, tuned FloatSOM RNG delivers better $QE$ than the default "
+        "hexagonal XPySOM baseline, while also running faster and scaling to larger workloads "
         "(Supplementary Table S9)."
     )
 
