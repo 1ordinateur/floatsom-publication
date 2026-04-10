@@ -248,51 +248,60 @@ def _sync_sampling_regression_stats_to_manuscript(
 
     start_marker = "<!-- AUTO-SAMPLING-REGRESSION-STATS:START -->"
     end_marker = "<!-- AUTO-SAMPLING-REGRESSION-STATS:END -->"
+    caption_token = "[[AUTO-SAMPLING-REGRESSION-STATS]]"
     if metric_phrases:
         if all("pending" in phrase for phrase in metric_phrases):
-            paragraph = (
-                "Figure 2D-F regression statistics will be populated automatically after the publication "
+            caption_text = (
+                "Differences in QE between random and full stratified by dataset size "
+                "(panels D-F) will be populated automatically after the publication "
                 "figure-generation run."
             )
         else:
-            paragraph = (
-                "Regression of full-versus-random QE difference against dataset sample size (Fig. 2D-F) yielded: "
-                + "; ".join(metric_phrases)
+            if len(metric_phrases) == 1:
+                metric_summary = metric_phrases[0]
+            else:
+                metric_summary = "; ".join(metric_phrases[:-1]) + "; and " + metric_phrases[-1]
+            caption_text = (
+                "Differences in QE between random and full stratified by dataset size "
+                "(panels D-F): "
+                + metric_summary
                 + "."
             )
     else:
-        paragraph = (
-            "Figure 2D-F regression statistics will be populated automatically after the publication "
+        caption_text = (
+            "Differences in QE between random and full stratified by dataset size "
+            "(panels D-F) will be populated automatically after the publication "
             "figure-generation run."
         )
     if metadata_path is not None and metadata_path.exists():
-        paragraph += (
-            " The corresponding Fig. 2 dataset metadata table "
-            "(dataset_index, dataset, dimension_count, sample_size, dataset_type) is exported as "
-            "assets/tables/supp_table_figure_2_sampling_dataset_metadata.csv and listed in "
-            "Supplementary Table S1."
+        caption_text += (
+            " The corresponding dataset metadata table is listed in Supplementary Table S1."
         )
     block_body = "\n".join(
         [
             start_marker,
-            paragraph,
             end_marker,
         ]
     )
 
     manuscript_text = manuscript_path.read_text(encoding="utf-8")
-    start_idx = manuscript_text.find(start_marker)
-    end_idx = manuscript_text.find(end_marker)
+    updated_text = manuscript_text
+    if caption_token in updated_text:
+        updated_text = updated_text.replace(caption_token, caption_text)
+    start_idx = updated_text.find(start_marker)
+    end_idx = updated_text.find(end_marker)
     if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
         end_idx += len(end_marker)
-        updated_text = manuscript_text[:start_idx] + block_body + manuscript_text[end_idx:]
+        updated_text = updated_text[:start_idx] + block_body + updated_text[end_idx:]
     else:
         anchor = "### 5.3 MST Results"
-        anchor_idx = manuscript_text.find(anchor)
-        if anchor_idx == -1:
-            updated_text = manuscript_text.rstrip() + "\n\n" + block_body + "\n"
-        else:
-            updated_text = manuscript_text[:anchor_idx].rstrip() + "\n\n" + block_body + "\n\n" + manuscript_text[anchor_idx:]
+        anchor_idx = updated_text.find(anchor)
+        if caption_token not in manuscript_text:
+            fallback_body = "\n".join([start_marker, caption_text, end_marker])
+            if anchor_idx == -1:
+                updated_text = updated_text.rstrip() + "\n\n" + fallback_body + "\n"
+            else:
+                updated_text = updated_text[:anchor_idx].rstrip() + "\n\n" + fallback_body + "\n\n" + updated_text[anchor_idx:]
 
     if updated_text == manuscript_text:
         return {

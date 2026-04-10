@@ -450,10 +450,10 @@ def _render_tuned_vs_default_publication_figure(
                 metric_slug=metric_slug,
                 plot_df=plot_df,
                 output_path=figure_path,
-                title=f"Tuned vs True Default ({metric_label})",
+                title=f"Tuned Configuration vs Untuned Reference ({metric_label})",
                 subtitle=(
                     "Paired effect with 95% paired t-test CI. "
-                    "Positive means tuned outperforms true default; global pools all matched pairs."
+                    "Positive means tuned configuration outperforms untuned reference; global pools all matched pairs."
                 ),
                 stats_table_output_path=stats_path,
             )
@@ -490,7 +490,7 @@ def _render_tuned_vs_default_publication_figure(
             output_path=combined_figure,
             dpi=int(dpi),
             legend_path=legend_path if legend_path is not None and legend_path.exists() else None,
-            direction_label=_direction_banner_text(left_label="True Default", right_label="Tuned"),
+            direction_label=_direction_banner_text(left_label="Untuned Reference", right_label="Tuned Configuration"),
             generated_files=generated_files,
             external_y_labels=top_row_dataset_labels,
             shared_x_label=CANONICAL_PUBLICATION_QE_CHANGE_LABEL,
@@ -2974,7 +2974,7 @@ def _build_default_aware_pairing_variants(
             "df": selected_df,
             "output_subdir": "tuned_vs_default",
             "markdown_filename": "TUNED_VS_TRUE_DEFAULT_PAIRED_TTEST.md",
-            "figure_title": "Figure 6: Tuned vs True Default Across QE Metrics",
+            "figure_title": "Figure 6: Tuned Configuration vs Untuned Reference Across QE Metrics",
         }
     ]
     if include_selected_topology_variants and "pair_topology" in selected_df.columns:
@@ -2999,7 +2999,7 @@ def _build_default_aware_pairing_variants(
                     ),
                     "figure_title": (
                         f"Supplementary Figure S{9 if topology_slug == 'hex' else 10 if topology_slug == 'mst' else 11}: "
-                        f"Tuned vs True Default Across QE Metrics ({topology_label})"
+                        f"Tuned Configuration vs Untuned Reference Across QE Metrics ({topology_label})"
                     ),
                 }
             )
@@ -3015,7 +3015,7 @@ def _build_default_aware_pairing_variants(
                 "df": base_df,
                 "output_subdir": "tuned_vs_default_data_file",
                 "markdown_filename": "TUNED_VS_TRUE_DEFAULT_PAIRED_TTEST_DATA_FILE.md",
-                "figure_title": "Figure 6: Tuned vs True Default Across QE Metrics",
+                "figure_title": "Figure 6: Tuned Configuration vs Untuned Reference Across QE Metrics",
             }
         )
     return variants
@@ -3068,7 +3068,7 @@ def _run_tuned_vs_default_variant(
         dpi=int(dpi),
         alpha=float(alpha),
         combined_figure_title=str(
-            variant.get("figure_title", "Figure 6: Tuned vs True Default Across QE Metrics")
+            variant.get("figure_title", "Figure 6: Tuned Configuration vs Untuned Reference Across QE Metrics")
         ),
     )
     return {

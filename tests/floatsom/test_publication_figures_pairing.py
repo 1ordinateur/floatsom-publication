@@ -606,7 +606,7 @@ def test_render_tuned_vs_default_publication_figure_uses_figure_7_title(
 
     assert output["generated"] is True
     combined_svg = (tuned_dir / "figures" / "fig_tuned_vs_true_default_metrics.svg").read_text(encoding="utf-8")
-    assert "Figure 7: Tuned vs True Default Across QE Metrics" in combined_svg
+    assert "Figure 7: Tuned Configuration vs Untuned Reference Across QE Metrics" in combined_svg
 
 
 def test_compose_three_panel_stats_figure_uses_auto_shared_xlabel_positioning(
@@ -1662,6 +1662,7 @@ def test_sync_sampling_regression_stats_to_manuscript_uses_plain_text(
         "\n".join(
             [
                 "Sampling intro.",
+                "*Figure 3. Base caption. [[AUTO-SAMPLING-REGRESSION-STATS]]*",
                 "<!-- AUTO-SAMPLING-REGRESSION-STATS:START -->",
                 "stale sampling block",
                 "<!-- AUTO-SAMPLING-REGRESSION-STATS:END -->",
@@ -1718,16 +1719,17 @@ def test_sync_sampling_regression_stats_to_manuscript_uses_plain_text(
 
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
+    assert "Differences in QE between random and full stratified by dataset size (panels D-F):" in updated_text
     assert "Balanced QE (Pearson R=-0.761, p=0.00158, n=14)" in updated_text
     assert "Holdout QE (Pearson R=-0.743, p=0.00235, n=14)" in updated_text
     assert "Train QE (Pearson R=-0.653, p=0.0113, n=14)" in updated_text
     assert (
-        "The corresponding Fig. 2 dataset metadata table (dataset_index, dataset, "
-        "dimension_count, sample_size, dataset_type) is exported as "
-        "assets/tables/supp_table_figure_2_sampling_dataset_metadata.csv and listed in Supplementary Table S1."
+        "The corresponding dataset metadata table is listed in Supplementary Table S1."
     ) in updated_text
+    assert "[[AUTO-SAMPLING-REGRESSION-STATS]]" not in updated_text
+    assert "stale sampling block" not in updated_text
     assert "`R=" not in updated_text
-    assert "`assets/tables/supp_table_figure_2_sampling_dataset_metadata.csv`" not in updated_text
+    assert "assets/tables/supp_table_figure_2_sampling_dataset_metadata.csv" not in updated_text
 
 
 def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table(
