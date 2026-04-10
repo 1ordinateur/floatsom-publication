@@ -1572,7 +1572,7 @@ def test_sync_topology_pvalue_summary_to_paper_and_manuscript(
     assert summary["generated"] is True
     assert "Balanced QE (p=0.00091); Holdout QE (p=0.0032); and Train QE (p=0.0045)." in updated_text
     assert "Balanced QE (p=0.00012); Holdout QE (p=0.00034); and Train QE (p=0.00056)." in updated_text
-    assert "Supplementary Table S5" in updated_text
+    assert "Supplementary Table S6" in updated_text
     assert "`assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`" in updated_text
 
     paper_table_path = assets_dir / "tables" / "supp_table_topology_hex_vs_mst_rng_pvalues.tsv"

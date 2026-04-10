@@ -847,15 +847,18 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
     mst_phrases = _overall_metric_phrases("hex_vs_mst")
     rng_phrases = _overall_metric_phrases("hex_vs_rng")
     mst_sentence = (
-        "MST has lower QE than matched hexagonal on the reported endpoints for all measures in Balacned QE "
-        "and training-QE (Fig. 4A-4C)."
+        "Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 5A), indicating a net advantage across "
+        "train and holdout performance. This aggregate gain is driven more clearly by Train QE (Fig. 5C), while "
+        "Holdout QE is more mixed across datasets (Fig. 5B)."
     )
     if mst_phrases:
         mst_sentence = (
-            "MST has lower QE than matched hexagonal on the reported endpoints (Fig. 4A-4C), with overall paired "
-            "t-test p-values of "
+            "Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 5A), indicating a net advantage "
+            "across train and holdout performance. This aggregate gain is driven more clearly by Train QE "
+            "(Fig. 5C), while Holdout QE is more mixed across datasets (Fig. 5B) and shows no clear overall "
+            "holdout advantage. The overall paired t-test p-values are "
             + _join_metric_phrases(mst_phrases)
-            + ". Supplementary Table S5 lists the per-dataset and overall hexagonal-comparison p-values for MST "
+            + ". Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST "
             "and RNG."
         )
 
@@ -865,15 +868,15 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
     )
     if rng_phrases:
         rng_sentence = (
-            "RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 5A-5C), with overall paired "
+            "RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 6A-6C), with overall paired "
             "t-test p-values of "
             + _join_metric_phrases(rng_phrases)
-            + ". Supplementary Table S5 lists the per-dataset and overall hexagonal-comparison p-values for MST "
+            + ". Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST "
             "and RNG."
         )
 
     supp_table_caption = (
-        "**Supplementary Table S5. Paired topology-comparison p-values for hexagonal versus MST and hexagonal "
+        "**Supplementary Table S6. Paired topology-comparison p-values for hexagonal versus MST and hexagonal "
         "versus RNG across Balanced QE, Holdout QE, and Train QE.** Rows list metric/dataset entries, including "
         "the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. "
         "See `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
@@ -914,14 +917,14 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
         start_marker=mst_start,
         end_marker=mst_end,
         block_body=mst_block,
-        anchor="![Figure 4](assets_manual/figures/fig_4.svg)",
+        anchor="![Figure 5](assets_manual/figures/fig_4.svg)",
     )
     updated_text = _upsert_block(
         updated_text,
         start_marker=rng_start,
         end_marker=rng_end,
         block_body=rng_block,
-        anchor="![Figure 5](assets_manual/figures/fig_5.svg)",
+        anchor="![Figure 6](assets_manual/figures/fig_5.svg)",
     )
     updated_text = _upsert_block(
         updated_text,
