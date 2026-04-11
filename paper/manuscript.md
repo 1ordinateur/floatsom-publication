@@ -389,7 +389,7 @@ This establishes the main speed penalty associated with choosing the more faithf
 
 We next examine what additional GPUs buy at the systems level. To maximally stress-test the implementation, we employ harmonized full-batch processing across $G\in\{1,2,4,8\}$ GPUs and evaluate performance in the regime where RAM is no longer the limiting factor, allowing us to probe the computational limits leading up to out-of-memory (OOM) conditions. Under these conditions, runtime and efficiency exhibit consistent scaling behavior across workloads (Fig. 10). The practical timeout boundary also shifts with GPU count in the sample-scaling panel: the 1-GPU configuration times out at 500M samples, whereas the 2-GPU configuration reaches 500M but times out at 1B under the benchmark wall-clock limit.
 
-![Figure 10](assets_manual/figures/fig_9.svg)
+![Figure 10](assets_manual/figures/fig_9_coloured.svg)
 
 *Figure 10. Multi-GPU full-batch scaling across $G\in\{1,2,4,8\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\% efficiency reference line indicates ideal linear scaling.*
 

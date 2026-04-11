@@ -1,1 +1,71 @@
-<svg width="720" height="1280" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><g><rect x="0" y="0" width="720" height="1280" fill="#FFFFFF"/><rect x="119" y="60" width="346" height="440" stroke="#000000" stroke-width="2" stroke-miterlimit="8" fill="none"/><rect x="130" y="75" width="149" height="58" fill="#FCF059"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="24" transform="translate(164.577 111)">Sample</text><rect x="306" y="75" width="149" height="58" fill="#FCF059"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(351.397 99)">Random</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(367.904 118)">Full</text><rect x="306" y="204" width="149" height="58" fill="#FFFFFF"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="24" transform="translate(340.757 231)">Training</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(355.891 253)">(Batch)</text><rect x="130" y="204" width="149" height="58" fill="#F3A447"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="24" transform="translate(158.421 241)">Topology</text><path d="M279 232 299.982 232 299.982 234 279 234ZM298.649 229 306.649 233 298.649 237Z"/><rect x="130" y="273" width="149" height="86" fill="#F3A447"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(162.274 293)">Rectangular</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(167.634 312)">Hexagonal</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(189.647 331)">MST</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(187.994 350)">RN</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(208.994 350)">G</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="24" transform="translate(234.343 426)">Compute Framework</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(379.923 448)">Local</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(421.036 448)">GPU</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(292.036 467)">Single</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(334.203 467)">-</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(339.703 467)">Node Multi</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(415.536 467)">-</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(421.036 467)">GPU</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(339.703 486)">Multi</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(374.536 486)">-</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(380.036 486)">Node</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(421.036 486)">GP</text><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="400" font-size="16" transform="translate(441.536 486)">U</text><path d="M0-1 36.8501-1 36.8501 176.533 35.8501 175.533 65.0336 175.533 65.0336 177.533 34.8501 177.533 34.8501 0 35.8501 1 0 1ZM63.7003 172.533 71.7003 176.533 63.7003 180.533Z" transform="matrix(1.83697e-16 1 1 -1.83697e-16 204 133)"/></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 348.2 442.09">
+  <!-- Generator: Adobe Illustrator 30.3.0, SVG Export Plug-In . SVG Version: 2.1.3 Build 182)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #f3a447;
+      }
+
+      .st1 {
+        font-size: 16px;
+      }
+
+      .st1, .st2 {
+        font-family: ArialMT, Arial;
+        isolation: isolate;
+      }
+
+      .st3 {
+        fill: #fff;
+      }
+
+      .st2 {
+        font-size: 24px;
+      }
+
+      .st4 {
+        fill: #fcf059;
+      }
+
+      .st5 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 8;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <rect class="st5" x="1.15" y=".99" width="346" height="440"/>
+  <rect class="st4" x="12.15" y="15.99" width="149" height="58"/>
+  <text class="st2" transform="translate(46.73 51.99)"><tspan x="0" y="0">Sample</tspan></text>
+  <rect class="st4" x="188.15" y="15.99" width="149" height="58"/>
+  <text class="st1" transform="translate(233.55 39.99)"><tspan x="0" y="0">Random</tspan></text>
+  <text class="st1" transform="translate(250.05 58.99)"><tspan x="0" y="0">Full</tspan></text>
+  <rect class="st3" x="188.15" y="144.99" width="149" height="58"/>
+  <text class="st2" transform="translate(222.91 171.99)"><tspan x="0" y="0">Training</tspan></text>
+  <text class="st1" transform="translate(238.04 193.99)"><tspan x="0" y="0">(Batch)</tspan></text>
+  <rect class="st0" x="12.15" y="144.99" width="149" height="58"/>
+  <text class="st2" transform="translate(40.57 181.99)"><tspan x="0" y="0">Topology</tspan></text>
+  <path d="M161.15,172.99h20.98v2h-20.98v-2ZM180.8,169.99l8,4-8,4v-8Z"/>
+  <rect class="st0" x="12.15" y="213.99" width="149" height="86"/>
+  <text class="st1" transform="translate(44.42 233.99)"><tspan x="0" y="0">Rectangular</tspan></text>
+  <text class="st1" transform="translate(49.78 252.99)"><tspan x="0" y="0">Hexagonal</tspan></text>
+  <text class="st1" transform="translate(71.8 271.99)"><tspan x="0" y="0">MST</tspan></text>
+  <text class="st1" transform="translate(70.14 290.99)"><tspan x="0" y="0">RN</tspan></text>
+  <text class="st1" transform="translate(91.14 290.99)"><tspan x="0" y="0">G</tspan></text>
+  <text class="st2" transform="translate(116.49 366.99)"><tspan x="0" y="0">Compute Framework</tspan></text>
+  <text class="st1" transform="translate(262.07 388.99)"><tspan x="0" y="0">Local</tspan></text>
+  <text class="st1" transform="translate(303.18 388.99)"><tspan x="0" y="0">GPU</tspan></text>
+  <text class="st1" transform="translate(174.18 407.99)"><tspan x="0" y="0">Single</tspan></text>
+  <text class="st1" transform="translate(216.35 407.99)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st1" transform="translate(221.85 407.99)"><tspan x="0" y="0">Node Multi</tspan></text>
+  <text class="st1" transform="translate(297.68 407.99)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st1" transform="translate(303.18 407.99)"><tspan x="0" y="0">GPU</tspan></text>
+  <text class="st1" transform="translate(221.85 426.99)"><tspan x="0" y="0">Multi</tspan></text>
+  <text class="st1" transform="translate(256.68 426.99)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st1" transform="translate(262.18 426.99)"><tspan x="0" y="0">Node</tspan></text>
+  <text class="st1" transform="translate(303.18 426.99)"><tspan x="0" y="0">GP</tspan></text>
+  <text class="st1" transform="translate(323.68 426.99)"><tspan x="0" y="0">U</tspan></text>
+  <path d="M85.15,73.99v36.85h177.53l-1-1v29.18h2v-30.18H86.15l1,1v-35.85h-2ZM258.68,137.69l4,8,4-8h-8Z"/>
+</svg>
