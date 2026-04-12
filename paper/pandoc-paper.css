@@ -2,8 +2,9 @@
   --paper-max-width: 42em;
   --paper-padding-x: 32px;
   --paper-padding-y: 44px;
-  --figure-bleed-screen: 24px;
-  --figure-bleed-print: 8mm;
+  --figure-bleed-screen: 16px;
+  --figure-bleed-print: 9mm;
+  --print-text-inset: 1mm;
 }
 
 html {
@@ -35,9 +36,10 @@ figure {
   margin: 1.5em 0;
 }
 
-/* Let figures extend half a margin width on each side without widening captions. */
+/* Let images use part of the side margins while keeping captions aligned to text. */
 figure > img,
-figure > svg {
+figure > svg,
+p > img[role="img"] {
   display: block;
   width: calc(100% + var(--figure-bleed-screen) + var(--figure-bleed-screen));
   max-width: none;
@@ -47,6 +49,30 @@ figure > svg {
 
 figure > figcaption {
   margin-top: 0.75em;
+  font-size: 0.75em;
+}
+
+/* Give display math extra breathing room without changing text/figure geometry. */
+span.math.display,
+pre.math,
+math[display="block"] {
+  display: block;
+  margin-top: 0.8em;
+  margin-bottom: 1em;
+}
+
+pre.math {
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+p > img[role="img"] + em {
+  display: block;
+  margin-top: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 0.75em;
+  line-height: 1.35;
 }
 
 @media (max-width: 600px) {
@@ -83,6 +109,30 @@ figure > figcaption {
     font-size: 12pt;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol,
+  dl,
+  table,
+  blockquote,
+  pre,
+  hr {
+    max-width: calc(100% - var(--print-text-inset) - var(--print-text-inset));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  p:has(> img[role="img"]),
+  figure {
+    max-width: 100%;
+  }
+
   p,
   h2,
   h3 {
@@ -97,9 +147,35 @@ figure > figcaption {
   }
 
   figure > img,
-  figure > svg {
-    width: calc(100% + var(--figure-bleed-print) + var(--figure-bleed-print));
-    margin-left: calc(-1 * var(--figure-bleed-print));
-    margin-right: calc(-1 * var(--figure-bleed-print));
+  figure > svg,
+  p > img[role="img"] {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  figure > figcaption {
+    font-size: 9pt;
+    max-width: calc(100% - var(--print-text-inset) - var(--print-text-inset));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  span.math.display,
+  pre.math,
+  math[display="block"] {
+    margin-top: 0.9em;
+    margin-bottom: 1.05em;
+  }
+
+  p > img[role="img"] + em {
+    display: block;
+    margin-top: 0.75em;
+    max-width: calc(100% - var(--print-text-inset) - var(--print-text-inset));
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 9pt;
+    line-height: 1.35;
   }
 }

@@ -2,7 +2,7 @@ from: markdown+tex_math_dollars
 to: html5
 standalone: true
 embed-resources: true
-html-math-method: mathjax
+html-math-method: mathml
 citeproc: true
 bibliography:
   - floatsom_bibliography.bib
