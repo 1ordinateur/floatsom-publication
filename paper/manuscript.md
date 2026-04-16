@@ -447,7 +447,7 @@ However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtim
 
 Taken together, these topology comparisons show that MST and RNG retain broadly similar runtimes with hexagonal in the main sample and dimension-scaling regimes. This is caveated though with the grid-size costs associated with very large numbers of nodes, especially for the RNG topology. 
 
-## 7. Discussion
+## 7. Final FloatSOM RNG Comparison with XPySOM
 
 With the scaling story established, Fig. 13 then tests whether the $QE$ gains from topology choice and tuning persist in deployment against XPySOM, a current high-performance Python SOM baseline in this benchmark context [@manciniXPySomHighPerformanceSelfOrganizing2020].
 
@@ -459,13 +459,11 @@ With the scaling story established, Fig. 13 then tests whether the $QE$ gains fr
 At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined deployment effect of topology choice and tuning on $QE$.
 <!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->
 
-For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed under this benchmark setup because the implementation ran out of GPU VRAM and required the full dataset to be loaded into memory. This deployment comparison therefore provides a concrete endpoint for the speed-scaling story above: the main systems difference is not merely raw runtime at matched scale, but the ability to sustain larger workloads under distributed, out-of-memory-capable execution.
+For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because as the datasets exceeded available VRAM as XPySOM requires the full dataset to be loaded into memory. In sum, tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads (Supplementary Table S7). 
 
-<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:START -->
-In the deployment comparison, tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads (Supplementary Table S7).
-<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:END -->
+## 8. Discussion
 
-### 7.1 Sampling tradeoff (random versus full)
+### 8.1 Sampling tradeoff (random versus full)
 
 These results suggest that the sampling trade-off is strongly scale dependent. In smaller datasets, random subsampling appears to increase update variance because each iteration is supported by fewer observations, which makes outcomes less stable. As dataset size grows, that instability seems to weaken, and under iteration-matched training the quality gap between full and random sampling largely disappears. From this perspective, full sampling is the safer choice when stability is the priority in smaller datasets, whereas random sampling becomes the more practical option when throughput is the dominant concern at larger scales.
 
@@ -473,13 +471,13 @@ This interpretation should be qualified in the very-large-dataset regime ($>$ RA
 
 The single-GPU random crossover between the last successful 100M point and the failed 500M point helps clarify that caveat. At that failed 500M point, the dominant cost appears to have shifted to file transfer and staging overhead rather than the nominal sampling fraction itself. Our interpretation is that single-GPU bandwidth is insufficient for disk-backed operation to behave as efficiently as it does under 2+ GPU execution, where the staging and transfer burden is distributed more effectively. We treat this as a plausible explanation of the observed runtime pattern rather than as an independently benchmarked bandwidth result.
 
-### 7.2 Topology tradeoff (MST and RNG)
+### 8.2 Topology tradeoff (MST and RNG)
 
 The MST result appears to be driven primarily by training-set fidelity rather than by a uniform holdout advantage. One possible interpretation is that the tree-structured neighborhood conforms more efficiently to the occupied training manifold, allowing MST to represent the observed sample geometry with lower train QE than the fixed hexagonal lattice. The same efficiency may also make MST less forgiving when holdout samples occupy somewhat different regions of feature space, which could explain the mixed holdout-QE pattern across datasets. In those cases, the more uniform spatial coverage imposed by the hexagonal lattice may provide a modest generalization buffer. We treat this as an interpretation rather than a demonstrated mechanism, because the present benchmark does not explicitly quantify train-to-holdout distribution shift.
 
 The topology results point to a simple trade-off. Hexagonal neighborhoods are the most restrictive because they impose a fixed mesh [@kohonenEssentialsSelforganizingMap2013]; MST relaxes that structure but still limits propagation to tree paths [@kangasVariantsSelforganizingMaps1990]; RNG allows denser graph connectivity as prototype geometry evolves [@toussaintRelativeNeighbourhoodGraph1980]. This pattern is consistent with the lower $QE$ observed for RNG in our results, although the present comparisons do not isolate the connectivity mechanism directly. One interpretation of this difference is RNG's ability to support both topology regimes within one model: mesh-like local organization where manifold structure is regular, and freer non-mesh connectivity where the manifold is irregular or partially disconnected. In contrast, hexagonal neighborhoods enforce a fixed mesh and MST enforces a strictly tree-constrained structure. Because the RNG graph is recomputed over moving prototypes during topology refresh, the neighborhood structure can shift between these two regimes over training rather than remaining fixed. The same qualitative ordering is robust across the tested top-$k$ sensitivity range, supporting the interpretation that the observed topology effect is stable rather than an artifact of a single pairing cutoff; the corresponding topology-comparison sensitivity analyses are provided in Supplementary Figs. S5-S7. The main downside of RNG is its less favorable topology-refresh scaling at very large node counts, so its gap narrows in grid-size-dominated regimes. The expensive step is the relative-neighborhood edge test itself: for each candidate prototype pair $(i,j)$, RNG checks every third prototype $k$ to determine whether $k$ blocks that edge by being closer to both endpoints than the endpoints are to each other, that is, whether $\max(d(i,k), d(j,k)) < d(i,j)$. In other words, the implementation must examine prototype triplets $(i,j,k)$ rather than prototype pairs alone. For $P$ prototype nodes, that edge-construction stage therefore carries a worst-case cost of $O(P^3)$ [@toussaintRelativeNeighbourhoodGraph1980]. Because these benchmarks use square maps, increasing grid size from $g$ to a larger side length increases the prototype count to $P=g^2$, so the number of potential triplet checks rises very rapidly as the map grows. In the implemented FloatSOM path, however, both MST and RNG then pass through the same all-pairs shortest-path precomputation during topology refresh, so the end-to-end refresh cost is not separated cleanly by the edge-construction terms alone. The safer reading of these results is therefore empirical rather than purely asymptotic: RNG gives the strongest $QE$ in these comparisons, while MST remains a reasonable alternative when very large maps make the RNG topology-refresh stage the practical bottleneck.
 
-### 7.3 Tuning benefit under matched defaults
+### 8.3 Tuning benefit under matched defaults
 
 <!-- AUTO-DEFAULT-AWARE-DISCUSSION:START -->
 Across the matched Fig. 8 comparisons, tuned configurations consistently produce better QE results than untuned reference settings. This suggests that tuning should be treated as part of the method configuration rather than as optional post-processing.
@@ -487,13 +485,13 @@ Across the matched Fig. 8 comparisons, tuned configurations consistently produce
 
 The key interpretation is that topology choice and hyperparameter choice are coupled. Gains remain positive across hexagonal, MST, and RNG, so tuning is not confined to a single topology. This is also consistent with the broader hyperparameter-optimization literature, where achieved performance depends materially on the search process and the selected configuration rather than on architecture alone [@bergstraAlgorithmsHyperParameterOptimization2011]. A transferable deployment strategy therefore requires topology-aware tuning rather than a single universal setting.
 
-### 7.4 Hyperparameter stability and dataset-type interpretation
+### 8.4 Hyperparameter stability and dataset-type interpretation
 
 The stability analysis adds an operational layer to the quality results. Hexagonal maps appear more constrained because their neighborhood structure is fixed by the initial lattice: if those initial connections are poorly aligned with the data geometry, training can move the prototypes but cannot rebuild the connectivity itself. That makes the final outcome more sensitive to the initialization methodology and to seed-level variation in the tuned region. By contrast, MST and especially RNG recompute connectivity from the evolving prototype configuration, so they can begin from a broadly suitable initialization and then adapt the neighborhood structure as training proceeds. This likely makes the graph topologies easier to recover consistently in the tuned region and helps explain why they may be more suitable for higher-dimensional, non-synthetic datasets, where imposing a fixed low-dimensional lattice prior is more likely to create a geometric mismatch [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990].
 
 Cumulatively, we demonstrate robustly that MST and, especially, RNG better capture data topology than the fixed hexagonal baseline. They also exhibit a more stable hyperparameter profile across multiple datasets and configurations.
 
-### 7.5 Systems implications and limits
+### 8.5 Systems implications and limits
 
 Distributed execution should therefore be interpreted as a workload-dependent regime change rather than as a uniform multiplicative speedup. The Ray-enabled path introduces fixed startup and orchestration costs, which can offset its benefits at small problem sizes. At larger workloads, however, the high efficiencies observed in Fig. 11 and the topology-specific scaling outputs are more plausibly explained by changes in memory residency and data movement than by compute scaling alone. As GPU count increases, the dataset is partitioned into smaller worker-local shards, which reduces per-worker memory pressure and allows some workloads to remain in RAM that would otherwise spill to disk. When disk-backed staging is still required, assigning shards to workers localizes prefetch and transfer activity, so disk-to-GPU traffic is distributed across more workers rather than repeatedly contending for a narrower path. Communication overhead is likewise amortized because global collectives occur once per iteration, after local chunk accumulation, rather than after each chunk. The exact efficiency magnitudes should nevertheless be interpreted cautiously, because some 1-GPU baselines were obtained by local linear extrapolation and may be inaccurate where the single-GPU curve is nonlinear.
 
@@ -510,7 +508,7 @@ Taken together, one operating profile supported by these experiments uses the ma
 
 More broadly, FloatSOM provides a GPU-oriented SOM implementation with a broad configuration space across sampling strategy, topology, batch/processing mode, and systems-scale execution. This design allows practitioners to select configurations aligned with different quality-throughput tradeoffs under deployment constraints. The study brings these components into a single evaluation framework.
 
-## 8. Acknowledgements
+## 9. Acknowledgements
 
 This work was supported by computational resources provided by the Australian Government through the National Computational Infrastructure (NCI) under the ANU Merit Allocation Scheme.
 
@@ -518,12 +516,12 @@ We also acknowledge the computational services provided by the University of Ber
 
 We thank Prof. Hanna Suominen for her input and advice.
 
-## 9. References
+## 10. References
 
 ::: {#refs}
 :::
 
-## 10. Supplementary Tables (End Matter)
+## 11. Supplementary Tables (End Matter)
 
 **Supplementary Table S1. Dataset metadata and numbered point key for the Figure 4 sampling-mode analysis.**
 
@@ -578,7 +576,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 
 **Supplementary Table S10. Figure 12 topology runtime summary at the largest common 8-GPU axis value for the dimension-, sample-, and grid-size-scaling workloads.** Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread. See `assets/tables/supp_table_figure_12_topology_runtime_summary.tsv`.
 
-## 11. Supplementary Figures (End Matter)
+## 12. Supplementary Figures (End Matter)
 
 ![Supplementary Figure S1](assets_manual/figures/supp_fig_s1.svg)
 *Supplementary Figure S1. FloatSOM-versus-XPySOM calibration under default settings for the MST topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S3. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
