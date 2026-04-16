@@ -26,15 +26,13 @@ Related work on practical SOM deployment spans software implementations, samplin
 
 ### 2.1 Open-Source SOM Implementations and Systems
 
-A variety of SOM implementations exist, spanning lightweight libraries to more performance-oriented systems. MiniSom is a commonly employed compact Python SOM implementation. It implements a single-CPU online training procedure in which SOM node weights are updated after every sample in a sequential manner. This "online" training procedure most closely adheres to the original classical SOM algorithm [@vettigliJustGlowingMinisom2018]. XPySOM is another Python-based SOM implementation that uses the newer "batch" training regime [@manciniXPySomHighPerformanceSelfOrganizing2020]. In batch training, each iteration evaluates the presented samples against the map, accumulates neighborhood-weighted update statistics across that set, and then applies a coordinated prototype update. In most modern practical settings, this BatchSOM regime has become the dominant approach because it offers superior stability, speed, and output quality relative to online sample-wise updates, while also aligning naturally with vectorized linear algebra and GPU execution, which permit even greater acceleration [@kohonenEssentialsSelforganizingMap2013; @manciniXPySomHighPerformanceSelfOrganizing2020]. Finally, several distributed-compute SOM algorithms exist, of which Somoclu and GigaSOM are perhaps the most mature. Somoclu emphasizes parallel large-scale training through a C++ core [@wittekSomocluEfficientParallel2017], whereas GigaSOM.jl provides a distributed implementation in Julia targeted at very large cytometry workloads [@kratochvilGigaSOMjlHighperformanceClustering2020].
-
-Taken together, these implementations represent the frontier of scalable open SOM systems. Among the openly available systems considered here, the highest reported single-machine throughput implementation is XPySOM, by virtue of its efficient vectorized GPU-backed operations [@manciniXPySomHighPerformanceSelfOrganizing2020]. However, XPySOM remains a single-GPU implementation, requiring the whole training dataset to fit into VRAM. GigaSOM.jl, in turn, represents the most strongly scaled openly available distributed implementation in this area, including the processing of a 1,167,129,317-cell dataset on a 256-core distributed CPU cluster in slightly under 25 minutes [@kratochvilGigaSOMjlHighperformanceClustering2020]. Nevertheless, GigaSOM's implementation within the comparatively smaller Julia ecosystem may limit interoperability with the broader Python-centered scientific software stack and with some established HPC workflows. Additionally, it does not support GPUs to further accelerate the algorithm, limiting options for users without access to HPC. Accordingly, an important systems gap remains: an openly usable distributed GPU SOM implementation that combines the throughput of GPU batch pathways with execution beyond single-device in-VRAM constraints.
+Open SOM implementations range from lightweight libraries to more performance-oriented systems. MiniSom is a compact Python implementation of the classical online regime [@vettigliJustGlowingMinisom2018], whereas XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. At larger scale, Somoclu and GigaSOM provide mature parallel SOM systems for large workloads [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]. However, an important systems gap remains: XPySOM is limited to a single GPU and requires the full dataset to fit in VRAM, while GigaSOM emphasizes distributed CPU execution rather than distributed GPU training within a broadly used Python workflow. FloatSOM is intended to address that gap.
 
 ### 2.2 Sampling Methodologies for SOM Training
 
 Classical online and batch SOM training schemes traditionally sample every data-point in every training iteration [@kohonenSelfOrganizingMaps2001; @liuRobustPhenotypingHighly2023]. Consequently, one obvious route to improving SOM speed and scalability is subsampling, which reduces the amount of data used to train the final SOM. Note that this sampling question is separate from the online-versus-batch distinction: a SOM can use full or sampled data under either update regime, whereas online and batch refer to how updates are accumulated and applied.
 
-To date, numerous subsampling strategies have been proposed. Beyond naive random sampling, several guided methods have also been introduced. For instance, hierarchical dynamic subset selection SOM (HDSSSOM) concentrates computation on difficult or stale regions of the data [@wetmoreSpeedingSelfOrganizingFeature2005]. Similarly, SOM-based adaptive sampling for design-space exploration, which iteratively guides new evaluations toward promising or underexplored regions, has also been introduced [@itoDesignSpaceExploration2016]. Hence, the literature offers several plausible sampling strategies. However, systematically benchmarked and openly maintained implementations that compare full-data, random, and guided sampling within a modern high-performance SOM workflow remain limited.
+To date, numerous subsampling strategies have been proposed. Beyond naive random sampling, guided methods include hierarchical dynamic subset selection SOM (HDSSSOM), which concentrates computation on difficult or stale regions of the data [@wetmoreSpeedingSelfOrganizingFeature2005], and adaptive sampling strategies for design-space exploration [@itoDesignSpaceExploration2016]. However, systematically benchmarked and openly maintained implementations that compare full-data, random, and guided sampling within a modern high-performance SOM workflow remain limited.
 
 ### 2.3 SOM Lattice and Adaptive Topologies
 
@@ -50,13 +48,9 @@ SOM performance depends strongly on choices such as map size, initialization, le
 
 More generally, modern machine-learning workflows increasingly rely on automated hyperparameter optimization rather than manual tuning alone. Frameworks such as Optuna provide bounded search over large hyperparameter spaces and can support multi-objective optimization, allowing parameter settings to be selected with respect to several benchmark criteria simultaneously rather than collapsed into a single score [@akibaOptunaNextgenerationHyperparameter2019].
 
-Currently, the literature provides many components in isolation: accessible SOM libraries, accelerated batch implementations, classical and guided sampling schemes, and multiple alternatives to standard grid neighborhoods. What remains limited is an openly usable workflow that combines these pieces in one benchmarkable setting: support for both regular and irregular topologies, direct comparison of full, random, and guided sampling, and execution beyond a narrow single-device in-memory regime. Similarly, when these components are combined, empirically derived default hyperparameters become essential for practical deployment. This evidence-based derivation and analysis of performance impact remain, to date, largely unexplored.
-
 ## 3. Methods
 
-A standard Self-Organizing Map (SOM) can be viewed as a small set of interacting components: the selection of training samples at each iteration, the definition of neighborhood relations between map units, the batch training step that updates the prototypes from those sampled data, and the compute framework used to execute those operations. FloatSOM uses a just-in-time (JIT) CUDA-kernel-accelerated batch SOM training formulation. FloatSOM additionally introduces several options for sampling, topology, and compute execution.
-
-Specifically, the sample component determines which data are presented at each iteration, with FloatSOM offering `random`, `full`, or `HDSSSOM`. The topology component defines the neighborhood relations between map units, with FloatSOM offering rectangular, hexagonal, MST, or RNG. The compute framework then determines how that same training procedure is executed in practice, ranging from local GPU execution to single-node multi-GPU and multi-node GPU options. Hyperparameter optimization is treated as an additional methodological layer applied across these configurations. Figure 1 provides a schematic overview of these components and their FloatSOM options; the following subsections then describe each component in turn.
+FloatSOM combines four methodological components: sample selection, topology definition, batch SOM updates, and the compute framework used to execute them. The framework supports `random`, `full`, and `HDSSSOM` sampling; rectangular, hexagonal, MST, and RNG topologies; and execution modes ranging from local GPU training to single-node and multi-node multi-GPU operation. Hyperparameter optimization is treated as a separate layer applied across these configurations. Figure 1 summarizes this design.
 
 ![Figure 1](assets_manual/figures/fig_1.svg){.half-width width=50%}
 
@@ -94,7 +88,7 @@ $$
 \tag{3}
 $$
 
-For hierarchical dynamic subset selection SOM (HDSSSOM) [@wetmoreSpeedingSelfOrganizingFeature2005], the core algorithm is kept from the original publication and re-implemented here to be multi-GPU compatible. Briefly, HDSSSOM is an adaptive sampling strategy that aims to focus computation on informative regions of the dataset by preferentially revisiting samples that are difficult, under-trained, or stale, while still preserving exploration across training.
+For hierarchical dynamic subset selection SOM (HDSSSOM) [@wetmoreSpeedingSelfOrganizingFeature2005], we retain the core published algorithm and re-implement it in a multi-GPU-compatible form as an adaptive sampler that preferentially revisits difficult, under-trained, or stale samples.
 
 ### 3.2 Topology Definition
 
@@ -166,7 +160,7 @@ This section covers how we distribute computation across GPUs, how data are stre
 
 #### 3.3.1 General Multi-GPU Logic
 
-Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation [@moritzRayDistributedFramework2018]. For every iteration, each worker processes its assigned shard locally. As illustrated in Fig. 2, that shard is processed within the worker in `n_chunks`; Eqs. (4)-(5) are written at the shard level, but in implementation the worker-local accumulators are built incrementally across those chunks before synchronization. Finally, once worker-local computations are complete, influences are accumulated across workers via NCCL synchronization.
+Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation [@moritzRayDistributedFramework2018]. At each iteration, every worker processes its assigned shard locally in `n_chunks`, accumulates worker-local statistics across those chunks, and synchronizes once per iteration.
 
 For worker $g \in \{1,\dots,G\}$, let $X_{t,g}^{(s)}$ denote the worker-local shard of the selected iteration batch $X_t^{(s)}$. Let $j$ index prototype nodes, let $w_j^{(t)}$ denote the prototype vector of node $j$ at iteration $t$, let $b(x)$ denote the best-matching unit (BMU) of sample $x$ under the current weights, let $h_{j,b(x)}^{(t)}$ denote the iteration-$t$ neighborhood influence between node $j$ and the BMU of $x$, and let $\eta_t$ denote the learning rate at iteration $t$. The local accumulators are:
 
@@ -192,19 +186,11 @@ In implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker
 
 #### 3.3.2 Multi-GPU Implementation Details
 
-As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU. In RAM mode, data are pre-sharded directly into each worker's GPU-local CPU RAM and fed into the same pinned-memory path, bypassing disk reading. In both cases, the worker processes its assigned shard as `n_chunks` rather than ever materializing the full shard on VRAM.
-
-The loader enqueues upcoming chunks in pinned memory and replenishes consumed chunks asynchronously with new chunks read from disk. Furthermore, FloatSOM operates multiple CUDA streams. This enables, in steady state, one chunk to be under GPU compute on one CUDA stream while the next chunk is being transferred from pinned memory to the GPU on another CUDA stream. For each chunk, the worker performs BMU search and accumulates local update and influence tensors. For the core BatchSOM path, we prefer JIT-compiled kernels for these BMU and update calculations because, despite a small one-time compilation cost, they provide higher throughput once workloads become large.
-
-After all required data for the current iteration have been processed on each worker, NCCL performs a synchronous all-reduce over the worker-local accumulators, allowing for worker-local weight normalization and updating. Consequently, weights remain resident on worker GPUs across iterations, with the driver only exchanging lightweight metadata.
+As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses JIT-compiled kernels for the core BMU and update steps, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations.
 
 #### 3.3.3 OOM-Capable Topology Updates
 
 Additional larger-than-memory support for topology updates is provided through topological chunking. Topological chunking applies the same idea to topology-side computations within each worker. When graph-distance or influence structures would otherwise exceed a worker's VRAM, those computations are tiled and evaluated in bounded pieces rather than materialized at once. This topology-side chunking is not depicted in the Fig. 2 data path, but it follows the same per-worker bounded-memory execution rule.
-
-#### 3.3.4 XPySOM vs FloatSOM batch comparison
-
-FloatSOM can be matched to XPySOM to produce identical results when configured in the 'XPySOM' equivalence mode.
 
 ### 3.4 Multi-Objective Hyperparameter Optimization
 
@@ -216,9 +202,7 @@ We use two benchmark protocols: an Optuna quality benchmark and a speed-scaling 
 
 ### 4.1 Optuna benchmark protocol
 
-We use Optuna-based multi-objective optimization to determine the best attainable performance and corresponding hyperparameters for each sampling (full and random) and topology (hexagonal, MST, and RNG) combination. Presently, we optimize for both train and holdout quantization error ($QE_T$ and $QE_H$). Hyperparameter search is run with configuration constraints that depend on the selected algorithmic variant, so comparisons remain consistent across datasets while allowing variant-appropriate tuning spaces. A separate focused HDSSSOM sampling pilot is reported later in Section 5.2; unlike the main full-versus-random benchmark, that pilot uses a restricted run envelope summarized in Supplementary Table S2.
-
-Concretely, each dataset-topology-sampling configuration is optimized for 200 Optuna trials and replicated across 10 seeds to ensure robust results. Trials are executed sequentially within each run, with the current optimum updated after each completed trial. Operationally, this Optuna benchmark uses the standard in-memory batch path rather than the Ray-distributed execution stack due to dataset size not requiring Ray. This corresponds to:
+We use Optuna-based multi-objective optimization to determine the best attainable performance and corresponding hyperparameters for each sampling (full and random) and topology (hexagonal, MST, and RNG) combination, optimizing jointly for train and holdout quantization error ($QE_T$ and $QE_H$). Each dataset-topology-sampling configuration is optimized for 200 trials across 10 seeds under variant-appropriate search constraints. These runs use the standard in-memory batch path rather than the Ray-distributed execution stack. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This corresponds to:
 
 $$
 14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ Runs}
@@ -228,7 +212,7 @@ Sampling comparisons in Section 5.2 compare full-vs-random paired analyses poole
 
 #### 4.1.1 Optuna benchmark datasets and preprocessing
 
-The Optuna benchmark uses a mixture of synthetic and real datasets from scikit-learn [@pedregosaScikitlearnMachineLearning2011] to expose the algorithm to a broad range of challenges and verify stable behavior across distinct data regimes. Synthetic datasets include: *swiss_roll, moons, circles, blobs, s_curve*, and real datasets include: *breast_cancer, wine, iris, digits, olivetti_faces, diabetes, california_housing, covertype, kddcup99*. Synthetic datasets are generated in accordance with the random seed, while real-world datasets are loaded directly from sklearn. Across the Optuna protocol, inputs are standardized feature-wise to zero mean and unit variance using `StandardScaler` before deterministic seeded permutation and then a fixed 70/30 train-holdout split. We retain both train and holdout partitions because they capture two different practical questions: how well the SOM represents the observed training population, and how well that same trained map transfers to previously unseen samples.
+The Optuna benchmark uses 14 synthetic and real scikit-learn datasets spanning low- and high-dimensional regimes [@pedregosaScikitlearnMachineLearning2011]; dataset metadata are listed in Supplementary Table S1. Synthetic datasets are generated according to the random seed, whereas real datasets are loaded directly from sklearn. Across the Optuna protocol, inputs are standardized feature-wise to zero mean and unit variance using `StandardScaler`, then deterministically permuted and split into fixed 70/30 train-holdout partitions. We retain both partitions to evaluate both training-set representation and transfer to unseen samples.
 
 #### 4.1.2 Optuna quality metrics
 
@@ -280,13 +264,7 @@ For dataset-type stratification, we use the same synthetic/real group definition
 
 ### 4.4 Statistical analysis
 
-All Optuna comparisons were paired because the experimental design contains substantial between-run heterogeneity arising from dataset, seed, and split structure. Pairing therefore allows each comparison to be evaluated within a matched experimental context. 
-
-Pairs were defined within matched dataset, seed, and split units, while holding all non-target descriptors fixed and varying only the factor under study. Within each matched unit, trials were ranked by the target metric, the top five were retained, and each condition was summarized by the median of those retained trials. Our primary summary metrics use a top-$k$ rule with $k=5$, where $k$ denotes the number of best-ranked trials retained per matched unit before taking the within-condition median. This summary is intended to estimate near-optimal attainable performance under the common Optuna budget rather than average behavior across all explored hyperparameter settings. Paired effects were then computed as simple condition differences, with negative values favoring the first condition for lower-is-better metrics. For completeness, we conduct a top-$k$ sensitivity analysis, shown in Supplementary figures. 
-
-Dataset-level paired effects are visualized as forest plots. For each dataset row, the point estimate is the sample mean of the paired effects contributing to that row, and the horizontal whiskers show the corresponding 95% confidence interval from the same two-sided paired one-sample $t$-test applied to those paired effects. We use this paired $t$-test because the estimand in the forest plots is the mean paired effect and each dataset contributes multiple matched pairs under the executed design.
-
-Global aggregate summaries use the same paired $t$-test framework. The single global row is tested with a two-sided paired one-sample $t$-test on the paired effects contributing to that aggregate, together with the corresponding 95% confidence interval around the mean paired effect. The same paired $t$-test summary is used for top-$k$ sensitivity analyses.
+All Optuna comparisons use matched pairs within dataset, seed, and split units to control for substantial between-run heterogeneity. Within each matched unit, trials were ranked by the target metric, the top five were retained, and each condition was summarized by the median of those retained trials, yielding a top-$k$ summary with $k=5$ intended to estimate near-optimal attainable performance under a fixed Optuna budget. Paired effects were then computed as simple condition differences, with negative values favoring the first condition for lower-is-better metrics. Dataset-level and global summaries are shown as forest plots with 95% confidence intervals from two-sided paired one-sample $t$-tests; top-$k$ sensitivity analyses are provided in the Supplementary figures.
 
 ## 5. Results
 
@@ -294,26 +272,21 @@ Global aggregate summaries use the same paired $t$-test framework. The single gl
 
 Under matched-configuration XPySOM-versus-FloatSOM calibration on hexagonal $QE$ (Fig. S3), the two implementations are numerically equivalent up to expected floating-point accumulation-order effects (e.g., backend/kernel reduction order and host-device execution details), not algorithmic-update differences. Using the paired-testing pipeline defined in Section 4.3, we do not detect significant $QE$ differences (Supplementary Table S5). Accordingly, we treat hexagonal FloatSOM batch as a valid proxy for XPySOM in the benchmarks that follow.
 
-We do not include MiniSom as a full benchmark baseline in the remaining experiments. This choice reflects both prior literature already supporting the expected online-versus-batch behavior for this implementation class and the practical runtime cost of MiniSom at the scales targeted here. Under the standard benchmark configuration, Minisom requires more than 12 hours to complete, making it impractical for the broader comparative benchmark. Within that context, XPySOM is the more relevant external calibration baseline for the remaining results.
-
 Given FloatSOM's implementation usage of JIT kernels, these require a small one-time startup cost from JIT kernel compilation. This overhead is most visible on small workloads, but is progressively amortized as sample count and workload size increase. Hence, FloatSOM performs slightly more slowly ($<0.1s$) than XPySOM on small datasets. On the largest benchmark datasets (covertype and kddcup99), runtime is on par with or faster than XPySOM under this matched protocol, consistent with compilation-cost amortization. This trend is expected to strengthen further as dataset scale increases (Sections 6.1-6.2).
 
 ### 5.2 Comparison of Different Sampling Methods
 
-We first report the focused HDSSSOM pilot as an elimination comparison rather than as part of the broader sampling benchmark. This pilot used a different run envelope from the later full-versus-random analysis: it was restricted to the hexagonal Optuna benchmark with 10 datasets, 5 seeds, and the `full`, `random`, and `HDSSSOM` sampling methods; the corresponding pilot configuration is summarized in Supplementary Table S2.
+We first report a focused HDSSSOM pilot as an elimination comparison rather than as part of the broader sampling benchmark. This pilot used a restricted run envelope relative to the later full-versus-random analysis and is summarized in Supplementary Table S2.
 
-Under this pilot configuration, HDSSSOM was materially worse than the other sampling options. In the hexagonal full-batch view shown in Fig. 3, full outperformed HDSSSOM in all 50 paired comparisons (10 datasets $\times$ 5 seeds; 50 wins, 0 losses, 0 ties), with dataset-level median balanced-$QE$ improvements ranging from 2.5% to 209.7% and a global median improvement of 38.7%. The matched random-versus-HDSSSOM comparison showed the same direction across all datasets and paired units, with a corresponding global median improvement of 38.3%. Given these large differences, we focused on the full and random sampling methodologies for the remainder of the manuscript.
+Under that pilot configuration, HDSSSOM was materially worse than the other sampling options. In the hexagonal full-batch view shown in Fig. 3, full outperformed HDSSSOM in all 50 paired comparisons, and the matched random-versus-HDSSSOM comparison showed the same direction across all datasets and paired units. We therefore focused on full and random sampling for the remainder of the manuscript.
 
 ![Figure 3](assets_manual/figures/fig_3.svg)
 *Figure 3. HDSSSOM screening pilot on $QE_B$ (hexagonal topology): full vs HDSSSOM, using the restricted pilot configuration summarized in Supplementary Table S2 (10 datasets, 5 seeds, with all other pilot settings held fixed within that run envelope). Panels report dataset-matched paired top-$k$ within-unit medians plus dataset-level paired-effect summaries (Section 4.3). Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
-Conversely, the differences between full and random sampling are comparably much smaller. We observe that the effectiveness of random sampling is scale-dependent: above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes, consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random-sampling behavior.
+Conversely, the differences between full and random sampling are much smaller. We observe that the effectiveness of random sampling is scale-dependent: above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes, consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random-sampling behavior.
 
 ![Figure 4](assets_manual/figures/fig_4.svg)
-*Figure 4. Sampling-mode comparison focused on full versus random under the paired analysis pipeline (Section 4.3). In the empirically larger-dataset regime observed here (>10,000 samples), little paired $QE$ separation is detected; at smaller dataset scales, random is more variable and less stable. In the forest panels, whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. [[AUTO-SAMPLING-REGRESSION-STATS]]*
-
-<!-- AUTO-SAMPLING-REGRESSION-STATS:START -->
-<!-- AUTO-SAMPLING-REGRESSION-STATS:END -->
+*Figure 4. Sampling-mode comparison focused on full versus random under the paired analysis pipeline (Section 4.3). In the empirically larger-dataset regime observed here (>10,000 samples), little paired $QE$ separation is detected; at smaller dataset scales, random is more variable and less stable. In the forest panels, whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ results. Accordingly, all remaining analyses reported below rely on full-batch training unless specified.
 
@@ -337,8 +310,6 @@ Across the tested top-$k$ range, which varies the number of best-ranked retained
 ![Figure 6](assets_manual/figures/fig_6.svg)
 *Figure 6. Hexagonal versus MST topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
-For completeness, we also ran a default-setting FloatSOM MST configuration against XPySOM under the same seed-matched and train-holdout setup (Supplementary Fig. S1). This was intentionally done with XPySOM-equivalent default batch settings for equivalence calibration. Notwithstanding that these are inherited hexagonal hyperparameters, MST still outperforms the default hexagonal baseline, indicating prima facie that the MST topology is already favorable relative to the current regular-topology reference even before topology-specific tuning is applied.
-
 #### 5.3.2 RNG
 
 To evaluate RNG topology performance, we reuse the paired reporting logic on hexagonal versus RNG, again centered on $QE_B$ with $QE_H$ and $QE_T$ in Fig. 7. 
@@ -347,14 +318,12 @@ To evaluate RNG topology performance, we reuse the paired reporting logic on hex
 RNG has lower QE than matched hexagonal on the reported QE metrics (Fig. 7A-C), with overall paired t-test p-values of balanced QE (p=7.4e-10), holdout QE (p=0.0232), and train QE (p=4.69e-06). Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST and RNG.
 <!-- AUTO-TOPOLOGY-RNG-PVALUES:END -->
 
-The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced QE and especially in train QE, rather than by producing an equally strong shift on every dataset. The separation tends to be more apparent in the real and larger datasets, where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice. Taken together, the figure suggests that RNG is generally better than hexagonal, with the clearest benefit appearing in training-set fidelity and with the holdout results supporting the same overall conclusion. 
+The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced QE and especially in train QE, with the separation most apparent in the real and larger datasets where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice.
 
 Similar to the MST results, across the tested top-$k$ range, the hexagonal-versus-RNG comparison likewise remains directionally stable; the corresponding sensitivity analysis is provided in Fig. S6. The direct MST-versus-RNG sensitivity comparison is reported separately in Fig. S7.
 
 ![Figure 7](assets_manual/figures/fig_7.svg)
 *Figure 7. Hexagonal versus RNG topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
-
-For completeness, we also ran a default-setting FloatSOM RNG configuration against XPySOM under the same seed-matched and train-holdout setup (Supplementary Fig. S2). Even under those inherited hexagonal hyperparameters, RNG still outperforms the default hexagonal baseline, further indicating that the topology itself is favorable relative to the regular-topology reference, without needing topology-specific hyperparameter adjustment.
 
 ### 5.4 Hyperparameter Tuning and Stability
 
@@ -362,24 +331,17 @@ We analyse hyperparameter effects on these results in two ways. First, we assess
 
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
-The pooled tuned-versus-reference $QE$ comparison is shown in Fig. 8, with topology-specific hexagonal, MST, and RNG breakdowns provided in Fig. S8-10, respectively. The tuned configuration is a fixed hyperparameter setting derived from the Optuna workflow by aggregating the selected tuned settings across seeds, using the mean for numeric parameters and the mode for categorical parameters, and then rerun on the datasets. This comparison therefore estimates the gain from adopting that tuned setting as the operating configuration, relative to an untuned reference configuration. We observe universally large $QE$ improvements in hyperparameter-tuned runs relative to untuned runs.
+The pooled tuned-versus-reference $QE$ comparison is shown in Fig. 8, with topology-specific hexagonal, MST, and RNG breakdowns provided in Fig. S8-S10. The tuned configuration is a fixed setting derived from the Optuna workflow by aggregating selected tuned settings across seeds and rerunning that single deployable configuration on the datasets. This comparison therefore estimates the gain from adopting a tuned setting rather than an untuned reference, and the pooled results show broad $QE$ improvement under tuning.
 
 ![Figure 8](assets_manual/figures/fig_8.svg)
 *Figure 8. Tuned-configuration-versus-untuned-reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned-configuration/untuned-reference pairs across datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
-
-<!-- AUTO-DEFAULT-AWARE-FIGURE6-STATS:START -->
-In Fig. 8, we report both the tuned-minus-untuned difference, so positive values favor the tuned configuration relative to the untuned reference value. The tuned-versus-reference pairing results in Fig. 8 show the same direction across the $QE$ endpoints, based on n=840 paired comparisons per $QE$ metric (n=2,520 total across all $QE$ variants). Across the matched pairs, tuned settings improve balanced QE in 786/840 pairs, with median and mean improvements of 5.00% and 8.26%; holdout QE in 675/840 pairs, with median and mean improvements of 3.47% and 6.01%; and train QE in 799/840 pairs, with median and mean improvements of 7.58% and 11.78%.
-<!-- AUTO-DEFAULT-AWARE-FIGURE6-STATS:END -->
 
 At the pooled overall level, the paired summaries across all matched tuned-configuration/untuned-reference pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 8. <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:START --> The same tuning pattern is observed across topologies, indicating that tuning affects all topology families rather than a single-architecture artifact.
 <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:END -->
 
 #### 5.4.2 Hyperparameter Stability Across Topology and Sampling
 
-Hyperparameter stability analyses (Section 4.4.2) compare within-topology seed-to-seed tuned-parameter drift and then contrast those internal-stability scores between topology pairs. The resulting pattern indicates that MST and RNG reach lower stability scores than hexagonal when matching dataset, sampling mode, and seed structure. Fig. 9A summarizes the full-sampling stratum, and Fig. 9B shows the corresponding random-sampling analysis. The full-versus-random contrast is also directional: the full-sampling panel generally shows lower selected-parameter stability scores than the random-sampling panel for the same topology families, suggesting modestly better hyperparameter stability under full sampling.
-<!-- AUTO-DEFAULT-AWARE-STABILITY-REGRESSION:START -->
-The dataset-size regression summaries show little evidence of a full-sampling size relationship, with near-zero correlations under full sampling, hexagonal (Pearson R=0.082, p=0.781, n=14); MST (Pearson R=0.198, p=0.497, n=14); and RNG (Pearson R=-0.192, p=0.511, n=14). By contrast, Fig. 9C shows a clearer random-sampling size relationship, with hexagonal (Pearson R=-0.820, p=0.000326, n=14); MST (Pearson R=-0.839, p=0.000176, n=14); and RNG (Pearson R=-0.512, p=0.0613, n=14). Under random sampling, larger datasets tend to produce lower selected-parameter stability scores, indicating improved stability with scale. This reinforces the practical interpretation that random is attractive primarily as a throughput-oriented choice rather than a stability-first setting at smaller dataset scales.
-<!-- AUTO-DEFAULT-AWARE-STABILITY-REGRESSION:END -->
+Hyperparameter stability analyses (Section 4.3.2) compare within-topology seed-to-seed tuned-parameter drift and then contrast those internal-stability scores between topology pairs. The resulting pattern indicates that MST and RNG reach lower stability scores than hexagonal when matching dataset, sampling mode, and seed structure. Fig. 9A summarizes the full-sampling stratum and Fig. 9B the corresponding random-sampling analysis; across these panels, full sampling is generally the more stable setting.
 
 ![Figure 9](assets_manual/figures/fig_9.svg)
 *Figure 9. Hyperparameter stability by sampling mode. A: selected-parameter stability under full sampling for hexagonal, MST, and RNG topologies (lower stability score is better). B: selected-parameter stability under random sampling for the same topologies. C: dataset-size stability regression under random sampling, using the selected-parameter stability score against sample size (log10) across the included topology families.*
@@ -398,9 +360,9 @@ We report sample-scaling runtime comparisons for full versus random sampling, st
 
 *Figure 10. Sample-scaling runtime comparison of full versus random sampling in batch mode across $G\in\{1,2,4\}$ GPUs (A,B,C). Curves report mean wall-clock training time (s) under harmonized settings; error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration. Color encodes topology (hexagonal, MST, RNG), and line style encodes sampling mode (full vs. random). Shaded x-axis regions indicate sample-size ranges that could not be run in that panel relative to the shared axis maximum due to timeouts. Lower values indicate faster execution.*
 
-Across topologies, random sampling is faster than full sampling across all 1-, 2-, and 4-GPU comparisons, with similarly proportioned reductions at any given dataset size. With more GPUs, larger datasets can also be processed before timing out. Furthermore, as datasets increase in size, the runtime reduction relative to full sampling becomes smaller. This is evident in the 500,000,000 and 1,000,000,000 sample runs on both 2 and 4 GPUs. 
+Across topologies, random sampling is faster than full sampling across all 1-, 2-, and 4-GPU comparisons, with similar proportional reductions at a given dataset size. With more GPUs, larger datasets can also be processed before timing out, although the runtime advantage of random over full narrows at the largest sample counts.
 
-Expanding on the 1-GPU random-sampling runs, the last successful 1-GPU random point occurs at 100M samples, as in full sampling, despite random otherwise being much faster. We interpret the failed 500M point as the stage at which the single-GPU path has tipped into disk-backed operation, so the relevant cost is no longer only the reduced number of selected samples. The overhead incurred by staging data to disk and transferring them through the single-GPU path likely explains this timeout. We therefore treat the 1-GPU random failure at 500M samples as a disk-mode systems limitation rather than as evidence against the general random-versus-full runtime ordering. 
+For the 1-GPU random-sampling runs, the last successful point occurs at 100M samples, as in full sampling, despite random otherwise being much faster. We interpret the failed 500M point as the stage at which the single-GPU path has tipped into disk-backed operation, so the dominant cost is no longer only the reduced number of selected samples. We therefore treat this failure as a disk-mode systems limitation rather than as evidence against the general random-versus-full runtime ordering.
 
 ### 6.2 Multi-GPU topology scaling and OOM context
 
