@@ -1088,7 +1088,7 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
             "Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. "
             "First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. "
             "Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. "
-            f"In the sample-scaling benchmark, for example, the {('500 million' if int(sample_thresholds[example_low_gpu]) == 500_000_000 else _format_int(sample_thresholds[example_low_gpu]))} sample dataset requires disk backing under the "
+            f"In the sample-scaling benchmark, for example, the {('500,000,000' if int(sample_thresholds[example_low_gpu]) == 500_000_000 else _format_int(sample_thresholds[example_low_gpu]))} sample dataset requires disk backing under the "
             f"{int(example_low_gpu)}-GPU configuration, whereas the {int(example_high_gpu)}-GPU configuration remains in RAM mode until the "
             f"{_format_int(sample_thresholds[example_high_gpu])} sample dataset. "
             "Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. "

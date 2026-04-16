@@ -32,7 +32,7 @@ Taken together, these implementations represent the frontier of scalable open SO
 
 ### 2.2 Sampling Methodologies for SOM Training
 
-Classical online and batch SOM training schemes traditionally sample every data-point in every training iteration [@kohonenSelfOrganizingMaps2001; @liuRobustPhenotypingHighly2023]. Consequently, one readily appreciable method of further optimizing SOMs for increased speed and scalability would be the employment of a subsampling regime, effectively reducing the amount of data required to train the final SOM. Note that this sampling question is separate from the online-versus-batch distinction: a SOM can use full or sampled data under either update regime, whereas online and batch refer to how updates are accumulated and applied.
+Classical online and batch SOM training schemes traditionally sample every data-point in every training iteration [@kohonenSelfOrganizingMaps2001; @liuRobustPhenotypingHighly2023]. Consequently, one obvious route to improving SOM speed and scalability is subsampling, which reduces the amount of data used to train the final SOM. Note that this sampling question is separate from the online-versus-batch distinction: a SOM can use full or sampled data under either update regime, whereas online and batch refer to how updates are accumulated and applied.
 
 To date, numerous subsampling strategies have been proposed. Beyond naive random sampling, several guided methods have also been introduced. For instance, hierarchical dynamic subset selection SOM (HDSSSOM) concentrates computation on difficult or stale regions of the data [@wetmoreSpeedingSelfOrganizingFeature2005]. Similarly, SOM-based adaptive sampling for design-space exploration, which iteratively guides new evaluations toward promising or underexplored regions, has also been introduced [@itoDesignSpaceExploration2016]. Hence, the literature offers several plausible sampling strategies. However, systematically benchmarked and openly maintained implementations that compare full-data, random, and guided sampling within a modern high-performance SOM workflow remain limited.
 
@@ -234,7 +234,7 @@ The Optuna benchmark uses a mixture of synthetic and real datasets from scikit-l
 
 Our primary quality metric is Quantization Error ($QE$) [@kohonenSelfOrganizingMaps2001]. We report both train and holdout $QE$, denoted $QE_T$ and $QE_H$, respectively. Here, $QE_T$ captures use cases where the full observed population is available and the map is intended to represent that same population, while $QE_H$ captures generalization settings where the trained SOM is projected onto previously unseen samples.
 
-Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_B$ is therefore a composite endpoint that weights representation fidelity (train) and transfer-to-unseen-data fidelity (holdout) equally. Again, note that in the Optuna runs, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector, with $QE_B$ only calculated *post hoc*. 
+Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_B$ is therefore a composite endpoint that weights representation fidelity (train) and transfer-to-unseen-data fidelity (holdout) equally. Note that in the Optuna runs, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector, with $QE_B$ only calculated *post hoc*. 
 
 ### 4.2 Speed-scaling benchmark protocol
 
@@ -250,7 +250,7 @@ The speed benchmark uses synthetic random matrices with uniform values in $[0,1]
 
 From this shared default, we generate three different scale benchmarking datasets. Sample scaling varies the sample count over $\{10^6, 5 \times 10^6, 10^7, 5 \times 10^7, 10^8, 5 \times 10^8, 10^9\}$. Dimension scaling varies the feature dimension over $\{50, 100, 200, 500, 1000, 2000, 5000\}$. Grid-size scaling varies the hexagonal grid side length over $\{8, 16, 24, 32, 48, 64\}$; equivalently, the number of SOM nodes in this panel is $g^2$ for grid side length $g$.
 
-Additional CPU and RAM resources attached to each GPU are scaled linearly with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run was timed-out if it exceeded 30-minutes of wall-time. Per-GPU resource allocation was fixed at one NVIDIA V100 (32 GB VRAM), 12 CPU cores, 90 GB system RAM, with one full node comprising 4 GPUs and their associated CPUs, and with 400 GB of associated local disk storage. 
+Additional CPU and RAM resources attached to each GPU are scaled linearly with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run was timed out if it exceeded 30 minutes of wall time. Per-GPU resource allocation was fixed at one NVIDIA V100 (32 GB VRAM), 12 CPU cores, 90 GB system RAM, with one full node comprising 4 GPUs and their associated CPUs, and with 400 GB of associated local disk storage. 
 
 ### 4.3 Hyperparameter Tuning and Stability
 
@@ -300,9 +300,9 @@ Given FloatSOM's implementation usage of JIT kernels, these require a small one-
 
 ### 5.2 Comparison of Different Sampling Methods
 
-We first report the focused HDSSSOM pilot as an elimination comparison rather than as part of the broader sampling benchmark. This pilot used a different run envelope from the later full-versus-random analysis: it was restricted to the hexagonal Optuna benchmark with 10 datasets, 5 seeds, and  full, random, hdsssom sampling methods, the corresponding pilot configuration is summarized in Supplementary Table S2.
+We first report the focused HDSSSOM pilot as an elimination comparison rather than as part of the broader sampling benchmark. This pilot used a different run envelope from the later full-versus-random analysis: it was restricted to the hexagonal Optuna benchmark with 10 datasets, 5 seeds, and the `full`, `random`, and `HDSSSOM` sampling methods; the corresponding pilot configuration is summarized in Supplementary Table S2.
 
-Under this pilot configuration, HDSSSOM was materially worse than the other sampling options. In the hexagonal full-batch view shown in Fig. 3, full outperformed HDSSSOM in all 50 paired comparisons (10 datasets $\times$ 5 seeds; 50 wins, 0 losses, 0 ties), with dataset-level median balanced-$QE$ improvements ranging from 2.5% to 209.7% and a global median improvement of 38.7%. The matched random-versus-HDSSSOM comparison showed the same direction across all datasets and paired units, with a corresponding global median improvement of 38.3%. Given these large differences, we turned to focus upon the full and random sampling methodologies for the remainder of the manuscript.
+Under this pilot configuration, HDSSSOM was materially worse than the other sampling options. In the hexagonal full-batch view shown in Fig. 3, full outperformed HDSSSOM in all 50 paired comparisons (10 datasets $\times$ 5 seeds; 50 wins, 0 losses, 0 ties), with dataset-level median balanced-$QE$ improvements ranging from 2.5% to 209.7% and a global median improvement of 38.7%. The matched random-versus-HDSSSOM comparison showed the same direction across all datasets and paired units, with a corresponding global median improvement of 38.3%. Given these large differences, we focused on the full and random sampling methodologies for the remainder of the manuscript.
 
 ![Figure 3](assets_manual/figures/fig_3.svg)
 *Figure 3. HDSSSOM screening pilot on $QE_B$ (hexagonal topology): full vs HDSSSOM, using the restricted pilot configuration summarized in Supplementary Table S2 (10 datasets, 5 seeds, with all other pilot settings held fixed within that run envelope). Panels report dataset-matched paired top-$k$ within-unit medians plus dataset-level paired-effect summaries (Section 4.3). Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
@@ -315,18 +315,18 @@ Conversely, the differences between full and random sampling are comparably much
 <!-- AUTO-SAMPLING-REGRESSION-STATS:START -->
 <!-- AUTO-SAMPLING-REGRESSION-STATS:END -->
 
-However, nevertheless, full sampling remains the best sampling strategy for optimal $QE$ results. Accordingly, all remaining analyses reported below rely on full-batch training unless specified.
+Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ results. Accordingly, all remaining analyses reported below rely on full-batch training unless specified.
 
 ### 5.3 Topology Results
 
-Topology comparisons are reported with $QE$-only endpoints. We treat the Optuna hexagonal batch setting as the primary regular-topology baseline in this panel and compare MST and RNG against it. To anchor the topology results qualitatively, Fig. 5 shows representative neighborhood overlays for hexagonal, MST, and RNG on a synthetic sklearn circles dataset when run on XPySOM's default parameters. Fig. 5 demonstrates RNG's ability to contain both tree like structures and also mesh-like structures within the same representation, unlike MST and hexagonal.  
+Topology comparisons are reported with $QE$-only endpoints. We treat the Optuna hexagonal batch setting as the primary regular-topology baseline in this panel and compare MST and RNG against it. To anchor the topology results qualitatively, Fig. 5 shows representative neighborhood overlays for hexagonal, MST, and RNG on a synthetic sklearn circles dataset when run on XPySOM's default parameters. Fig. 5 demonstrates RNG's ability to contain both tree-like and mesh-like structures within the same representation, unlike MST and hexagonal.  
 
 ![Figure 5](assets_manual/figures/fig_5.svg)
 *Figure 5. Representative neighborhood node and connection overlays for default XPySOM hexagonal, MST, and RNG runs on a 30,000 data-point synthetic sklearn circles dataset.*
 
 #### 5.3.1 MST
 
-We report dataset-wise paired improvement summaries (hexagonal over MST) with the same reporting logic as Section 5.1 in Fig 5.
+We report dataset-wise paired improvement summaries (hexagonal over MST) with the same reporting logic as Section 5.1 in Fig. 6.
 
 <!-- AUTO-TOPOLOGY-MST-PVALUES:START -->
 Overall, MST outperforms matched hexagonal on balanced QE (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by train QE (Fig. 6C), while holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The overall paired t-test p-values are balanced QE (p=1.12e-05), holdout QE (p=0.15), and train QE (p=0.0064). Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST and RNG.
@@ -358,7 +358,7 @@ For completeness, we also ran a default-setting FloatSOM RNG configuration again
 
 ### 5.4 Hyperparameter Tuning and Stability
 
-We analyse byperparameter effects on these results in two ways. Firstly, how tuned hyperparameters, relative to the XPySOM defaults, can improve attainable $QE$ relative. Secondly, the stability of the 'optimal' hyperparameters across seeds, topologies, and sampling modes, where greater stability permits users to have greater confidence in the reliability of algorithm outputs. We therefore separate the hyperparameter results into tuning benefit (Fig. 8) and hyperparameter stability (Fig. 9).
+We analyse hyperparameter effects on these results in two ways. First, we assess how tuned hyperparameters, relative to the XPySOM defaults, improve attainable $QE$. Second, we assess the stability of the "optimal" hyperparameters across seeds, topologies, and sampling modes, where greater stability permits greater confidence in the reliability of algorithm outputs. We therefore separate the hyperparameter results into tuning benefit (Fig. 8) and hyperparameter stability (Fig. 9).
 
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
@@ -388,19 +388,19 @@ Overall, the stability results indicate that full sampling remains the more stab
 
 ## 6. Speed Scaling
 
-This section addresses three practical questions for deployment. Firstly how much runtime is added by full relative to random sampling. Secondly, how additional GPUs scale performance in dataset size, and in speed. Finally, whether choosing MST or RNG topologies impose a meaningful scalability penalty relative to a hexagonal topology. 
+This section addresses three practical deployment questions: how much runtime full sampling adds relative to random sampling, how additional GPUs scale performance with dataset size and runtime, and whether choosing MST or RNG topologies imposes a meaningful scalability penalty relative to a hexagonal topology. 
 
 ### 6.1 Random versus Full Sampling Runtime
 
-We report sample-scaling runtime comparisons for full versus random sampling with stratification of hexagonal, MST, and RNG are reported for 1,2, and 4 GPUs in Fig. 10.
+We report sample-scaling runtime comparisons for full versus random sampling, stratified by hexagonal, MST, and RNG, for 1, 2, and 4 GPUs in Fig. 10.
 
 ![Figure 10](assets_manual/figures/fig_10.svg)
 
 *Figure 10. Sample-scaling runtime comparison of full versus random sampling in batch mode across $G\in\{1,2,4\}$ GPUs (A,B,C). Curves report mean wall-clock training time (s) under harmonized settings; error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration. Color encodes topology (hexagonal, MST, RNG), and line style encodes sampling mode (full vs. random). Shaded x-axis regions indicate sample-size ranges that could not be run in that panel relative to the shared axis maximum due to timeouts. Lower values indicate faster execution.*
 
-Across topologies, random sampling is faster than full sampling across all 1, 2, and 4-GPU comparisons, with similarly proportioned reductions at any given dataset size. Again, with increased GPUs, we are able to process larger datasets before timing out. Furthermore, as the datasets increase in size, we see a smaller reduction in runtime speed relative to full sampling. This is evinced in the 500 million and 1,000,000,000 dataset runs, in both 2 and 4 GPUs. 
+Across topologies, random sampling is faster than full sampling across all 1-, 2-, and 4-GPU comparisons, with similarly proportioned reductions at any given dataset size. With more GPUs, larger datasets can also be processed before timing out. Furthermore, as datasets increase in size, the runtime reduction relative to full sampling becomes smaller. This is evident in the 500,000,000 and 1,000,000,000 sample runs on both 2 and 4 GPUs. 
 
-Expanding on the 1-GPU random-sampling runs, the last successful 1-GPU random point occurs at 100M samples like full sampling, despite random otherwise being much faster. We interpret that failed 500M point as the stage at which the single-GPU path has tipped into disk-backed operation, so the relevant cost is no longer only the reduced number of selected samples. Therefore, the overhead incurred of staging data to disk and transferring them through the single-GPU path may be causing this timeout. We therefore treat the 1-GPU random failure at 500M samples as a disk-mode systems limitation rather than as evidence against the general random-versus-full runtime ordering. 
+Expanding on the 1-GPU random-sampling runs, the last successful 1-GPU random point occurs at 100M samples, as in full sampling, despite random otherwise being much faster. We interpret the failed 500M point as the stage at which the single-GPU path has tipped into disk-backed operation, so the relevant cost is no longer only the reduced number of selected samples. The overhead incurred by staging data to disk and transferring them through the single-GPU path likely explains this timeout. We therefore treat the 1-GPU random failure at 500M samples as a disk-mode systems limitation rather than as evidence against the general random-versus-full runtime ordering. 
 
 ### 6.2 Multi-GPU topology scaling and OOM context
 
@@ -413,9 +413,9 @@ To further explore the effects of parallelising operations across multiple GPUs,
 #### 6.2.1 GPU Scaling and OOM Runtime Acceleration
 
 <!-- AUTO-SYSTEMS-SCALING-STATS:START -->
-Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. In the sample-scaling benchmark, for example, the 500 million sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset. Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. As per-node disk bandwidth is limited, distributing the workload across additional nodes may reduce transfer-path saturation and enable more stable high-throughput operation.
+Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. In the sample-scaling benchmark, for example, the 500,000,000 sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset. Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. As per-node disk bandwidth is limited, distributing the workload across additional nodes may reduce transfer-path saturation and enable more stable high-throughput operation.
 
-The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min), demonstrating billion-sample training at a runtime measured in minutes rather than hours. To reiterate, this is on a relatively complex 50-feature dataset, using 1024-node network ($32 \times 32 = 1024$), with under multi-node distributed execution, and including time taken to remotely stage data from shared non-local storage to node-local shards before training.
+The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min), demonstrating billion-sample training at a runtime measured in minutes rather than hours. To reiterate, this is on a relatively complex 50-feature dataset, using a 1024-node network ($32 \times 32 = 1024$), under multi-node distributed execution, and including the time taken to remotely stage data from shared non-local storage to node-local shards before training.
 
 The grid-size scaling panel proves to be the main exception: at the largest tested grid size (64), runtime shortens from 934.01 s (15.57 min) on 1 GPU to only 880.83 s (14.68 min) on 8 GPUs, a 5.69% reduction, indicating that once map-size/topology-refresh costs dominate, additional GPUs contribute little extra speedup. 
 
@@ -453,15 +453,17 @@ With the scaling story established, Fig. 13 then tests whether the $QE$ gains fr
 At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined deployment effect of topology choice and tuning on $QE$.
 <!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->
 
-For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because as the datasets exceeded available VRAM as XPySOM requires the full dataset to be loaded into memory. In sum, tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads (Supplementary Table S7). 
+For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. In sum, tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads (Supplementary Table S7). 
 
 ## 8. Discussion
+
+This work introduces FloatSOM as a GPU-oriented SOM framework that combines topology flexibility, out-of-memory execution, and distributed multi-GPU training in a single implementation. The study also provides a unified empirical analysis of sampling strategy, graph-based versus fixed-lattice topology, topology-aware hyperparameter tuning, and workload scaling across synthetic and real benchmarks. Taken together, these results clarify how algorithmic and systems choices jointly shape SOM quality and runtime under practical deployment constraints.
 
 ### 8.1 Sampling tradeoff (random versus full)
 
 These results suggest that the sampling trade-off is strongly scale dependent. In smaller datasets, random subsampling appears to increase update variance because each iteration is supported by fewer observations, which makes outcomes less stable. As dataset size grows, that instability seems to weaken, and under iteration-matched training the quality gap between full and random sampling largely disappears. From this perspective, full sampling is the safer choice when stability is the priority in smaller datasets, whereas random sampling becomes the more practical option when throughput is the dominant concern at larger scales.
 
-This interpretation should be qualified in the very-large-dataset regime ($>$ RAM capacity). There, the dominant bottleneck shifts away from pure compute and toward disk-read behavior and transfer into node-local storage. In the current implementation, the random path still reads each worker-local chunk before subsampling within it. Distributed shards still need to be cloned in their entirety to their respective workers, thereby incurring the same dataset I/O costs as `full` sampling. A logical direction for future work would be a chunk-level randomization path that avoids the current full-chunk-read requirement, but that approach is outside the validated scope of the present study and may introduce different update behavior. Even so, the present random path remains faster in this regime and is still roughly an order of magnitude faster than the corresponding full-data path at the largest scales considered.
+This interpretation should be qualified in the very-large-dataset regime ($>$ RAM capacity). There, the dominant bottleneck shifts away from pure compute and toward disk-read behavior and transfer into node-local storage. In the current implementation, the random path still reads each worker-local chunk before subsampling within it. Distributed shards still need to be cloned in their entirety to their respective workers, thereby incurring the same dataset I/O costs as full sampling. Even so, the present random path remains faster in this regime and is still roughly an order of magnitude faster than the corresponding full-data path at the largest scales considered.
 
 The single-GPU random crossover between the last successful 100M point and the failed 500M point helps clarify that caveat. At that failed 500M point, the dominant cost appears to have shifted to file transfer and staging overhead rather than the nominal sampling fraction itself. Our interpretation is that single-GPU bandwidth is insufficient for disk-backed operation to behave as efficiently as it does under 2+ GPU execution, where the staging and transfer burden is distributed more effectively. We treat this as a plausible explanation of the observed runtime pattern rather than as an independently benchmarked bandwidth result.
 
@@ -488,13 +490,8 @@ Distributed execution should therefore be interpreted as a workload-dependent re
 This same workload-dependent interpretation applies to our preference for the JIT-kernel BatchSOM path. Although JIT compilation introduces a small startup cost, we prefer this path because it delivers higher throughput on larger workloads; the calibration runtime pattern in Fig. S3D is consistent with that compilation cost being amortized as workload size increases.
 
 The practical implication is that multi-GPU execution becomes most useful once workload size is large enough for memory pressure and steady-state throughput to dominate orchestration overhead. In small workloads, distributed overhead can outweigh those benefits; in large workloads, scaling out is usually preferable because it sustains the end-to-end data path more effectively, even when both settings are disk-backed.
-<!-- AUTO-DEFAULT-AWARE-CONCLUSION:START -->
-This manuscript reports four main findings: in iteration-matched comparisons, full and random show no meaningful paired QE difference in larger datasets (>10,000 samples), while random provides runtime gains on smaller datasets, where it also shows greater instability; graph topologies show lower QE than the fixed hexagonal structure, with RNG showing the lowest QE in these comparisons; default-aware analyses over n=840 paired comparisons per $QE$ endpoint (n=2,520 total across all $QE$ variants $QE_B$/$QE_H$/$QE_T$), drawn from 14 datasets, 10 seeds, and the full and random sampling modes, show that hyperparameter selection affects outcomes under the derived default hyperparameters; and the multi-GPU, OOM-capable execution pipeline scales effectively when storage and file I/O are sufficient to sustain throughput.
-<!-- AUTO-DEFAULT-AWARE-CONCLUSION:END -->
 
-Taken together, one operating profile supported by these experiments uses the maximum GPU count permitted by file I/O, RNG topology, and the derived default hyperparameters, with sampling chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the empirically larger-dataset regime observed here (>10,000 samples) where paired $QE$ differences are not meaningfully detected. When workloads are dominated by very large grid-size scaling, MST remains a reasonable alternative because its graph-construction path scales more favorably than RNG.
-
-More broadly, FloatSOM provides a GPU-oriented SOM implementation with a broad configuration space across sampling strategy, topology, batch/processing mode, and systems-scale execution. This design allows practitioners to select configurations aligned with different quality-throughput tradeoffs under deployment constraints. The study brings these components into a single evaluation framework.
+Overall, these results support a practical deployment strategy that uses the maximum GPU count permitted by file I/O, RNG topology, and the derived default hyperparameters, with sampling chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the empirically larger-dataset regime observed here (>10,000 samples) where paired $QE$ differences are not meaningfully detected. When workloads are dominated by very large grid-size scaling, MST remains a reasonable alternative because its graph-construction path scales more favorably than RNG.
 
 ## 9. Acknowledgements
 
