@@ -96,7 +96,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "Output SVG path for the combined representative figure. "
-            "Default: paper/assets/figures/fig_3.svg for sklearn_circles; "
+            "Default: paper/assets/figures/fig_5.svg for sklearn_circles; "
             "otherwise paper/assets/figures/fig_topology_<data_type>_representative.svg"
         ),
     )
@@ -140,7 +140,7 @@ def _resolve_output_paths(script_args: argparse.Namespace) -> Tuple[Path, Path]:
     summary_tsv = script_args.summary_tsv
     if output_svg is None:
         if tag == "circles":
-            output_svg = figures_dir / "fig_3.svg"
+            output_svg = figures_dir / "fig_5.svg"
         else:
             output_svg = figures_dir / f"fig_topology_{tag}_representative.svg"
     if summary_tsv is None:

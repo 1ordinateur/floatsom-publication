@@ -903,8 +903,8 @@ def _render_xpysom_topology_tripanel_publication_figures(
 
         topology_label = topology_label_map[topology]
         topology_figure_label_map = {
-            "hexagonal": "Supplementary Figure S13",
-            "mst": "Supplementary Figure S14",
+            "hexagonal": "Supplementary Figure S12",
+            "mst": "Supplementary Figure S13",
         }
         comparison_key = f"xpysom_default_vs_tuned_{topology}"
         comparison_output = _render_matched_parameter_tripanel_figure(
@@ -2299,7 +2299,7 @@ def _render_xpysom_rng_scaling_publication_figure(
                 ("D", "Scaling Runtime", scaling_panel_path),
             ],
         ],
-        title="Figure 11: XPySOM (Default) v FloatSOM RNG",
+        title="Figure 13: XPySOM (Default) v FloatSOM RNG",
         output_path=combined_figure_path,
         dpi=int(dpi),
     )

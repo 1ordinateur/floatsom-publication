@@ -195,7 +195,7 @@ def test_write_publication_support_tables_builds_rng_scaling_diagnostics(
         / "harmonized"
         / "publication_figures"
         / "tables"
-        / "supp_table_figure_9_rng_scaling_diagnostics.tsv"
+        / "supp_table_figure_11_rng_scaling_diagnostics.tsv"
     )
     assert output_table.exists()
 
@@ -216,5 +216,5 @@ def test_write_publication_support_tables_builds_rng_scaling_diagnostics(
     assert sample_row["gpu_count"] == "8"
     assert sample_row["runtime_mean_s"] == "543.21"
 
-    synced_table = paper_tables_dir / "supp_table_figure_9_rng_scaling_diagnostics.tsv"
+    synced_table = paper_tables_dir / "supp_table_figure_11_rng_scaling_diagnostics.tsv"
     assert synced_table.exists()

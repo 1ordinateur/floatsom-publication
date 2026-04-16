@@ -12,17 +12,20 @@ _SVG_HEIGHT_PATTERN = re.compile(r'\bheight=["\']\s*([-+0-9.eE]+)')
 _SVG_OPEN_TAG_PATTERN = re.compile(r"<svg\b[^>]*>", re.IGNORECASE | re.DOTALL)
 
 _PUBLICATION_SVG_NORMALIZATION_TARGETS: Tuple[str, ...] = (
-    "fig_4.svg",
-    "fig_5.svg",
     "fig_6.svg",
     "fig_7.svg",
+    "fig_8.svg",
+    "fig_9.svg",
+    "supp_fig_s4.svg",
     "supp_fig_s5.svg",
+    "supp_fig_s6.svg",
+    "supp_fig_s7.svg",
     "supp_fig_s8.svg",
     "supp_fig_s9.svg",
     "supp_fig_s10.svg",
     "supp_fig_s11.svg",
+    "supp_fig_s12.svg",
     "supp_fig_s13.svg",
-    "supp_fig_s14.svg",
 )
 _NORMALIZATION_GROUP_ID = "publication_svg_canvas_normalized"
 _SVG_TOLERANCE = 1e-6

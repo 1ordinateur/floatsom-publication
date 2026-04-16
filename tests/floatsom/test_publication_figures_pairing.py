@@ -1303,7 +1303,7 @@ def test_sync_default_aware_stats_to_manuscript_updates_live_counts(
                 "<!-- AUTO-DEFAULT-AWARE-FIGURE6-STATS:START -->",
                 "stale fig6 block",
                 "<!-- AUTO-DEFAULT-AWARE-FIGURE6-STATS:END -->",
-                "At the pooled overall level, the paired summaries across all matched tuned/default pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 6.",
+                "At the pooled overall level, the paired summaries across all matched tuned/default pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 8.",
                 "<!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:START -->",
                 "stale topology block",
                 "<!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:END -->",
@@ -1451,7 +1451,7 @@ def test_sync_default_aware_stats_to_manuscript_updates_live_counts(
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
     assert (
-        "The tuned-versus-reference pairing results in Fig. 7 show the same direction across the $QE$ endpoints, "
+        "The tuned-versus-reference pairing results in Fig. 8 show the same direction across the $QE$ endpoints, "
         "based on n=2 paired comparisons per $QE$ endpoint (n=6 total across all $QE$ variants "
         "$QE_B$/$QE_H$/$QE_T$) from 2 datasets, 2 seeds, and the full and random sampling modes."
     ) in updated_text
@@ -1471,7 +1471,7 @@ def test_sync_default_aware_stats_to_manuscript_updates_live_counts(
         "rather than a single-architecture artifact."
     ) in updated_text
     assert (
-        "Across the matched Fig. 6 comparisons, tuned defaults consistently produce better QE results than "
+        "Across the matched Fig. 8 comparisons, tuned defaults consistently produce better QE results than "
         "untuned defaults. This suggests that tuning should be treated as part of the method configuration "
         "rather than as optional post-processing."
     ) in updated_text
@@ -1497,12 +1497,12 @@ def test_sync_topology_pvalue_summary_to_paper_and_manuscript(
                 "<!-- AUTO-TOPOLOGY-MST-PVALUES:START -->",
                 "stale mst block",
                 "<!-- AUTO-TOPOLOGY-MST-PVALUES:END -->",
-                "![Figure 4](assets_manual/figures/fig_4.svg)",
+                "![Figure 6](assets_manual/figures/fig_6.svg)",
                 "### 5.4 RNG Results",
                 "<!-- AUTO-TOPOLOGY-RNG-PVALUES:START -->",
                 "stale rng block",
                 "<!-- AUTO-TOPOLOGY-RNG-PVALUES:END -->",
-                "![Figure 5](assets_manual/figures/fig_5.svg)",
+                "![Figure 7](assets_manual/figures/fig_7.svg)",
                 "## Supplementary Tables (End Matter)",
                 "**Supplementary Table S4. Existing entry.**",
                 "## Supplementary Figures (End Matter)",
@@ -1600,20 +1600,20 @@ def test_sync_systems_scaling_stats_to_manuscript(
         "\n".join(
             [
                 "### 6.2 Multi-GPU topology scaling and OOM context",
-                "![Figure 9](assets_manual/figures/fig_9.svg)",
-                "*Figure 9. Multi-GPU full-batch scaling across $G\\in\\{1,2,4,8\\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\\% efficiency reference line indicates ideal linear scaling.*",
+                "![Figure 11](assets_manual/figures/fig_11.svg)",
+                "*Figure 11. Multi-GPU full-batch scaling across $G\\in\\{1,2,4,8\\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\\% efficiency reference line indicates ideal linear scaling.*",
                 "<!-- AUTO-SYSTEMS-SCALING-STATS:START -->",
                 "stale systems block",
                 "<!-- AUTO-SYSTEMS-SCALING-STATS:END -->",
                 "We interpret scaling efficiency using the standard single-GPU baseline-over-observed speedup definition.",
-                "At fixed $G=8$ under the same harmonized full-batch scaling conditions, topology runtime is compared across hexagonal, MST, and RNG (Fig. 10).",
+                "At fixed $G=8$ under the same harmonized full-batch scaling conditions, topology runtime is compared across hexagonal, MST, and RNG (Fig. 11).",
                 "",
             ]
         ),
         encoding="utf-8",
     )
 
-    diagnostics_path = assets_dir / "tables" / "supp_table_figure_9_rng_scaling_diagnostics.tsv"
+    diagnostics_path = assets_dir / "tables" / "supp_table_figure_11_rng_scaling_diagnostics.tsv"
     pd.DataFrame(
         [
             {"mode_name": "dimension_scaling", "mode_label": "Dimension Scaling", "topology": "rng", "method": "batch", "axis_value": 500, "gpu_count": 1, "runtime_mean_s": 101.0, "runtime_std_s": 1.0, "n_repeats": 3, "log_count": 1, "staging_mode": "ram", "staging_modes": "ram", "any_repeat_disk": False, "all_repeats_disk": False},
@@ -1822,7 +1822,7 @@ def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table
             },
         ]
     ).to_csv(
-        tables_dir / "supp_table_figure_10_topology_runtime_summary.tsv",
+        tables_dir / "supp_table_figure_12_topology_runtime_summary.tsv",
         index=False,
         sep="\t",
     )
@@ -1832,13 +1832,13 @@ def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
     assert (
-        "In Fig. 10A-B, the topologies scale similarly as input complexity and data volume increase: "
+        "In Fig. 12A-B, the topologies scale similarly as input complexity and data volume increase: "
         "even at the largest tested axis values, the maximum pairwise runtime spread remains modest at "
         "dimension scaling (0.92% at 5,000 dimensions); sample scaling (0.89% at "
         "1,000,000,000 samples)."
     ) in updated_text
     assert (
-        "However, when the grid itself is enlarged in Fig. 10C, topology-dependent runtime differences "
+        "However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtime differences "
         "become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are "
         "40.00 s (0.67 min) for hexagonal, 65.00 s (1.08 min) for MST, and 74.00 s (1.23 min) for "
         "RNG, corresponding to 8-GPU MST and RNG runtimes that are 1.62x and 1.85x the hexagonal "
@@ -1862,11 +1862,11 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
     manuscript_path.write_text(
         "\n".join(
             [
-                "*Figure 11. Integrated deployment comparison of default XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned XPySOM baseline against matched tuned FloatSOM RNG full-sampling runs. Panel D provides the scaling/runtime context for the same comparison, with the separately executed targeted 1B-sample runs discussed in the text rather than plotted directly. Taken together, this integrated figure summarizes the operating point observed for tuned FloatSOM RNG once workload size is large enough for steady-state execution to dominate startup overhead. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S6.*",
+                "*Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full-sampling runs. Panel D provides the scaling/runtime context for the same comparison, with the separately executed targeted 1B-sample runs discussed in the text rather than plotted directly. Taken together, this integrated figure summarizes the operating point observed for tuned FloatSOM RNG once workload size is large enough for steady-state execution to dominate startup overhead. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S7.*",
                 "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:START -->",
                 "stale figure11 qe block",
                 "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->",
-                "For the XPySOM reference in Fig. 11, workloads beyond the $10^8$-sample case were not processed under this benchmark setup because the implementation ran out of memory.",
+                "For the XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed under this benchmark setup because the implementation ran out of memory.",
                 "<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:START -->",
                 "stale figure11 runtime block",
                 "<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:END -->",
@@ -1911,18 +1911,18 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
             },
         ]
     ).to_csv(
-        tables_dir / "supp_table_figure_10_topology_runtime_summary.tsv",
+        tables_dir / "supp_table_figure_12_topology_runtime_summary.tsv",
         index=False,
         sep="\t",
     )
     pd.DataFrame(
         [
-            {"figure": "Figure 11", "topology": "rng", "metric": "QE_B", "dataset": "GLOBAL_OVERALL", "median_pct_change": 14.4850, "ci_low_pct": 12.7836, "ci_high_pct": 16.1865},
-            {"figure": "Figure 11", "topology": "rng", "metric": "QE_H", "dataset": "GLOBAL_OVERALL", "median_pct_change": 9.0765, "ci_low_pct": 7.1203, "ci_high_pct": 11.0326},
-            {"figure": "Figure 11", "topology": "rng", "metric": "QE_T", "dataset": "GLOBAL_OVERALL", "median_pct_change": 22.4609, "ci_low_pct": 19.4613, "ci_high_pct": 25.4605},
+            {"figure": "Figure 13", "topology": "rng", "metric": "QE_B", "dataset": "GLOBAL_OVERALL", "median_pct_change": 14.4850, "ci_low_pct": 12.7836, "ci_high_pct": 16.1865},
+            {"figure": "Figure 13", "topology": "rng", "metric": "QE_H", "dataset": "GLOBAL_OVERALL", "median_pct_change": 9.0765, "ci_low_pct": 7.1203, "ci_high_pct": 11.0326},
+            {"figure": "Figure 13", "topology": "rng", "metric": "QE_T", "dataset": "GLOBAL_OVERALL", "median_pct_change": 22.4609, "ci_low_pct": 19.4613, "ci_high_pct": 25.4605},
         ]
     ).to_csv(
-        tables_dir / "supp_table_figure_11_xpysom_rng_deployment_summary.tsv",
+        tables_dir / "supp_table_figure_12_xpysom_rng_deployment_summary.tsv",
         index=False,
         sep="\t",
     )
@@ -1932,13 +1932,13 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
     assert (
-        "At the overall level, Fig. 11 shows median percentage improvements of $QE_B$ (14.5%); "
+        "At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); "
         "$QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to default XPySOM, "
         "capturing the combined deployment effect of topology choice and tuning on $QE$."
     ) in updated_text
     assert (
         "The targeted deployment-scale runs indicate that these quality gains are not purchased at the "
-        "cost of a qualitatively different runtime profile: applying the tuned defaults used in Fig. 11 "
+        "cost of a qualitatively different runtime profile: applying the tuned defaults used in Fig. 12 "
         "does not strongly alter the distributed scaling behavior established by the earlier results "
         "(Supplementary Table S9)."
     ) in updated_text
@@ -1963,7 +1963,7 @@ def test_sync_default_aware_stability_regression_stats_to_manuscript_uses_plain_
                 "<!-- AUTO-DEFAULT-AWARE-STABILITY-REGRESSION:START -->",
                 "stale stability block",
                 "<!-- AUTO-DEFAULT-AWARE-STABILITY-REGRESSION:END -->",
-                "![Figure 7](assets_manual/figures/fig_7.svg)",
+                "![Figure 9](assets_manual/figures/fig_9.svg)",
                 "",
             ]
         ),

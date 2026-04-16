@@ -47,6 +47,15 @@ p > img[role="img"] {
   margin-right: calc(-1 * var(--figure-bleed-screen));
 }
 
+figure > img.half-width,
+figure > svg.half-width,
+p > img[role="img"].half-width {
+  width: 50%;
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 figure > figcaption {
   margin-top: 0.75em;
   font-size: 0.75em;
@@ -153,6 +162,15 @@ p > img[role="img"] + em {
     max-width: 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  figure > img.half-width,
+  figure > svg.half-width,
+  p > img[role="img"].half-width {
+    width: 50%;
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   figure > figcaption {

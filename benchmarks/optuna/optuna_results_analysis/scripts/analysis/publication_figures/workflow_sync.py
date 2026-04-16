@@ -56,6 +56,29 @@ def _resolve_paper_assets_dir() -> Optional[Path]:
             return candidate
     return None
 
+
+def _resolve_paper_manual_assets_dir() -> Optional[Path]:
+    script_path = Path(__file__).resolve()
+    for parent in script_path.parents:
+        candidate = parent / "floatsom" / "paper" / "assets_manual"
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
+def _mirror_figure_to_manual_assets(src_path: Path, dst_name: str, generated_files: List[str]) -> Optional[Path]:
+    if dst_name in {"fig_3.svg", "fig_11.svg"}:
+        return None
+    manual_assets_dir = _resolve_paper_manual_assets_dir()
+    if manual_assets_dir is None:
+        return None
+    manual_figures_dir = manual_assets_dir / "figures"
+    manual_figures_dir.mkdir(parents=True, exist_ok=True)
+    manual_path = manual_figures_dir / dst_name
+    shutil.copy2(src_path, manual_path)
+    generated_files.append(str(manual_path.resolve()))
+    return manual_path
+
 def _sync_sampling_comparison_assets_to_paper(
     suite_outputs: Dict[str, Dict[str, object]],
     generated_files: List[str],
@@ -88,32 +111,32 @@ def _sync_sampling_comparison_assets_to_paper(
     copied_tables: List[str] = []
     sampling_comparison_scope = "all_sampling_modes"
     required_publication_figure_sources: Dict[str, str] = {
-        "figure_3_algorithm_sampling_stratified_full_random_only_all_metrics.svg": "fig_2.svg",
+        "figure_3_algorithm_sampling_stratified_full_random_only_all_metrics.svg": "fig_4.svg",
     }
     publication_figure_name_map: Dict[str, Tuple[str, ...]] = {
         "figure_3_algorithm_sampling_stratified_full_random_only_all_metrics.svg": (
-            "fig_2.svg",
-        ),
-        "figure_3_algorithm_sampling_stratified_full_hdsssom_only_all_metrics.svg": (
-            "supp_fig_s4.svg",
-        ),
-        "figure_4_topology_hex_mst_metrics_full_only.svg": (
             "fig_4.svg",
         ),
+        "figure_3_algorithm_sampling_stratified_full_hdsssom_only_all_metrics.svg": (
+            "fig_3.svg",
+        ),
+        "figure_4_topology_hex_mst_metrics_full_only.svg": (
+            "fig_6.svg",
+        ),
         "figure_5_topology_hex_rng_metrics_full_only.svg": (
-            "fig_5.svg",
+            "fig_7.svg",
         ),
         "supp_figure_topology_mst_rng_metrics_full_only.svg": (
-            "supp_fig_s5.svg",
+            "supp_fig_s4.svg",
         ),
         "supp_figure_s6_topology_hex_mst_sensitivity_full_only.svg": (
-            "supp_fig_s6.svg",
+            "supp_fig_s5.svg",
         ),
         "supp_figure_s7_topology_hex_rng_sensitivity_full_only.svg": (
-            "supp_fig_s7.svg",
+            "supp_fig_s6.svg",
         ),
         "supp_figure_s8_topology_mst_rng_sensitivity_full_only.svg": (
-            "supp_fig_s8.svg",
+            "supp_fig_s7.svg",
         ),
     }
     if (publication_figures_path / "figure_3_algorithm_sampling_stratified_full_random_only_all_metrics.svg").exists():
@@ -141,6 +164,11 @@ def _sync_sampling_comparison_assets_to_paper(
                 shutil.copy2(src_path, dst_path)
                 copied_figures[f"publication_figures/{src_name}:{dst_name}"] = str(dst_path.resolve())
                 generated_files.append(str(dst_path.resolve()))
+                manual_path = _mirror_figure_to_manual_assets(dst_path, dst_name, generated_files)
+                if manual_path is not None:
+                    copied_figures[f"publication_figures/{src_name}:manual/{dst_name}"] = str(
+                        manual_path.resolve()
+                    )
 
     figure_3_metadata_candidates = [
         src_tables_dir / "figure_3_full_vs_random_dataset_metadata.csv",
@@ -340,11 +368,11 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
             "reason": f"Manuscript file not found: {manuscript_path}",
         }
 
-    stats_path = (assets_dir / "tables" / "supp_table_figure_10_topology_runtime_summary.tsv").resolve()
+    stats_path = (assets_dir / "tables" / "supp_table_figure_12_topology_runtime_summary.tsv").resolve()
     if not stats_path.exists():
         return {
             "updated": False,
-            "reason": f"Figure 10 topology runtime summary table not found: {stats_path}",
+            "reason": f"Figure 11 topology runtime summary table not found: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -352,7 +380,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     if stats_df.empty:
         return {
             "updated": False,
-            "reason": f"Figure 10 topology runtime summary table is empty: {stats_path}",
+            "reason": f"Figure 11 topology runtime summary table is empty: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -435,7 +463,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
         rng_fold = float(rng_runtime) / float(hex_runtime)
         if np.isfinite(mst_fold) and np.isfinite(rng_fold):
             grid_discussion_paragraph = (
-                "However, when the grid itself is enlarged in Fig. 10C, topology-dependent runtime "
+            "However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtime "
                 "differences become readily evident. "
                 f"At the largest tested grid size (grid size {grid_axis_value_text}), "
                 f"the 8-GPU mean runtimes are {_format_runtime(hex_runtime)} for hexagonal, "
@@ -455,7 +483,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     discussion_end = "<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:END -->"
     if metric_phrases:
         paragraph = (
-            "In Fig. 10A-B, the topologies scale similarly as input complexity and data volume increase: "
+            "In Fig. 12A-B, the topologies scale similarly as input complexity and data volume increase: "
             "even at the largest tested axis values, the maximum pairwise runtime spread remains modest at "
             + "; ".join(metric_phrases[:-1] + [metric_phrases[-1]])
             + "."
@@ -518,13 +546,13 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
         }
 
     deployment_summary_path = (
-        assets_dir / "tables" / "supp_table_figure_11_xpysom_rng_deployment_summary.tsv"
+        assets_dir / "tables" / "supp_table_figure_12_xpysom_rng_deployment_summary.tsv"
     ).resolve()
-    stats_path = (assets_dir / "tables" / "supp_table_figure_10_topology_runtime_summary.tsv").resolve()
+    stats_path = (assets_dir / "tables" / "supp_table_figure_12_topology_runtime_summary.tsv").resolve()
     if not stats_path.exists():
         return {
             "updated": False,
-            "reason": f"Figure 10 topology runtime summary table not found: {stats_path}",
+            "reason": f"Figure 11 topology runtime summary table not found: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -532,7 +560,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
     if stats_df.empty:
         return {
             "updated": False,
-            "reason": f"Figure 10 topology runtime summary table is empty: {stats_path}",
+            "reason": f"Figure 11 topology runtime summary table is empty: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -613,7 +641,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
                 else:
                     metric_text = f"{'; '.join(metric_phrases[:-1])}; and {metric_phrases[-1]}"
                 qe_paragraph = (
-                    "At the overall level, Fig. 11 shows median percentage improvements of "
+                    "At the overall level, Fig. 13 shows median percentage improvements of "
                     + metric_text
                     + " for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined "
                     "deployment effect of topology choice and tuning on $QE$."
@@ -650,7 +678,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
         qe_end_idx += len(qe_end_marker)
         updated_text = manuscript_text[:qe_start_idx] + qe_block_body + manuscript_text[qe_end_idx:]
     else:
-        qe_anchor = "*Figure 11. Integrated deployment comparison of default XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned XPySOM baseline against matched tuned FloatSOM RNG full-sampling runs. Panel D provides the scaling/runtime context for the same comparison, with the separately executed targeted 1B-sample runs discussed in the text rather than plotted directly. Taken together, this integrated figure summarizes the operating point observed for tuned FloatSOM RNG once workload size is large enough for steady-state execution to dominate startup overhead. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S6.*"
+        qe_anchor = "*Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full-sampling runs. Panel D provides the scaling/runtime context for the same comparison, with the separately executed targeted 1B-sample runs discussed in the text rather than plotted directly. Taken together, this integrated figure summarizes the operating point observed for tuned FloatSOM RNG once workload size is large enough for steady-state execution to dominate startup overhead. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S7.*"
         qe_anchor_idx = manuscript_text.find(qe_anchor)
         if qe_anchor_idx == -1:
             updated_text = manuscript_text.rstrip() + "\n\n" + qe_block_body + "\n"
@@ -846,15 +874,15 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
     mst_phrases = _overall_metric_phrases("hex_vs_mst")
     rng_phrases = _overall_metric_phrases("hex_vs_rng")
     mst_sentence = (
-        "Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 5A), indicating a net advantage across "
-        "train and holdout performance. This aggregate gain is driven more clearly by Train QE (Fig. 5C), while "
-        "Holdout QE is more mixed across datasets (Fig. 5B)."
+        "Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 6A), indicating a net advantage across "
+        "train and holdout performance. This aggregate gain is driven more clearly by Train QE (Fig. 6C), while "
+        "Holdout QE is more mixed across datasets (Fig. 6B)."
     )
     if mst_phrases:
         mst_sentence = (
-            "Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 5A), indicating a net advantage "
+            "Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 6A), indicating a net advantage "
             "across train and holdout performance. This aggregate gain is driven more clearly by Train QE "
-            "(Fig. 5C), while Holdout QE is more mixed across datasets (Fig. 5B) and shows no clear overall "
+            "(Fig. 6C), while Holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall "
             "holdout advantage. The overall paired t-test p-values are "
             + _join_metric_phrases(mst_phrases)
             + ". Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST "
@@ -863,11 +891,11 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
 
     rng_sentence = (
         "RNG has lower QE than hexagonal topologies on all QE metrics, and significantly better than MST in "
-        "Balanced and Train QE (Fig. 5, Supplementary Fig. S5)."
+        "Balanced and Train QE (Fig. 7, Supplementary Fig. S6)."
     )
     if rng_phrases:
         rng_sentence = (
-            "RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 6A-6C), with overall paired "
+            "RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 7A-7C), with overall paired "
             "t-test p-values of "
             + _join_metric_phrases(rng_phrases)
             + ". Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST "
@@ -916,14 +944,14 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
         start_marker=mst_start,
         end_marker=mst_end,
         block_body=mst_block,
-        anchor="![Figure 5](assets_manual/figures/fig_4.svg)",
+        anchor="![Figure 6](assets_manual/figures/fig_6.svg)",
     )
     updated_text = _upsert_block(
         updated_text,
         start_marker=rng_start,
         end_marker=rng_end,
         block_body=rng_block,
-        anchor="![Figure 6](assets_manual/figures/fig_5.svg)",
+        anchor="![Figure 7](assets_manual/figures/fig_7.svg)",
     )
     updated_text = _upsert_block(
         updated_text,
@@ -962,7 +990,7 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
             "reason": f"Manuscript file not found: {manuscript_path}",
         }
 
-    diagnostics_path = (assets_dir / "tables" / "supp_table_figure_9_rng_scaling_diagnostics.tsv").resolve()
+    diagnostics_path = (assets_dir / "tables" / "supp_table_figure_11_rng_scaling_diagnostics.tsv").resolve()
     if not diagnostics_path.exists():
         return {
             "updated": False,
@@ -1057,7 +1085,7 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
         first_gpu = shared_gpu_counts[0]
         last_gpu = shared_gpu_counts[-1]
         crossover_sentence = (
-            "Across the Fig. 9 full-batch RNG scaling sweeps, all tested GPU counts eventually transition into disk mode. "
+            "Across the Fig. 10 full-batch RNG scaling sweeps, all tested GPU counts eventually transition into disk mode. "
             f"In dimension scaling, the crossover shifts from {_format_gpu(first_gpu)} at "
             f"{_format_int(dimension_thresholds[first_gpu])} dimensions to {_format_gpu(last_gpu)} at "
             f"{_format_int(dimension_thresholds[last_gpu])} dimensions; in sample scaling, it shifts from "
@@ -1101,7 +1129,7 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
         end_idx += len(end_marker)
         updated_text = manuscript_text[:start_idx] + block_body + manuscript_text[end_idx:]
     else:
-        anchor = "*Figure 9. Multi-GPU full-batch scaling across $G\\in\\{1,2,4,8\\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\\% efficiency reference line indicates ideal linear scaling.*"
+        anchor = "*Figure 10. Multi-GPU full-batch scaling across $G\\in\\{1,2,4,8\\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\\% efficiency reference line indicates ideal linear scaling.*"
         anchor_idx = manuscript_text.find(anchor)
         if anchor_idx == -1:
             updated_text = manuscript_text.rstrip() + "\n\n" + block_body + "\n"
@@ -1333,7 +1361,7 @@ def _sync_default_aware_stats_to_manuscript(
     sampling_modes_text = _plain_text_join(pair_metadata.get("sampling_modes", [])) if pair_metadata is not None else ""
 
     results_sentence = (
-        "The tuned-versus-reference pairing results in Fig. 7 show the same direction across the $QE$ endpoints, "
+        "The tuned-versus-reference pairing results in Fig. 8 show the same direction across the $QE$ endpoints, "
         f"based on {pair_count_phrase} from {n_datasets} datasets, {n_seeds} seeds"
     )
     if sampling_modes_text:
@@ -1406,7 +1434,7 @@ def _sync_default_aware_stats_to_manuscript(
         )
 
     discussion_sentence = (
-        "Across the matched Fig. 6 comparisons, tuned defaults consistently produce better QE results than "
+        "Across the matched Fig. 8 comparisons, tuned defaults consistently produce better QE results than "
         "untuned defaults. This suggests that tuning should be treated as part of the method configuration "
         "rather than as optional post-processing."
     )
@@ -1446,7 +1474,7 @@ def _sync_default_aware_stats_to_manuscript(
         start_marker=fig6_start,
         end_marker=fig6_end,
         block_body=fig6_block,
-        anchor="At the pooled overall level, the paired summaries across all matched tuned/default pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 6.",
+        anchor="At the pooled overall level, the paired summaries across all matched tuned/default pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 8.",
     )
     updated_text = _upsert_block(
         updated_text,
@@ -1593,7 +1621,7 @@ def _sync_default_aware_stability_regression_stats_to_manuscript(
     if full_summary and random_summary:
         paragraph = (
             "The dataset-size regression summaries show little evidence of a full-sampling size relationship, with "
-            f"near-zero correlations under full sampling, {full_summary}. By contrast, Fig. 7C shows a clearer "
+            f"near-zero correlations under full sampling, {full_summary}. By contrast, Fig. 9C shows a clearer "
             "random-sampling size relationship, with "
             f"{random_summary}. Under random sampling, larger datasets tend to produce lower selected-parameter "
             "stability scores, indicating improved stability with scale. This reinforces the practical interpretation "
@@ -1626,7 +1654,7 @@ def _sync_default_aware_stability_regression_stats_to_manuscript(
         end_idx += len(end_marker)
         updated_text = manuscript_text[:start_idx] + block_body + manuscript_text[end_idx:]
     else:
-        anchor = "![Figure 7](assets_manual/figures/fig_7.svg)"
+        anchor = "![Figure 8](assets_manual/figures/fig_8.svg)"
         anchor_idx = manuscript_text.find(anchor)
         if anchor_idx == -1:
             updated_text = manuscript_text.rstrip() + "\n\n" + block_body + "\n"
@@ -1671,10 +1699,10 @@ def _sync_default_aware_assets_to_paper(
     dst_figures_dir.mkdir(parents=True, exist_ok=True)
 
     variant_destinations: Dict[str, str] = {
-        "selected_source": "fig_6.svg",
-        "selected_source_hex": "supp_fig_s9.svg",
-        "selected_source_mst": "supp_fig_s10.svg",
-        "selected_source_rng": "supp_fig_s11.svg",
+        "selected_source": "fig_8.svg",
+        "selected_source_hex": "supp_fig_s8.svg",
+        "selected_source_mst": "supp_fig_s9.svg",
+        "selected_source_rng": "supp_fig_s10.svg",
     }
     copied_figures: Dict[str, str] = {}
 
@@ -1689,6 +1717,7 @@ def _sync_default_aware_assets_to_paper(
         shutil.copy2(src_path, dst_path)
         copied_figures[key] = str(dst_path.resolve())
         generated_files.append(str(dst_path.resolve()))
+        _mirror_figure_to_manual_assets(dst_path, dst_name, generated_files)
 
     variants = default_aware_analysis.get("tuned_vs_default_variants", [])
     if not isinstance(variants, list):
@@ -1831,10 +1860,11 @@ def _sync_xpysom_rng_publication_assets_to_paper(
 
     figure_src = Path(figure_src_text).resolve()
     if figure_src.exists():
-        figure_dst = dst_figures_dir / "fig_11.svg"
+        figure_dst = dst_figures_dir / "fig_13.svg"
         shutil.copy2(figure_src, figure_dst)
         copied["figure"] = str(figure_dst.resolve())
         generated_files.append(str(figure_dst.resolve()))
+        _mirror_figure_to_manual_assets(figure_dst, figure_dst.name, generated_files)
 
     return {
         "copied": bool(copied),
@@ -1868,8 +1898,8 @@ def _sync_xpysom_topology_tripanel_assets_to_paper(
     dst_figures_dir.mkdir(parents=True, exist_ok=True)
 
     figure_name_map = {
-        "hexagonal": "supp_fig_s13.svg",
-        "mst": "supp_fig_s14.svg",
+        "hexagonal": "supp_fig_s12.svg",
+        "mst": "supp_fig_s13.svg",
     }
     copied_figures: Dict[str, str] = {}
 
@@ -1884,6 +1914,7 @@ def _sync_xpysom_topology_tripanel_assets_to_paper(
         shutil.copy2(src_path, dst_path)
         copied_figures[topology] = str(dst_path.resolve())
         generated_files.append(str(dst_path.resolve()))
+        _mirror_figure_to_manual_assets(dst_path, dst_name, generated_files)
 
     return {
         "copied": bool(copied_figures),

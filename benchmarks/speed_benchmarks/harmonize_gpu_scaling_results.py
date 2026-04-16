@@ -122,15 +122,15 @@ PUBLICATION_SUPPLEMENTARY_TOPOLOGY_COMPARISON_LEGEND_SCALE = PUBLICATION_COMPOSI
 PUBLICATION_SUPPLEMENTARY_SINGLE_TOPOLOGY_LEGEND_BAND_HEIGHT = PUBLICATION_TWO_ROW_LEGEND_BAND_HEIGHT
 PUBLICATION_SUPPLEMENTARY_SINGLE_TOPOLOGY_LEGEND_SCALE = PUBLICATION_FIGURE_9_LEGEND_SCALE
 PUBLICATION_PAPER_ASSET_FIGURE_MAP: Dict[str, str] = {
-    "figure_8_sampling_speed_random_over_full.svg": "fig_8.svg",
-    "figure_9_algorithm_first_gpu_scaling.svg": "fig_9.svg",
-    "figure_10_topology_mst_hex_performance.svg": "fig_10.svg",
-    "supplementary_figure_s12_mst_hex_gpu_scaling.svg": "supp_fig_s12.svg",
+    "figure_8_sampling_speed_random_over_full.svg": "fig_10.svg",
+    "figure_9_algorithm_first_gpu_scaling.svg": "fig_11.svg",
+    "figure_10_topology_mst_hex_performance.svg": "fig_12.svg",
+    "supplementary_figure_s12_mst_hex_gpu_scaling.svg": "supp_fig_s11.svg",
 }
 PUBLICATION_PAPER_ASSET_EXTRA_COPIES: Dict[str, Tuple[str, ...]] = {}
 PUBLICATION_PAPER_ASSET_TABLE_MAP: Dict[str, str] = {
-    "supp_table_figure_10_topology_runtime_summary.tsv": "supp_table_figure_10_topology_runtime_summary.tsv",
-    "supp_table_figure_9_rng_scaling_diagnostics.tsv": "supp_table_figure_9_rng_scaling_diagnostics.tsv",
+    "supp_table_figure_10_topology_runtime_summary.tsv": "supp_table_figure_12_topology_runtime_summary.tsv",
+    "supp_table_figure_9_rng_scaling_diagnostics.tsv": "supp_table_figure_11_rng_scaling_diagnostics.tsv",
 }
 SCALING_LOG_CONFIG_PATTERN = re.compile(
     r"^(?P<topology>[A-Za-z0-9_]+)"
@@ -1220,6 +1220,27 @@ def _resolve_paper_assets_tables_dir() -> Optional[Path]:
     return None
 
 
+def _resolve_paper_manual_figures_dir() -> Optional[Path]:
+    script_path = Path(__file__).resolve()
+    for parent in script_path.parents:
+        candidate = parent / "floatsom" / "paper" / "assets_manual" / "figures"
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
+def _mirror_publication_figure_to_manual_assets(src_path: Path, dst_name: str) -> Optional[Path]:
+    if dst_name in {"fig_3.svg", "fig_11.svg"}:
+        return None
+    manual_figures_dir = _resolve_paper_manual_figures_dir()
+    if manual_figures_dir is None:
+        return None
+    manual_figures_dir.mkdir(parents=True, exist_ok=True)
+    manual_path = manual_figures_dir / dst_name
+    shutil.copy2(src_path, manual_path)
+    return manual_path
+
+
 def _sync_publication_figures_to_paper_assets(
     publication_dir: Path,
     warnings: List[str],
@@ -1243,6 +1264,9 @@ def _sync_publication_figures_to_paper_assets(
         dst_path = paper_figures_dir / dst_name
         shutil.copy2(src_path, dst_path)
         copied[src_name] = str(dst_path.resolve())
+        manual_path = _mirror_publication_figure_to_manual_assets(dst_path, dst_name)
+        if manual_path is not None:
+            copied[f"{src_name} -> manual/{dst_name}"] = str(manual_path.resolve())
         extra_targets = PUBLICATION_PAPER_ASSET_EXTRA_COPIES.get(src_name, ())
         for extra_name in extra_targets:
             extra_path = paper_figures_dir / extra_name
@@ -1868,7 +1892,7 @@ def _write_publication_panel_outputs(
     figure_10_path = publication_dir / "figure_10_topology_mst_hex_performance.svg"
     if _compose_publication_matrix_from_sources(
         panel_rows=[figure_5_row],
-        title="Figure 10: Topology Runtime Comparison (8 GPUs, Full Batch)",
+        title="Figure 11: Topology Runtime Comparison (8 GPUs, Full Batch)",
         output_path=figure_10_path,
         legend_dirs=legend_dirs_5,
         warnings=warnings,
@@ -1975,11 +1999,11 @@ def _write_topology_scaling_supplementary_outputs(
         mst_hex_output_path.unlink()
     generated[mst_hex_output_path.name] = _compose_publication_matrix_from_sources(
         panel_rows=mst_hex_rows,
-        title="Supplementary Figure S12: Per-Topology GPU Scaling Performance\n(MST and Hexagonal)",
+        title="Supplementary Figure S11: Per-Topology GPU Scaling Performance\n(MST and Hexagonal)",
         output_path=mst_hex_output_path,
         legend_dirs=mst_hex_legend_dirs,
         warnings=warnings,
-        warning_label="Supplementary Figure S12 MST/Hex GPU scaling performance",
+        warning_label="Supplementary Figure S11 MST/Hex GPU scaling performance",
         legend_band_height_override=PUBLICATION_SUPPLEMENTARY_TOPOLOGY_COMPARISON_LEGEND_BAND_HEIGHT,
         legend_gap_override=PUBLICATION_LEGEND_GAP,
         legend_scale_override=PUBLICATION_SUPPLEMENTARY_TOPOLOGY_COMPARISON_LEGEND_SCALE,
