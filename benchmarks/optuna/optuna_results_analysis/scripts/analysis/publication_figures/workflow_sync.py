@@ -661,7 +661,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
     paragraph = (
         "In the deployment comparison, tuned FloatSOM RNG delivers better $QE$ than the default "
         "hexagonal XPySOM baseline, while also running faster and scaling to larger workloads "
-        "(Supplementary Table S9)."
+        "(Supplementary Table S7)."
     )
 
     qe_start_marker = "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:START -->"
@@ -1080,23 +1080,24 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
     sample_thresholds = _first_disk_thresholds("sample_scaling")
 
     block_lines: List[str] = []
-    shared_gpu_counts = sorted(set(dimension_thresholds.keys()).intersection(sample_thresholds.keys()))
-    if shared_gpu_counts:
-        first_gpu = shared_gpu_counts[0]
-        last_gpu = shared_gpu_counts[-1]
+    sample_gpu_counts = sorted(sample_thresholds.keys())
+    if sample_gpu_counts:
+        example_low_gpu = 2 if 2 in sample_thresholds else sample_gpu_counts[0]
+        example_high_gpu = sample_gpu_counts[-1]
         crossover_sentence = (
-            "Across the Fig. 10 full-batch RNG scaling sweeps, all tested GPU counts eventually transition into disk mode. "
-            f"In dimension scaling, the crossover shifts from {_format_gpu(first_gpu)} at "
-            f"{_format_int(dimension_thresholds[first_gpu])} dimensions to {_format_gpu(last_gpu)} at "
-            f"{_format_int(dimension_thresholds[last_gpu])} dimensions; in sample scaling, it shifts from "
-            f"{_format_gpu(first_gpu)} at {_format_int(sample_thresholds[first_gpu])} samples to "
-            f"{_format_gpu(last_gpu)} at {_format_int(sample_thresholds[last_gpu])} samples, with intermediate GPU counts "
-            "moving upward with GPU count."
+            "Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. "
+            "First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. "
+            "Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. "
+            f"In the sample-scaling benchmark, for example, the {('500 million' if int(sample_thresholds[example_low_gpu]) == 500_000_000 else _format_int(sample_thresholds[example_low_gpu]))} sample dataset requires disk backing under the "
+            f"{int(example_low_gpu)}-GPU configuration, whereas the {int(example_high_gpu)}-GPU configuration remains in RAM mode until the "
+            f"{_format_int(sample_thresholds[example_high_gpu])} sample dataset. "
+            "Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. "
+            "As per-node disk bandwidth is limited, distributing the workload across additional nodes may reduce transfer-path saturation and enable more stable high-throughput operation."
         )
         block_lines.append(crossover_sentence)
     else:
         block_lines.append(
-            "Figure 9 disk-mode crossover text will be populated automatically after the RNG scaling diagnostics table includes staging-mode entries."
+            "Figure 11 systems-scaling text will be populated automatically after the RNG scaling diagnostics table includes sample-scaling staging-mode entries."
         )
 
     runtime_row = working[
@@ -1109,14 +1110,35 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
         runtime_value_s = float(runtime_row.iloc[0]["runtime_mean_s_numeric"])
         block_lines.append(
             f"The 8-GPU RNG configuration processes 1,000,000,000 samples in {_format_runtime(runtime_value_s)}, "
-            "demonstrating billion-sample training at a runtime measured in minutes rather than hours even "
-            "for a 50-feature, 1024-node network ($32 \\times 32 = 1024$) under multi-node distributed "
-            "execution with data staged from shared non-local storage to node-local shards before training."
+            "demonstrating billion-sample training at a runtime measured in minutes rather than hours. "
+            "To reiterate, this is on a relatively complex 50-feature dataset, using 1024-node network "
+            "($32 \\times 32 = 1024$), with under multi-node distributed execution, and including time "
+            "taken to remotely stage data from shared non-local storage to node-local shards before training."
         )
     else:
         block_lines.append(
             "The exact 8-GPU RNG runtime at the 1,000,000,000-sample point will be populated automatically after that scaling point is present in the diagnostics table."
         )
+
+    grid_rows = working[
+        (working["mode_name"] == "grid_size_scaling")
+        & (working["axis_value_numeric"] == 64)
+        & working["runtime_mean_s_numeric"].notna()
+        & working["gpu_count_numeric"].isin([1, 8])
+    ].copy()
+    if len(grid_rows.index) >= 2:
+        grid_one = grid_rows[grid_rows["gpu_count_numeric"] == 1].copy()
+        grid_eight = grid_rows[grid_rows["gpu_count_numeric"] == 8].copy()
+        if not grid_one.empty and not grid_eight.empty:
+            grid_one_runtime = float(grid_one.iloc[0]["runtime_mean_s_numeric"])
+            grid_eight_runtime = float(grid_eight.iloc[0]["runtime_mean_s_numeric"])
+            reduction_pct = ((grid_one_runtime - grid_eight_runtime) / grid_one_runtime) * 100.0
+            block_lines.append(
+                "The grid-size scaling panel proves to be the main exception: at the largest tested grid size (64), "
+                f"runtime shortens from {_format_runtime(grid_one_runtime)} on 1 GPU to only {_format_runtime(grid_eight_runtime)} "
+                f"on 8 GPUs, a {reduction_pct:.2f}% reduction, indicating that once map-size/topology-refresh costs dominate, "
+                "additional GPUs contribute little extra speedup."
+            )
 
     start_marker = "<!-- AUTO-SYSTEMS-SCALING-STATS:START -->"
     end_marker = "<!-- AUTO-SYSTEMS-SCALING-STATS:END -->"
@@ -1129,7 +1151,7 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
         end_idx += len(end_marker)
         updated_text = manuscript_text[:start_idx] + block_body + manuscript_text[end_idx:]
     else:
-        anchor = "*Figure 10. Multi-GPU full-batch scaling across $G\\in\\{1,2,4,8\\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\\% efficiency reference line indicates ideal linear scaling.*"
+        anchor = "*Figure 11. Multi-GPU full-batch scaling across $G\\in\\{1,2,4,8\\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\\% efficiency reference line indicates ideal linear scaling.*"
         anchor_idx = manuscript_text.find(anchor)
         if anchor_idx == -1:
             updated_text = manuscript_text.rstrip() + "\n\n" + block_body + "\n"
@@ -1434,16 +1456,16 @@ def _sync_default_aware_stats_to_manuscript(
         )
 
     discussion_sentence = (
-        "Across the matched Fig. 8 comparisons, tuned defaults consistently produce better QE results than "
-        "untuned defaults. This suggests that tuning should be treated as part of the method configuration "
+        "Across the matched Fig. 8 comparisons, tuned configurations consistently produce better QE results than "
+        "untuned reference settings. This suggests that tuning should be treated as part of the method configuration "
         "rather than as optional post-processing."
     )
 
     conclusion_sentence = (
         "This manuscript reports four main findings: in iteration-matched comparisons, "
-        "full and random show no meaningful paired QE difference in larger datasets (>10000 samples), "
-        "while random provides runtime gains on smaller datasets, where it also shows greater random instability; "
-        "graph topologies show lower QE than fixed hexagonal structure, with RNG showing the lowest QE in these comparisons; "
+        "full and random show no meaningful paired QE difference in larger datasets (>10,000 samples), "
+        "while random provides runtime gains on smaller datasets, where it also shows greater instability; "
+        "graph topologies show lower QE than the fixed hexagonal structure, with RNG showing the lowest QE in these comparisons; "
         f"default-aware analyses over {pair_count_phrase}, drawn from {n_datasets} datasets, {n_seeds} seeds"
     )
     if sampling_modes_text:

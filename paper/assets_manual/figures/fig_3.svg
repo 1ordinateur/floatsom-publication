@@ -1,1342 +1,1610 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="993.6pt" height="658.8pt" viewBox="0 0 993.6 658.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
- <title>Figure 3: Full vs HDSSSOM Outcomes (Hexagonal / Full Batch)</title>
- <metadata>
-  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-   <cc:Work>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-03-10T13:13:51.251247</dc:date>
-    <dc:format>image/svg+xml</dc:format>
-    <dc:creator>
-     <cc:Agent>
-      <dc:title>Matplotlib v3.10.7, https://matplotlib.org/</dc:title>
-     </cc:Agent>
-    </dc:creator>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <defs>
-  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
- </defs>
- <g id="figure_1">
-  <g id="patch_1">
-   <path d="M 0 658.8 
-L 993.6 658.8 
-L 993.6 0 
-L 0 0 
-z
-" style="fill: #ffffff"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 3333 1200">
+  <!-- Generator: Adobe Illustrator 30.3.0, SVG Export Plug-In . SVG Version: 2.1.3 Build 182)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6 {
+        fill: #d7301f;
+      }
+
+      .st7 {
+        clip-path: url(#clippath-76);
+      }
+
+      .st8 {
+        clip-path: url(#clippath-51);
+      }
+
+      .st9 {
+        clip-path: url(#clippath-34);
+      }
+
+      .st10 {
+        clip-path: url(#clippath-38);
+      }
+
+      .st11 {
+        clip-path: url(#clippath-21);
+      }
+
+      .st12 {
+        clip-path: url(#clippath-6);
+      }
+
+      .st13 {
+        clip-path: url(#clippath-7);
+      }
+
+      .st14 {
+        clip-path: url(#clippath-17);
+      }
+
+      .st15 {
+        clip-path: url(#clippath-80);
+      }
+
+      .st16 {
+        clip-path: url(#clippath-31);
+      }
+
+      .st17 {
+        font-family: ArialMT, Arial;
+        font-size: 36.33px;
+      }
+
+      .st17, .st18, .st19, .st20, .st21, .st22, .st23 {
+        isolation: isolate;
+      }
+
+      .st17, .st20, .st21, .st23 {
+        fill: #2f2f2f;
+      }
+
+      .st24 {
+        clip-path: url(#clippath-79);
+      }
+
+      .st25 {
+        clip-path: url(#clippath-75);
+      }
+
+      .st26, .st27, .st28, .st29, .st30, .st31, .st32, .st33, .st34, .st35, .st36, .st37, .st38, .st39, .st40, .st41, .st42 {
+        fill: none;
+      }
+
+      .st26, .st31, .st43, .st39, .st40, .st41 {
+        stroke: #000;
+      }
+
+      .st26, .st31, .st41 {
+        stroke-width: 2px;
+      }
+
+      .st26, .st34, .st42 {
+        stroke-linecap: square;
+        stroke-miterlimit: 4.66;
+      }
+
+      .st44 {
+        clip-path: url(#clippath-15);
+      }
+
+      .st45 {
+        clip-path: url(#clippath-33);
+      }
+
+      .st46 {
+        clip-path: url(#clippath-61);
+      }
+
+      .st18, .st20, .st21, .st22, .st23 {
+        font-family: Arial-BoldMT, Arial;
+        font-weight: 700;
+      }
+
+      .st18, .st21 {
+        font-size: 40px;
+      }
+
+      .st18, .st22 {
+        fill: #1f1f1f;
+      }
+
+      .st47 {
+        clip-path: url(#clippath-18);
+      }
+
+      .st48 {
+        clip-path: url(#clippath-47);
+      }
+
+      .st49 {
+        clip-path: url(#clippath-4);
+      }
+
+      .st50 {
+        clip-path: url(#clippath-71);
+      }
+
+      .st51 {
+        clip-path: url(#clippath-22);
+      }
+
+      .st52, .st27, .st28, .st1, .st30, .st32, .st2, .st3, .st33, .st4, .st35, .st43, .st5, .st36, .st37, .st38, .st39, .st40, .st6, .st41 {
+        stroke-linejoin: round;
+      }
+
+      .st52, .st53 {
+        fill: #7a7a7a;
+        stroke: #7a7a7a;
+      }
+
+      .st52, .st53, .st33, .st6 {
+        stroke-width: 1.59px;
+      }
+
+      .st54 {
+        clip-path: url(#clippath-23);
+      }
+
+      .st55 {
+        clip-path: url(#clippath-54);
+      }
+
+      .st56 {
+        clip-path: url(#clippath-66);
+      }
+
+      .st27 {
+        stroke: #4d4d4d;
+        stroke-width: 5.35px;
+      }
+
+      .st27, .st28, .st32, .st35, .st36, .st37, .st39, .st40 {
+        stroke-linecap: round;
+      }
+
+      .st28 {
+        stroke-width: 1.6px;
+      }
+
+      .st28, .st34, .st37, .st42 {
+        stroke: #ccc;
+      }
+
+      .st57 {
+        clip-path: url(#clippath-9);
+      }
+
+      .st58 {
+        clip-path: url(#clippath-70);
+      }
+
+      .st59 {
+        clip-path: url(#clippath-10);
+      }
+
+      .st60 {
+        clip-path: url(#clippath-42);
+      }
+
+      .st53 {
+        stroke-miterlimit: 6.37;
+      }
+
+      .st61 {
+        clip-path: url(#clippath-59);
+      }
+
+      .st62 {
+        fill: #fff;
+      }
+
+      .st63 {
+        clip-path: url(#clippath-43);
+      }
+
+      .st64 {
+        clip-path: url(#clippath-64);
+      }
+
+      .st65 {
+        clip-path: url(#clippath-25);
+      }
+
+      .st66 {
+        clip-path: url(#clippath-27);
+      }
+
+      .st67 {
+        clip-path: url(#clippath-60);
+      }
+
+      .st68 {
+        clip-path: url(#clippath-11);
+      }
+
+      .st69 {
+        clip-path: url(#clippath-57);
+      }
+
+      .st70 {
+        fill: #262626;
+      }
+
+      .st71 {
+        clip-path: url(#clippath-36);
+      }
+
+      .st72 {
+        clip-path: url(#clippath-35);
+      }
+
+      .st73 {
+        clip-path: url(#clippath-48);
+      }
+
+      .st74 {
+        clip-path: url(#clippath-28);
+      }
+
+      .st1 {
+        stroke-width: 1.09px;
+      }
+
+      .st1, .st3, .st5 {
+        stroke: #fff;
+      }
+
+      .st30 {
+        stroke-width: 2.14px;
+      }
+
+      .st30, .st2, .st4, .st38, .st6 {
+        stroke: #d7301f;
+      }
+
+      .st30, .st38 {
+        stroke-opacity: .9;
+      }
+
+      .st75 {
+        clip-path: url(#clippath-1);
+      }
+
+      .st76 {
+        clip-path: url(#clippath-56);
+      }
+
+      .st77 {
+        clip-path: url(#clippath-45);
+      }
+
+      .st31 {
+        stroke-miterlimit: 10;
+      }
+
+      .st78 {
+        clip-path: url(#clippath-46);
+      }
+
+      .st79 {
+        clip-path: url(#clippath-40);
+      }
+
+      .st80 {
+        clip-path: url(#clippath-5);
+      }
+
+      .st81 {
+        clip-path: url(#clippath-20);
+      }
+
+      .st82 {
+        clip-path: url(#clippath-8);
+      }
+
+      .st83 {
+        clip-path: url(#clippath-52);
+      }
+
+      .st84 {
+        clip-path: url(#clippath-41);
+      }
+
+      .st85 {
+        clip-path: url(#clippath-67);
+      }
+
+      .st32 {
+        stroke-width: 1.23px;
+      }
+
+      .st32, .st33, .st35, .st36 {
+        stroke: #c7c7c7;
+      }
+
+      .st32, .st33, .st35, .st36, .st39 {
+        stroke-opacity: .65;
+      }
+
+      .st86 {
+        clip-path: url(#clippath-74);
+      }
+
+      .st2 {
+        stroke-width: 1.61px;
+      }
+
+      .st87 {
+        clip-path: url(#clippath-3);
+      }
+
+      .st88 {
+        clip-path: url(#clippath-26);
+      }
+
+      .st89 {
+        clip-path: url(#clippath-12);
+      }
+
+      .st90 {
+        clip-path: url(#clippath-50);
+      }
+
+      .st91 {
+        clip-path: url(#clippath-14);
+      }
+
+      .st3 {
+        stroke-width: 1.04px;
+      }
+
+      .st20 {
+        font-size: 45px;
+      }
+
+      .st92 {
+        clip-path: url(#clippath-30);
+      }
+
+      .st93 {
+        clip-path: url(#clippath-77);
+      }
+
+      .st4, .st37 {
+        stroke-width: 1.75px;
+      }
+
+      .st94 {
+        clip-path: url(#clippath-19);
+      }
+
+      .st95 {
+        clip-path: url(#clippath-78);
+      }
+
+      .st96 {
+        clip-path: url(#clippath-72);
+      }
+
+      .st34 {
+        stroke-width: 2.19px;
+      }
+
+      .st97 {
+        clip-path: url(#clippath-32);
+      }
+
+      .st35 {
+        stroke-width: 1.15px;
+      }
+
+      .st43 {
+        stroke-width: 3.5px;
+      }
+
+      .st98 {
+        clip-path: url(#clippath-55);
+      }
+
+      .st5 {
+        stroke-width: 1.04px;
+      }
+
+      .st36 {
+        stroke-width: 1.34px;
+      }
+
+      .st99 {
+        clip-path: url(#clippath-73);
+      }
+
+      .st100 {
+        clip-path: url(#clippath-53);
+      }
+
+      .st101 {
+        clip-path: url(#clippath-39);
+      }
+
+      .st38 {
+        stroke-width: 2.33px;
+      }
+
+      .st39 {
+        stroke-width: .7px;
+      }
+
+      .st22 {
+        font-size: 50px;
+      }
+
+      .st102 {
+        clip-path: url(#clippath-16);
+      }
+
+      .st103 {
+        clip-path: url(#clippath-2);
+      }
+
+      .st104 {
+        clip-path: url(#clippath-29);
+      }
+
+      .st105 {
+        clip-path: url(#clippath-49);
+      }
+
+      .st106 {
+        clip-path: url(#clippath-37);
+      }
+
+      .st107 {
+        clip-path: url(#clippath-58);
+      }
+
+      .st108 {
+        clip-path: url(#clippath-13);
+      }
+
+      .st40 {
+        stroke-opacity: 0;
+        stroke-width: 3.58px;
+      }
+
+      .st109 {
+        clip-path: url(#clippath-63);
+      }
+
+      .st110 {
+        clip-path: url(#clippath-24);
+      }
+
+      .st111 {
+        clip-path: url(#clippath);
+      }
+
+      .st112 {
+        clip-path: url(#clippath-68);
+      }
+
+      .st23 {
+        font-size: 33.14px;
+      }
+
+      .st113 {
+        clip-path: url(#clippath-65);
+      }
+
+      .st41 {
+        stroke-opacity: .8;
+      }
+
+      .st114 {
+        clip-path: url(#clippath-44);
+      }
+
+      .st42 {
+        stroke-width: 2px;
+      }
+
+      .st115 {
+        clip-path: url(#clippath-62);
+      }
+
+      .st116 {
+        clip-path: url(#clippath-69);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-3">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-4">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-5">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-6">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-7">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-8">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-9">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-10">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-11">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-12">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-13">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-14">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-15">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-16">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-17">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-18">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-19">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-20">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-21">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-22">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-23">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-24">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-25">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-26">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-27">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-28">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-29">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-30">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-31">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-32">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-33">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-34">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-35">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-36">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-37">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-38">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-39">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-40">
+      <rect class="st29" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-41">
+      <rect class="st31" x="389.23" y="252.13" width="938.48" height="668.93"/>
+    </clipPath>
+    <clipPath id="clippath-42">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-43">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-44">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-45">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-46">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-47">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-48">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-49">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-50">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-51">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-52">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-53">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-54">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-55">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-56">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-57">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-58">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-59">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-60">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-61">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-62">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-63">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-64">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-65">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-66">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-67">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-68">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-69">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-70">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-71">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-72">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-73">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-74">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-75">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-76">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-77">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-78">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-79">
+      <rect class="st29" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+    <clipPath id="clippath-80">
+      <rect class="st31" x="1383.65" y="251.22" width="938.48" height="672"/>
+    </clipPath>
+  </defs>
+  <path class="st34" d="M389.23,921.06V252.13"/>
+  <path class="st62" d="M389.23,921.06h938.48V252.13H389.23v668.93Z"/>
+  <g class="st111">
+    <path class="st37" d="M448.83,921.06V252.13"/>
   </g>
-  <g id="axes_1">
-   <g id="patch_2">
-    <path d="M 228.528 606.096 
-L 989.6256 606.096 
-L 989.6256 29.646 
-L 228.528 29.646 
-z
-" style="fill: #ffffff"/>
-   </g>
-   <g id="matplotlib.axis_1">
-    <g id="xtick_1">
-     <g id="line2d_1">
-      <path d="M 276.858494 606.096 
-L 276.858494 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_1">
-      <!-- 0 -->
-      <g style="fill: #262626" transform="translate(270.068589 636.075378) scale(0.2442 -0.2442)">
-       <defs>
-        <path id="ArialMT-30" d="M 266 2259 
-Q 266 3072 433 3567 
-Q 600 4063 929 4331 
-Q 1259 4600 1759 4600 
-Q 2128 4600 2406 4451 
-Q 2684 4303 2865 4023 
-Q 3047 3744 3150 3342 
-Q 3253 2941 3253 2259 
-Q 3253 1453 3087 958 
-Q 2922 463 2592 192 
-Q 2263 -78 1759 -78 
-Q 1097 -78 719 397 
-Q 266 969 266 2259 
-z
-M 844 2259 
-Q 844 1131 1108 757 
-Q 1372 384 1759 384 
-Q 2147 384 2411 759 
-Q 2675 1134 2675 2259 
-Q 2675 3391 2411 3762 
-Q 2147 4134 1753 4134 
-Q 1366 4134 1134 3806 
-Q 844 3388 844 2259 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-30"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_2">
-     <g id="line2d_2">
-      <path d="M 400.79495 606.096 
-L 400.79495 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_2">
-      <!-- 50 -->
-      <g style="fill: #262626" transform="translate(387.215141 636.075378) scale(0.2442 -0.2442)">
-       <defs>
-        <path id="ArialMT-35" d="M 266 1200 
-L 856 1250 
-Q 922 819 1161 601 
-Q 1400 384 1738 384 
-Q 2144 384 2425 690 
-Q 2706 997 2706 1503 
-Q 2706 1984 2436 2262 
-Q 2166 2541 1728 2541 
-Q 1456 2541 1237 2417 
-Q 1019 2294 894 2097 
-L 366 2166 
-L 809 4519 
-L 3088 4519 
-L 3088 3981 
-L 1259 3981 
-L 1013 2750 
-Q 1425 3038 1878 3038 
-Q 2478 3038 2890 2622 
-Q 3303 2206 3303 1553 
-Q 3303 931 2941 478 
-Q 2500 -78 1738 -78 
-Q 1113 -78 717 272 
-Q 322 622 266 1200 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-35"/>
-       <use xlink:href="#ArialMT-30" transform="translate(55.615234 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_3">
-     <g id="line2d_3">
-      <path d="M 524.731406 606.096 
-L 524.731406 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_3">
-      <!-- 100 -->
-      <g style="fill: #262626" transform="translate(504.361692 636.075378) scale(0.2442 -0.2442)">
-       <defs>
-        <path id="ArialMT-31" d="M 2384 0 
-L 1822 0 
-L 1822 3584 
-Q 1619 3391 1289 3197 
-Q 959 3003 697 2906 
-L 697 3450 
-Q 1169 3672 1522 3987 
-Q 1875 4303 2022 4600 
-L 2384 4600 
-L 2384 0 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-31"/>
-       <use xlink:href="#ArialMT-30" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-30" transform="translate(111.230469 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_4">
-     <g id="line2d_4">
-      <path d="M 648.667863 606.096 
-L 648.667863 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_4">
-      <!-- 150 -->
-      <g style="fill: #262626" transform="translate(628.298149 636.075378) scale(0.2442 -0.2442)">
-       <use xlink:href="#ArialMT-31"/>
-       <use xlink:href="#ArialMT-35" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-30" transform="translate(111.230469 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_5">
-     <g id="line2d_5">
-      <path d="M 772.604319 606.096 
-L 772.604319 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_5">
-      <!-- 200 -->
-      <g style="fill: #262626" transform="translate(752.234605 636.075378) scale(0.2442 -0.2442)">
-       <defs>
-        <path id="ArialMT-32" d="M 3222 541 
-L 3222 0 
-L 194 0 
-Q 188 203 259 391 
-Q 375 700 629 1000 
-Q 884 1300 1366 1694 
-Q 2113 2306 2375 2664 
-Q 2638 3022 2638 3341 
-Q 2638 3675 2398 3904 
-Q 2159 4134 1775 4134 
-Q 1369 4134 1125 3890 
-Q 881 3647 878 3216 
-L 300 3275 
-Q 359 3922 746 4261 
-Q 1134 4600 1788 4600 
-Q 2447 4600 2831 4234 
-Q 3216 3869 3216 3328 
-Q 3216 3053 3103 2787 
-Q 2991 2522 2730 2228 
-Q 2469 1934 1863 1422 
-Q 1356 997 1212 845 
-Q 1069 694 975 541 
-L 3222 541 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-32"/>
-       <use xlink:href="#ArialMT-30" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-30" transform="translate(111.230469 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_6">
-     <g id="line2d_6">
-      <path d="M 896.540775 606.096 
-L 896.540775 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_6">
-      <!-- 250 -->
-      <g style="fill: #262626" transform="translate(876.171061 636.075378) scale(0.2442 -0.2442)">
-       <use xlink:href="#ArialMT-32"/>
-       <use xlink:href="#ArialMT-35" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-30" transform="translate(111.230469 0)"/>
-      </g>
-     </g>
-    </g>
-   </g>
-   <g id="matplotlib.axis_2">
-    <g id="ytick_1">
-     <g id="line2d_7">
-      <path d="M 228.528 55.848273 
-L 989.6256 55.848273 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_7">
-      <!-- blobs -->
-      <g style="fill: #262626" transform="translate(145.031078 66.477624) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-62" d="M 941 0 
-L 419 0 
-L 419 4581 
-L 981 4581 
-L 981 2947 
-Q 1338 3394 1891 3394 
-Q 2197 3394 2470 3270 
-Q 2744 3147 2920 2923 
-Q 3097 2700 3197 2384 
-Q 3297 2069 3297 1709 
-Q 3297 856 2875 390 
-Q 2453 -75 1863 -75 
-Q 1275 -75 941 416 
-L 941 0 
-z
-M 934 1684 
-Q 934 1088 1097 822 
-Q 1363 388 1816 388 
-Q 2184 388 2453 708 
-Q 2722 1028 2722 1663 
-Q 2722 2313 2464 2622 
-Q 2206 2931 1841 2931 
-Q 1472 2931 1203 2611 
-Q 934 2291 934 1684 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-6c" d="M 409 0 
-L 409 4581 
-L 972 4581 
-L 972 0 
-L 409 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-6f" d="M 213 1659 
-Q 213 2581 725 3025 
-Q 1153 3394 1769 3394 
-Q 2453 3394 2887 2945 
-Q 3322 2497 3322 1706 
-Q 3322 1066 3130 698 
-Q 2938 331 2570 128 
-Q 2203 -75 1769 -75 
-Q 1072 -75 642 372 
-Q 213 819 213 1659 
-z
-M 791 1659 
-Q 791 1022 1069 705 
-Q 1347 388 1769 388 
-Q 2188 388 2466 706 
-Q 2744 1025 2744 1678 
-Q 2744 2294 2464 2611 
-Q 2184 2928 1769 2928 
-Q 1347 2928 1069 2612 
-Q 791 2297 791 1659 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-73" d="M 197 991 
-L 753 1078 
-Q 800 744 1014 566 
-Q 1228 388 1613 388 
-Q 2000 388 2187 545 
-Q 2375 703 2375 916 
-Q 2375 1106 2209 1216 
-Q 2094 1291 1634 1406 
-Q 1016 1563 777 1677 
-Q 538 1791 414 1992 
-Q 291 2194 291 2438 
-Q 291 2659 392 2848 
-Q 494 3038 669 3163 
-Q 800 3259 1026 3326 
-Q 1253 3394 1513 3394 
-Q 1903 3394 2198 3281 
-Q 2494 3169 2634 2976 
-Q 2775 2784 2828 2463 
-L 2278 2388 
-Q 2241 2644 2061 2787 
-Q 1881 2931 1553 2931 
-Q 1166 2931 1000 2803 
-Q 834 2675 834 2503 
-Q 834 2394 903 2306 
-Q 972 2216 1119 2156 
-Q 1203 2125 1616 2013 
-Q 2213 1853 2448 1751 
-Q 2684 1650 2818 1456 
-Q 2953 1263 2953 975 
-Q 2953 694 2789 445 
-Q 2625 197 2315 61 
-Q 2006 -75 1616 -75 
-Q 969 -75 630 194 
-Q 291 463 197 991 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-62"/>
-       <use xlink:href="#ArialMT-6c" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-6f" transform="translate(77.832031 0)"/>
-       <use xlink:href="#ArialMT-62" transform="translate(133.447266 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(189.0625 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_2">
-     <g id="line2d_8">
-      <path d="M 228.528 108.252818 
-L 989.6256 108.252818 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_8">
-      <!-- circles -->
-      <g style="fill: #262626" transform="translate(131.874906 118.88217) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-63" d="M 2588 1216 
-L 3141 1144 
-Q 3050 572 2676 248 
-Q 2303 -75 1759 -75 
-Q 1078 -75 664 370 
-Q 250 816 250 1647 
-Q 250 2184 428 2587 
-Q 606 2991 970 3192 
-Q 1334 3394 1763 3394 
-Q 2303 3394 2647 3120 
-Q 2991 2847 3088 2344 
-L 2541 2259 
-Q 2463 2594 2264 2762 
-Q 2066 2931 1784 2931 
-Q 1359 2931 1093 2626 
-Q 828 2322 828 1663 
-Q 828 994 1084 691 
-Q 1341 388 1753 388 
-Q 2084 388 2306 591 
-Q 2528 794 2588 1216 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-69" d="M 425 3934 
-L 425 4581 
-L 988 4581 
-L 988 3934 
-L 425 3934 
-z
-M 425 0 
-L 425 3319 
-L 988 3319 
-L 988 0 
-L 425 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-72" d="M 416 0 
-L 416 3319 
-L 922 3319 
-L 922 2816 
-Q 1116 3169 1280 3281 
-Q 1444 3394 1641 3394 
-Q 1925 3394 2219 3213 
-L 2025 2691 
-Q 1819 2813 1613 2813 
-Q 1428 2813 1281 2702 
-Q 1134 2591 1072 2394 
-Q 978 2094 978 1738 
-L 978 0 
-L 416 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-65" d="M 2694 1069 
-L 3275 997 
-Q 3138 488 2766 206 
-Q 2394 -75 1816 -75 
-Q 1088 -75 661 373 
-Q 234 822 234 1631 
-Q 234 2469 665 2931 
-Q 1097 3394 1784 3394 
-Q 2450 3394 2872 2941 
-Q 3294 2488 3294 1666 
-Q 3294 1616 3291 1516 
-L 816 1516 
-Q 847 969 1125 678 
-Q 1403 388 1819 388 
-Q 2128 388 2347 550 
-Q 2566 713 2694 1069 
-z
-M 847 1978 
-L 2700 1978 
-Q 2663 2397 2488 2606 
-Q 2219 2931 1791 2931 
-Q 1403 2931 1139 2672 
-Q 875 2413 847 1978 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-63"/>
-       <use xlink:href="#ArialMT-69" transform="translate(50 0)"/>
-       <use xlink:href="#ArialMT-72" transform="translate(72.216797 0)"/>
-       <use xlink:href="#ArialMT-63" transform="translate(105.517578 0)"/>
-       <use xlink:href="#ArialMT-6c" transform="translate(155.517578 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(177.734375 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(233.349609 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_3">
-     <g id="line2d_9">
-      <path d="M 228.528 160.657364 
-L 989.6256 160.657364 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_9">
-      <!-- moons -->
-      <g style="fill: #262626" transform="translate(126.890875 171.286715) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-6d" d="M 422 0 
-L 422 3319 
-L 925 3319 
-L 925 2853 
-Q 1081 3097 1340 3245 
-Q 1600 3394 1931 3394 
-Q 2300 3394 2536 3241 
-Q 2772 3088 2869 2813 
-Q 3263 3394 3894 3394 
-Q 4388 3394 4653 3120 
-Q 4919 2847 4919 2278 
-L 4919 0 
-L 4359 0 
-L 4359 2091 
-Q 4359 2428 4304 2576 
-Q 4250 2725 4106 2815 
-Q 3963 2906 3769 2906 
-Q 3419 2906 3187 2673 
-Q 2956 2441 2956 1928 
-L 2956 0 
-L 2394 0 
-L 2394 2156 
-Q 2394 2531 2256 2718 
-Q 2119 2906 1806 2906 
-Q 1569 2906 1367 2781 
-Q 1166 2656 1075 2415 
-Q 984 2175 984 1722 
-L 984 0 
-L 422 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-6e" d="M 422 0 
-L 422 3319 
-L 928 3319 
-L 928 2847 
-Q 1294 3394 1984 3394 
-Q 2284 3394 2536 3286 
-Q 2788 3178 2913 3003 
-Q 3038 2828 3088 2588 
-Q 3119 2431 3119 2041 
-L 3119 0 
-L 2556 0 
-L 2556 2019 
-Q 2556 2363 2490 2533 
-Q 2425 2703 2258 2804 
-Q 2091 2906 1866 2906 
-Q 1506 2906 1245 2678 
-Q 984 2450 984 1813 
-L 984 0 
-L 422 0 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-6d"/>
-       <use xlink:href="#ArialMT-6f" transform="translate(83.300781 0)"/>
-       <use xlink:href="#ArialMT-6f" transform="translate(138.916016 0)"/>
-       <use xlink:href="#ArialMT-6e" transform="translate(194.53125 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(250.146484 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_4">
-     <g id="line2d_10">
-      <path d="M 228.528 213.061909 
-L 989.6256 213.061909 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_10">
-      <!-- s_curve -->
-      <g style="fill: #262626" transform="translate(112.040875 223.691261) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-5f" d="M -97 -1272 
-L -97 -866 
-L 3631 -866 
-L 3631 -1272 
-L -97 -1272 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-75" d="M 2597 0 
-L 2597 488 
-Q 2209 -75 1544 -75 
-Q 1250 -75 995 37 
-Q 741 150 617 320 
-Q 494 491 444 738 
-Q 409 903 409 1263 
-L 409 3319 
-L 972 3319 
-L 972 1478 
-Q 972 1038 1006 884 
-Q 1059 663 1231 536 
-Q 1403 409 1656 409 
-Q 1909 409 2131 539 
-Q 2353 669 2445 892 
-Q 2538 1116 2538 1541 
-L 2538 3319 
-L 3100 3319 
-L 3100 0 
-L 2597 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-76" d="M 1344 0 
-L 81 3319 
-L 675 3319 
-L 1388 1331 
-Q 1503 1009 1600 663 
-Q 1675 925 1809 1294 
-L 2547 3319 
-L 3125 3319 
-L 1869 0 
-L 1344 0 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-73"/>
-       <use xlink:href="#ArialMT-5f" transform="translate(50 0)"/>
-       <use xlink:href="#ArialMT-63" transform="translate(105.615234 0)"/>
-       <use xlink:href="#ArialMT-75" transform="translate(155.615234 0)"/>
-       <use xlink:href="#ArialMT-72" transform="translate(211.230469 0)"/>
-       <use xlink:href="#ArialMT-76" transform="translate(244.53125 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(294.53125 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_5">
-     <g id="line2d_11">
-      <path d="M 228.528 265.466455 
-L 989.6256 265.466455 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_11">
-      <!-- swiss_roll -->
-      <g style="fill: #262626" transform="translate(87.310984 276.095806) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-77" d="M 1034 0 
-L 19 3319 
-L 600 3319 
-L 1128 1403 
-L 1325 691 
-Q 1338 744 1497 1375 
-L 2025 3319 
-L 2603 3319 
-L 3100 1394 
-L 3266 759 
-L 3456 1400 
-L 4025 3319 
-L 4572 3319 
-L 3534 0 
-L 2950 0 
-L 2422 1988 
-L 2294 2553 
-L 1622 0 
-L 1034 0 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-73"/>
-       <use xlink:href="#ArialMT-77" transform="translate(50 0)"/>
-       <use xlink:href="#ArialMT-69" transform="translate(122.216797 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(144.433594 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(194.433594 0)"/>
-       <use xlink:href="#ArialMT-5f" transform="translate(244.433594 0)"/>
-       <use xlink:href="#ArialMT-72" transform="translate(300.048828 0)"/>
-       <use xlink:href="#ArialMT-6f" transform="translate(333.349609 0)"/>
-       <use xlink:href="#ArialMT-6c" transform="translate(388.964844 0)"/>
-       <use xlink:href="#ArialMT-6c" transform="translate(411.181641 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_6">
-     <g id="line2d_12">
-      <path d="M 228.528 317.871 
-L 989.6256 317.871 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_12">
-      <!-- breast_cancer -->
-      <g style="fill: #262626" transform="translate(27.836734 328.500352) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-61" d="M 2588 409 
-Q 2275 144 1986 34 
-Q 1697 -75 1366 -75 
-Q 819 -75 525 192 
-Q 231 459 231 875 
-Q 231 1119 342 1320 
-Q 453 1522 633 1644 
-Q 813 1766 1038 1828 
-Q 1203 1872 1538 1913 
-Q 2219 1994 2541 2106 
-Q 2544 2222 2544 2253 
-Q 2544 2597 2384 2738 
-Q 2169 2928 1744 2928 
-Q 1347 2928 1158 2789 
-Q 969 2650 878 2297 
-L 328 2372 
-Q 403 2725 575 2942 
-Q 747 3159 1072 3276 
-Q 1397 3394 1825 3394 
-Q 2250 3394 2515 3294 
-Q 2781 3194 2906 3042 
-Q 3031 2891 3081 2659 
-Q 3109 2516 3109 2141 
-L 3109 1391 
-Q 3109 606 3145 398 
-Q 3181 191 3288 0 
-L 2700 0 
-Q 2613 175 2588 409 
-z
-M 2541 1666 
-Q 2234 1541 1622 1453 
-Q 1275 1403 1131 1340 
-Q 988 1278 909 1158 
-Q 831 1038 831 891 
-Q 831 666 1001 516 
-Q 1172 366 1500 366 
-Q 1825 366 2078 508 
-Q 2331 650 2450 897 
-Q 2541 1088 2541 1459 
-L 2541 1666 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-74" d="M 1650 503 
-L 1731 6 
-Q 1494 -44 1306 -44 
-Q 1000 -44 831 53 
-Q 663 150 594 308 
-Q 525 466 525 972 
-L 525 2881 
-L 113 2881 
-L 113 3319 
-L 525 3319 
-L 525 4141 
-L 1084 4478 
-L 1084 3319 
-L 1650 3319 
-L 1650 2881 
-L 1084 2881 
-L 1084 941 
-Q 1084 700 1114 631 
-Q 1144 563 1211 522 
-Q 1278 481 1403 481 
-Q 1497 481 1650 503 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-62"/>
-       <use xlink:href="#ArialMT-72" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(88.916016 0)"/>
-       <use xlink:href="#ArialMT-61" transform="translate(144.53125 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(200.146484 0)"/>
-       <use xlink:href="#ArialMT-74" transform="translate(250.146484 0)"/>
-       <use xlink:href="#ArialMT-5f" transform="translate(277.929688 0)"/>
-       <use xlink:href="#ArialMT-63" transform="translate(333.544922 0)"/>
-       <use xlink:href="#ArialMT-61" transform="translate(383.544922 0)"/>
-       <use xlink:href="#ArialMT-6e" transform="translate(439.160156 0)"/>
-       <use xlink:href="#ArialMT-63" transform="translate(494.775391 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(544.775391 0)"/>
-       <use xlink:href="#ArialMT-72" transform="translate(600.390625 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_7">
-     <g id="line2d_13">
-      <path d="M 228.528 370.275545 
-L 989.6256 370.275545 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_13">
-      <!-- wine -->
-      <g style="fill: #262626" transform="translate(154.948094 380.904897) scale(0.297 -0.297)">
-       <use xlink:href="#ArialMT-77"/>
-       <use xlink:href="#ArialMT-69" transform="translate(72.216797 0)"/>
-       <use xlink:href="#ArialMT-6e" transform="translate(94.433594 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(150.048828 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_8">
-     <g id="line2d_14">
-      <path d="M 228.528 422.680091 
-L 989.6256 422.680091 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_14">
-      <!-- iris -->
-      <g style="fill: #262626" transform="translate(178.090891 433.309442) scale(0.297 -0.297)">
-       <use xlink:href="#ArialMT-69"/>
-       <use xlink:href="#ArialMT-72" transform="translate(22.216797 0)"/>
-       <use xlink:href="#ArialMT-69" transform="translate(55.517578 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(77.734375 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_9">
-     <g id="line2d_15">
-      <path d="M 228.528 475.084636 
-L 989.6256 475.084636 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_15">
-      <!-- digits -->
-      <g style="fill: #262626" transform="translate(146.697063 485.713988) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-64" d="M 2575 0 
-L 2575 419 
-Q 2259 -75 1647 -75 
-Q 1250 -75 917 144 
-Q 584 363 401 755 
-Q 219 1147 219 1656 
-Q 219 2153 384 2558 
-Q 550 2963 881 3178 
-Q 1213 3394 1622 3394 
-Q 1922 3394 2156 3267 
-Q 2391 3141 2538 2938 
-L 2538 4581 
-L 3097 4581 
-L 3097 0 
-L 2575 0 
-z
-M 797 1656 
-Q 797 1019 1065 703 
-Q 1334 388 1700 388 
-Q 2069 388 2326 689 
-Q 2584 991 2584 1609 
-Q 2584 2291 2321 2609 
-Q 2059 2928 1675 2928 
-Q 1300 2928 1048 2622 
-Q 797 2316 797 1656 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-67" d="M 319 -275 
-L 866 -356 
-Q 900 -609 1056 -725 
-Q 1266 -881 1628 -881 
-Q 2019 -881 2231 -725 
-Q 2444 -569 2519 -288 
-Q 2563 -116 2559 434 
-Q 2191 0 1641 0 
-Q 956 0 581 494 
-Q 206 988 206 1678 
-Q 206 2153 378 2554 
-Q 550 2956 876 3175 
-Q 1203 3394 1644 3394 
-Q 2231 3394 2613 2919 
-L 2613 3319 
-L 3131 3319 
-L 3131 450 
-Q 3131 -325 2973 -648 
-Q 2816 -972 2473 -1159 
-Q 2131 -1347 1631 -1347 
-Q 1038 -1347 672 -1080 
-Q 306 -813 319 -275 
-z
-M 784 1719 
-Q 784 1066 1043 766 
-Q 1303 466 1694 466 
-Q 2081 466 2343 764 
-Q 2606 1063 2606 1700 
-Q 2606 2309 2336 2618 
-Q 2066 2928 1684 2928 
-Q 1309 2928 1046 2623 
-Q 784 2319 784 1719 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-64"/>
-       <use xlink:href="#ArialMT-69" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-67" transform="translate(77.832031 0)"/>
-       <use xlink:href="#ArialMT-69" transform="translate(133.447266 0)"/>
-       <use xlink:href="#ArialMT-74" transform="translate(155.664062 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(183.447266 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_10">
-     <g id="line2d_16">
-      <path d="M 228.528 527.489182 
-L 989.6256 527.489182 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_16">
-      <!-- olivetti_faces -->
-      <g style="fill: #262626" transform="translate(44.348078 538.299518) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-66" d="M 556 0 
-L 556 2881 
-L 59 2881 
-L 59 3319 
-L 556 3319 
-L 556 3672 
-Q 556 4006 616 4169 
-Q 697 4388 901 4523 
-Q 1106 4659 1475 4659 
-Q 1713 4659 2000 4603 
-L 1916 4113 
-Q 1741 4144 1584 4144 
-Q 1328 4144 1222 4034 
-Q 1116 3925 1116 3625 
-L 1116 3319 
-L 1763 3319 
-L 1763 2881 
-L 1116 2881 
-L 1116 0 
-L 556 0 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-6f"/>
-       <use xlink:href="#ArialMT-6c" transform="translate(55.615234 0)"/>
-       <use xlink:href="#ArialMT-69" transform="translate(77.832031 0)"/>
-       <use xlink:href="#ArialMT-76" transform="translate(100.048828 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(150.048828 0)"/>
-       <use xlink:href="#ArialMT-74" transform="translate(205.664062 0)"/>
-       <use xlink:href="#ArialMT-74" transform="translate(233.447266 0)"/>
-       <use xlink:href="#ArialMT-69" transform="translate(261.230469 0)"/>
-       <use xlink:href="#ArialMT-5f" transform="translate(283.447266 0)"/>
-       <use xlink:href="#ArialMT-66" transform="translate(339.0625 0)"/>
-       <use xlink:href="#ArialMT-61" transform="translate(366.845703 0)"/>
-       <use xlink:href="#ArialMT-63" transform="translate(422.460938 0)"/>
-       <use xlink:href="#ArialMT-65" transform="translate(472.460938 0)"/>
-       <use xlink:href="#ArialMT-73" transform="translate(528.076172 0)"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_11">
-     <g id="line2d_17">
-      <path d="M 228.528 579.893727 
-L 989.6256 579.893727 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #cccccc; stroke-width: 1.5; stroke-linecap: round"/>
-     </g>
-     <g id="text_17">
-      <!-- GLOBAL_OVERALL -->
-      <g style="fill: #262626" transform="translate(-56.358125 590.713344) scale(0.297 -0.297)">
-       <defs>
-        <path id="ArialMT-47" d="M 2638 1797 
-L 2638 2334 
-L 4578 2338 
-L 4578 638 
-Q 4131 281 3656 101 
-Q 3181 -78 2681 -78 
-Q 2006 -78 1454 211 
-Q 903 500 622 1047 
-Q 341 1594 341 2269 
-Q 341 2938 620 3517 
-Q 900 4097 1425 4378 
-Q 1950 4659 2634 4659 
-Q 3131 4659 3532 4498 
-Q 3934 4338 4162 4050 
-Q 4391 3763 4509 3300 
-L 3963 3150 
-Q 3859 3500 3706 3700 
-Q 3553 3900 3268 4020 
-Q 2984 4141 2638 4141 
-Q 2222 4141 1919 4014 
-Q 1616 3888 1430 3681 
-Q 1244 3475 1141 3228 
-Q 966 2803 966 2306 
-Q 966 1694 1177 1281 
-Q 1388 869 1791 669 
-Q 2194 469 2647 469 
-Q 3041 469 3416 620 
-Q 3791 772 3984 944 
-L 3984 1797 
-L 2638 1797 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-4c" d="M 469 0 
-L 469 4581 
-L 1075 4581 
-L 1075 541 
-L 3331 541 
-L 3331 0 
-L 469 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-4f" d="M 309 2231 
-Q 309 3372 921 4017 
-Q 1534 4663 2503 4663 
-Q 3138 4663 3647 4359 
-Q 4156 4056 4423 3514 
-Q 4691 2972 4691 2284 
-Q 4691 1588 4409 1038 
-Q 4128 488 3612 205 
-Q 3097 -78 2500 -78 
-Q 1853 -78 1343 234 
-Q 834 547 571 1087 
-Q 309 1628 309 2231 
-z
-M 934 2222 
-Q 934 1394 1379 917 
-Q 1825 441 2497 441 
-Q 3181 441 3623 922 
-Q 4066 1403 4066 2288 
-Q 4066 2847 3877 3264 
-Q 3688 3681 3323 3911 
-Q 2959 4141 2506 4141 
-Q 1863 4141 1398 3698 
-Q 934 3256 934 2222 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-42" d="M 469 0 
-L 469 4581 
-L 2188 4581 
-Q 2713 4581 3030 4442 
-Q 3347 4303 3526 4014 
-Q 3706 3725 3706 3409 
-Q 3706 3116 3547 2856 
-Q 3388 2597 3066 2438 
-Q 3481 2316 3704 2022 
-Q 3928 1728 3928 1328 
-Q 3928 1006 3792 729 
-Q 3656 453 3456 303 
-Q 3256 153 2954 76 
-Q 2653 0 2216 0 
-L 469 0 
-z
-M 1075 2656 
-L 2066 2656 
-Q 2469 2656 2644 2709 
-Q 2875 2778 2992 2937 
-Q 3109 3097 3109 3338 
-Q 3109 3566 3000 3739 
-Q 2891 3913 2687 3977 
-Q 2484 4041 1991 4041 
-L 1075 4041 
-L 1075 2656 
-z
-M 1075 541 
-L 2216 541 
-Q 2509 541 2628 563 
-Q 2838 600 2978 687 
-Q 3119 775 3209 942 
-Q 3300 1109 3300 1328 
-Q 3300 1584 3169 1773 
-Q 3038 1963 2805 2039 
-Q 2572 2116 2134 2116 
-L 1075 2116 
-L 1075 541 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-41" d="M -9 0 
-L 1750 4581 
-L 2403 4581 
-L 4278 0 
-L 3588 0 
-L 3053 1388 
-L 1138 1388 
-L 634 0 
-L -9 0 
-z
-M 1313 1881 
-L 2866 1881 
-L 2388 3150 
-Q 2169 3728 2063 4100 
-Q 1975 3659 1816 3225 
-L 1313 1881 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-56" d="M 1803 0 
-L 28 4581 
-L 684 4581 
-L 1875 1253 
-Q 2019 853 2116 503 
-Q 2222 878 2363 1253 
-L 3600 4581 
-L 4219 4581 
-L 2425 0 
-L 1803 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-45" d="M 506 0 
-L 506 4581 
-L 3819 4581 
-L 3819 4041 
-L 1113 4041 
-L 1113 2638 
-L 3647 2638 
-L 3647 2100 
-L 1113 2100 
-L 1113 541 
-L 3925 541 
-L 3925 0 
-L 506 0 
-z
-" transform="scale(0.015625)"/>
-        <path id="ArialMT-52" d="M 503 0 
-L 503 4581 
-L 2534 4581 
-Q 3147 4581 3465 4457 
-Q 3784 4334 3975 4021 
-Q 4166 3709 4166 3331 
-Q 4166 2844 3850 2509 
-Q 3534 2175 2875 2084 
-Q 3116 1969 3241 1856 
-Q 3506 1613 3744 1247 
-L 4541 0 
-L 3778 0 
-L 3172 953 
-Q 2906 1366 2734 1584 
-Q 2563 1803 2427 1890 
-Q 2291 1978 2150 2013 
-Q 2047 2034 1813 2034 
-L 1109 2034 
-L 1109 0 
-L 503 0 
-z
-M 1109 2559 
-L 2413 2559 
-Q 2828 2559 3062 2645 
-Q 3297 2731 3419 2920 
-Q 3541 3109 3541 3331 
-Q 3541 3656 3305 3865 
-Q 3069 4075 2559 4075 
-L 1109 4075 
-L 1109 2559 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#ArialMT-47"/>
-       <use xlink:href="#ArialMT-4c" transform="translate(77.783203 0)"/>
-       <use xlink:href="#ArialMT-4f" transform="translate(133.398438 0)"/>
-       <use xlink:href="#ArialMT-42" transform="translate(211.181641 0)"/>
-       <use xlink:href="#ArialMT-41" transform="translate(277.880859 0)"/>
-       <use xlink:href="#ArialMT-4c" transform="translate(344.580078 0)"/>
-       <use xlink:href="#ArialMT-5f" transform="translate(400.195312 0)"/>
-       <use xlink:href="#ArialMT-4f" transform="translate(455.810547 0)"/>
-       <use xlink:href="#ArialMT-56" transform="translate(533.59375 0)"/>
-       <use xlink:href="#ArialMT-45" transform="translate(600.292969 0)"/>
-       <use xlink:href="#ArialMT-52" transform="translate(666.992188 0)"/>
-       <use xlink:href="#ArialMT-41" transform="translate(739.208984 0)"/>
-       <use xlink:href="#ArialMT-4c" transform="translate(805.908203 0)"/>
-       <use xlink:href="#ArialMT-4c" transform="translate(861.523438 0)"/>
-      </g>
-     </g>
-    </g>
-   </g>
-   <g id="line2d_18">
-    <path d="M 228.528 291.668727 
-L 989.6256 291.668727 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #c7c7c7; stroke-opacity: 0.65; stroke-width: 1.15; stroke-linecap: round"/>
-   </g>
-   <g id="line2d_19">
-    <path d="M 228.528 553.691455 
-L 989.6256 553.691455 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #c7c7c7; stroke-opacity: 0.65; stroke-width: 1.15; stroke-linecap: round"/>
-   </g>
-   <g id="PathCollection_1">
-    <defs>
-     <path id="C0_0_6a3abdb714" d="M 0 5.868347 
-C 1.556304 5.868347 3.049075 5.250021 4.149548 4.149548 
-C 5.250021 3.049075 5.868347 1.556304 5.868347 -0 
-C 5.868347 -1.556304 5.250021 -3.049075 4.149548 -4.149548 
-C 3.049075 -5.250021 1.556304 -5.868347 0 -5.868347 
-C -1.556304 -5.868347 -3.049075 -5.250021 -4.149548 -4.149548 
-C -5.250021 -3.049075 -5.868347 -1.556304 -5.868347 0 
-C -5.868347 1.556304 -5.250021 3.049075 -4.149548 4.149548 
-C -3.049075 5.250021 -1.556304 5.868347 0 5.868347 
-z
-"/>
-    </defs>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="284.29778" y="55.848273" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="283.919019" y="108.252818" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="283.13045" y="160.657364" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="286.136667" y="213.061909" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="288.561525" y="265.466455" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="335.899927" y="317.871" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="458.052105" y="370.275545" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="796.660217" y="422.680091" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="325.785639" y="475.084636" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#C0_0_6a3abdb714" x="384.989853" y="527.489182" style="fill: #d7301f; stroke: #ffffff; stroke-width: 0.938936"/>
-    </g>
-   </g>
-   <g id="line2d_20">
-    <path d="M 276.858494 606.096 
-L 276.858494 29.646 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: #000000; stroke-opacity: 0.8"/>
-   </g>
-   <g id="LineCollection_1">
-    <path d="M 281.829878 55.848273 
-L 286.765683 55.848273 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_2">
-    <path d="M 282.553406 108.252818 
-L 285.284631 108.252818 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_3">
-    <path d="M 281.01749 160.657364 
-L 285.24341 160.657364 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_4">
-    <path d="M 285.471856 213.061909 
-L 286.801478 213.061909 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_5">
-    <path d="M 285.699273 265.466455 
-L 291.423777 265.466455 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_6">
-    <path d="M 333.567042 317.871 
-L 338.232812 317.871 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_7">
-    <path d="M 426.97597 370.275545 
-L 489.128241 370.275545 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_8">
-    <path d="M 656.184323 422.680091 
-L 937.13611 422.680091 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_9">
-    <path d="M 320.17648 475.084636 
-L 331.394798 475.084636 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_10">
-    <path d="M 381.33597 527.489182 
-L 388.643737 527.489182 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="LineCollection_11">
-    <path d="M 285.217224 579.893727 
-L 540.289618 579.893727 
-" clip-path="url(#p93b6785a97)" style="fill: none; stroke: #d7301f; stroke-opacity: 0.9; stroke-width: 2"/>
-   </g>
-   <g id="patch_3">
-    <path d="M 228.528 606.096 
-L 228.528 29.646 
-" style="fill: none; stroke: #cccccc; stroke-width: 1.875; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_4">
-    <path d="M 989.6256 606.096 
-L 989.6256 29.646 
-" style="fill: none; stroke: #cccccc; stroke-width: 1.875; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_5">
-    <path d="M 228.528 606.096 
-L 989.6256 606.096 
-" style="fill: none; stroke: #cccccc; stroke-width: 1.875; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_6">
-    <path d="M 228.528 29.646 
-L 989.6256 29.646 
-" style="fill: none; stroke: #cccccc; stroke-width: 1.875; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="text_18">
-    <!-- ** -->
-    <g style="fill: #d7301f" transform="translate(275.949038 42.615249) scale(0.2145 -0.2145)">
-     <defs>
-      <path id="Arial-BoldMT-2a" d="M 766 2475 
-L 294 2841 
-Q 519 3094 763 3325 
-Q 859 3419 884 3444 
-Q 806 3456 438 3547 
-Q 172 3613 88 3644 
-L 272 4194 
-Q 681 4028 1003 3828 
-Q 928 4338 928 4659 
-L 1484 4659 
-Q 1484 4431 1400 3822 
-Q 1463 3847 1669 3944 
-Q 1950 4072 2188 4163 
-L 2353 3597 
-Q 2006 3519 1550 3444 
-L 1925 3022 
-Q 2038 2894 2103 2813 
-L 1625 2497 
-L 1203 3194 
-Q 1013 2856 766 2475 
-z
-" transform="scale(0.015625)"/>
-     </defs>
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-    </g>
-   </g>
-   <g id="text_19">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(271.395905 95.019795) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_20">
-    <!-- ** -->
-    <g style="fill: #d7301f" transform="translate(274.781708 147.42434) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-    </g>
-   </g>
-   <g id="text_21">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(273.613554 199.828886) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_22">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(276.038412 252.233431) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_23">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(323.376814 304.637977) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_24">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(445.528992 357.042522) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_25">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(784.137103 409.447067) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_26">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(313.262526 461.851613) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="text_27">
-    <!-- *** -->
-    <g style="fill: #d7301f" transform="translate(372.46674 514.256158) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(77.832031 0)"/>
-    </g>
-   </g>
-   <g id="PathCollection_2">
-    <defs>
-     <path id="ma20b6bbc44" d="M 0 9.327379 
-L 9.327379 0 
-L 0 -9.327379 
-L -9.327379 0 
-z
-" style="stroke: #d7301f; stroke-width: 1.5"/>
-    </defs>
-    <g clip-path="url(#p93b6785a97)">
-     <use xlink:href="#ma20b6bbc44" x="334.060152" y="579.893727" style="fill: #d7301f; stroke: #d7301f; stroke-width: 1.5"/>
-    </g>
-   </g>
-   <g id="text_28">
-    <!-- ** -->
-    <g style="fill: #d7301f" transform="translate(325.711409 566.660704) scale(0.2145 -0.2145)">
-     <use xlink:href="#Arial-BoldMT-2a"/>
-     <use xlink:href="#Arial-BoldMT-2a" transform="translate(38.916016 0)"/>
-    </g>
-   </g>
+  <path id="fig3_panel1_ArialMT-30" class="st70" d="M441.38,954.48c0-2.17.25-3.92.74-5.24.5-1.33,1.23-2.35,2.21-3.06.98-.72,2.21-1.08,3.69-1.08,1.09,0,2.05.2,2.88.6.82.4,1.5.97,2.04,1.72.54.75.96,1.66,1.27,2.73.31,1.07.46,2.52.46,4.34,0,2.15-.25,3.89-.74,5.22-.49,1.32-1.22,2.35-2.2,3.07-.98.72-2.21,1.08-3.71,1.08-1.96,0-3.51-.63-4.63-1.9-1.34-1.53-2.01-4.02-2.01-7.46ZM443.95,954.48c0,3.01.39,5.02,1.17,6.02.78,1,1.75,1.5,2.9,1.5s2.12-.5,2.9-1.5,1.17-3.01,1.17-6.01-.39-5.03-1.17-6.03c-.78-.99-1.76-1.49-2.93-1.49s-2.07.44-2.75,1.31c-.86,1.12-1.29,3.18-1.29,6.2Z"/>
+  <g class="st75">
+    <path class="st37" d="M601.65,921.06V252.13"/>
   </g>
- </g>
- <defs>
-  <clipPath id="p93b6785a97">
-   <rect x="228.528" y="29.646" width="761.0976" height="576.45"/>
-  </clipPath>
- </defs>
+  <path id="fig3_panel1_ArialMT-35" class="st70" d="M586.48,958.17l2.62-.22c.2,1.28.65,2.24,1.36,2.89.71.64,1.56.97,2.57.97,1.2,0,2.22-.45,3.06-1.36.83-.91,1.25-2.12,1.25-3.62s-.4-2.55-1.2-3.38c-.8-.83-1.85-1.24-3.15-1.24-.81,0-1.53.18-2.18.55-.65.36-1.16.84-1.53,1.42l-2.35-.31,1.97-10.47h10.14v2.39h-8.14l-1.09,5.48c1.22-.85,2.5-1.28,3.85-1.28,1.78,0,3.28.62,4.5,1.85,1.22,1.23,1.84,2.82,1.84,4.76s-.54,3.44-1.61,4.78c-1.31,1.65-3.09,2.47-5.35,2.47-1.85,0-3.37-.52-4.54-1.56-1.17-1.04-1.84-2.41-2.01-4.13Z"/>
+  <path id="fig3_panel1_ArialMT-301" data-name="fig3_panel1_ArialMT-30" class="st70" d="M602.32,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM604.89,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <g class="st103">
+    <path class="st37" d="M754.47,921.06V252.13"/>
+  </g>
+  <path id="fig3_panel1_ArialMT-31" class="st70" d="M742.01,963.85h-2.5v-15.94c-.6.57-1.39,1.15-2.37,1.72s-1.86,1.01-2.63,1.29v-2.42c1.4-.66,2.62-1.45,3.67-2.39,1.05-.94,1.79-1.85,2.22-2.73h1.61v20.46Z"/>
+  <path id="fig3_panel1_ArialMT-302" data-name="fig3_panel1_ArialMT-30" class="st70" d="M748.42,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM750.99,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <path id="fig3_panel1_ArialMT-303" data-name="fig3_panel1_ArialMT-30" class="st70" d="M764.25,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM766.82,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <g class="st87">
+    <path class="st37" d="M907.29,921.06V252.13"/>
+  </g>
+  <path id="fig3_panel1_ArialMT-311" data-name="fig3_panel1_ArialMT-31" class="st70" d="M894.49,963.85h-2.5v-15.94c-.6.57-1.39,1.15-2.37,1.72s-1.86,1.01-2.63,1.29v-2.42c1.4-.66,2.62-1.45,3.67-2.39,1.05-.94,1.79-1.85,2.22-2.73h1.61v20.46Z"/>
+  <path id="fig3_panel1_ArialMT-351" data-name="fig3_panel1_ArialMT-35" class="st70" d="M900.9,958.17l2.62-.22c.2,1.28.65,2.24,1.36,2.89.71.64,1.56.97,2.57.97,1.2,0,2.22-.45,3.06-1.36.83-.91,1.25-2.12,1.25-3.62s-.4-2.55-1.2-3.38c-.8-.83-1.85-1.24-3.15-1.24-.81,0-1.53.18-2.18.55-.65.36-1.16.84-1.53,1.42l-2.35-.31,1.97-10.47h10.14v2.39h-8.14l-1.09,5.48c1.22-.85,2.5-1.28,3.85-1.28,1.78,0,3.28.62,4.5,1.85,1.22,1.23,1.84,2.82,1.84,4.76s-.54,3.44-1.61,4.78c-1.31,1.65-3.09,2.47-5.35,2.47-1.85,0-3.37-.52-4.54-1.56-1.17-1.04-1.84-2.41-2.01-4.13Z"/>
+  <path id="fig3_panel1_ArialMT-304" data-name="fig3_panel1_ArialMT-30" class="st70" d="M916.73,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM919.3,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <g class="st49">
+    <path class="st37" d="M1060.11,921.06V252.13"/>
+  </g>
+  <path id="fig3_panel1_ArialMT-32" class="st70" d="M1051.69,961.45v2.41h-13.47c-.02-.6.08-1.18.29-1.74.34-.92.89-1.82,1.65-2.71.76-.89,1.85-1.92,3.28-3.09,2.22-1.81,3.71-3.25,4.49-4.31.78-1.06,1.17-2.07,1.17-3.01s-.36-1.83-1.07-2.5c-.71-.68-1.63-1.02-2.77-1.02-1.2,0-2.17.36-2.89,1.09-.72.72-1.09,1.72-1.1,3l-2.57-.26c.17-1.92.84-3.38,1.98-4.39,1.15-1.01,2.7-1.51,4.63-1.51s3.5.54,4.64,1.63c1.14,1.08,1.71,2.43,1.71,4.03,0,.82-.17,1.62-.5,2.41-.33.79-.89,1.61-1.66,2.49s-2.06,2.07-3.86,3.59c-1.5,1.26-2.47,2.12-2.9,2.57-.42.45-.78.9-1.05,1.35h9.99Z"/>
+  <path id="fig3_panel1_ArialMT-305" data-name="fig3_panel1_ArialMT-30" class="st70" d="M1054.38,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM1056.95,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <path id="fig3_panel1_ArialMT-306" data-name="fig3_panel1_ArialMT-30" class="st70" d="M1070.21,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM1072.78,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <g class="st80">
+    <path class="st37" d="M1212.94,921.06V252.13"/>
+  </g>
+  <path id="fig3_panel1_ArialMT-321" data-name="fig3_panel1_ArialMT-32" class="st70" d="M1204.17,961.45v2.41h-13.47c-.02-.6.08-1.18.29-1.74.34-.92.89-1.82,1.65-2.71.76-.89,1.85-1.92,3.28-3.09,2.22-1.81,3.71-3.25,4.49-4.31.78-1.06,1.17-2.07,1.17-3.01s-.36-1.83-1.07-2.5c-.71-.68-1.63-1.02-2.77-1.02-1.2,0-2.17.36-2.89,1.09-.72.72-1.09,1.72-1.1,3l-2.57-.26c.17-1.92.84-3.38,1.98-4.39,1.15-1.01,2.7-1.51,4.63-1.51s3.5.54,4.64,1.63c1.14,1.08,1.71,2.43,1.71,4.03,0,.82-.17,1.62-.5,2.41-.33.79-.89,1.61-1.66,2.49s-2.06,2.07-3.86,3.59c-1.5,1.26-2.47,2.12-2.9,2.57-.42.45-.78.9-1.05,1.35h9.99Z"/>
+  <path id="fig3_panel1_ArialMT-352" data-name="fig3_panel1_ArialMT-35" class="st70" d="M1206.86,958.17l2.62-.22c.2,1.28.65,2.24,1.36,2.89.71.64,1.56.97,2.57.97,1.2,0,2.22-.45,3.06-1.36.83-.91,1.25-2.12,1.25-3.62s-.4-2.55-1.2-3.38c-.8-.83-1.85-1.24-3.15-1.24-.81,0-1.53.18-2.18.55-.65.36-1.16.84-1.53,1.42l-2.35-.31,1.97-10.47h10.14v2.39h-8.14l-1.09,5.48c1.22-.85,2.5-1.28,3.85-1.28,1.78,0,3.28.62,4.5,1.85,1.22,1.23,1.84,2.82,1.84,4.76s-.54,3.44-1.61,4.78c-1.31,1.65-3.09,2.47-5.35,2.47-1.85,0-3.37-.52-4.54-1.56-1.17-1.04-1.84-2.41-2.01-4.13Z"/>
+  <path id="fig3_panel1_ArialMT-307" data-name="fig3_panel1_ArialMT-30" class="st70" d="M1222.69,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM1225.26,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <g class="st12">
+    <path class="st37" d="M389.23,282.54h938.48"/>
+  </g>
+  <g class="st13">
+    <path class="st37" d="M389.23,343.35h938.48"/>
+  </g>
+  <g class="st82">
+    <path class="st37" d="M389.23,404.16h938.48"/>
+  </g>
+  <path class="st37" d="M1383.65,586.6h938.48"/>
+  <g class="st57">
+    <path class="st37" d="M389.23,464.97h938.48"/>
+  </g>
+  <g class="st59">
+    <path class="st37" d="M389.23,525.79h938.48"/>
+  </g>
+  <g class="st68">
+    <path class="st37" d="M389.23,586.6h938.48"/>
+  </g>
+  <g class="st89">
+    <path class="st37" d="M389.23,647.41h938.48"/>
+  </g>
+  <g class="st108">
+    <path class="st37" d="M389.23,708.22h938.48"/>
+  </g>
+  <g class="st91">
+    <path class="st37" d="M389.23,769.03h938.48"/>
+  </g>
+  <g class="st44">
+    <path class="st37" d="M389.23,829.84h938.48"/>
+  </g>
+  <g class="st102">
+    <path class="st37" d="M389.23,890.66h938.48"/>
+  </g>
+  <g class="st14">
+    <path class="st36" d="M1327.71,556.19"/>
+    <path class="st36" d="M389.23,556.19"/>
+  </g>
+  <g class="st47">
+    <path class="st36" d="M1327.71,860.25"/>
+    <path class="st36" d="M389.23,860.25"/>
+  </g>
+  <g class="st94">
+    <path id="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M458,289.35c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st81">
+    <path id="fig3_panel1_C0_0_6a3abdb7141" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M457.53,350.16c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st11">
+    <path id="fig3_panel1_C0_0_6a3abdb7142" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M456.56,410.97c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st51">
+    <path id="fig3_panel1_C0_0_6a3abdb7143" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M460.27,471.78c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st54">
+    <path id="fig3_panel1_C0_0_6a3abdb7144" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M463.26,532.6c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st110">
+    <path id="fig3_panel1_C0_0_6a3abdb7145" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M521.63,593.41c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st65">
+    <path id="fig3_panel1_C0_0_6a3abdb7146" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M672.25,654.22c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st88">
+    <path id="fig3_panel1_C0_0_6a3abdb7147" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M1089.78,715.03c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st66">
+    <path id="fig3_panel1_C0_0_6a3abdb7148" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M509.16,775.84c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st74">
+    <path id="fig3_panel1_C0_0_6a3abdb7149" data-name="fig3_panel1_C0_0_6a3abdb714" class="st1" d="M582.16,836.65c1.92,0,3.76-.72,5.12-1.99,1.36-1.28,2.12-3.01,2.12-4.82s-.76-3.54-2.12-4.82c-1.36-1.28-3.2-1.99-5.12-1.99s-3.76.72-5.12,1.99c-1.36,1.28-2.12,3.01-2.12,4.82s.76,3.54,2.12,4.82c1.36,1.28,3.2,1.99,5.12,1.99Z"/>
+  </g>
+  <g class="st104">
+    <path class="st41" d="M448.83,921.06V252.13"/>
+  </g>
+  <g class="st92">
+    <path class="st38" d="M454.96,282.54h6.09"/>
+  </g>
+  <g class="st16">
+    <path class="st38" d="M455.85,343.35h3.37"/>
+  </g>
+  <g class="st97">
+    <path class="st38" d="M453.96,404.16h5.21"/>
+  </g>
+  <g class="st45">
+    <path class="st38" d="M459.45,464.97h1.64"/>
+  </g>
+  <g class="st9">
+    <path class="st38" d="M459.73,525.79h7.06"/>
+  </g>
+  <g class="st72">
+    <path class="st38" d="M518.75,586.6h5.75"/>
+  </g>
+  <g class="st71">
+    <path class="st38" d="M633.93,647.41h76.64"/>
+  </g>
+  <g class="st106">
+    <path class="st38" d="M916.56,708.22h346.43"/>
+  </g>
+  <g class="st10">
+    <path class="st38" d="M502.24,769.03h13.83"/>
+  </g>
+  <g class="st101">
+    <path class="st38" d="M577.66,829.84h9.01"/>
+  </g>
+  <g class="st79">
+    <path class="st38" d="M459.14,890.66h314.52"/>
+  </g>
+  <path class="st34" d="M1327.71,921.06V252.13"/>
+  <path class="st34" d="M389.23,921.06h938.48"/>
+  <path class="st34" d="M389.23,252.13h938.48"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M450.87,257.56l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a1" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M461.17,257.56l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a2" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M445.26,318.37l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a3" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M455.55,318.37l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a4" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M465.84,318.37l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a5" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M449.43,379.18l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a6" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M459.73,379.18l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a7" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M447.99,439.99l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a8" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M458.29,439.99l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a9" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M468.58,439.99l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a10" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M450.98,500.8l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a11" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M461.28,500.8l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a12" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M471.57,500.8l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a13" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M509.35,561.62l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a14" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M519.65,561.62l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a15" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M529.94,561.62l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a16" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M659.98,622.43l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a17" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M670.27,622.43l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a18" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M680.56,622.43l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a19" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1077.5,683.24l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a20" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1087.79,683.24l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a21" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1098.09,683.24l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a22" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M496.88,744.05l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a23" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M507.18,744.05l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a24" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M517.47,744.05l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a25" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M569.89,804.86l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a26" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M580.18,804.86l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a27" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M590.47,804.86l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <g>
+    <g class="st84">
+      <path id="fig3_panel1_ma20b6bbc44" class="st4" d="M519.36,901.48l11.5-10.82-11.5-10.82-11.5,10.82,11.5,10.82Z"/>
+    </g>
+    <rect class="st31" x="389.23" y="252.13" width="938.48" height="668.93"/>
+  </g>
+  <path id="fig3_panel1_Arial-BoldMT-2a28" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M512.23,865.67l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a29" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M522.53,865.67l-1.95-1.42c.62-.66,1.27-1.28,1.94-1.88.26-.24.43-.4.5-.46-.21-.03-.83-.16-1.84-.4-.73-.17-1.22-.3-1.45-.38l.76-2.14c1.13.43,2.13.9,3.02,1.42-.21-1.32-.31-2.4-.31-3.23h2.3c0,.59-.12,1.68-.35,3.26.17-.06.54-.22,1.11-.47.77-.33,1.49-.62,2.14-.85l.68,2.2c-.96.2-2.06.4-3.32.6l1.55,1.64c.31.33.56.6.74.81l-1.98,1.23-1.74-2.71c-.52.88-1.13,1.81-1.81,2.8Z"/>
+  <path id="fig3_panel1_ArialMT-308" data-name="fig3_panel1_ArialMT-30" class="st70" d="M1438.66,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM1441.23,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <path id="fig3_panel1_ArialMT-34" class="st70" d="M1653.82,963.85v-4.88h-8.84v-2.3l9.3-13.2h2.04v13.2h2.75v2.3h-2.75v4.88h-2.5ZM1653.82,956.68v-9.19l-6.38,9.19h6.38Z"/>
+  <path id="fig3_panel1_ArialMT-309" data-name="fig3_panel1_ArialMT-30" class="st70" d="M1661.64,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM1664.21,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <path id="fig3_panel1_ArialMT-38" class="st70" d="M1869.17,952.46c-1.04-.38-1.81-.93-2.31-1.63-.5-.71-.75-1.55-.75-2.53,0-1.48.53-2.73,1.6-3.74,1.07-1.01,2.48-1.52,4.25-1.52s3.21.52,4.3,1.55c1.09,1.03,1.63,2.29,1.63,3.77,0,.95-.25,1.77-.75,2.47-.5.7-1.25,1.24-2.26,1.62,1.25.41,2.2,1.06,2.86,1.97.65.91.98,1.99.98,3.25,0,1.74-.62,3.2-1.85,4.39-1.23,1.19-2.85,1.78-4.86,1.78s-3.63-.59-4.87-1.78c-1.23-1.19-1.85-2.68-1.85-4.46,0-1.33.34-2.43,1.01-3.33.67-.9,1.63-1.5,2.87-1.83ZM1868.67,948.21c0,.96.31,1.75.93,2.37.62.61,1.43.92,2.42.92s1.75-.3,2.37-.91c.62-.61.93-1.35.93-2.23s-.32-1.69-.96-2.32c-.63-.63-1.42-.94-2.37-.94s-1.75.31-2.38.92c-.63.61-.94,1.34-.94,2.19ZM1867.87,957.62c0,.71.17,1.41.51,2.07s.84,1.18,1.51,1.55c.67.36,1.38.55,2.15.55,1.2,0,2.18-.38,2.96-1.15.78-.77,1.17-1.75,1.17-2.94s-.4-2.2-1.2-2.99c-.8-.79-1.8-1.18-3.01-1.18s-2.15.39-2.93,1.17c-.77.78-1.16,1.75-1.16,2.92Z"/>
+  <path id="fig3_panel1_ArialMT-3010" data-name="fig3_panel1_ArialMT-30" class="st70" d="M1881.15,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM1883.72,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <path id="fig3_panel1_ArialMT-312" data-name="fig3_panel1_ArialMT-31" class="st70" d="M2080.72,963.85h-2.5v-15.94c-.6.57-1.39,1.15-2.37,1.72s-1.86,1.01-2.63,1.29v-2.42c1.4-.66,2.62-1.45,3.67-2.39,1.05-.94,1.79-1.85,2.22-2.73h1.61v20.46Z"/>
+  <path id="fig3_panel1_ArialMT-322" data-name="fig3_panel1_ArialMT-32" class="st70" d="M2100.28,961.45v2.41h-13.47c-.02-.6.08-1.18.29-1.74.34-.92.89-1.82,1.65-2.71.76-.89,1.85-1.92,3.28-3.09,2.22-1.81,3.71-3.25,4.49-4.31.78-1.06,1.17-2.07,1.17-3.01s-.36-1.83-1.07-2.5c-.71-.68-1.63-1.02-2.77-1.02-1.2,0-2.17.36-2.89,1.09-.72.72-1.09,1.72-1.1,3l-2.57-.26c.17-1.92.84-3.38,1.98-4.39,1.15-1.01,2.7-1.51,4.63-1.51s3.5.54,4.64,1.63c1.14,1.08,1.71,2.43,1.71,4.03,0,.82-.17,1.62-.5,2.41-.33.79-.89,1.61-1.66,2.49s-2.06,2.07-3.86,3.59c-1.5,1.26-2.47,2.12-2.9,2.57-.42.45-.78.9-1.05,1.35h9.99Z"/>
+  <path id="fig3_panel1_ArialMT-3011" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2102.97,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2105.54,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+  <g class="st60">
+    <path class="st28" d="M1444.12,923.22V251.22"/>
+  </g>
+  <g class="st63">
+    <path class="st28" d="M1660.98,923.22V251.22"/>
+  </g>
+  <g class="st114">
+    <path class="st28" d="M1877.84,923.22V251.22"/>
+  </g>
+  <g class="st77">
+    <path class="st28" d="M2094.71,923.22V251.22"/>
+  </g>
+  <g class="st78">
+    <path class="st28" d="M2311.57,251.22"/>
+    <path class="st28" d="M2311.57,923.22"/>
+  </g>
+  <g class="st48">
+    <path class="st28" d="M1383.65,281.76h938.48"/>
+  </g>
+  <g class="st73">
+    <path class="st28" d="M1383.65,342.85h938.48"/>
+  </g>
+  <g class="st105">
+    <path class="st28" d="M1383.65,403.94h938.48"/>
+  </g>
+  <g class="st90">
+    <path class="st28" d="M1383.65,465.03h938.48"/>
+  </g>
+  <g class="st8">
+    <path class="st28" d="M1383.65,526.13h938.48"/>
+  </g>
+  <g class="st83">
+    <path class="st28" d="M1383.65,648.31h938.48"/>
+  </g>
+  <g class="st100">
+    <path class="st28" d="M1383.65,709.4h938.48"/>
+  </g>
+  <g class="st55">
+    <path class="st28" d="M1383.65,770.49h938.48"/>
+  </g>
+  <g class="st98">
+    <path class="st28" d="M1383.65,831.58h938.48"/>
+  </g>
+  <g class="st76">
+    <path class="st28" d="M1383.65,892.67h938.48"/>
+  </g>
+  <g class="st69">
+    <path class="st32" d="M2322.13,862.13"/>
+    <path class="st32" d="M1383.65,862.13"/>
+  </g>
+  <g class="st107">
+    <path id="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1457.74,288.26c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st61">
+    <path id="fig3_panel1_C0_0_bd975d72ad1" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1457.26,349.35c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st67">
+    <path id="fig3_panel1_C0_0_bd975d72ad2" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1454.64,410.44c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st46">
+    <path id="fig3_panel1_C0_0_bd975d72ad3" data-name="fig3_panel1_C0_0_bd975d72ad" class="st5" d="M1462.4,471.53c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st115">
+    <path id="fig3_panel1_C0_0_bd975d72ad4" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1467.88,532.63c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st109">
+    <path id="fig3_panel1_C0_0_bd975d72ad5" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1503.45,593.72c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st64">
+    <path id="fig3_panel1_C0_0_bd975d72ad6" data-name="fig3_panel1_C0_0_bd975d72ad" class="st5" d="M1581.77,654.81c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st113">
+    <path id="fig3_panel1_C0_0_bd975d72ad7" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M2032.46,715.9c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st56">
+    <path id="fig3_panel1_C0_0_bd975d72ad8" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1518.78,776.99c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st85">
+    <path id="fig3_panel1_C0_0_bd975d72ad9" data-name="fig3_panel1_C0_0_bd975d72ad" class="st3" d="M1575.23,838.08c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+  </g>
+  <g class="st112">
+    <path class="st41" d="M1444.12,923.22V251.22"/>
+  </g>
+  <g class="st116">
+    <path class="st30" d="M1453.14,281.76h9.22"/>
+  </g>
+  <g class="st58">
+    <path class="st30" d="M1453.8,342.85h6.9"/>
+  </g>
+  <g class="st50">
+    <path class="st30" d="M1448.37,403.94h12.54"/>
+  </g>
+  <g class="st96">
+    <path class="st30" d="M1460.75,465.03h3.3"/>
+  </g>
+  <g class="st99">
+    <path class="st30" d="M1460.74,526.13h14.27"/>
+  </g>
+  <g class="st86">
+    <path class="st30" d="M1498.75,587.22h9.4"/>
+  </g>
+  <g class="st25">
+    <path class="st30" d="M1540.61,648.31h82.32"/>
+  </g>
+  <g class="st7">
+    <path class="st30" d="M1807.52,709.4h449.89"/>
+  </g>
+  <g class="st93">
+    <path class="st30" d="M1515.44,770.49h6.68"/>
+  </g>
+  <g class="st95">
+    <path class="st30" d="M1563.42,831.58h23.64"/>
+  </g>
+  <g class="st24">
+    <path class="st30" d="M1460.07,892.67h284.79"/>
+  </g>
+  <path class="st42" d="M1383.65,923.22V251.22"/>
+  <path class="st42" d="M2322.13,923.22V251.22"/>
+  <path class="st42" d="M1383.65,923.22h938.48"/>
+  <path class="st42" d="M1383.65,251.22h938.48"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a30" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1452.09,256.67l-1.55-1.43c.49-.66,1-1.29,1.54-1.89.21-.24.34-.4.4-.46-.17-.03-.66-.17-1.46-.4-.58-.17-.96-.3-1.15-.38l.6-2.15c.89.43,1.69.91,2.4,1.43-.16-1.33-.25-2.41-.25-3.25h1.82c0,.59-.09,1.68-.28,3.27.14-.07.43-.22.88-.48.61-.33,1.18-.62,1.7-.86l.54,2.21c-.76.2-1.64.4-2.63.6l1.23,1.65c.25.33.44.61.58.82l-1.57,1.23-1.38-2.72c-.42.88-.89,1.82-1.43,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a31" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1460.25,256.67l-1.55-1.43c.49-.66,1-1.29,1.54-1.89.21-.24.34-.4.4-.46-.17-.03-.66-.17-1.46-.4-.58-.17-.96-.3-1.15-.38l.6-2.15c.89.43,1.69.91,2.4,1.43-.16-1.33-.25-2.41-.25-3.25h1.82c0,.59-.09,1.68-.28,3.27.14-.07.43-.22.88-.48.61-.33,1.18-.62,1.7-.86l.54,2.21c-.76.2-1.64.4-2.63.6l1.23,1.65c.25.33.44.61.58.82l-1.57,1.23-1.38-2.72c-.42.88-.89,1.82-1.43,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a32" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1447.22,317.76l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a33" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1455.39,317.76l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a34" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1463.55,317.76l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a35" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1448.69,378.85l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a36" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1456.86,378.85l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a37" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1452.37,439.94l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a38" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1460.53,439.94l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a39" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1468.69,439.94l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a40" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1457.84,501.03l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a41" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1466.01,501.03l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a42" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1474.17,501.03l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a43" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1493.41,562.12l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a44" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1501.58,562.12l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a45" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1509.74,562.12l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a46" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1571.74,623.21l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a47" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1579.9,623.21l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a48" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1588.06,623.21l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a49" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2026.51,684.3l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a50" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2034.68,684.3l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a51" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1508.74,745.39l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a52" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1516.91,745.39l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a53" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1525.07,745.39l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a54" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1565.2,806.48l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a55" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1573.36,806.48l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a56" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1581.53,806.48l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <g>
+    <g class="st15">
+      <path id="fig3_panel1_m0d9e714ff5" class="st2" d="M1514.94,902.67l10-10-10-10-10,10,10,10Z"/>
+    </g>
+    <rect class="st31" x="1383.65" y="251.22" width="938.48" height="672"/>
+  </g>
+  <path id="fig3_panel1_Arial-BoldMT-2a57" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1508.99,867.57l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <path id="fig3_panel1_Arial-BoldMT-2a58" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M1517.15,867.57l-1.86-1.43c.59-.66,1.2-1.29,1.84-1.89.25-.24.41-.4.48-.46-.2-.03-.79-.17-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.15c1.07.43,2.03.91,2.87,1.43-.2-1.33-.29-2.41-.29-3.25h2.19c0,.59-.11,1.68-.33,3.27.17-.07.52-.22,1.06-.48.74-.33,1.42-.62,2.04-.86l.65,2.21c-.91.2-1.96.4-3.16.6l1.47,1.65c.3.33.53.61.7.82l-1.88,1.23-1.66-2.72c-.5.88-1.07,1.82-1.72,2.81Z"/>
+  <g>
+    <path class="st37" d="M2434.31,924.13V255.2"/>
+    <path id="fig3_panel1_ArialMT-3012" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2427.35,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2429.92,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path class="st37" d="M2601.96,924.13V255.2"/>
+    <path id="fig3_panel1_ArialMT-323" data-name="fig3_panel1_ArialMT-32" class="st70" d="M2597.35,961.45v2.41h-13.47c-.02-.6.08-1.18.29-1.74.34-.92.89-1.82,1.65-2.71.76-.89,1.85-1.92,3.28-3.09,2.22-1.81,3.71-3.25,4.49-4.31.78-1.06,1.17-2.07,1.17-3.01s-.36-1.83-1.07-2.5c-.71-.68-1.63-1.02-2.77-1.02-1.2,0-2.17.36-2.89,1.09-.72.72-1.09,1.72-1.1,3l-2.57-.26c.17-1.92.84-3.38,1.98-4.39,1.15-1.01,2.7-1.51,4.63-1.51s3.5.54,4.64,1.63c1.14,1.08,1.71,2.43,1.71,4.03,0,.82-.17,1.62-.5,2.41-.33.79-.89,1.61-1.66,2.49s-2.06,2.07-3.86,3.59c-1.5,1.26-2.47,2.12-2.9,2.57-.42.45-.78.9-1.05,1.35h9.99Z"/>
+    <path id="fig3_panel1_ArialMT-3013" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2600.03,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2602.6,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path id="fig3_panel1_ArialMT-3014" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2615.86,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2618.44,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path class="st37" d="M2769.62,924.13V255.2"/>
+    <path id="fig3_panel1_ArialMT-341" data-name="fig3_panel1_ArialMT-34" class="st70" d="M2759.17,963.85v-4.88h-8.84v-2.3l9.3-13.2h2.04v13.2h2.75v2.3h-2.75v4.88h-2.5ZM2759.17,956.68v-9.19l-6.38,9.19h6.38Z"/>
+    <path id="fig3_panel1_ArialMT-3015" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2766.98,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2769.55,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path id="fig3_panel1_ArialMT-3016" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2782.81,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2785.38,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path class="st37" d="M2937.28,924.13V255.2"/>
+    <path id="fig3_panel1_ArialMT-36" class="st70" d="M2928.18,948.12l-2.49.19c-.22-.98-.54-1.69-.94-2.14-.68-.71-1.51-1.07-2.5-1.07-.8,0-1.5.22-2.1.67-.79.58-1.41,1.41-1.86,2.52-.45,1.1-.69,2.67-.71,4.71.6-.92,1.34-1.6,2.21-2.04s1.79-.67,2.74-.67c1.67,0,3.09.61,4.26,1.84,1.17,1.23,1.76,2.81,1.76,4.76,0,1.28-.28,2.47-.83,3.57-.55,1.1-1.31,1.94-2.27,2.52-.96.58-2.06.88-3.28.88-2.08,0-3.79-.77-5.1-2.3-1.31-1.53-1.97-4.06-1.97-7.58,0-3.94.73-6.8,2.18-8.59,1.27-1.56,2.98-2.34,5.13-2.34,1.6,0,2.92.45,3.94,1.35,1.03.9,1.64,2.14,1.84,3.73ZM2917.97,956.9c0,.86.18,1.68.55,2.47.36.79.88,1.39,1.53,1.8.66.41,1.35.62,2.07.62,1.06,0,1.96-.43,2.72-1.28.76-.85,1.14-2.01,1.14-3.48s-.38-2.52-1.13-3.33c-.75-.81-1.69-1.22-2.83-1.22s-2.09.41-2.88,1.22c-.79.81-1.18,1.87-1.18,3.19Z"/>
+    <path id="fig3_panel1_ArialMT-3017" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2931.04,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2933.61,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path id="fig3_panel1_ArialMT-3018" data-name="fig3_panel1_ArialMT-30" class="st70" d="M2946.87,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM2949.44,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path class="st37" d="M3104.93,924.13V255.2"/>
+    <path id="fig3_panel1_ArialMT-381" data-name="fig3_panel1_ArialMT-38" class="st70" d="M3087.95,952.46c-1.04-.38-1.81-.93-2.31-1.63-.5-.71-.75-1.55-.75-2.53,0-1.48.53-2.73,1.6-3.74,1.07-1.01,2.48-1.52,4.25-1.52s3.21.52,4.3,1.55c1.09,1.03,1.63,2.29,1.63,3.77,0,.95-.25,1.77-.75,2.47-.5.7-1.25,1.24-2.26,1.62,1.25.41,2.2,1.06,2.86,1.97.65.91.98,1.99.98,3.25,0,1.74-.62,3.2-1.85,4.39-1.23,1.19-2.85,1.78-4.86,1.78s-3.63-.59-4.87-1.78c-1.23-1.19-1.85-2.68-1.85-4.46,0-1.33.34-2.43,1.01-3.33.67-.9,1.63-1.5,2.87-1.83ZM3087.45,948.21c0,.96.31,1.75.93,2.37.62.61,1.43.92,2.42.92s1.75-.3,2.37-.91c.62-.61.93-1.35.93-2.23s-.32-1.69-.96-2.32c-.63-.63-1.42-.94-2.37-.94s-1.75.31-2.38.92c-.63.61-.94,1.34-.94,2.19ZM3086.65,957.62c0,.71.17,1.41.51,2.07s.84,1.18,1.51,1.55c.67.36,1.38.55,2.15.55,1.2,0,2.18-.38,2.96-1.15.78-.77,1.17-1.75,1.17-2.94s-.4-2.2-1.2-2.99c-.8-.79-1.8-1.18-3.01-1.18s-2.15.39-2.93,1.17c-.77.78-1.16,1.75-1.16,2.92Z"/>
+    <path id="fig3_panel1_ArialMT-3019" data-name="fig3_panel1_ArialMT-30" class="st70" d="M3099.93,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM3102.51,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path id="fig3_panel1_ArialMT-3020" data-name="fig3_panel1_ArialMT-30" class="st70" d="M3115.77,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM3118.34,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path class="st37" d="M3272.59,924.13V255.2"/>
+    <path id="fig3_panel1_ArialMT-313" data-name="fig3_panel1_ArialMT-31" class="st70" d="M3250.87,963.85h-2.5v-15.94c-.6.57-1.39,1.15-2.37,1.72s-1.86,1.01-2.63,1.29v-2.42c1.4-.66,2.62-1.45,3.67-2.39,1.05-.94,1.79-1.85,2.22-2.73h1.61v20.46Z"/>
+    <path id="fig3_panel1_ArialMT-3021" data-name="fig3_panel1_ArialMT-30" class="st70" d="M3257.29,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM3259.86,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path id="fig3_panel1_ArialMT-3022" data-name="fig3_panel1_ArialMT-30" class="st70" d="M3273.12,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM3275.69,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path id="fig3_panel1_ArialMT-3023" data-name="fig3_panel1_ArialMT-30" class="st70" d="M3288.95,953.46c0-2.41.25-4.35.74-5.82.5-1.47,1.23-2.6,2.21-3.4.98-.8,2.21-1.2,3.69-1.2,1.09,0,2.05.22,2.88.66.82.44,1.5,1.07,2.04,1.9.54.83.96,1.84,1.27,3.03.31,1.19.46,2.79.46,4.82,0,2.39-.25,4.32-.74,5.79-.49,1.47-1.22,2.6-2.2,3.41-.98.8-2.21,1.2-3.71,1.2-1.96,0-3.51-.7-4.63-2.11-1.34-1.7-2.01-4.46-2.01-8.28ZM3291.52,953.46c0,3.34.39,5.57,1.17,6.68.78,1.11,1.75,1.66,2.9,1.66s2.12-.56,2.9-1.67,1.17-3.34,1.17-6.67-.39-5.59-1.17-6.69c-.78-1.1-1.76-1.65-2.93-1.65s-2.07.49-2.75,1.46c-.86,1.24-1.29,3.53-1.29,6.88Z"/>
+    <path class="st37" d="M2371.82,285.61h938.48"/>
+    <path class="st37" d="M2371.82,346.42h938.48"/>
+    <path class="st37" d="M2371.82,407.23h938.48"/>
+    <path class="st37" d="M2371.82,468.04h938.48"/>
+    <path class="st37" d="M2371.82,528.86h938.48"/>
+    <path class="st37" d="M2371.82,589.67h938.48"/>
+    <path class="st37" d="M2371.82,650.48h938.48"/>
+    <path class="st37" d="M2371.82,711.29h938.48"/>
+    <path class="st37" d="M2371.82,772.1h938.48"/>
+    <path class="st37" d="M2371.82,832.91h938.48"/>
+    <path class="st37" d="M2371.82,893.73h938.48"/>
+    <g>
+      <path class="st36" d="M3310.3,559.26"/>
+      <path class="st36" d="M2371.82,559.26"/>
+    </g>
+    <g>
+      <path class="st36" d="M3310.3,863.32"/>
+      <path class="st36" d="M2371.82,863.32"/>
+    </g>
+    <path id="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2437.49,292.11c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb1" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2437.17,352.92c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb2" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2437.11,413.73c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb3" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2437.79,474.54c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb4" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2438.57,535.36c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb5" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2473.43,596.17c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb6" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2641.85,656.98c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb7" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M3083.23,718.1c1.72,0,3.38-.72,4.6-1.99,1.22-1.28,1.9-3.01,1.9-4.82s-.68-3.54-1.9-4.82c-1.22-1.28-2.87-1.99-4.6-1.99s-3.38.72-4.6,1.99c-1.22,1.28-1.9,3.01-1.9,4.82s.68,3.54,1.9,4.82c1.22,1.28,2.87,1.99,4.6,1.99Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb8" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M3083.23,717.79c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb9" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2456.69,778.6c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path id="fig3_panel1_C0_0_94cf5f7edb10" data-name="fig3_panel1_C0_0_94cf5f7edb" class="st1" d="M2495.92,839.41c1.72,0,3.38-.68,4.6-1.9,1.22-1.22,1.9-2.87,1.9-4.6s-.68-3.38-1.9-4.6c-1.22-1.22-2.87-1.9-4.6-1.9s-3.38.68-4.6,1.9c-1.22,1.22-1.9,2.87-1.9,4.6s.68,3.38,1.9,4.6c1.22,1.22,2.87,1.9,4.6,1.9Z"/>
+    <path class="st41" d="M2434.31,924.13V255.2"/>
+    <path class="st38" d="M2436.74,285.61h1.5"/>
+    <path class="st38" d="M2436.77,346.42h.82"/>
+    <path class="st38" d="M2436.54,407.23h1.15"/>
+    <path class="st38" d="M2437.45,468.04h.68"/>
+    <path class="st38" d="M2437.65,528.86h1.85"/>
+    <path class="st38" d="M2470.26,589.67h6.35"/>
+    <path class="st38" d="M2610.84,650.48h62.01"/>
+    <path class="st38" d="M2920.89,711.29h324.68"/>
+    <path class="st38" d="M2453.32,772.1h6.73"/>
+    <path class="st38" d="M2493.63,832.91h4.57"/>
+    <path class="st26" d="M2371.82,924.13V255.2"/>
+    <path class="st26" d="M3310.3,924.13V255.2"/>
+    <path class="st26" d="M2371.82,924.13h938.48"/>
+    <path class="st26" d="M2371.82,255.2h938.48"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a59" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2427.46,260.63l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a60" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2435.62,260.63l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a61" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2443.79,260.63l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a62" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2427.14,321.44l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a63" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2435.3,321.44l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a64" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2443.47,321.44l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a65" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2427.08,382.25l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a66" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2435.24,382.25l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a67" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2443.4,382.25l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a68" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2427.76,443.06l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a69" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2435.92,443.06l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a70" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2444.08,443.06l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a71" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2428.54,503.87l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a72" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2436.7,503.87l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a73" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2444.87,503.87l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a74" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2463.4,564.69l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a75" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2471.56,564.69l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a76" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2479.72,564.69l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a77" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2631.81,625.5l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a78" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2639.98,625.5l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a79" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2648.14,625.5l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a80" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M3073.02,686.31l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a81" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M3081.18,686.31l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a82" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M3089.35,686.31l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a83" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2446.65,747.12l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a84" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2454.82,747.12l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a85" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2462.98,747.12l-1.86-1.42c.59-.66,1.2-1.28,1.84-1.88.25-.24.41-.4.48-.46-.2-.03-.79-.16-1.75-.4-.7-.17-1.16-.3-1.38-.38l.72-2.14c1.07.43,2.03.9,2.87,1.42-.2-1.32-.29-2.4-.29-3.23h2.19c0,.59-.11,1.68-.33,3.26.17-.06.52-.22,1.06-.47.74-.33,1.42-.62,2.04-.85l.65,2.2c-.91.2-1.96.4-3.16.6l1.47,1.64c.3.33.53.6.7.81l-1.88,1.23-1.66-2.71c-.5.88-1.07,1.81-1.72,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a86" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2485.71,807.93l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a87" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2493.87,807.93l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a88" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2502.03,807.93l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_m22c8d125be" class="st4" d="M2526.91,903.73l10-10-10-10-10,10,10,10Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a89" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2519.9,869.02l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+    <path id="fig3_panel1_Arial-BoldMT-2a90" data-name="fig3_panel1_Arial-BoldMT-2a" class="st0" d="M2528.06,869.02l-2.04-1.42c.65-.66,1.33-1.28,2.03-1.88.28-.24.45-.4.52-.46-.22-.03-.87-.16-1.93-.4-.77-.17-1.27-.3-1.51-.38l.8-2.14c1.18.43,2.23.9,3.16,1.42-.22-1.32-.32-2.4-.32-3.23h2.41c0,.59-.12,1.68-.36,3.26.18-.06.57-.22,1.16-.47.81-.33,1.56-.62,2.25-.85l.71,2.2c-1,.2-2.16.4-3.47.6l1.62,1.64c.33.33.58.6.77.81l-2.07,1.23-1.83-2.71c-.55.88-1.18,1.81-1.89,2.8Z"/>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <text class="st23" transform="translate(1557.82 229.67)"><tspan x="0" y="0">← Favours HDSSSOM | Favours Full →</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st22" transform="translate(38.45 74.13)"><tspan x="0" y="0">Figure 3: Full versus HDSSSOM on Pilot Dataset</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(267.74 292.41)"><tspan x="0" y="0">blobs</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(251.65 349.38)"><tspan x="0" y="0">circles</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(245.54 409.87)"><tspan x="0" y="0">moons</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(227.38 469.54)"><tspan x="0" y="0">s_curve</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(197.13 537.94)"><tspan x="0" y="0">swiss_roll</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(123.86 594.48)"><tspan x="0" y="0">breast_cancer</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(279.87 654.88)"><tspan x="0" y="0">wine</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(308.18 720.8)"><tspan x="0" y="0">iris</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(269.78 780.49)"><tspan x="0" y="0">digits</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st17" transform="translate(144.57 834.43)"><tspan x="0" y="0">olivetti_faces</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <text class="st17" transform="translate(22.7 900.17)"><tspan x="0" y="0">GLOBAL_OVERALL</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <path class="st37" d="M354.59,487.77"/>
+  <path class="st33" d="M354.59,487.77"/>
+  <path class="st33" d="M354.59,878.47"/>
+  <path class="st33" d="M354.59,878.47"/>
+  <g>
+    <g id="panel_r0_c0_figure_11">
+      <g id="panel_r0_c0_axes_11">
+        <g id="panel_r0_c0_matplotlib.axis_21">
+          <g id="panel_r0_c0_ytick_16">
+            <g id="panel_r0_c0_line2d_71">
+              <path class="st39" d="M390.61,307.64"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_21">
+            <g id="panel_r0_c0_line2d_81">
+              <path class="st39" d="M390.61,349.38"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_31">
+            <g id="panel_r0_c0_line2d_91">
+              <path class="st39" d="M390.61,391.12"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_41">
+            <g id="panel_r0_c0_line2d_101">
+              <path class="st39" d="M390.61,432.87"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_51">
+            <g id="panel_r0_c0_line2d_111">
+              <path class="st39" d="M390.61,474.61"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_61">
+            <g id="panel_r0_c0_line2d_121">
+              <path class="st39" d="M390.61,516.35"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_71">
+            <g id="panel_r0_c0_line2d_131">
+              <path class="st39" d="M390.61,558.09"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_81">
+            <g id="panel_r0_c0_line2d_141">
+              <path class="st39" d="M390.61,599.83"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_91">
+            <g id="panel_r0_c0_line2d_151">
+              <path class="st39" d="M390.61,641.57"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_101">
+            <g id="panel_r0_c0_line2d_161">
+              <path class="st39" d="M390.61,683.31"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_111">
+            <g id="panel_r0_c0_line2d_171">
+              <path class="st39" d="M390.61,725.05"/>
+            </g>
+          </g>
+          <g id="panel_r0_c0_ytick_121">
+            <g id="panel_r0_c0_line2d_181">
+              <path class="st39" d="M390.61,766.8"/>
+            </g>
+          </g>
+        </g>
+        <g id="panel_r0_c0_line2d_221">
+          <path class="st35" d="M390.61,495.48"/>
+        </g>
+      </g>
+    </g>
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <g class="st19">
+              <text class="st18" transform="translate(409.31 162.17)"><tspan x="0" y="0">A</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <g class="st19">
+              <text class="st21" transform="translate(530.83 162.17)"><tspan x="0" y="0">Balanced QE</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g>
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <g class="st19">
+              <text class="st18" transform="translate(1386.99 162.17)"><tspan x="0" y="0">B</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <g class="st19">
+              <text class="st21" transform="translate(1508.51 162.17)"><tspan x="0" y="0">Holdout QE</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g>
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <g class="st19">
+              <text class="st18" transform="translate(2364.68 162.17)"><tspan x="0" y="0">C</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <g class="st19">
+              <text class="st21" transform="translate(2486.2 162.17)"><tspan x="0" y="0">Train QE</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="st19">
+    <g class="st19">
+      <g class="st19">
+        <g class="st19">
+          <g class="st19">
+            <text class="st20" transform="translate(1680.62 1051.96)"><tspan x="0" y="0">QE change (%)</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g>
+    <path class="st40" d="M768.34,1158h78.22"/>
+    <path id="bottom_legend_0_m34411af60d" class="st6" d="M807.45,1170.23c3.25,0,6.35-1.29,8.64-3.58,2.29-2.28,3.58-5.41,3.58-8.64s-1.29-6.35-3.58-8.64-5.41-3.58-8.64-3.58-6.35,1.29-8.64,3.58-3.58,5.41-3.58,8.64,1.29,6.35,3.58,8.64,5.41,3.58,8.64,3.58Z"/>
+    <path id="bottom_legend_0_ArialMT-53" class="st70" d="M874.11,1161.91l2.9-.26c.13,1.17.47,2.13.96,2.87.51.74,1.29,1.35,2.35,1.81,1.06.47,2.25.69,3.59.69,1.18,0,2.21-.18,3.12-.53.9-.35,1.57-.83,2.02-1.44s.66-1.28.66-2.01-.22-1.36-.64-1.91-1.13-1-2.1-1.38c-.63-.25-2.02-.62-4.16-1.14s-3.64-1-4.51-1.46c-1.12-.58-1.95-1.3-2.49-2.17-.55-.87-.82-1.84-.82-2.9,0-1.18.33-2.27,1-3.3s1.64-1.8,2.93-2.34c1.28-.53,2.72-.8,4.28-.8,1.73,0,3.26.28,4.57.84,1.32.56,2.34,1.37,3.05,2.46.71,1.07,1.1,2.3,1.15,3.67l-2.96.23c-.16-1.48-.7-2.58-1.62-3.34s-2.27-1.13-4.06-1.13-3.22.34-4.08,1.03c-.85.68-1.28,1.51-1.28,2.47,0,.84.3,1.53.91,2.08.59.54,2.15,1.1,4.65,1.66,2.51.57,4.23,1.06,5.17,1.49,1.35.63,2.36,1.43,3.01,2.39s.97,2.07.97,3.32-.35,2.42-1.06,3.51-1.74,1.95-3.07,2.56-2.83.91-4.5.91c-2.11,0-3.89-.31-5.31-.92s-2.54-1.54-3.36-2.78-1.24-2.64-1.28-4.2h.02v.02h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-69" class="st70" d="M896.55,1149.37v-3.3h2.86v3.3h-2.86ZM896.55,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-67" class="st70" d="M903.24,1170.81l2.79.41c.11.86.43,1.49.97,1.88.71.53,1.68.8,2.91.8,1.32,0,2.35-.27,3.07-.8s1.21-1.27,1.47-2.22c.14-.58.22-1.81.21-3.68-1.25,1.48-2.81,2.21-4.67,2.21-2.33,0-4.12-.84-5.4-2.51s-1.91-3.69-1.91-6.03c0-1.61.29-3.1.88-4.47.58-1.36,1.43-2.42,2.53-3.16,1.11-.74,2.42-1.12,3.91-1.12,1.99,0,3.64.81,4.93,2.42v-2.04h2.64v14.62c0,2.64-.27,4.5-.81,5.59s-1.39,1.96-2.54,2.6-2.59.96-4.29.96c-2.02,0-3.64-.45-4.89-1.36s-1.84-2.27-1.8-4.1h0ZM905.61,1160.66c0,2.21.44,3.83,1.32,4.86s1.98,1.53,3.32,1.53,2.42-.51,3.31-1.52,1.34-2.6,1.34-4.76-.45-3.63-1.37-4.67c-.92-1.05-2.03-1.58-3.32-1.58s-2.36.52-3.25,1.55-1.33,2.56-1.33,4.6h-.02Z"/>
+    <path id="bottom_legend_0_ArialMT-6e" class="st70" d="M921.89,1169.41v-16.9h2.57v2.41c1.24-1.86,3.04-2.79,5.37-2.79,1.02,0,1.95.19,2.81.55s1.5.85,1.92,1.44.72,1.3.89,2.11c.1.54.16,1.46.16,2.79v10.4h-2.86v-10.28c0-1.17-.11-2.04-.34-2.62-.22-.58-.61-1.03-1.18-1.38s-1.23-.52-1.99-.52c-1.22,0-2.27.38-3.16,1.16s-1.33,2.24-1.33,4.4v9.23h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-691" class="st70" d="M940.04,1149.37v-3.3h2.86v3.3h-2.86ZM940.04,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-66" class="st70" d="M947.95,1169.41v-14.67h-2.53v-2.23h2.53v-1.8c0-1.14.1-1.97.31-2.53.28-.74.75-1.34,1.45-1.8.69-.47,1.67-.69,2.93-.69.81,0,1.7.09,2.68.29l-.42,2.49c-.59-.1-1.16-.16-1.7-.16-.87,0-1.49.19-1.84.56-.36.37-.54,1.06-.54,2.09v1.56h3.3v2.23h-3.3v14.67h-2.87Z"/>
+    <path id="bottom_legend_0_ArialMT-692" class="st70" d="M956.33,1149.37v-3.3h2.86v3.3h-2.86ZM956.33,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-63" class="st70" d="M974.59,1163.22l2.81.36c-.31,1.94-1.1,3.46-2.37,4.56s-2.82,1.64-4.67,1.64c-2.32,0-4.18-.75-5.58-2.26s-2.11-3.68-2.11-6.5c0-1.82.3-3.42.91-4.79.6-1.37,1.52-2.4,2.76-3.08s2.58-1.03,4.04-1.03c1.83,0,3.34.47,4.51,1.4s1.91,2.24,2.24,3.95l-2.79.43c-.27-1.14-.73-1.99-1.41-2.56-.67-.58-1.49-.86-2.44-.86-1.45,0-2.62.52-3.51,1.55s-1.35,2.67-1.35,4.9.43,3.92,1.3,4.95,2.01,1.54,3.41,1.54c1.13,0,2.07-.34,2.81-1.03.75-.69,1.23-1.75,1.44-3.18v.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-61" class="st70" d="M990.88,1167.32c-1.06.9-2.09,1.54-3.07,1.91s-2.04.56-3.15.56c-1.86,0-3.29-.45-4.28-1.36s-1.5-2.07-1.5-3.48c0-.83.19-1.58.57-2.26.37-.68.87-1.24,1.48-1.65s1.3-.72,2.07-.94c.56-.14,1.41-.29,2.54-.43,2.32-.28,4.01-.6,5.11-.98,0-.39.01-.64.01-.74,0-1.17-.27-1.99-.82-2.47-.73-.64-1.82-.97-3.26-.97-1.34,0-2.35.24-2.99.7s-1.12,1.3-1.43,2.5l-2.8-.38c.26-1.2.67-2.17,1.26-2.9.58-.73,1.43-1.3,2.53-1.71s2.38-.6,3.83-.6,2.62.17,3.51.51,1.57.76,1.99,1.28.72,1.17.89,1.95c.09.49.14,1.36.14,2.64v3.82c0,2.67.06,4.35.19,5.05s.36,1.37.72,2.03h-3c-.3-.59-.49-1.29-.57-2.09v.03h0l.03-.02h0ZM990.65,1160.93c-1.04.42-2.6.79-4.68,1.09-1.18.17-2.02.36-2.5.58-.49.21-.86.52-1.13.93-.27.4-.39.86-.39,1.36,0,.76.29,1.4.87,1.91s1.43.76,2.54.76,2.09-.24,2.95-.72,1.49-1.15,1.89-1.98c.31-.65.47-1.6.47-2.86v-1.05h-.01v-.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-6e1" class="st70" d="M997.98,1169.41v-16.9h2.57v2.41c1.24-1.86,3.04-2.79,5.37-2.79,1.02,0,1.95.19,2.81.55s1.5.85,1.92,1.44.72,1.3.89,2.11c.1.54.16,1.46.16,2.79v10.4h-2.86v-10.28c0-1.17-.11-2.04-.34-2.62-.22-.58-.61-1.03-1.18-1.38s-1.23-.52-1.99-.52c-1.22,0-2.27.38-3.16,1.16s-1.33,2.24-1.33,4.4v9.23h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-74" class="st70" d="M1022.37,1166.85l.41,2.53c-.81.17-1.53.26-2.16.26-1.04,0-1.85-.17-2.42-.5s-.97-.76-1.21-1.3-.35-1.66-.35-3.38v-9.73h-2.1v-2.23h2.1v-4.19l2.84-1.72v5.9h2.88v2.23h-2.88v9.88c0,.82.05,1.34.16,1.58.1.23.27.41.5.56.23.13.56.21.98.21.32,0,.73-.04,1.26-.11h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-20" class="st70" d="M1023.02,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-28" class="st70" d="M1039.69,1176.26c-1.58-1.99-2.91-4.33-4.01-7-1.09-2.68-1.63-5.45-1.63-8.31,0-2.52.4-4.94,1.22-7.26.95-2.69,2.43-5.35,4.42-8.02h2.06c-1.28,2.21-2.13,3.78-2.54,4.72-.65,1.47-1.16,2.99-1.53,4.58-.45,1.98-.68,3.98-.68,5.98,0,5.11,1.58,10.2,4.75,15.3h-2.06,0Z"/>
+    <path id="bottom_legend_0_ArialMT-70" class="st70" d="M1045.07,1175.88v-23.38h2.6v2.19c.62-.86,1.31-1.5,2.09-1.93s1.72-.65,2.81-.65c1.45,0,2.72.37,3.82,1.12s1.93,1.79,2.49,3.14c.57,1.35.85,2.83.85,4.44,0,1.73-.31,3.29-.93,4.67s-1.52,2.45-2.71,3.18c-1.18.73-2.43,1.11-3.73,1.11-.95,0-1.81-.21-2.57-.61-.75-.4-1.38-.91-1.87-1.53v8.23h-2.86v.02h.01ZM1047.67,1161.05c0,2.18.44,3.78,1.32,4.83s1.95,1.56,3.2,1.56,2.37-.54,3.27-1.61c.91-1.07,1.36-2.75,1.36-5s-.44-3.76-1.33-4.84-1.94-1.61-3.17-1.61-2.3.57-3.25,1.72c-.94,1.14-1.41,2.8-1.41,4.97h0v-.02h.01Z"/>
+    <path id="bottom_legend_0_ArialMT-201" class="st70" d="M1061.05,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-3c" class="st70" d="M1071.89,1159.21v-2.68l15.45-6.52v2.84l-12.25,5.02,12.25,5.07v2.85l-15.45-6.6h0v.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-202" class="st70" d="M1089.14,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-30" class="st70" d="M1099.54,1157.91c0-2.76.28-4.98.85-6.66s1.41-2.98,2.52-3.89,2.53-1.37,4.23-1.37c1.25,0,2.35.25,3.3.75.94.51,1.73,1.23,2.34,2.18.62.95,1.11,2.1,1.45,3.47.35,1.36.53,3.2.53,5.52,0,2.74-.28,4.94-.85,6.63-.56,1.68-1.4,2.98-2.52,3.9s-2.53,1.37-4.24,1.37c-2.24,0-4.01-.81-5.29-2.42-1.54-1.94-2.3-5.11-2.3-9.48h-.02,0ZM1102.49,1157.91c0,3.83.44,6.38,1.34,7.65s2.01,1.9,3.32,1.9,2.43-.64,3.32-1.91,1.34-3.82,1.34-7.64-.44-6.4-1.34-7.66-2.02-1.89-3.35-1.89-2.37.56-3.15,1.67c-.98,1.42-1.48,4.04-1.48,7.88h0Z"/>
+    <path id="bottom_legend_0_ArialMT-2e" class="st70" d="M1119.28,1169.41v-3.27h3.27v3.27h-3.27Z"/>
+    <path id="bottom_legend_0_ArialMT-301" class="st70" d="M1126.73,1157.91c0-2.76.28-4.98.85-6.66s1.41-2.98,2.52-3.89,2.53-1.37,4.23-1.37c1.25,0,2.35.25,3.3.75.94.51,1.73,1.23,2.34,2.18.62.95,1.11,2.1,1.45,3.47.35,1.36.53,3.2.53,5.52,0,2.74-.28,4.94-.85,6.63-.56,1.68-1.4,2.98-2.52,3.9s-2.53,1.37-4.24,1.37c-2.24,0-4.01-.81-5.29-2.42-1.54-1.94-2.3-5.11-2.3-9.48h-.02,0ZM1129.67,1157.91c0,3.83.44,6.38,1.34,7.65s2.01,1.9,3.32,1.9,2.43-.64,3.32-1.91,1.34-3.82,1.34-7.64-.44-6.4-1.34-7.66-2.02-1.89-3.35-1.89-2.37.56-3.15,1.67c-.98,1.42-1.48,4.04-1.48,7.88h0Z"/>
+    <path id="bottom_legend_0_ArialMT-35" class="st70" d="M1144.86,1163.29l3.01-.26c.23,1.47.74,2.56,1.55,3.31.82.73,1.79,1.11,2.94,1.11,1.37,0,2.54-.52,3.49-1.56s1.43-2.42,1.43-4.14-.45-2.93-1.37-3.87c-.92-.95-2.12-1.42-3.61-1.42-.92,0-1.76.21-2.5.63-.74.41-1.32.96-1.75,1.63l-2.69-.35,2.25-11.98h11.61v2.74h-9.31l-1.25,6.27c1.4-.98,2.86-1.47,4.4-1.47,2.04,0,3.75.7,5.16,2.12s2.1,3.22,2.1,5.45-.61,3.94-1.84,5.48c-1.5,1.89-3.53,2.83-6.13,2.83-2.12,0-3.86-.59-5.2-1.78s-2.11-2.76-2.29-4.72v-.02h.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-29" class="st70" d="M1165.65,1176.26h-2.06c3.17-5.1,4.75-10.19,4.75-15.3,0-1.99-.23-3.98-.68-5.93-.36-1.59-.87-3.12-1.51-4.58-.41-.95-1.27-2.54-2.56-4.78h2.06c1.99,2.67,3.46,5.33,4.42,8.02.82,2.32,1.23,4.73,1.23,7.26,0,2.86-.55,5.63-1.65,8.31s-2.43,5-4,7h0Z"/>
+    <path class="st40" d="M1237.65,1158h78.22"/>
+    <path id="bottom_legend_0_m8dc7324f2d" class="st52" d="M1276.76,1170.23c3.25,0,6.35-1.29,8.64-3.58,2.29-2.28,3.58-5.41,3.58-8.64s-1.29-6.35-3.58-8.64-5.41-3.58-8.64-3.58-6.35,1.29-8.64,3.58-3.58,5.41-3.58,8.64,1.29,6.35,3.58,8.64,5.41,3.58,8.64,3.58Z"/>
+    <path id="bottom_legend_0_ArialMT-4e" class="st70" d="M1344.43,1169.41v-23.33h3.16l12.26,18.32v-18.32h2.96v23.33h-3.16l-12.25-18.34v18.34h-2.97Z"/>
+    <path id="bottom_legend_0_ArialMT-6f" class="st70" d="M1366.57,1160.96c0-3.13.87-5.45,2.6-6.96,1.46-1.25,3.22-1.88,5.31-1.88,2.33,0,4.22.76,5.7,2.28s2.21,3.63,2.21,6.3c0,2.17-.33,3.89-.98,5.14s-1.6,2.21-2.85,2.9-2.6,1.03-4.08,1.03c-2.37,0-4.28-.75-5.74-2.27s-2.18-3.7-2.18-6.55h.01ZM1369.51,1160.96c0,2.16.48,3.78,1.42,4.86.94,1.07,2.13,1.61,3.57,1.61s2.6-.54,3.55-1.62c.94-1.09,1.42-2.73,1.42-4.95,0-2.09-.48-3.68-1.43-4.75s-2.13-1.61-3.53-1.61-2.63.54-3.57,1.61c-.94,1.06-1.42,2.69-1.42,4.86h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-6e2" class="st70" d="M1385.76,1169.41v-16.9h2.57v2.41c1.24-1.86,3.04-2.79,5.37-2.79,1.02,0,1.95.19,2.81.55s1.5.85,1.92,1.44.72,1.3.89,2.11c.1.54.16,1.46.16,2.79v10.4h-2.86v-10.28c0-1.17-.11-2.04-.34-2.62-.22-.58-.61-1.03-1.18-1.38s-1.23-.52-1.99-.52c-1.22,0-2.27.38-3.16,1.16s-1.33,2.24-1.33,4.4v9.23h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-2d" class="st70" d="M1402.77,1162.4v-2.88h8.8v2.88h-8.8Z"/>
+    <path id="bottom_legend_0_ArialMT-531" class="st70" d="M1414.06,1161.91l2.9-.26c.13,1.17.47,2.13.96,2.87.51.74,1.29,1.35,2.35,1.81,1.06.47,2.25.69,3.59.69,1.18,0,2.21-.18,3.12-.53.9-.35,1.57-.83,2.02-1.44.44-.61.66-1.28.66-2.01s-.22-1.36-.64-1.91-1.13-1-2.1-1.38c-.63-.25-2.02-.62-4.16-1.14s-3.64-1-4.51-1.46c-1.12-.58-1.95-1.3-2.49-2.17-.55-.87-.82-1.84-.82-2.9,0-1.18.33-2.27,1-3.3s1.64-1.8,2.93-2.34c1.28-.53,2.72-.8,4.28-.8,1.73,0,3.26.28,4.57.84,1.32.56,2.34,1.37,3.05,2.46.71,1.07,1.1,2.3,1.15,3.67l-2.96.23c-.16-1.48-.7-2.58-1.62-3.34-.92-.75-2.27-1.13-4.06-1.13s-3.22.34-4.08,1.03c-.85.68-1.28,1.51-1.28,2.47,0,.84.3,1.53.91,2.08.59.54,2.15,1.1,4.65,1.66,2.51.57,4.23,1.06,5.17,1.49,1.35.63,2.36,1.43,3.01,2.39s.97,2.07.97,3.32-.35,2.42-1.06,3.51c-.71,1.1-1.74,1.95-3.07,2.56-1.33.61-2.83.91-4.5.91-2.11,0-3.89-.31-5.31-.92s-2.54-1.54-3.36-2.78-1.24-2.64-1.28-4.2h.02v.02h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-693" class="st70" d="M1436.5,1149.37v-3.3h2.86v3.3h-2.86ZM1436.5,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-671" class="st70" d="M1443.19,1170.81l2.79.41c.11.86.43,1.49.97,1.88.71.53,1.68.8,2.91.8,1.32,0,2.35-.27,3.07-.8s1.21-1.27,1.47-2.22c.14-.58.22-1.81.21-3.68-1.25,1.48-2.81,2.21-4.67,2.21-2.33,0-4.12-.84-5.4-2.51s-1.91-3.69-1.91-6.03c0-1.61.29-3.1.88-4.47.58-1.36,1.43-2.42,2.53-3.16,1.11-.74,2.42-1.12,3.91-1.12,1.99,0,3.64.81,4.93,2.42v-2.04h2.64v14.62c0,2.64-.27,4.5-.81,5.59s-1.38,1.96-2.54,2.6-2.59.96-4.29.96c-2.02,0-3.64-.45-4.89-1.36s-1.84-2.27-1.8-4.1h0ZM1445.56,1160.66c0,2.21.44,3.83,1.32,4.86s1.98,1.53,3.32,1.53,2.42-.51,3.31-1.52,1.34-2.6,1.34-4.76-.45-3.63-1.37-4.67c-.92-1.05-2.03-1.58-3.32-1.58s-2.36.52-3.25,1.55-1.33,2.56-1.33,4.6h-.02Z"/>
+    <path id="bottom_legend_0_ArialMT-6e3" class="st70" d="M1461.85,1169.41v-16.9h2.57v2.41c1.24-1.86,3.04-2.79,5.37-2.79,1.02,0,1.95.19,2.81.55s1.5.85,1.92,1.44.72,1.3.89,2.11c.1.54.16,1.46.16,2.79v10.4h-2.86v-10.28c0-1.17-.11-2.04-.34-2.62-.22-.58-.61-1.03-1.18-1.38s-1.23-.52-1.99-.52c-1.22,0-2.27.38-3.16,1.16s-1.33,2.24-1.33,4.4v9.23h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-694" class="st70" d="M1479.99,1149.37v-3.3h2.86v3.3h-2.86ZM1479.99,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-661" class="st70" d="M1487.9,1169.41v-14.67h-2.53v-2.23h2.53v-1.8c0-1.14.1-1.97.31-2.53.28-.74.75-1.34,1.45-1.8.69-.47,1.67-.69,2.93-.69.81,0,1.7.09,2.68.29l-.42,2.49c-.59-.1-1.16-.16-1.7-.16-.87,0-1.49.19-1.84.56-.36.37-.54,1.06-.54,2.09v1.56h3.3v2.23h-3.3v14.67h-2.87Z"/>
+    <path id="bottom_legend_0_ArialMT-695" class="st70" d="M1496.29,1149.37v-3.3h2.86v3.3h-2.86ZM1496.29,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-631" class="st70" d="M1514.54,1163.22l2.81.36c-.31,1.94-1.1,3.46-2.37,4.56s-2.82,1.64-4.67,1.64c-2.32,0-4.18-.75-5.58-2.26s-2.11-3.68-2.11-6.5c0-1.82.3-3.42.91-4.79.6-1.37,1.52-2.4,2.76-3.08,1.24-.68,2.58-1.03,4.04-1.03,1.83,0,3.34.47,4.51,1.4s1.91,2.24,2.24,3.95l-2.79.43c-.27-1.14-.73-1.99-1.41-2.56-.67-.58-1.49-.86-2.44-.86-1.45,0-2.62.52-3.51,1.55s-1.35,2.67-1.35,4.9.43,3.92,1.3,4.95,2.01,1.54,3.41,1.54c1.13,0,2.07-.34,2.81-1.03.75-.69,1.23-1.75,1.44-3.18v.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-611" class="st70" d="M1530.84,1167.32c-1.06.9-2.09,1.54-3.07,1.91s-2.04.56-3.15.56c-1.86,0-3.29-.45-4.28-1.36s-1.5-2.07-1.5-3.48c0-.83.19-1.58.57-2.26.37-.68.87-1.24,1.48-1.65s1.3-.72,2.07-.94c.56-.14,1.41-.29,2.54-.43,2.32-.28,4.01-.6,5.11-.98,0-.39.01-.64.01-.74,0-1.17-.27-1.99-.82-2.47-.73-.64-1.82-.97-3.26-.97-1.34,0-2.35.24-2.99.7s-1.12,1.3-1.43,2.5l-2.8-.38c.26-1.2.67-2.17,1.26-2.9.58-.73,1.43-1.3,2.53-1.71s2.38-.6,3.83-.6,2.62.17,3.51.51,1.57.76,1.99,1.28.72,1.17.89,1.95c.09.49.14,1.36.14,2.64v3.82c0,2.67.06,4.35.19,5.05s.36,1.37.72,2.03h-3c-.3-.59-.49-1.29-.57-2.09v.03h0l.03-.02h0ZM1530.59,1160.93c-1.04.42-2.6.79-4.68,1.09-1.18.17-2.02.36-2.5.58-.49.21-.86.52-1.13.93-.27.4-.39.86-.39,1.36,0,.76.29,1.4.87,1.91s1.43.76,2.54.76,2.09-.24,2.95-.72,1.49-1.15,1.89-1.98c.31-.65.47-1.6.47-2.86v-1.05h-.01v-.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-6e4" class="st70" d="M1537.93,1169.41v-16.9h2.57v2.41c1.24-1.86,3.04-2.79,5.37-2.79,1.02,0,1.95.19,2.81.55s1.5.85,1.92,1.44.72,1.3.89,2.11c.1.54.16,1.46.16,2.79v10.4h-2.86v-10.28c0-1.17-.11-2.04-.34-2.62-.22-.58-.61-1.03-1.18-1.38s-1.23-.52-1.99-.52c-1.22,0-2.27.38-3.16,1.16s-1.33,2.24-1.33,4.4v9.23h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-741" class="st70" d="M1562.32,1166.85l.41,2.53c-.81.17-1.53.26-2.16.26-1.04,0-1.85-.17-2.42-.5-.57-.33-.97-.76-1.21-1.3s-.35-1.66-.35-3.38v-9.73h-2.1v-2.23h2.1v-4.19l2.84-1.72v5.9h2.88v2.23h-2.88v9.88c0,.82.05,1.34.16,1.58.1.23.27.41.5.56.23.13.56.21.98.21.32,0,.73-.04,1.26-.11h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-203" class="st70" d="M1562.97,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-281" class="st70" d="M1579.65,1176.26c-1.58-1.99-2.91-4.33-4.01-7-1.09-2.68-1.63-5.45-1.63-8.31,0-2.52.4-4.94,1.22-7.26.95-2.69,2.43-5.35,4.42-8.02h2.06c-1.28,2.21-2.13,3.78-2.54,4.72-.65,1.47-1.16,2.99-1.53,4.58-.45,1.98-.68,3.98-.68,5.98,0,5.11,1.58,10.2,4.75,15.3h-2.06,0Z"/>
+    <path id="bottom_legend_0_ArialMT-701" class="st70" d="M1585.02,1175.88v-23.38h2.6v2.19c.62-.86,1.31-1.5,2.09-1.93s1.72-.65,2.81-.65c1.45,0,2.72.37,3.82,1.12s1.93,1.79,2.49,3.14c.57,1.35.85,2.83.85,4.44,0,1.73-.31,3.29-.93,4.67s-1.52,2.45-2.71,3.18c-1.18.73-2.43,1.11-3.73,1.11-.95,0-1.81-.21-2.57-.61-.75-.4-1.38-.91-1.87-1.53v8.23h-2.86v.02h.01ZM1587.62,1161.05c0,2.18.44,3.78,1.32,4.83s1.95,1.56,3.2,1.56,2.37-.54,3.27-1.61c.91-1.07,1.36-2.75,1.36-5s-.44-3.76-1.33-4.84-1.94-1.61-3.17-1.61-2.3.57-3.25,1.72c-.94,1.14-1.41,2.8-1.41,4.97h0v-.02h.01Z"/>
+    <path id="bottom_legend_0_ArialMT-204" class="st70" d="M1601,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-3e" class="st70" d="M1627.29,1159.21l-15.45,6.6v-2.85l12.24-5.07-12.24-5.02v-2.84l15.45,6.52v2.68h0v-.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-205" class="st70" d="M1629.09,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-302" class="st70" d="M1639.5,1157.91c0-2.76.28-4.98.85-6.66s1.41-2.98,2.52-3.89,2.53-1.37,4.23-1.37c1.25,0,2.35.25,3.3.75.94.51,1.73,1.23,2.34,2.18.62.95,1.11,2.1,1.45,3.47.35,1.36.53,3.2.53,5.52,0,2.74-.28,4.94-.85,6.63-.56,1.68-1.4,2.98-2.52,3.9s-2.53,1.37-4.24,1.37c-2.24,0-4.01-.81-5.29-2.42-1.54-1.94-2.3-5.11-2.3-9.48h-.02,0ZM1642.44,1157.91c0,3.83.44,6.38,1.34,7.65s2.01,1.9,3.32,1.9,2.43-.64,3.32-1.91,1.34-3.82,1.34-7.64-.44-6.4-1.34-7.66-2.02-1.89-3.35-1.89-2.37.56-3.15,1.67c-.98,1.42-1.48,4.04-1.48,7.88h0Z"/>
+    <path id="bottom_legend_0_ArialMT-2e1" class="st70" d="M1659.24,1169.41v-3.27h3.27v3.27h-3.27Z"/>
+    <path id="bottom_legend_0_ArialMT-303" class="st70" d="M1666.68,1157.91c0-2.76.28-4.98.85-6.66s1.41-2.98,2.52-3.89,2.53-1.37,4.23-1.37c1.25,0,2.35.25,3.3.75.94.51,1.73,1.23,2.34,2.18.62.95,1.11,2.1,1.45,3.47.35,1.36.53,3.2.53,5.52,0,2.74-.28,4.94-.85,6.63-.56,1.68-1.4,2.98-2.52,3.9s-2.53,1.37-4.24,1.37c-2.24,0-4.01-.81-5.29-2.42-1.54-1.94-2.3-5.11-2.3-9.48h-.02,0ZM1669.62,1157.91c0,3.83.44,6.38,1.34,7.65s2.01,1.9,3.32,1.9,2.43-.64,3.32-1.91,1.34-3.82,1.34-7.64-.44-6.4-1.34-7.66-2.02-1.89-3.35-1.89-2.37.56-3.15,1.67c-.98,1.42-1.48,4.04-1.48,7.88h0Z"/>
+    <path id="bottom_legend_0_ArialMT-351" class="st70" d="M1684.81,1163.29l3.01-.26c.23,1.47.74,2.56,1.55,3.31.82.73,1.79,1.11,2.94,1.11,1.37,0,2.54-.52,3.49-1.56s1.43-2.42,1.43-4.14-.45-2.93-1.37-3.87c-.92-.95-2.12-1.42-3.61-1.42-.92,0-1.76.21-2.5.63-.74.41-1.32.96-1.75,1.63l-2.69-.35,2.25-11.98h11.61v2.74h-9.31l-1.25,6.27c1.4-.98,2.86-1.47,4.4-1.47,2.04,0,3.75.7,5.16,2.12s2.1,3.22,2.1,5.45-.61,3.94-1.84,5.48c-1.5,1.89-3.53,2.83-6.13,2.83-2.12,0-3.86-.59-5.2-1.78s-2.11-2.76-2.29-4.72v-.02h.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-291" class="st70" d="M1705.61,1176.26h-2.06c3.17-5.1,4.75-10.19,4.75-15.3,0-1.99-.23-3.98-.68-5.93-.36-1.59-.87-3.12-1.51-4.58-.41-.95-1.27-2.54-2.56-4.78h2.06c1.99,2.67,3.46,5.33,4.42,8.02.82,2.32,1.23,4.73,1.23,7.26,0,2.86-.55,5.63-1.65,8.31s-2.43,5-4,7h0Z"/>
+    <path class="st40" d="M1777.6,1158h78.22"/>
+    <path id="bottom_legend_0_m34bc08dcc0" class="st53" d="M1816.71,1173.71l15.71-15.71-15.71-15.71-15.71,15.71,15.71,15.71Z"/>
+    <path id="bottom_legend_0_ArialMT-47" class="st70" d="M1895.33,1160.25v-2.74l9.88-.02v8.66c-1.52,1.21-3.08,2.12-4.69,2.74-1.61.61-3.27.91-4.96.91-2.29,0-4.37-.49-6.25-1.47-1.87-.98-3.29-2.4-4.24-4.26s-1.43-3.93-1.43-6.22.48-4.39,1.42-6.36c.95-1.97,2.32-3.43,4.1-4.38s3.83-1.43,6.16-1.43c1.68,0,3.21.27,4.57.82,1.36.55,2.44,1.3,3.2,2.28.78.97,1.36,2.24,1.77,3.82l-2.78.76c-.35-1.19-.79-2.12-1.31-2.8s-1.26-1.22-2.23-1.63c-.96-.41-2.04-.62-3.2-.62-1.42,0-2.64.22-3.66.65-1.03.42-1.86.99-2.49,1.7s-1.13,1.47-1.47,2.3c-.59,1.45-.89,3.01-.89,4.69,0,2.08.36,3.81,1.07,5.22.71,1.4,1.76,2.44,3.13,3.12,1.36.68,2.82,1.02,4.36,1.02,1.33,0,2.65-.26,3.92-.76,1.27-.52,2.23-1.06,2.89-1.65v-4.34h-6.85l-.02-.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-6c" class="st70" d="M1909.33,1169.41v-23.33h2.86v23.33h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-6f1" class="st70" d="M1915.58,1160.96c0-3.13.87-5.45,2.6-6.96,1.46-1.25,3.22-1.88,5.31-1.88,2.33,0,4.22.76,5.7,2.28s2.21,3.63,2.21,6.3c0,2.17-.33,3.89-.98,5.14s-1.6,2.21-2.85,2.9-2.6,1.03-4.08,1.03c-2.37,0-4.28-.75-5.74-2.27s-2.18-3.7-2.18-6.55h.01ZM1918.51,1160.96c0,2.16.48,3.78,1.42,4.86.94,1.07,2.13,1.61,3.57,1.61s2.6-.54,3.55-1.62c.94-1.09,1.42-2.73,1.42-4.95,0-2.09-.48-3.68-1.43-4.75s-2.13-1.61-3.53-1.61-2.63.54-3.57,1.61c-.94,1.06-1.42,2.69-1.42,4.86h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-62" class="st70" d="M1937.41,1169.41h-2.66v-23.33h2.86v8.32c1.21-1.52,2.76-2.27,4.63-2.27,1.04,0,2.03.21,2.95.63.93.41,1.7,1,2.29,1.77.6.75,1.07,1.67,1.41,2.75.34,1.06.51,2.21.51,3.44,0,2.89-.71,5.14-2.15,6.72s-3.15,2.37-5.16,2.37-3.57-.84-4.69-2.5v2.12h.01v-.02h0ZM1937.38,1160.83c0,2.03.28,3.48.83,4.39.9,1.48,2.12,2.21,3.66,2.21,1.25,0,2.33-.55,3.25-1.63.91-1.09,1.37-2.71,1.37-4.87s-.43-3.83-1.31-4.89-1.93-1.57-3.17-1.57-2.34.55-3.25,1.63c-.91,1.09-1.37,2.66-1.37,4.72h0Z"/>
+    <path id="bottom_legend_0_ArialMT-612" class="st70" d="M1963.92,1167.32c-1.06.9-2.09,1.54-3.07,1.91s-2.04.56-3.15.56c-1.86,0-3.29-.45-4.28-1.36s-1.5-2.07-1.5-3.48c0-.83.19-1.58.57-2.26.37-.68.87-1.24,1.48-1.65s1.3-.72,2.07-.94c.56-.14,1.41-.29,2.54-.43,2.32-.28,4.01-.6,5.11-.98,0-.39.01-.64.01-.74,0-1.17-.27-1.99-.82-2.47-.73-.64-1.82-.97-3.26-.97-1.34,0-2.35.24-2.99.7s-1.12,1.3-1.43,2.5l-2.8-.38c.26-1.2.67-2.17,1.26-2.9.58-.73,1.43-1.3,2.53-1.71s2.38-.6,3.83-.6,2.62.17,3.51.51,1.57.76,1.99,1.28.72,1.17.89,1.95c.09.49.14,1.36.14,2.64v3.82c0,2.67.06,4.35.19,5.05s.36,1.37.72,2.03h-3c-.3-.59-.49-1.29-.57-2.09v.03h0l.03-.02h0ZM1963.68,1160.93c-1.04.42-2.6.79-4.68,1.09-1.18.17-2.02.36-2.5.58-.49.21-.86.52-1.13.93-.27.4-.39.86-.39,1.36,0,.76.29,1.4.87,1.91s1.43.76,2.54.76,2.09-.24,2.95-.72,1.49-1.15,1.89-1.98c.31-.65.47-1.6.47-2.86v-1.05h-.01v-.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-6c1" class="st70" d="M1970.95,1169.41v-23.33h2.86v23.33h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-206" class="st70" d="M1976.1,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-532" class="st70" d="M1986.63,1161.91l2.9-.26c.13,1.17.47,2.13.96,2.87.51.74,1.29,1.35,2.35,1.81,1.06.47,2.25.69,3.59.69,1.18,0,2.21-.18,3.12-.53.9-.35,1.57-.83,2.02-1.44s.66-1.28.66-2.01-.22-1.36-.64-1.91-1.13-1-2.1-1.38c-.63-.25-2.02-.62-4.16-1.14s-3.64-1-4.51-1.46c-1.12-.58-1.95-1.3-2.49-2.17-.55-.87-.82-1.84-.82-2.9,0-1.18.33-2.27,1-3.3s1.64-1.8,2.93-2.34c1.28-.53,2.72-.8,4.28-.8,1.73,0,3.26.28,4.57.84,1.32.56,2.34,1.37,3.05,2.46.71,1.07,1.1,2.3,1.15,3.67l-2.96.23c-.16-1.48-.7-2.58-1.62-3.34-.92-.75-2.27-1.13-4.06-1.13s-3.22.34-4.08,1.03c-.85.68-1.28,1.51-1.28,2.47,0,.84.3,1.53.91,2.08.59.54,2.15,1.1,4.65,1.66,2.51.57,4.23,1.06,5.17,1.49,1.35.63,2.36,1.43,3.01,2.39s.97,2.07.97,3.32-.35,2.42-1.06,3.51-1.74,1.95-3.07,2.56-2.83.91-4.5.91c-2.11,0-3.89-.31-5.31-.92s-2.54-1.54-3.36-2.78-1.24-2.64-1.28-4.2h.02v.02h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-75" class="st70" d="M2020.12,1169.41v-2.48c-1.31,1.91-3.1,2.86-5.36,2.86-1,0-1.93-.19-2.79-.57s-1.51-.87-1.92-1.44c-.41-.58-.71-1.29-.88-2.13-.11-.56-.18-1.45-.18-2.68v-10.47h2.86v9.37c0,1.5.06,2.5.18,3.03.18.75.56,1.34,1.15,1.77.58.43,1.3.65,2.16.65s1.66-.22,2.42-.66,1.28-1.04,1.6-1.8.48-1.86.48-3.31v-9.05h2.86v16.9h-2.58Z"/>
+    <path id="bottom_legend_0_ArialMT-6d" class="st70" d="M2027.17,1169.41v-16.9h2.56v2.38c.53-.83,1.23-1.5,2.11-1.99.88-.51,1.88-.75,3.01-.75,1.25,0,2.28.26,3.08.78s1.36,1.25,1.7,2.18c1.33-1.97,3.08-2.96,5.22-2.96,1.67,0,2.97.47,3.87,1.4s1.35,2.36,1.35,4.29v11.6h-2.85v-10.65c0-1.15-.09-1.96-.28-2.47s-.52-.91-1.01-1.22c-.49-.31-1.05-.47-1.72-.47-1.19,0-2.18.39-2.97,1.19-.79.79-1.18,2.06-1.18,3.79v9.82h-2.86v-10.98c0-1.27-.24-2.22-.7-2.86s-1.23-.96-2.29-.96c-.81,0-1.55.22-2.23.64s-1.18,1.04-1.49,1.86-.47,1.99-.47,3.52v8.76h-2.86.02-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-6d1" class="st70" d="M2054.33,1169.41v-16.9h2.56v2.38c.53-.83,1.23-1.5,2.11-1.99.88-.51,1.88-.75,3.01-.75,1.25,0,2.28.26,3.08.78s1.36,1.25,1.7,2.18c1.33-1.97,3.08-2.96,5.22-2.96,1.67,0,2.97.47,3.87,1.4s1.35,2.36,1.35,4.29v11.6h-2.85v-10.65c0-1.15-.09-1.96-.28-2.47s-.52-.91-1.01-1.22c-.49-.31-1.05-.47-1.72-.47-1.19,0-2.18.39-2.97,1.19-.79.79-1.18,2.06-1.18,3.79v9.82h-2.86v-10.98c0-1.27-.24-2.22-.7-2.86s-1.23-.96-2.29-.96c-.81,0-1.55.22-2.23.64s-1.18,1.04-1.49,1.86-.47,1.99-.47,3.52v8.76h-2.86.02-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-613" class="st70" d="M2092.51,1167.32c-1.06.9-2.09,1.54-3.07,1.91s-2.04.56-3.15.56c-1.86,0-3.29-.45-4.28-1.36s-1.5-2.07-1.5-3.48c0-.83.19-1.58.57-2.26.37-.68.87-1.24,1.48-1.65s1.3-.72,2.07-.94c.56-.14,1.41-.29,2.54-.43,2.32-.28,4.01-.6,5.11-.98,0-.39.01-.64.01-.74,0-1.17-.27-1.99-.82-2.47-.73-.64-1.82-.97-3.26-.97-1.34,0-2.35.24-2.99.7s-1.12,1.3-1.43,2.5l-2.8-.38c.26-1.2.67-2.17,1.26-2.9.58-.73,1.43-1.3,2.53-1.71s2.38-.6,3.83-.6,2.62.17,3.51.51,1.57.76,1.99,1.28.72,1.17.89,1.95c.09.49.14,1.36.14,2.64v3.82c0,2.67.06,4.35.19,5.05s.36,1.37.72,2.03h-3c-.3-.59-.49-1.29-.57-2.09v.03h0l.03-.02h0ZM2092.27,1160.93c-1.04.42-2.6.79-4.68,1.09-1.18.17-2.02.36-2.5.58-.49.21-.86.52-1.13.93-.27.4-.39.86-.39,1.36,0,.76.29,1.4.87,1.91s1.43.76,2.54.76,2.09-.24,2.95-.72,1.49-1.15,1.89-1.98c.31-.65.47-1.6.47-2.86v-1.05h-.01v-.02h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-72" class="st70" d="M2099.58,1169.41v-16.9h2.57v2.56c.66-1.2,1.27-1.98,1.82-2.37.56-.38,1.17-.58,1.84-.58.96,0,1.94.31,2.95.92l-.99,2.66c-.7-.41-1.4-.62-2.1-.62-.63,0-1.19.19-1.69.57s-.86.9-1.06,1.57c-.32,1.02-.48,2.13-.48,3.34v8.85h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-79" class="st70" d="M2110.33,1175.91l-.32-2.69c.63.17,1.18.26,1.64.26.64,0,1.15-.1,1.53-.32.38-.21.7-.51.94-.89.18-.29.48-1,.88-2.13.05-.16.13-.39.26-.7l-6.42-16.93h3.09l3.51,9.79c.45,1.24.87,2.55,1.23,3.92.33-1.31.72-2.6,1.18-3.84l3.61-9.85h2.86l-6.43,17.19c-.69,1.86-1.22,3.13-1.6,3.83-.51.95-1.1,1.64-1.75,2.08-.66.44-1.45.66-2.36.66-.55,0-1.17-.11-1.84-.35l-.02-.02h.01Z"/>
+    <path class="st27" d="M2189.78,1158h78.22"/>
+    <path id="bottom_legend_0_ArialMT-39" class="st70" d="M2295.86,1164.02l2.76-.26c.23,1.29.67,2.23,1.33,2.81.66.58,1.5.88,2.53.88.88,0,1.65-.21,2.32-.61s1.21-.94,1.63-1.61.78-1.58,1.06-2.73.43-2.32.43-3.5c0-.12,0-.32-.01-.57-.58.91-1.35,1.65-2.35,2.22s-2.07.85-3.22.85c-1.93,0-3.57-.7-4.9-2.1-1.33-1.41-2.01-3.25-2.01-5.54s.7-4.27,2.1-5.72,3.14-2.16,5.24-2.16c1.52,0,2.9.41,4.17,1.23,1.26.82,2.21,1.97,2.86,3.49.65,1.51.98,3.7.98,6.56s-.32,5.35-.97,7.12c-.64,1.77-1.61,3.11-2.88,4.03-1.28.92-2.77,1.38-4.5,1.38-1.83,0-3.32-.51-4.48-1.52s-1.85-2.44-2.09-4.27h-.02l.02.02h0ZM2307.59,1153.72c0-1.64-.43-2.96-1.31-3.92-.87-.96-1.92-1.45-3.15-1.45s-2.38.52-3.33,1.56c-.94,1.04-1.42,2.39-1.42,4.04,0,1.49.44,2.69,1.34,3.62s2.01,1.4,3.32,1.4,2.42-.47,3.27-1.4c.86-.93,1.28-2.21,1.28-3.86h0Z"/>
+    <path id="bottom_legend_0_ArialMT-352" class="st70" d="M2313.55,1163.29l3.01-.26c.23,1.47.74,2.56,1.55,3.31.82.73,1.79,1.11,2.94,1.11,1.37,0,2.54-.52,3.49-1.56s1.43-2.42,1.43-4.14-.45-2.93-1.37-3.87c-.92-.95-2.12-1.42-3.61-1.42-.92,0-1.76.21-2.5.63-.74.41-1.32.96-1.75,1.63l-2.69-.35,2.25-11.98h11.61v2.74h-9.31l-1.25,6.27c1.4-.98,2.86-1.47,4.4-1.47,2.04,0,3.75.7,5.16,2.12s2.1,3.22,2.1,5.45-.61,3.94-1.84,5.48c-1.5,1.89-3.53,2.83-6.13,2.83-2.12,0-3.86-.59-5.2-1.78s-2.11-2.76-2.29-4.72v-.02h.01,0Z"/>
+    <path id="bottom_legend_0_ArialMT-25" class="st70" d="M2332.22,1151.68c0-1.66.42-3.08,1.26-4.25s2.06-1.75,3.64-1.75c1.47,0,2.68.53,3.64,1.57s1.44,2.57,1.44,4.6-.49,3.49-1.46,4.56-2.17,1.6-3.59,1.6-2.58-.53-3.52-1.57-1.41-2.64-1.41-4.75h0ZM2337.2,1147.65c-.71,0-1.3.31-1.77.93-.48.61-.7,1.75-.7,3.39,0,1.5.24,2.55.71,3.16.48.61,1.06.91,1.77.91s1.32-.31,1.79-.92c.48-.62.7-1.75.7-3.38,0-1.51-.24-2.56-.71-3.17s-1.07-.92-1.78-.92h-.01ZM2337.22,1170.27l12.76-24.59h2.33l-12.71,24.59h-2.38ZM2347.31,1163.93c0-1.67.42-3.1,1.26-4.26s2.06-1.75,3.66-1.75c1.47,0,2.68.53,3.64,1.57s1.44,2.57,1.44,4.6-.49,3.49-1.46,4.56-2.17,1.6-3.61,1.6-2.58-.53-3.52-1.58-1.41-2.64-1.41-4.75h0ZM2352.31,1159.9c-.72,0-1.32.31-1.79.93-.48.61-.7,1.75-.7,3.39,0,1.49.24,2.54.71,3.15.48.61,1.06.92,1.77.92s1.33-.31,1.8-.92c.48-.61.7-1.74.7-3.38,0-1.51-.24-2.56-.71-3.17s-1.06-.92-1.78-.92h0Z"/>
+    <path id="bottom_legend_0_ArialMT-207" class="st70" d="M2359.31,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-43" class="st70" d="M2387.53,1161.22l3.09.78c-.65,2.53-1.81,4.47-3.49,5.8s-3.73,1.99-6.17,1.99-4.56-.51-6.14-1.53c-1.57-1.02-2.77-2.51-3.6-4.45-.82-1.94-1.23-4.03-1.23-6.25,0-2.43.47-4.55,1.4-6.36.93-1.81,2.25-3.18,3.96-4.12,1.72-.94,3.6-1.41,5.65-1.41,2.34,0,4.3.59,5.89,1.78s2.7,2.86,3.33,5.01l-3.04.71c-.55-1.7-1.33-2.94-2.36-3.71-1.03-.78-2.33-1.17-3.88-1.17-1.79,0-3.29.43-4.5,1.29s-2.06,2.02-2.54,3.46-.72,2.94-.72,4.48c0,1.98.29,3.71.87,5.2.58,1.48,1.48,2.58,2.7,3.32,1.22.73,2.54,1.1,3.97,1.1,1.73,0,3.19-.5,4.39-1.49,1.2-1,2.02-2.48,2.44-4.44l-.02.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-49" class="st70" d="M2394.94,1169.41v-23.33h3.09v23.33h-3.09Z"/>
+    <path id="bottom_legend_0_ArialMT-208" class="st70" d="M2400.95,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-50" class="st70" d="M2412.53,1169.41v-23.33h8.8c1.55,0,2.73.07,3.55.22,1.15.2,2.1.56,2.87,1.1s1.41,1.28,1.87,2.25c.48.96.7,2.03.7,3.18,0,1.98-.63,3.66-1.89,5.03s-3.55,2.06-6.84,2.06h-5.98v9.49h-3.09.02-.01ZM2415.61,1157.17h6.03c1.99,0,3.41-.37,4.25-1.12s1.26-1.79,1.26-3.14c0-.97-.25-1.81-.74-2.5s-1.14-1.16-1.94-1.38c-.53-.13-1.49-.21-2.88-.21h-5.96v8.34h-.02Z"/>
+    <path id="bottom_legend_0_ArialMT-614" class="st70" d="M2444.93,1167.32c-1.06.9-2.09,1.54-3.07,1.91s-2.04.56-3.15.56c-1.86,0-3.29-.45-4.28-1.36s-1.5-2.07-1.5-3.48c0-.83.19-1.58.57-2.26.37-.68.87-1.24,1.48-1.65s1.3-.72,2.07-.94c.56-.14,1.41-.29,2.54-.43,2.32-.28,4.01-.6,5.11-.98,0-.39.01-.64.01-.74,0-1.17-.27-1.99-.82-2.47-.73-.64-1.82-.97-3.26-.97-1.34,0-2.35.24-2.99.7s-1.12,1.3-1.43,2.5l-2.8-.38c.26-1.2.67-2.17,1.26-2.9.58-.73,1.43-1.3,2.53-1.71s2.38-.6,3.83-.6,2.62.17,3.51.51c.9.34,1.57.76,1.99,1.28s.72,1.17.89,1.95c.09.49.14,1.36.14,2.64v3.82c0,2.67.06,4.35.19,5.05.12.7.36,1.37.72,2.03h-3c-.3-.59-.49-1.29-.57-2.09v.03h0l.03-.02h0ZM2444.69,1160.93c-1.04.42-2.6.79-4.68,1.09-1.18.17-2.02.36-2.5.58-.49.21-.86.52-1.13.93-.27.4-.39.86-.39,1.36,0,.76.29,1.4.87,1.91s1.43.76,2.54.76,2.09-.24,2.95-.72,1.49-1.15,1.89-1.98c.31-.65.47-1.6.47-2.86v-1.05h-.01v-.02h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-696" class="st70" d="M2452.04,1149.37v-3.3h2.86v3.3h-2.86ZM2452.04,1169.41v-16.9h2.86v16.9h-2.86Z"/>
+    <path id="bottom_legend_0_ArialMT-721" class="st70" d="M2459.24,1169.41v-16.9h2.57v2.56c.66-1.2,1.27-1.98,1.82-2.37.56-.38,1.17-.58,1.84-.58.96,0,1.94.31,2.95.92l-.99,2.66c-.7-.41-1.4-.62-2.1-.62-.63,0-1.19.19-1.69.57s-.86.9-1.06,1.57c-.32,1.02-.48,2.13-.48,3.34v8.85h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-65" class="st70" d="M2481.69,1163.96l2.96.36c-.47,1.73-1.33,3.07-2.59,4.03-1.26.95-2.87,1.43-4.84,1.43-2.47,0-4.43-.76-5.88-2.28s-2.17-3.66-2.17-6.41.73-5.05,2.19-6.63c1.47-1.57,3.37-2.36,5.7-2.36s4.1.76,5.54,2.3,2.15,3.7,2.15,6.49c0,.17,0,.42-.01.76h-12.6c.1,1.86.63,3.28,1.57,4.27.94.98,2.12,1.48,3.53,1.48,1.04,0,1.94-.28,2.69-.83.74-.56,1.33-1.44,1.77-2.65v.02h0v.02h0ZM2472.28,1159.33h9.44c-.12-1.43-.49-2.49-1.07-3.19-.91-1.11-2.1-1.65-3.55-1.65-1.31,0-2.43.44-3.32,1.32s-1.4,2.06-1.49,3.53h-.01,0Z"/>
+    <path id="bottom_legend_0_ArialMT-64" class="st70" d="M2499.21,1169.41v-2.13c-1.07,1.67-2.65,2.51-4.72,2.51-1.34,0-2.58-.37-3.72-1.12s-2.01-1.78-2.63-3.11-.93-2.86-.93-4.59.28-3.21.84-4.59c.57-1.37,1.41-2.43,2.53-3.15,1.13-.73,2.39-1.1,3.77-1.1,1.02,0,1.92.22,2.72.65.8.42,1.45.98,1.94,1.67v-8.37h2.84v23.33h-2.66.02,0ZM2490.15,1160.98c0,2.16.45,3.78,1.36,4.86.91,1.06,1.99,1.6,3.24,1.6s2.32-.51,3.18-1.53c.88-1.02,1.31-2.58,1.31-4.68,0-2.32-.44-4.01-1.34-5.1-.89-1.09-1.98-1.62-3.29-1.62s-2.34.52-3.19,1.56c-.85,1.04-1.28,2.68-1.28,4.92h.01Z"/>
+    <path id="bottom_legend_0_ArialMT-209" class="st70" d="M2504.22,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-742" class="st70" d="M2521.69,1166.85l.41,2.53c-.81.17-1.53.26-2.16.26-1.04,0-1.85-.17-2.42-.5s-.97-.76-1.21-1.3-.35-1.66-.35-3.38v-9.73h-2.1v-2.23h2.1v-4.19l2.84-1.72v5.9h2.88v2.23h-2.88v9.88c0,.82.05,1.34.15,1.58.1.23.27.41.5.56.23.13.56.21.98.21.32,0,.73-.04,1.26-.11h0Z"/>
+    <path id="bottom_legend_0_ArialMT-2d1" class="st70" d="M2523.37,1162.4v-2.88h8.8v2.88h-8.8Z"/>
+    <path id="bottom_legend_0_ArialMT-54" class="st70" d="M2541.63,1169.41v-20.58h-7.68v-2.75h18.49v2.75h-7.71v20.58h-3.1Z"/>
+    <path id="bottom_legend_0_ArialMT-651" class="st70" d="M2563.18,1163.96l2.96.36c-.47,1.73-1.33,3.07-2.59,4.03-1.26.95-2.87,1.43-4.84,1.43-2.47,0-4.43-.76-5.88-2.28s-2.17-3.66-2.17-6.41.73-5.05,2.19-6.63c1.47-1.57,3.37-2.36,5.7-2.36s4.1.76,5.54,2.3,2.15,3.7,2.15,6.49c0,.17,0,.42-.01.76h-12.6c.1,1.86.63,3.28,1.57,4.27.94.98,2.12,1.48,3.53,1.48,1.04,0,1.94-.28,2.69-.83.74-.56,1.33-1.44,1.77-2.65v.02h0v.02h0ZM2553.78,1159.33h9.44c-.12-1.43-.49-2.49-1.07-3.19-.91-1.11-2.1-1.65-3.55-1.65-1.31,0-2.43.44-3.32,1.32s-1.4,2.06-1.49,3.53h-.01,0Z"/>
+    <path id="bottom_legend_0_ArialMT-73" class="st70" d="M2568.6,1164.36l2.83-.44c.15,1.14.6,2.01,1.33,2.6.72.6,1.75.91,3.05.91s2.28-.27,2.93-.8c.64-.54.96-1.17.96-1.89,0-.64-.28-1.16-.85-1.53-.39-.26-1.36-.58-2.93-.97-2.1-.54-3.56-.99-4.36-1.38s-1.43-.92-1.85-1.6c-.41-.68-.63-1.45-.63-2.27,0-.75.18-1.45.52-2.09.35-.64.82-1.18,1.41-1.6.44-.33,1.05-.6,1.82-.83.78-.23,1.6-.35,2.48-.35,1.32,0,2.49.2,3.49.58s1.75.9,2.22,1.55.81,1.52.99,2.62l-2.8.38c-.12-.87-.5-1.55-1.11-2.04s-1.48-.73-2.58-.73c-1.31,0-2.25.22-2.81.65-.57.43-.85.94-.85,1.53,0,.37.11.7.35,1,.24.31.6.56,1.1.76.29.1,1.13.35,2.53.72,2.03.55,3.44.99,4.24,1.33.81.34,1.43.85,1.88,1.5s.69,1.47.69,2.45-.28,1.85-.84,2.7c-.56.84-1.36,1.5-2.42,1.95-1.04.47-2.23.69-3.56.69-2.2,0-3.87-.45-5.02-1.37-1.15-.91-1.88-2.26-2.2-4.06l-.02.03h.01Z"/>
+    <path id="bottom_legend_0_ArialMT-743" class="st70" d="M2592.3,1166.85l.41,2.53c-.81.17-1.53.26-2.16.26-1.04,0-1.85-.17-2.42-.5s-.97-.76-1.21-1.3-.35-1.66-.35-3.38v-9.73h-2.1v-2.23h2.1v-4.19l2.84-1.72v5.9h2.88v2.23h-2.88v9.88c0,.82.05,1.34.15,1.58.1.23.27.41.5.56.23.13.56.21.98.21.32,0,.73-.04,1.26-.11h0Z"/>
+    <path id="bottom_legend_0_mbe8041f989" class="st43" d="M2697.23,1178v-40"/>
+    <path id="bottom_legend_0_ArialMT-5a" class="st70" d="M2763.07,1169.41v-2.86l11.95-14.95c.85-1.05,1.65-1.98,2.42-2.77h-13.01v-2.75h16.71v2.75l-13.1,16.19-1.42,1.64h14.89v2.76h-18.45.01Z"/>
+    <path id="bottom_legend_0_ArialMT-652" class="st70" d="M2796.04,1163.96l2.96.36c-.47,1.73-1.33,3.07-2.59,4.03-1.26.95-2.87,1.43-4.84,1.43-2.47,0-4.43-.76-5.88-2.28s-2.17-3.66-2.17-6.41.73-5.05,2.19-6.63c1.47-1.57,3.37-2.36,5.7-2.36s4.1.76,5.54,2.3,2.15,3.7,2.15,6.49c0,.17,0,.42-.01.76h-12.6c.1,1.86.63,3.28,1.57,4.27.94.98,2.12,1.48,3.53,1.48,1.04,0,1.94-.28,2.69-.83.74-.56,1.33-1.44,1.77-2.65v.02h0v.02h0ZM2786.64,1159.33h9.44c-.12-1.43-.49-2.49-1.07-3.19-.91-1.11-2.1-1.65-3.55-1.65-1.31,0-2.43.44-3.32,1.32s-1.4,2.06-1.49,3.53h-.01,0Z"/>
+    <path id="bottom_legend_0_ArialMT-722" class="st70" d="M2802.56,1169.41v-16.9h2.57v2.56c.66-1.2,1.27-1.98,1.82-2.37.56-.38,1.17-.58,1.84-.58.96,0,1.94.31,2.95.92l-.99,2.66c-.7-.41-1.4-.62-2.1-.62-.63,0-1.19.19-1.69.57s-.86.9-1.06,1.57c-.32,1.02-.48,2.13-.48,3.34v8.85h-2.86.01-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-6f2" class="st70" d="M2812.38,1160.96c0-3.13.87-5.45,2.6-6.96,1.46-1.25,3.22-1.88,5.31-1.88,2.33,0,4.22.76,5.7,2.28s2.21,3.63,2.21,6.3c0,2.17-.33,3.89-.98,5.14s-1.6,2.21-2.85,2.9-2.6,1.03-4.08,1.03c-2.37,0-4.28-.75-5.74-2.27s-2.18-3.7-2.18-6.55h.01ZM2815.33,1160.96c0,2.16.48,3.78,1.42,4.86.94,1.07,2.13,1.61,3.57,1.61s2.6-.54,3.55-1.62c.94-1.09,1.42-2.73,1.42-4.95,0-2.09-.48-3.68-1.43-4.75s-2.13-1.61-3.53-1.61-2.63.54-3.57,1.61c-.94,1.06-1.42,2.69-1.42,4.86h-.01Z"/>
+    <path id="bottom_legend_0_ArialMT-2010" class="st70" d="M2829.43,1169.41"/>
+    <path id="bottom_legend_0_ArialMT-45" class="st70" d="M2841.07,1169.41v-23.33h16.87v2.75h-13.78v7.14h12.91v2.74h-12.91v7.94h14.32v2.76h-17.42.01,0Z"/>
+    <path id="bottom_legend_0_ArialMT-662" class="st70" d="M2863.06,1169.41v-14.67h-2.53v-2.23h2.53v-1.8c0-1.14.1-1.97.31-2.53.28-.74.75-1.34,1.45-1.8.69-.47,1.67-.69,2.93-.69.81,0,1.69.09,2.68.29l-.42,2.49c-.59-.1-1.16-.16-1.69-.16-.87,0-1.49.19-1.84.56-.36.37-.54,1.06-.54,2.09v1.56h3.3v2.23h-3.3v14.67h-2.88Z"/>
+    <path id="bottom_legend_0_ArialMT-663" class="st70" d="M2871.54,1169.41v-14.67h-2.53v-2.23h2.53v-1.8c0-1.14.1-1.97.31-2.53.28-.74.75-1.34,1.45-1.8.69-.47,1.67-.69,2.93-.69.81,0,1.69.09,2.68.29l-.42,2.49c-.59-.1-1.16-.16-1.69-.16-.87,0-1.49.19-1.84.56-.36.37-.54,1.06-.54,2.09v1.56h3.3v2.23h-3.3v14.67h-2.88Z"/>
+    <path id="bottom_legend_0_ArialMT-653" class="st70" d="M2891.48,1163.96l2.96.36c-.47,1.73-1.33,3.07-2.59,4.03-1.26.95-2.87,1.43-4.84,1.43-2.47,0-4.43-.76-5.88-2.28s-2.17-3.66-2.17-6.41.73-5.05,2.19-6.63c1.47-1.57,3.37-2.36,5.7-2.36s4.1.76,5.54,2.3,2.15,3.7,2.15,6.49c0,.17,0,.42-.01.76h-12.6c.1,1.86.63,3.28,1.57,4.27.94.98,2.12,1.48,3.53,1.48,1.04,0,1.94-.28,2.69-.83.74-.56,1.33-1.44,1.77-2.65v.02h0v.02h0ZM2882.08,1159.33h9.44c-.12-1.43-.49-2.49-1.07-3.19-.91-1.11-2.1-1.65-3.55-1.65-1.31,0-2.43.44-3.32,1.32s-1.4,2.06-1.49,3.53h-.01,0Z"/>
+    <path id="bottom_legend_0_ArialMT-632" class="st70" d="M2909.07,1163.22l2.81.36c-.31,1.94-1.1,3.46-2.37,4.56s-2.82,1.64-4.67,1.64c-2.32,0-4.18-.75-5.58-2.26-1.41-1.51-2.11-3.68-2.11-6.5,0-1.82.3-3.42.91-4.79.6-1.37,1.52-2.4,2.76-3.08s2.58-1.03,4.04-1.03c1.83,0,3.34.47,4.51,1.4s1.91,2.24,2.24,3.95l-2.79.43c-.27-1.14-.73-1.99-1.41-2.56-.67-.58-1.49-.86-2.44-.86-1.45,0-2.62.52-3.51,1.55-.9,1.03-1.35,2.67-1.35,4.9s.43,3.92,1.3,4.95,2.01,1.54,3.41,1.54c1.13,0,2.07-.34,2.81-1.03.75-.69,1.23-1.75,1.44-3.18v.02h0Z"/>
+    <path id="bottom_legend_0_ArialMT-744" class="st70" d="M2920.59,1166.85l.41,2.53c-.81.17-1.53.26-2.16.26-1.04,0-1.85-.17-2.42-.5s-.97-.76-1.21-1.3-.35-1.66-.35-3.38v-9.73h-2.1v-2.23h2.1v-4.19l2.84-1.72v5.9h2.88v2.23h-2.88v9.88c0,.82.05,1.34.15,1.58.1.23.27.41.5.56.23.13.56.21.98.21.32,0,.73-.04,1.26-.11h0Z"/>
+  </g>
 </svg>

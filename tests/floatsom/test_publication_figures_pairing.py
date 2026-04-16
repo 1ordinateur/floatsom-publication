@@ -1471,9 +1471,19 @@ def test_sync_default_aware_stats_to_manuscript_updates_live_counts(
         "rather than a single-architecture artifact."
     ) in updated_text
     assert (
-        "Across the matched Fig. 8 comparisons, tuned defaults consistently produce better QE results than "
-        "untuned defaults. This suggests that tuning should be treated as part of the method configuration "
+        "Across the matched Fig. 8 comparisons, tuned configurations consistently produce better QE results than "
+        "untuned reference settings. This suggests that tuning should be treated as part of the method configuration "
         "rather than as optional post-processing."
+    ) in updated_text
+    assert (
+        "This manuscript reports four main findings: in iteration-matched comparisons, full and random show "
+        "no meaningful paired QE difference in larger datasets (>10,000 samples), while random provides runtime "
+        "gains on smaller datasets, where it also shows greater instability; graph topologies show lower QE than "
+        "the fixed hexagonal structure, with RNG showing the lowest QE in these comparisons; default-aware analyses "
+        "over n=2 paired comparisons per $QE$ endpoint (n=6 total across all $QE$ variants $QE_B$/$QE_H$/$QE_T$), "
+        "drawn from 2 datasets, 2 seeds, and the full and random sampling modes, show that hyperparameter selection "
+        "affects outcomes under the derived default hyperparameters; and the multi-GPU, OOM-capable execution "
+        "pipeline scales effectively when storage and file I/O are sufficient to sustain throughput."
     ) in updated_text
     assert "`n=2`" not in updated_text
     assert "`1/2`" not in updated_text
@@ -1644,20 +1654,24 @@ def test_sync_systems_scaling_stats_to_manuscript(
 
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
-    assert "The available staging diagnostics show that disk-backed execution is pushed to larger workloads as GPU count increases" in updated_text
-    assert "in dimension scaling, the crossover shifts from 1 GPU at 1,000 dimensions to 8 GPUs at 5,000 dimensions" in updated_text
-    assert "in sample scaling, it shifts from 1 GPU at 100,000,000 samples to 8 GPUs at 1,000,000,000 samples" in updated_text
+    assert (
+        "Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. "
+        "First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. "
+        "Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. "
+        "In the sample-scaling benchmark, for example, the 500 million sample dataset requires disk backing under the 2-GPU configuration, "
+        "whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset. "
+        "Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. "
+        "As per-node disk bandwidth is limited, distributing the workload across additional nodes may reduce transfer-path saturation and enable more stable high-throughput operation."
+    ) in updated_text
     assert (
         "The 8-GPU RNG configuration processes 1,000,000,000 samples in 543.21 s (9.05 min), "
-        "demonstrating billion-sample training at a runtime measured in minutes rather than hours "
-        "even for a 50-feature, 1024-node network ($32 \\times 32 = 1024$) under multi-node "
-        "distributed execution with data staged from shared non-local storage to node-local shards "
-        "before training."
+        "demonstrating billion-sample training at a runtime measured in minutes rather than hours. "
+        "To reiterate, this is on a relatively complex 50-feature dataset, using 1024-node network "
+        "($32 \\times 32 = 1024$), with under multi-node distributed execution, and including time "
+        "taken to remotely stage data from shared non-local storage to node-local shards before training."
     ) in updated_text
-    assert "This links the Fig. 9 random-versus-full result to the multi-GPU/OOM scaling result" in updated_text
-    assert "moving from random to full adds 369.47 s (6.16 min) (+63.40%)" in updated_text
-    assert "The grid-size panel is the main exception" in updated_text
-    assert "runtime changes only from 934.00 s (15.57 min) on 1 GPU to 881.00 s (14.68 min) on 8 GPUs" in updated_text
+    assert "The grid-size scaling panel proves to be the main exception" in updated_text
+    assert "runtime shortens from 934.00 s (15.57 min) on 1 GPU to only 881.00 s (14.68 min) on 8 GPUs, a 5.67% reduction" in updated_text
     assert "stale systems block" not in updated_text
 
 
@@ -1937,10 +1951,9 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
         "capturing the combined deployment effect of topology choice and tuning on $QE$."
     ) in updated_text
     assert (
-        "The targeted deployment-scale runs indicate that these quality gains are not purchased at the "
-        "cost of a qualitatively different runtime profile: applying the tuned defaults used in Fig. 12 "
-        "does not strongly alter the distributed scaling behavior established by the earlier results "
-        "(Supplementary Table S9)."
+        "In the deployment comparison, tuned FloatSOM RNG delivers better $QE$ than the default "
+        "hexagonal XPySOM baseline, while also running faster and scaling to larger workloads "
+        "(Supplementary Table S7)."
     ) in updated_text
     assert "stale figure11 qe block" not in updated_text
     assert "stale figure11 runtime block" not in updated_text
