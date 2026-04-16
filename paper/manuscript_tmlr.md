@@ -36,9 +36,9 @@ To date, numerous subsampling strategies have been proposed. Beyond naive random
 
 ### 2.3 SOM Lattice and Adaptive Topologies
 
-Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates [@kohonenSelforganizingMap1990; @kohonenEssentialsSelforganizingMap2013]. In comparison to rectangular lattices, hexagonal lattices are often preferred in the literature because their neighborhood geometry is more isotropic, reduces directional bias, and produces more accurate results [@whiteTopologyMattersNetwork2008; @kohonenEssentialsSelforganizingMap2013; @forestSurveyImplementationPerformance2020]. Nevertheless, fixed lattice topologies still assume that the data are best represented by a fixed mesh structure [@whiteTopologyMattersNetwork2008].
+Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates [@kohonenSelforganizingMap1990; @kohonenEssentialsSelforganizingMap2013]. Hexagonal lattices are often preferred in the literature and serve as the regular-topology baseline in this manuscript [@whiteTopologyMattersNetwork2008; @kohonenEssentialsSelforganizingMap2013; @forestSurveyImplementationPerformance2020].
 
-The SOM literature has explored alternatives to fixed lattices, noting that realistic data distributions often do not map cleanly onto fixed meshes. These alternatives include dynamic maps that change their configuration, node number, or connections throughout the training cycle, such as DBGSOM and AMSOM [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016]. Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work [@kangasVariantsSelforganizingMaps1990] and later smaller-scale MST-based analyses [@jangUseMinimalSpanning2009]. However, these modified SOM topologies have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. Indeed, none of the distributed or current GPU SOM implementations support these non-lattice-based topologies.
+The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. However, these alternatives have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. None of the current distributed or GPU SOM implementations support these non-lattice topologies.
 
 Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] are of particular interest in this work; we return to their full rationale and implementation details in Section 3.2.2.
 
@@ -92,19 +92,13 @@ For hierarchical dynamic subset selection SOM (HDSSSOM) [@wetmoreSpeedingSelfOrg
 
 ### 3.2 Topology Definition
 
-We next define how neighborhood structure is assigned in FloatSOM across regular-lattice and graph-based configurations.
-
 After initialization, neighborhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts, with hexagonal as the standard topology reference in this manuscript based on prior SOM guidance. We implement the hexagonal lattice topology in accordance with [@vettigliJustGlowingMinisom2018]. For MST and RNG, neighborhood structure is derived from the current prototype geometry using the methodologies below.
-
-Note that regardless of the selected topology, FloatSOM uses the same prototype initialization options. Initialization determines only the starting prototype values; neighborhood relations are applied afterward according to the selected topology to establish node connections, keeping the initial state comparable across regular-lattice and graph-based runs.
 
 #### 3.2.1 MST Topology Implementation
 
-Considering the lack of suitable MST implementations, we have developed our own. The MST topology replaces fixed lattice neighborhood distance with graph shortest-path distance on a minimum spanning tree built from current prototypes. For $P$ prototype nodes in feature dimension $d$, the pairwise prototype matrix is formed with the standard squared-distance Gram identity, which avoids 3D broadcast tensors and preserves $O(P^2 d)$ dense linear-algebra structure.
+The MST topology replaces fixed lattice neighborhood distance with graph shortest-path distance on a minimum spanning tree built from current prototypes.
 
-After distance construction, we build a minimum spanning tree over the prototypes and use shortest-path distances on that tree to evaluate the Gaussian neighborhood influence during learning [@kruskalShortestSpanningSubtree1956]. Topology-derived influence matrices are cached and refreshed at fixed or progress-adaptive intervals.
-
-If the current iteration does not trigger recomputation, the previous graph state and cached influences are reused. Otherwise, pairwise prototype distances are rebuilt on GPU, the MST is recomputed on CPU, graph distances are refreshed in chunked GPU fashion, and the influence cache is rebuilt for the deduplicated active radii.
+After distance construction, we build a minimum spanning tree over the prototypes and use shortest-path distances on that tree to evaluate the Gaussian neighborhood influence during learning [@kruskalShortestSpanningSubtree1956]. Topology-derived influence matrices are cached and refreshed at fixed or progress-adaptive intervals. 
 
 ```text
 Input: prototypes W_t, iteration t, topology-refresh policy
@@ -125,13 +119,7 @@ Output: topology state (E_t, g_t, cached influences)
 
 #### 3.2.2 RNG Topology Implementation
 
-RNG is our second topology contribution. Our RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion [@toussaintRelativeNeighbourhoodGraph1980], and then reuses the MST infrastructure for shortest-path precomputation, radius-deduplicated influence caching, and dynamic update scheduling.
-
-Relative Neighborhood Graphs are less constrained than MSTs because they are not restricted to a single spanning-tree backbone with exactly one route between connected prototypes. Instead, when local geometric evidence supports multiple neighborhood relations, RNG can retain those connections rather than forcing the structure through only one edge choice per region. Consequently, we hypothesize that this added flexibility will permit more faithful recovery of real data-local connections and, as a consequence, a superior topology relative to MST.
-
-We implement the RNG topology by evaluating candidate elimination in chunks to control memory pressure while preserving the direct strict blocker test. No post-hoc connectivity repair is applied after edge extraction; the topology is defined entirely by the canonical RNG criterion.
-
-Under this refresh policy, the RNG path follows the same overall structure as MST, but replaces tree construction with chunked relative-neighborhood edge extraction. Like the MST, if the current iteration does not trigger recomputation, the previous graph state and cached influences are reused; otherwise we recompute the RNG and influence cache.
+Our RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion [@toussaintRelativeNeighbourhoodGraph1980]. Unlike MST, RNG is not restricted to a single spanning-tree backbone, so multiple locally supported neighborhood relations can be retained. Conceptually, this allows the topology to represent both tree-like and more densely connected local structure as prototype geometry evolves.
 
 ```text
 Input: prototypes W_t, iteration t, topology-refresh policy
@@ -248,8 +236,7 @@ Dataset-wise tuned-configuration-versus-untuned-reference summaries use the same
 
 #### 4.3.2 Hyperparameter stability and dataset-type stratification
 
-An additional aim was to determine whether the topology and sampling strategies considered here differ in hyperparameter stability. In this context, stability refers to the extent to which similar high-performing hyperparameter settings are replicated across repeated runs and matched experimental conditions, such that a single parameter configuration can be applied with confidence across a broad range of scenarios while still yielding good performance. Greater stability is practically important because it reduces the need for user hyperparameter retuning and increases confidence in the robustness of the resulting map quality.
-
+An additional aim was to determine whether the topology and sampling strategies considered here differ in hyperparameter stability. Here, stability refers to whether similar high-performing hyperparameter settings are recovered across repeated runs and matched experimental conditions. Greater stability is practically important because it reduces the need for repeated retuning and increases confidence that one parameter configuration will perform well across settings.
 Hyperparameter stability was evaluated from the top-ranked tuned Optuna trial selected separately for each set. Stability was then quantified as the variation in those selected hyperparameter values across seeds within each topology. 
 
 For numeric parameters, stability was measured across within-topology seed pairs using the relative difference:
@@ -292,7 +279,7 @@ Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ 
 
 ### 5.3 Topology Results
 
-Topology comparisons are reported with $QE$-only endpoints. We treat the Optuna hexagonal batch setting as the primary regular-topology baseline in this panel and compare MST and RNG against it. To anchor the topology results qualitatively, Fig. 5 shows representative neighborhood overlays for hexagonal, MST, and RNG on a synthetic sklearn circles dataset when run on XPySOM's default parameters. Fig. 5 demonstrates RNG's ability to contain both tree-like and mesh-like structures within the same representation, unlike MST and hexagonal.  
+Topology comparisons are reported with $QE$-only metrics, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG.
 
 ![Figure 5](assets_manual/figures/fig_5.svg)
 *Figure 5. Representative neighborhood node and connection overlays for default XPySOM hexagonal, MST, and RNG runs on a 30,000 data-point synthetic sklearn circles dataset.*
@@ -308,7 +295,7 @@ Overall, MST outperforms matched hexagonal on balanced QE (Fig. 6A), indicating 
 Across the tested top-$k$ range, which varies the number of best-ranked retained trials per matched unit, the hexagonal-versus-MST comparison remains directionally stable, indicating that the observed effect is not an artifact of a single pairing cutoff; the corresponding sensitivity analysis is provided in Fig. S5.
 
 ![Figure 6](assets_manual/figures/fig_6.svg)
-*Figure 6. Hexagonal versus MST topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
+*Figure 6. Hexagonal versus MST topology on $QE$ metrics under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 #### 5.3.2 RNG
 
@@ -323,15 +310,13 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 Similar to the MST results, across the tested top-$k$ range, the hexagonal-versus-RNG comparison likewise remains directionally stable; the corresponding sensitivity analysis is provided in Fig. S6. The direct MST-versus-RNG sensitivity comparison is reported separately in Fig. S7.
 
 ![Figure 7](assets_manual/figures/fig_7.svg)
-*Figure 7. Hexagonal versus RNG topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
+*Figure 7. Hexagonal versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 ### 5.4 Hyperparameter Tuning and Stability
 
-We analyse hyperparameter effects on these results in two ways. First, we assess how tuned hyperparameters, relative to the XPySOM defaults, improve attainable $QE$. Second, we assess the stability of the "optimal" hyperparameters across seeds, topologies, and sampling modes, where greater stability permits greater confidence in the reliability of algorithm outputs. We therefore separate the hyperparameter results into tuning benefit (Fig. 8) and hyperparameter stability (Fig. 9).
-
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
-The pooled tuned-versus-reference $QE$ comparison is shown in Fig. 8, with topology-specific hexagonal, MST, and RNG breakdowns provided in Fig. S8-S10. The tuned configuration is a fixed setting derived from the Optuna workflow by aggregating selected tuned settings across seeds and rerunning that single deployable configuration on the datasets. This comparison therefore estimates the gain from adopting a tuned setting rather than an untuned reference, and the pooled results show broad $QE$ improvement under tuning.
+To quantify the practical benefit of deploying tuned settings, we conduct a topologically pooled tuned-versus-reference $QE$ comparison in Fig. 8, with topology-specific hexagonal, MST, and RNG breakdowns provided in Figs. S8-S10. The tuned configuration is a fixed setting derived from the Optuna workflow by aggregating selected tuned settings across seeds and rerunning that single deployable configuration on the datasets. This comparison estimates the gain from adopting a tuned setting rather than an untuned reference. The pooled results show broad $QE$ improvement under tuning.
 
 ![Figure 8](assets_manual/figures/fig_8.svg)
 *Figure 8. Tuned-configuration-versus-untuned-reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned-configuration/untuned-reference pairs across datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
@@ -341,12 +326,10 @@ At the pooled overall level, the paired summaries across all matched tuned-confi
 
 #### 5.4.2 Hyperparameter Stability Across Topology and Sampling
 
-Hyperparameter stability analyses (Section 4.3.2) compare within-topology seed-to-seed tuned-parameter drift and then contrast those internal-stability scores between topology pairs. The resulting pattern indicates that MST and RNG reach lower stability scores than hexagonal when matching dataset, sampling mode, and seed structure. Fig. 9A summarizes the full-sampling stratum and Fig. 9B the corresponding random-sampling analysis; across these panels, full sampling is generally the more stable setting.
+To assess whether the derived hyperparameters are robust across runs and datasets, we compare within-topology seed-to-seed tuned-parameter drift and then contrast those internal-stability scores between topology pairs (Section 4.3.2). MST and RNG reach lower stability scores than hexagonal when matching dataset, sampling mode, and seed structure. Fig. 9A summarizes the full-sampling stratum, and Fig. 9B the corresponding random-sampling analysis. Across these panels, full sampling is generally the more stable setting.
 
 ![Figure 9](assets_manual/figures/fig_9.svg)
 *Figure 9. Hyperparameter stability by sampling mode. A: selected-parameter stability under full sampling for hexagonal, MST, and RNG topologies (lower stability score is better). B: selected-parameter stability under random sampling for the same topologies. C: dataset-size stability regression under random sampling, using the selected-parameter stability score against sample size (log10) across the included topology families.*
-
-Overall, the stability results indicate that full sampling remains the more stable choice, while random sampling becomes more viable as dataset size increases. Within that picture, MST and RNG show lower selected-parameter stability scores than hexagonal across the matched comparisons, suggesting that the graph topologies are less sensitive to tuning variation even when subsampling is introduced.
 
 ## 6. Speed Scaling
 
@@ -375,9 +358,7 @@ To further explore the effects of parallelising operations across multiple GPUs,
 #### 6.2.1 GPU Scaling and OOM Runtime Acceleration
 
 <!-- AUTO-SYSTEMS-SCALING-STATS:START -->
-Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. In the sample-scaling benchmark, for example, the 500,000,000 sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset. Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. As per-node disk bandwidth is limited, distributing the workload across additional nodes may reduce transfer-path saturation and enable more stable high-throughput operation.
-
-The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min), demonstrating billion-sample training at a runtime measured in minutes rather than hours. To reiterate, this is on a relatively complex 50-feature dataset, using a 1024-node network ($32 \times 32 = 1024$), under multi-node distributed execution, and including the time taken to remotely stage data from shared non-local storage to node-local shards before training.
+Fig. 11 shows that increasing GPU count improves performance in the sample-scaling regime by increasing parallel throughput and delaying the transition to disk-backed execution. In the sample-scaling benchmark, the 500,000,000 sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset; when staging is still required, the disk-to-GPU path is distributed across more nodes. The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min). Note that this time also includes includes remote staging from shared storage to node-local shards, alongside the overhead associated with operating across multiple HPC nodes.
 
 The grid-size scaling panel proves to be the main exception: at the largest tested grid size (64), runtime shortens from 934.01 s (15.57 min) on 1 GPU to only 880.83 s (14.68 min) on 8 GPUs, a 5.69% reduction, indicating that once map-size/topology-refresh costs dominate, additional GPUs contribute little extra speedup. 
 
@@ -385,7 +366,7 @@ The grid-size scaling panel proves to be the main exception: at the largest test
 
 #### 6.2.2 GPU Scaling Efficiency
 
-We next consider GPU efficiency under strong scaling. We interpret scaling efficiency relative to ideal linear scaling, such that 100\% efficiency means that doubling or octupling the GPU count yields the corresponding 2x or 8x runtime reduction, while lower values indicate increasing overhead from communication, orchestration, or I/O. In Fig. 11D-F, efficiencies are high at the higher GPU counts, including values above 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so the exact magnitude of some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which show the same super-linear pattern.
+We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which show the same super-linear pattern.
 
 ### 6.3 Topology Runtime Comparisons
 
@@ -405,7 +386,7 @@ However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtim
 
 ## 7. Final FloatSOM RNG Comparison with XPySOM
 
-With the scaling story established, Fig. 13 then tests whether the $QE$ gains from topology choice and tuning persist in deployment against XPySOM, a current high-performance Python SOM baseline in this benchmark context [@manciniXPySomHighPerformanceSelfOrganizing2020].
+Fig. 13 tests whether the $QE$ gains from topology choice and tuning persist in deployment against XPySOM, a current high-performance Python SOM baseline in this benchmark context [@manciniXPySomHighPerformanceSelfOrganizing2020].
 
 ![Figure 13](assets_manual/figures/fig_13.svg)
 
@@ -415,7 +396,7 @@ With the scaling story established, Fig. 13 then tests whether the $QE$ gains fr
 At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined deployment effect of topology choice and tuning on $QE$.
 <!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->
 
-For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. In sum, tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads (Supplementary Table S7). 
+For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. Tuned FloatSOM RNG therefore delivers better $QE$, faster runtime, and larger-scale deployment in this comparison (Supplementary Table S7). 
 
 ## 8. Discussion
 
@@ -437,11 +418,11 @@ The key implication is that topology choice and hyperparameter choice are couple
 
 ### 8.4 Hyperparameter stability and dataset-type interpretation
 
-The stability analysis suggests that graph topologies are recovered more consistently than the fixed-lattice baseline. Hexagonal maps cannot rebuild connectivity once initialized, whereas MST and RNG recompute connectivity from the evolving prototype geometry. This likely reduces sensitivity to seed-level variation in the tuned region. It may also help explain why the graph topologies are better suited to higher-dimensional, non-synthetic datasets [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990].
+The stability results suggest that graph topologies are recovered more consistently than the fixed-lattice baseline. Hexagonal maps cannot rebuild connectivity once initialized, whereas MST and RNG recompute connectivity from the evolving prototype geometry. This likely reduces sensitivity to seed-level variation in the tuned region. It may also help explain why the graph topologies are better suited to higher-dimensional, non-synthetic datasets [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990].
 
 ### 8.5 Systems implications and limits
 
-Distributed execution helps most in large workloads, but not as a uniform multiplicative speedup. At small problem sizes, Ray startup and orchestration overhead can offset the benefit. At larger workloads, the gains are more plausibly explained by improved memory residency and distributed data movement than by compute scaling alone.Multi-GPU execution is therefore most useful once workload size is large enough for memory pressure and steady-state throughput to dominate orchestration overhead.
+Distributed execution should therefore be interpreted as workload dependent rather than as a uniform multiplicative speedup. At small problem sizes, Ray startup, communication, and staging overheads appear to dominate, consistent with the lower efficiencies observed at the low end of the scaling curves. At larger workloads, efficiency rises sharply because additional GPUs increase parallel throughput while also allowing some distributed configurations to remain in RAM when the 1-GPU baseline has already entered disk-backed execution. Apparent efficiencies above 100\% should therefore be interpreted as reflecting changes in memory residency and data movement rather than literal super-linear compute scaling. In this setting, the efficiency ratio is influenced not only by parallel scaling itself but also by whether the 1-GPU reference has already transitioned to disk-backed execution while the multi-GPU configuration has not.
 
 Overall, these results support a practical deployment strategy that uses the maximum GPU count permitted by file I/O, RNG topology, and the derived default hyperparameters, with sampling chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the empirically larger-dataset regime observed here (>10,000 samples) where paired $QE$ differences are not meaningfully detected. When workloads are dominated by very large grid-size scaling, MST remains a reasonable alternative because its graph-construction path scales more favorably than RNG.
 
@@ -525,7 +506,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 *Supplementary Figure S3. FloatSOM-versus-XPySOM calibration under default settings for the hexagonal topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S5. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 ![Supplementary Figure S4](assets_manual/figures/supp_fig_s4.svg)
-*Supplementary Figure S4. MST versus RNG topology on $QE$ endpoints under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
+*Supplementary Figure S4. MST versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full-sampling-only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full-sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 ![Supplementary Figure S5](assets_manual/figures/supp_fig_s5.svg)
 *Supplementary Figure S5. Hexagonal versus MST topology sensitivity under full sampling only. Panels A-C report the matched top-$k$ paired sensitivity analysis for $QE_B$, $QE_H$, and $QE_T$.*
