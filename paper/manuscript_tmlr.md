@@ -423,9 +423,7 @@ This work introduces FloatSOM as a GPU-oriented SOM framework that combines topo
 
 ### 8.1 Sampling tradeoff (random versus full)
 
-The sampling trade-off is strongly scale dependent. In smaller datasets, random subsampling produces less stable outcomes, whereas above $10{,}000$ samples paired $QE$ differences between full and random are not meaningfully detected. Full sampling is therefore the safer choice when stability is the priority, while random sampling is better viewed as a throughput-oriented option at larger scales.
-
-This interpretation is qualified in the OOM regime. In the current implementation, random sampling still requires each worker-local chunk to be read before subsampling, so it reduces compute more directly than dataset I/O. This explains why random remains faster than full at large scale, while its advantage narrows once execution becomes disk-backed. 
+The sampling trade-off is strongly scale dependent. In smaller datasets, random subsampling produces less stable outcomes, whereas above $10{,}000$ samples paired $QE$ differences between full and random are not meaningfully detected. Full sampling is therefore the safer choice when stability is the priority, while random sampling is better viewed as a throughput-oriented option at larger scales. In the OOM regime, this advantage narrows because random still requires each worker-local chunk to be read before subsampling, so it reduces compute more directly than dataset I/O.
 
 ### 8.2 Topology Comparisons (MST and RNG)
 
@@ -435,7 +433,7 @@ Globally, both MST and RNG outperform the fixed hexagonal topology in these comp
 
 Across the matched Fig. 8 comparisons, tuned configurations consistently outperform untuned reference settings. Hyperparameter tuning should therefore be treated as part of the method configuration rather than as optional post-processing.
 
-The key implication is that topology choice and hyperparameter choice are coupled. Gains remain positive across hexagonal, MST, and RNG, so tuning is not confined to a single topology. This is also consistent with the broader hyperparameter-optimization literature, where achieved performance depends materially on the search process and the selected configuration rather than on architecture alone [@bergstraAlgorithmsHyperParameterOptimization2011]. A practical deployment strategy therefore requires topology-aware tuning rather than a single universal setting.
+The key implication is that topology choice and hyperparameter choice are coupled. Gains remain positive across hexagonal, MST, and RNG, so tuning is not confined to a single topology. A practical deployment strategy therefore requires topology-aware tuning.
 
 ### 8.4 Hyperparameter stability and dataset-type interpretation
 
@@ -444,8 +442,6 @@ The stability analysis sharpens the quality results by showing that graph topolo
 ### 8.5 Systems implications and limits
 
 Distributed execution provides a clear benefit for large workloads, but that benefit is workload dependent rather than a uniform multiplicative speedup. The Ray-enabled path introduces fixed startup and orchestration costs, which can offset its benefits at small problem sizes. At larger workloads, however, the high efficiencies observed in Fig. 11 and the topology-specific scaling outputs are more plausibly explained by changes in memory residency and data movement than by compute scaling alone. As GPU count increases, the dataset is partitioned into smaller worker-local shards, which reduces per-worker memory pressure and allows some workloads to remain in RAM that would otherwise spill to disk. When disk-backed staging is still required, disk-to-GPU traffic is distributed across more workers rather than repeatedly contending for a narrower path. Communication overhead is likewise amortized because global collectives occur once per iteration, after local chunk accumulation, rather than after each chunk. The exact efficiency magnitudes should nevertheless be interpreted cautiously, because some 1-GPU baselines were obtained by local linear extrapolation and may be inaccurate where the single-GPU curve is nonlinear.
-
-This same workload-dependent interpretation applies to our preference for the JIT-kernel BatchSOM path. Although JIT compilation introduces a small startup cost, we prefer this path because it delivers higher throughput on larger workloads; the calibration runtime pattern in Fig. S3D is consistent with that compilation cost being amortized as workload size increases.
 
 The practical implication is that multi-GPU execution becomes most useful once workload size is large enough for memory pressure and steady-state throughput to dominate orchestration overhead. In small workloads, distributed overhead can outweigh those benefits; in large workloads, scaling out is usually preferable because it sustains the end-to-end data path more effectively, even when both settings are disk-backed.
 
