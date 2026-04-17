@@ -11,61 +11,116 @@
         font-size: 16px;
       }
 
-      .st1, .st2 {
-        font-family: ArialMT, Arial;
+      .st1, .st2, .st3 {
         isolation: isolate;
       }
 
-      .st3 {
-        fill: #fff;
-      }
-
-      .st2 {
-        font-size: 24px;
+      .st1, .st3 {
+        font-family: ArialMT, Arial;
       }
 
       .st4 {
+        fill: #fff;
+        stroke-miterlimit: 10;
+      }
+
+      .st4, .st5 {
+        stroke: #000;
+      }
+
+      .st3 {
+        font-size: 24px;
+      }
+
+      .st6 {
         fill: #fcf059;
       }
 
       .st5 {
         fill: none;
-        stroke: #000;
         stroke-miterlimit: 8;
         stroke-width: 2px;
       }
     </style>
   </defs>
   <rect class="st5" x="1.15" y=".99" width="346" height="440"/>
-  <rect class="st4" x="12.15" y="15.99" width="149" height="58"/>
-  <text class="st2" transform="translate(46.73 51.99)"><tspan x="0" y="0">Sample</tspan></text>
-  <rect class="st4" x="188.15" y="15.99" width="149" height="58"/>
-  <text class="st1" transform="translate(233.55 39.99)"><tspan x="0" y="0">Random</tspan></text>
-  <text class="st1" transform="translate(250.05 58.99)"><tspan x="0" y="0">Full</tspan></text>
-  <rect class="st3" x="188.15" y="144.99" width="149" height="58"/>
-  <text class="st2" transform="translate(222.91 171.99)"><tspan x="0" y="0">Training</tspan></text>
-  <text class="st1" transform="translate(238.04 193.99)"><tspan x="0" y="0">(Batch)</tspan></text>
+  <rect class="st6" x="12.15" y="15.99" width="149" height="58"/>
+  <g class="st2">
+    <text class="st3" transform="translate(46.73 51.99)"><tspan x="0" y="0">Sample</tspan></text>
+  </g>
+  <rect class="st6" x="188.15" y="15.99" width="149" height="58"/>
+  <g class="st2">
+    <text class="st1" transform="translate(233.55 39.99)"><tspan x="0" y="0">Random</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(250.05 58.99)"><tspan x="0" y="0">Full</tspan></text>
+  </g>
+  <rect class="st4" x="188.15" y="144.99" width="149" height="58"/>
+  <g class="st2">
+    <text class="st3" transform="translate(222.91 171.99)"><tspan x="0" y="0">Training</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(238.04 193.99)"><tspan x="0" y="0">(Batch)</tspan></text>
+  </g>
   <rect class="st0" x="12.15" y="144.99" width="149" height="58"/>
-  <text class="st2" transform="translate(40.57 181.99)"><tspan x="0" y="0">Topology</tspan></text>
+  <g class="st2">
+    <text class="st3" transform="translate(40.57 181.99)"><tspan x="0" y="0">Topology</tspan></text>
+  </g>
   <path d="M161.15,172.99h20.98v2h-20.98v-2ZM180.8,169.99l8,4-8,4v-8Z"/>
   <rect class="st0" x="12.15" y="213.99" width="149" height="86"/>
-  <text class="st1" transform="translate(44.42 233.99)"><tspan x="0" y="0">Rectangular</tspan></text>
-  <text class="st1" transform="translate(49.78 252.99)"><tspan x="0" y="0">Hexagonal</tspan></text>
-  <text class="st1" transform="translate(71.8 271.99)"><tspan x="0" y="0">MST</tspan></text>
-  <text class="st1" transform="translate(70.14 290.99)"><tspan x="0" y="0">RN</tspan></text>
-  <text class="st1" transform="translate(91.14 290.99)"><tspan x="0" y="0">G</tspan></text>
-  <text class="st2" transform="translate(116.49 366.99)"><tspan x="0" y="0">Compute Framework</tspan></text>
-  <text class="st1" transform="translate(262.07 388.99)"><tspan x="0" y="0">Local</tspan></text>
-  <text class="st1" transform="translate(303.18 388.99)"><tspan x="0" y="0">GPU</tspan></text>
-  <text class="st1" transform="translate(174.18 407.99)"><tspan x="0" y="0">Single</tspan></text>
-  <text class="st1" transform="translate(216.35 407.99)"><tspan x="0" y="0">-</tspan></text>
-  <text class="st1" transform="translate(221.85 407.99)"><tspan x="0" y="0">Node Multi</tspan></text>
-  <text class="st1" transform="translate(297.68 407.99)"><tspan x="0" y="0">-</tspan></text>
-  <text class="st1" transform="translate(303.18 407.99)"><tspan x="0" y="0">GPU</tspan></text>
-  <text class="st1" transform="translate(221.85 426.99)"><tspan x="0" y="0">Multi</tspan></text>
-  <text class="st1" transform="translate(256.68 426.99)"><tspan x="0" y="0">-</tspan></text>
-  <text class="st1" transform="translate(262.18 426.99)"><tspan x="0" y="0">Node</tspan></text>
-  <text class="st1" transform="translate(303.18 426.99)"><tspan x="0" y="0">GP</tspan></text>
-  <text class="st1" transform="translate(323.68 426.99)"><tspan x="0" y="0">U</tspan></text>
-  <path d="M85.15,73.99v36.85h177.53l-1-1v29.18h2v-30.18H86.15l1,1v-35.85h-2ZM258.68,137.69l4,8,4-8h-8Z"/>
+  <g class="st2">
+    <text class="st1" transform="translate(44.42 233.99)"><tspan x="0" y="0">Rectangular</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(49.78 252.99)"><tspan x="0" y="0">Hexagonal</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(71.8 271.99)"><tspan x="0" y="0">MST</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(70.14 290.99)"><tspan x="0" y="0">RN</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(91.14 290.99)"><tspan x="0" y="0">G</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st3" transform="translate(116.49 366.99)"><tspan x="0" y="0">Compute Framework</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(262.07 388.99)"><tspan x="0" y="0">Local</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(303.18 388.99)"><tspan x="0" y="0">GPU</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(174.18 407.99)"><tspan x="0" y="0">Single</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(216.35 407.99)"><tspan x="0" y="0">-</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(221.85 407.99)"><tspan x="0" y="0">Node Multi</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(297.68 407.99)"><tspan x="0" y="0">-</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(303.18 407.99)"><tspan x="0" y="0">GPU</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(221.85 426.99)"><tspan x="0" y="0">Multi</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(256.68 426.99)"><tspan x="0" y="0">-</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(262.18 426.99)"><tspan x="0" y="0">Node</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(303.18 426.99)"><tspan x="0" y="0">GP</tspan></text>
+  </g>
+  <g class="st2">
+    <text class="st1" transform="translate(323.68 426.99)"><tspan x="0" y="0">U</tspan></text>
+  </g>
+  <path d="M85.15,73.99v36.85h177.53l-1-1v29.18h2v-30.18H86.15l1,1v-35.85s-2,0-2,0ZM258.68,137.69l4,8,4-8h-8Z"/>
 </svg>
