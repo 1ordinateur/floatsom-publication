@@ -140,7 +140,7 @@ Output: topology state (E_t, g_t, cached influences)
 
 ### 3.3 Multi-GPU + OOM Methodology and Implementation
 
-We implement FloatSOM to be able to perform in a distributed GPU environment, with support for both RAM spilling, and disk-spilling operations for when datasets exceed VRAM, and RAM respectively.
+FloatSOM is implemented for distributed GPU execution, with support for RAM spilling and disk-backed execution when datasets exceed available VRAM and RAM, respectively.
 
 ![Figure 2](assets_manual/figures/fig_2.svg){.half-width width=50%}
 
@@ -220,7 +220,7 @@ Additional CPU and RAM resources attached to each GPU are scaled linearly with G
 
 ### 4.3 Hyperparameter Tuning and Stability
 
-To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling-mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into our 'tuned' default configurations by taking the mean of numeric parameters and the mode of categorical parameters.
+To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling-mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into deployable default configurations by taking the mean of numeric parameters and the mode of categorical parameters.
 
 #### 4.3.1 Tuned Configuration versus Untuned Reference Analysis
 
@@ -310,7 +310,7 @@ To assess whether the derived hyperparameters are robust across runs and dataset
 
 ## 6. Speed Scaling
 
-We then sought to answer the following questions about FloatSOM's runtime performance. Firstly, how much runtime full sampling adds relative to random sampling. Secondly, how additional GPUs scale performance with dataset size and runtime. Lastly, whether choosing MST or RNG topologies imposes a meaningful scalability penalty relative to a hexagonal topology. 
+We next examine three aspects of FloatSOM runtime performance: the cost of full relative to random sampling, the scaling behavior obtained with additional GPUs, and the runtime implications of MST and RNG relative to a hexagonal topology.
 
 ### 6.1 Random versus Full Sampling Runtime
 
