@@ -353,7 +353,7 @@ def _sync_sampling_regression_stats_to_manuscript(
     }
 
 
-def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
+def _sync_figure12_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     assets_dir = _resolve_paper_assets_dir()
     if assets_dir is None:
         return {
@@ -372,7 +372,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     if not stats_path.exists():
         return {
             "updated": False,
-            "reason": f"Figure 11 topology runtime summary table not found: {stats_path}",
+            "reason": f"Figure 12 topology runtime summary table not found: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -380,7 +380,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     if stats_df.empty:
         return {
             "updated": False,
-            "reason": f"Figure 11 topology runtime summary table is empty: {stats_path}",
+            "reason": f"Figure 12 topology runtime summary table is empty: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -451,7 +451,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     grid_row = _lookup_mode_row("grid_size_scaling")
     if grid_row is None:
         grid_discussion_paragraph = (
-            "Grid-size topology slowdown text will be populated automatically after the Figure 10 "
+            "Grid-size topology slowdown text will be populated automatically after the Figure 12 "
             "topology runtime summary table is generated."
         )
     else:
@@ -473,14 +473,14 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
             )
         else:
             grid_discussion_paragraph = (
-                "Grid-size topology slowdown text will be populated automatically after the Figure 10 "
+                "Grid-size topology slowdown text will be populated automatically after the Figure 12 "
                 "topology runtime summary table is generated."
             )
 
-    start_marker = "<!-- AUTO-FIGURE10-TOPOLOGY-RUNTIME-STATS:START -->"
-    end_marker = "<!-- AUTO-FIGURE10-TOPOLOGY-RUNTIME-STATS:END -->"
-    discussion_start = "<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:START -->"
-    discussion_end = "<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:END -->"
+    start_marker = "<!-- AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:START -->"
+    end_marker = "<!-- AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:END -->"
+    discussion_start = "<!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:START -->"
+    discussion_end = "<!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:END -->"
     if metric_phrases:
         paragraph = (
             "In Fig. 12A-B, the topologies scale similarly as input complexity and data volume increase: "
@@ -490,7 +490,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
         )
     else:
         paragraph = (
-            "Figure 10 topology runtime summary statistics will be populated automatically after the "
+            "Figure 12 topology runtime summary statistics will be populated automatically after the "
             "harmonized speed-scaling publication tables are generated."
         )
     block_body = "\n".join([start_marker, paragraph, end_marker])
@@ -530,7 +530,7 @@ def _sync_figure10_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     }
 
 
-def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]:
+def _sync_figure13_deployment_runtime_stats_to_manuscript() -> Dict[str, object]:
     assets_dir = _resolve_paper_assets_dir()
     if assets_dir is None:
         return {
@@ -546,13 +546,13 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
         }
 
     deployment_summary_path = (
-        assets_dir / "tables" / "supp_table_figure_12_xpysom_rng_deployment_summary.tsv"
+        assets_dir / "tables" / "supp_table_figure_13_xpysom_rng_deployment_summary.tsv"
     ).resolve()
     stats_path = (assets_dir / "tables" / "supp_table_figure_12_topology_runtime_summary.tsv").resolve()
     if not stats_path.exists():
         return {
             "updated": False,
-            "reason": f"Figure 11 topology runtime summary table not found: {stats_path}",
+            "reason": f"Figure 12 topology runtime summary table not found: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -560,7 +560,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
     if stats_df.empty:
         return {
             "updated": False,
-            "reason": f"Figure 11 topology runtime summary table is empty: {stats_path}",
+            "reason": f"Figure 12 topology runtime summary table is empty: {stats_path}",
             "manuscript": str(manuscript_path),
         }
 
@@ -653,7 +653,7 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
     if dimension_row is None or sample_row is None:
         return {
             "updated": False,
-            "reason": "Figure 10 topology runtime summary table is missing the dimension- or sample-scaling rows needed for the deployment-runtime summary.",
+            "reason": "Figure 12 topology runtime summary table is missing the dimension- or sample-scaling rows needed for the deployment-runtime summary.",
             "manuscript": str(manuscript_path),
             "stats_table": str(stats_path),
         }
@@ -664,10 +664,10 @@ def _sync_figure11_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
         "(Supplementary Table S7)."
     )
 
-    qe_start_marker = "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:START -->"
-    qe_end_marker = "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->"
-    start_marker = "<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:START -->"
-    end_marker = "<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:END -->"
+    qe_start_marker = "<!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:START -->"
+    qe_end_marker = "<!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:END -->"
+    start_marker = "<!-- AUTO-FIGURE13-DEPLOYMENT-RUNTIME-STATS:START -->"
+    end_marker = "<!-- AUTO-FIGURE13-DEPLOYMENT-RUNTIME-STATS:END -->"
     qe_block_body = "\n".join([qe_start_marker, qe_paragraph, qe_end_marker])
     block_body = "\n".join([start_marker, paragraph, end_marker])
 

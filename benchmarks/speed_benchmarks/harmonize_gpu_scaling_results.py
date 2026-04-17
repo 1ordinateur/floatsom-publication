@@ -130,6 +130,7 @@ PUBLICATION_PAPER_ASSET_FIGURE_MAP: Dict[str, str] = {
 PUBLICATION_PAPER_ASSET_EXTRA_COPIES: Dict[str, Tuple[str, ...]] = {}
 PUBLICATION_PAPER_ASSET_TABLE_MAP: Dict[str, str] = {
     "supp_table_figure_10_topology_runtime_summary.tsv": "supp_table_figure_12_topology_runtime_summary.tsv",
+    "supp_table_figure_11_xpysom_rng_deployment_summary.tsv": "supp_table_figure_13_xpysom_rng_deployment_summary.tsv",
     "supp_table_figure_9_rng_scaling_diagnostics.tsv": "supp_table_figure_11_rng_scaling_diagnostics.tsv",
 }
 SCALING_LOG_CONFIG_PATTERN = re.compile(
@@ -1013,7 +1014,7 @@ def _build_topology_ratio_publication_table(
     return rows
 
 
-def _build_figure_10_topology_runtime_summary_table(
+def _build_figure_12_topology_runtime_summary_table(
     merged_modes: Dict[str, MergedModeResults],
     comparison_gpu_count: int,
     method: str = "batch",
@@ -1499,13 +1500,13 @@ def _write_publication_support_tables(
             writer.writeheader()
             writer.writerows(diagnostics_rows)
 
-    figure_10_summary_rows = _build_figure_10_topology_runtime_summary_table(
+    figure_12_summary_rows = _build_figure_12_topology_runtime_summary_table(
         merged_modes=merged_modes,
         comparison_gpu_count=comparison_gpu_count,
     )
-    if figure_10_summary_rows:
-        figure_10_summary_path = publication_tables_dir / "supp_table_figure_10_topology_runtime_summary.tsv"
-        with figure_10_summary_path.open("w", encoding="utf-8", newline="") as handle:
+    if figure_12_summary_rows:
+        figure_12_summary_path = publication_tables_dir / "supp_table_figure_12_topology_runtime_summary.tsv"
+        with figure_12_summary_path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(
                 handle,
                 fieldnames=[
@@ -1526,7 +1527,7 @@ def _write_publication_support_tables(
                 delimiter="\t",
             )
             writer.writeheader()
-            writer.writerows(figure_10_summary_rows)
+            writer.writerows(figure_12_summary_rows)
 
     _sync_publication_tables_to_paper_assets(publication_tables_dir, warnings)
 

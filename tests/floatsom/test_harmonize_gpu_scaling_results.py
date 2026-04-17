@@ -73,7 +73,7 @@ def test_discover_results_dirs_scans_root_for_latest_versioned_results(tmp_path:
     assert discovered == sorted([latest_one.resolve(), latest_two.resolve()])
 
 
-def test_build_figure_10_topology_runtime_summary_table_uses_largest_common_axis() -> None:
+def test_build_figure_12_topology_runtime_summary_table_uses_largest_common_axis() -> None:
     merged_modes = {
         "dimension_scaling": {
             ("hexagonal", "batch"): {
@@ -119,7 +119,7 @@ def test_build_figure_10_topology_runtime_summary_table_uses_largest_common_axis
         },
     }
 
-    rows = harmonize._build_figure_10_topology_runtime_summary_table(
+    rows = harmonize._build_figure_12_topology_runtime_summary_table(
         merged_modes=merged_modes,
         comparison_gpu_count=8,
     )

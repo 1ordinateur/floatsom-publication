@@ -723,11 +723,11 @@ def main() -> int:
             default_aware_analysis=default_aware_analysis,
         )
     )
-    diagnostics['manuscript_figure10_topology_runtime_sync'] = (
-        _sync_figure10_topology_runtime_stats_to_manuscript()
+    diagnostics['manuscript_figure12_topology_runtime_sync'] = (
+        _sync_figure12_topology_runtime_stats_to_manuscript()
     )
-    diagnostics['manuscript_figure11_deployment_runtime_sync'] = (
-        _sync_figure11_deployment_runtime_stats_to_manuscript()
+    diagnostics['manuscript_figure13_deployment_runtime_sync'] = (
+        _sync_figure13_deployment_runtime_stats_to_manuscript()
     )
 
     xpysom_calibration_csvs = {

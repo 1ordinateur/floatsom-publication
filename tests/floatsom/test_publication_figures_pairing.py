@@ -1759,7 +1759,7 @@ def test_sync_sampling_regression_stats_to_manuscript_uses_plain_text(
     assert "assets/tables/supp_table_figure_2_sampling_dataset_metadata.csv" not in updated_text
 
 
-def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table(
+def test_sync_figure12_topology_runtime_stats_to_manuscript_uses_generated_table(
     tmp_path,
     monkeypatch,
     publication_figures_module,
@@ -1773,13 +1773,13 @@ def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table
     manuscript_path.write_text(
         "\n".join(
             [
-                "Figure 10 intro.",
-                "<!-- AUTO-FIGURE10-TOPOLOGY-RUNTIME-STATS:START -->",
-                "stale figure10 block",
-                "<!-- AUTO-FIGURE10-TOPOLOGY-RUNTIME-STATS:END -->",
-                "<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:START -->",
+                "Figure 12 intro.",
+                "<!-- AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:START -->",
+                "stale figure12 block",
+                "<!-- AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:END -->",
+                "<!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:START -->",
                 "stale systems discussion block",
-                "<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:END -->",
+                "<!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:END -->",
                 "RNG runtime traces are interpreted jointly with the quality outcomes in Section 5.4, using the same harmonized benchmark construction described in Section 4.4.",
                 "",
             ]
@@ -1841,7 +1841,7 @@ def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table
         sep="\t",
     )
 
-    summary = publication_figures_module._sync_figure10_topology_runtime_stats_to_manuscript()
+    summary = publication_figures_module._sync_figure12_topology_runtime_stats_to_manuscript()
 
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
@@ -1862,7 +1862,7 @@ def test_sync_figure10_topology_runtime_stats_to_manuscript_uses_generated_table
     assert "`5,000`" not in updated_text
 
 
-def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_table(
+def test_sync_figure13_deployment_runtime_stats_to_manuscript_uses_generated_table(
     tmp_path,
     monkeypatch,
     publication_figures_module,
@@ -1877,13 +1877,13 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
         "\n".join(
             [
                 "*Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full-sampling runs. Panel D provides the scaling/runtime context for the same comparison, with the separately executed targeted 1B-sample runs discussed in the text rather than plotted directly. Taken together, this integrated figure summarizes the operating point observed for tuned FloatSOM RNG once workload size is large enough for steady-state execution to dominate startup overhead. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S7.*",
-                "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:START -->",
-                "stale figure11 qe block",
-                "<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->",
+                "<!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:START -->",
+                "stale figure13 qe block",
+                "<!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:END -->",
                 "For the XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed under this benchmark setup because the implementation ran out of memory.",
-                "<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:START -->",
-                "stale figure11 runtime block",
-                "<!-- AUTO-FIG11-DEPLOYMENT-RUNTIME-STATS:END -->",
+                "<!-- AUTO-FIGURE13-DEPLOYMENT-RUNTIME-STATS:START -->",
+                "stale figure13 runtime block",
+                "<!-- AUTO-FIGURE13-DEPLOYMENT-RUNTIME-STATS:END -->",
                 "Alongside these figure-level scaling outputs, we use log-derived systems diagnostics as supporting evidence (not additional main figures): staging mode and worker throughput summaries, per-iteration timing breakdowns (submit/get/collective components), and OOM-avoidance stability notes under the largest workloads.",
                 "",
             ]
@@ -1936,12 +1936,12 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
             {"figure": "Figure 13", "topology": "rng", "metric": "QE_T", "dataset": "GLOBAL_OVERALL", "median_pct_change": 22.4609, "ci_low_pct": 19.4613, "ci_high_pct": 25.4605},
         ]
     ).to_csv(
-        tables_dir / "supp_table_figure_12_xpysom_rng_deployment_summary.tsv",
+        tables_dir / "supp_table_figure_13_xpysom_rng_deployment_summary.tsv",
         index=False,
         sep="\t",
     )
 
-    summary = publication_figures_module._sync_figure11_deployment_runtime_stats_to_manuscript()
+    summary = publication_figures_module._sync_figure13_deployment_runtime_stats_to_manuscript()
 
     updated_text = manuscript_path.read_text(encoding="utf-8")
     assert summary["updated"] is True
@@ -1955,8 +1955,8 @@ def test_sync_figure11_deployment_runtime_stats_to_manuscript_uses_generated_tab
         "hexagonal XPySOM baseline, while also running faster and scaling to larger workloads "
         "(Supplementary Table S7)."
     ) in updated_text
-    assert "stale figure11 qe block" not in updated_text
-    assert "stale figure11 runtime block" not in updated_text
+    assert "stale figure13 qe block" not in updated_text
+    assert "stale figure13 runtime block" not in updated_text
 
 
 def test_sync_default_aware_stability_regression_stats_to_manuscript_uses_plain_text(

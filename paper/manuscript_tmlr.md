@@ -40,7 +40,7 @@ Most practical SOM implementations retain regular rectangular or hexagonal latti
 
 The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. However, these alternatives have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. None of the current distributed or GPU SOM implementations support these non-lattice topologies.
 
-Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] are of particular interest in this work; we return the full rationale and implementation for RNG in Section 3.2.2.
+Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] are of particular interest in this work; we return to the full rationale and implementation for RNG in Section 3.2.2.
 
 ### 2.4 Hyperparameter Optimization and Fair Comparison
 
@@ -92,7 +92,7 @@ HDSSSOM was re-implemented in multi-GPU-compatible form as an adaptive sampler t
 
 ### 3.2 Topology Definition
 
-After initialization, neighborhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts. Presently, we treat hexagonal as the standard topology reference considering the previous SOM topology guidance. We implement the hexagonal lattice topology in accordance with [@vettigliJustGlowingMinisom2018]. For MST and RNG, neighborhood structure is derived from the current prototype geometry using the methodologies below.
+After initialization, neighborhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts. Considering the previous SOM topology guidance concerning the preferability of ehxagonal topologies to rectangular ones, for this manuscript, we treat hexagonal as our standard reference topology. We implement the hexagonal lattice topology in accordance with [@vettigliJustGlowingMinisom2018]. For MST and RNG, neighborhood structure is derived from the current prototype geometry using the methodologies below.
 
 #### 3.2.1 MST Topology Implementation
 
@@ -119,7 +119,7 @@ Output: topology state (E_t, g_t, cached influences)
 
 #### 3.2.2 RNG Topology Implementation
 
-Our RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion [@toussaintRelativeNeighbourhoodGraph1980]. Unlike MST, RNG is not restricted to a single spanning-tree backbone, so multiple locally supported neighborhood relations can be retained. Conceptually, permits the RNG topology to represent both tree-like and denser mesh-like local structures simultaneously throughout the training process. Consequently, we hypothesise that this greater freedom in topology will allow RNG based SOM maps to better represent a variety of distributions. 
+Our RNG topology constructs a Relative Neighborhood Graph over current prototype distances using the standard RNG criterion [@toussaintRelativeNeighbourhoodGraph1980]. Unlike MST, RNG is not restricted to a single spanning-tree backbone, so multiple locally supported neighborhood relations can be retained. Conceptually, the absence of this restriction permits the RNG topology to represent both tree-like and denser mesh-like local structures simultaneously throughout the training process. Consequently, we hypothesise that this greater freedom in topology will allow RNG-based SOM maps to better represent a variety of distributions. 
 
 ```text
 Input: prototypes W_t, iteration t, topology-refresh policy
@@ -140,7 +140,7 @@ Output: topology state (E_t, g_t, cached influences)
 
 ### 3.3 Multi-GPU + OOM Methodology and Implementation
 
-We implement FloatSOM to be able to perform in a distributed GPU environment, with support for larger than VRAM, and OOM operations by dynamically reading from disk storage.
+We implement FloatSOM to be able to perform in a distributed GPU environment, with support for both RAM spilling, and disk-spilling operations for when datasets exceed VRAM, and RAM respectively.
 
 ![Figure 2](assets_manual/figures/fig_2.svg){.half-width width=50%}
 
@@ -192,7 +192,7 @@ $$
 14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ Runs}
 $$
 
-Sampling comparisons in Section 5.2 compare full-vs-random paired analyses pooled across all topologies, with the HDSSSOM pilot also including the HDSSSOM sampling methodology. Topology comparisons in Sections 5.3-5.4 use full-sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses  use full sampling with full-batch training.
+Sampling comparisons in Section 5.2 compare full-vs-random paired analyses pooled across all topologies, with the HDSSSOM pilot also including the HDSSSOM sampling methodology. Topology comparisons in Sections 5.3-5.4 use full-sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling with full-batch training.
 
 #### 4.1.1 Optuna benchmark datasets and preprocessing
 
@@ -220,7 +220,7 @@ Additional CPU and RAM resources attached to each GPU are scaled linearly with G
 
 ### 4.3 Hyperparameter Tuning and Stability
 
-To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling-mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then collapsed these per-seed best-performing tuned settings into deployable default configurations by taking the mean of numeric parameters and the mode of categorical parameters.
+To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling-mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into our 'tuned' default configurations by taking the mean of numeric parameters and the mode of categorical parameters.
 
 #### 4.3.1 Tuned Configuration versus Untuned Reference Analysis
 
@@ -230,7 +230,7 @@ Dataset-wise tuned-configuration-versus-untuned-reference summaries use the same
 
 #### 4.3.2 Hyperparameter stability and dataset-type stratification
 
-Hyperparameter stability is important, as it allows algorithm to be deployed optimally without bespoke hyperparameter tuning. To quantify this aspect, we calculate extract the optimal hyperparameters from the top-ranked tuned Optuna trial selected separately for each set. Where the observed variation between hyperparameter values across seeds is our reported 'Hyperparameter stability'. For numeric parameters, stability was measured across using the relative difference between runs $|a-b| / \max(|a|,|b|,\varepsilon)$, where $a$ and $b$ are the values of a given numeric parameter for the two compared seeds and $\varepsilon=10^{-12}$. These relative differences were then averaged over the compared numeric parameters; lower values indicate higher stability. For categorical parameters, stability was defined as the mismatch rate of the compared categorical parameters across the same seed pairs, again with lower values indicating higher stability. We report the mean per-parameter and equal-weight overall stability across all datasets. 
+Hyperparameter stability is important because it determines whether a method can be deployed reliably without bespoke retuning. We therefore extracted the top-ranked tuned Optuna trial separately for each seed and compared the recovered hyperparameter values across seeds. We define hyperparameter stability as the variation in these recovered settings. For numeric parameters, stability was measured by the relative difference between runs, $|a-b| / \max(|a|,|b|,\varepsilon)$, where $a$ and $b$ are the values of a given parameter for the two compared seeds and $\varepsilon=10^{-12}$. These relative differences were then averaged across numeric parameters, with lower values indicating higher stability. For categorical parameters, stability was defined as the mismatch rate across the same seed pairs. We report both mean per-parameter stability and an equal-weight overall stability summary across datasets.
 
 ### 4.4 Statistical analysis
 
@@ -240,7 +240,7 @@ All Optuna comparisons use matched pairs within dataset, seed, and split units t
 
 ### 5.1 XPySOM calibration (Equivalence)
 
-Under matched-configuration XPySOM-versus-FloatSOM calibration on hexagonal $QE$ (Fig. S3), the two implementations perform equivalently, with no $QE$ differences detected (Supplementary Table S6). Accordingly, we treat hexagonal FloatSOM batch as a valid proxy for XPySOM in the benchmarks that follow. Concerning the runtime differences, this is resultant of FloatSOM incuring a small JIT startup cost on small workloads. This overhead is progressively amortized as workload size increases, with FloatSOM running faster than XPySOM on larger datasets due to the JIT kernel's efficiency.
+Under matched-configuration XPySOM-versus-FloatSOM calibration on hexagonal $QE$ (Fig. S3), the two implementations perform equivalently, with no $QE$ differences detected (Supplementary Table S6). Accordingly, we treat hexagonal FloatSOM batch as a valid proxy for XPySOM in the benchmarks that follow. Concerning the runtime differences, this is due to FloatSOM's usage of JIT kernels, which incur a small startup cost. This overhead is progressively amortized as workload size increases, with FloatSOM running faster than XPySOM on larger datasets due to the JIT kernel's efficiency.
 
 ### 5.2 Comparison of Different Sampling Methods
 
@@ -293,7 +293,7 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
-To quantify the practical benefit of deploying tuned settings, we conduct a tuned-versus-default hyperparameter pooled topology $QE$ comparison in Fig. 8. We show topology-specific hexagonal, MST, and RNG breakdowns provided in Figs. S8-S10. The tuned configurations are the section 4.3 derived optimal hyperparameters, as compared to the XPySOM defaults. Broadly, we see substantial and significant $QE$ improvement when using these new parameters.
+To quantify the practical benefit of deploying tuned settings, we conduct a tuned-versus-default hyperparameter pooled topology $QE$ comparison in Fig. 8. We show the topology stratified $QE$ comparisons in Figs. S8-S10. Again, the tuned configurations are those we derived per section 4.3, with the default untuned being the XPySOM defaults. Broadly, we see substantial and significant $QE$ improvement when using these new parameters.
 
 ![Figure 8](assets_manual/figures/fig_8.svg)
 *Figure 8. Tuned-configuration-versus-untuned-reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned-configuration/untuned-reference pairs across datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
@@ -326,7 +326,7 @@ For the 1-GPU random-sampling runs, the last successful point occurs at 100M sam
 
 ### 6.2 Multi-GPU topology scaling and OOM context
 
-To further explore the effects of parallelising operations across multiple GPUs, we conducted a series of scaling runtime benchmarks. We maximally stress-test FloatSOM's speed performance by benchmarking with full-sampling across $G\in\{1,2,4,8\}$ GPUs, up to datasets that exceed RAM. This allows us to probe the computational limits leading up to out-of-memory (OOM) conditions. Under these conditions, runtime and efficiency exhibit consistent scaling behavior across workloads (Fig. 11).
+To examine parallel scaling, we benchmarked FloatSOM under full sampling across $G\in\{1,2,4,8\}$ GPUs using workload-scaling benchmarks that extend from standard in-memory settings to larger workloads that exceed available memory. Across these increasingly demanding regimes, runtime and efficiency show a broadly consistent scaling pattern, indicating that FloatSOM maintains good performance as workload demands increase (Fig. 11).
 
 ![Figure 11](assets_manual/figures/fig_11.svg)
 
@@ -343,7 +343,7 @@ The grid-size scaling panel proves to be the main exception: at the largest test
 
 #### 6.2.2 GPU Scaling Efficiency
 
-We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which show the same super-linear pattern.
+We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which show the same non-linear pattern.
 
 ### 6.3 Topology Runtime Comparisons
 
@@ -353,13 +353,13 @@ With that systems context in place, we next compare topology runtimes across hex
 
 *Figure 12. Topology runtime comparison at fixed $G=8$ GPUs under full-batch processing. Panels A-C report mean wall-clock runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively, with topology traces for hexagonal, MST, and RNG. Error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration. The largest-axis 8-GPU topology runtime summaries are listed in Supplementary Table S11.*
 
-<!-- AUTO-FIGURE10-TOPOLOGY-RUNTIME-STATS:START -->
+<!-- AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:START -->
 In Fig. 12A-B, the topologies scale similarly as input complexity and data volume increase: even at the largest tested axis values, the maximum pairwise runtime spread remains modest at dimension scaling (4.70% at 5,000 dimensions) and sample scaling (3.26% at 1,000,000,000 samples).
-<!-- AUTO-FIGURE10-TOPOLOGY-RUNTIME-STATS:END -->
+<!-- AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:END -->
 
-<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:START -->
+<!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:START -->
 However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtime differences become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively.
-<!-- AUTO-FIGURE10-GRID-SIZE-DISCUSSION:END -->
+<!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:END -->
 
 ## 7. Final FloatSOM RNG Comparison with XPySOM
 
@@ -368,9 +368,9 @@ Fig. 13 tests whether the $QE$ gains from topology choice and tuning persist in 
 ![Figure 13](assets_manual/figures/fig_13.svg)
 
 *Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full-sampling runs. Panel D provides the scaling/runtime context for the same comparison, with the separately executed targeted 1B-sample runs discussed in the text rather than plotted directly. Taken together, this integrated figure summarizes the operating point observed for tuned FloatSOM RNG once workload size is large enough for steady-state execution to dominate startup overhead. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S8.*
-<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:START -->
+<!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:START -->
 Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined deployment effect of topology choice and tuning on $QE$.
-<!-- AUTO-FIG11-DEPLOYMENT-QE-STATS:END -->
+<!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:END -->
 
 For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. Tuned FloatSOM RNG therefore delivers better $QE$, faster runtime, and larger-scale deployment in this comparison (Supplementary Table S8). 
 
@@ -398,7 +398,7 @@ The stability results suggest that graph topologies are recovered more consisten
 
 ### 8.5 Systems implications and limits
 
-Distributed execution should therefore be interpreted as workload dependent rather than as a uniform multiplicative speedup. At small problem sizes, Ray startup, communication, and staging overheads appear to dominate, consistent with the lower efficiencies observed at the low end of the scaling curves. At larger workloads, efficiency rises sharply because additional GPUs increase parallel throughput while also allowing some distributed configurations to remain in RAM when the 1-GPU baseline has already entered disk-backed execution. Apparent efficiencies above 100\% should therefore be interpreted as reflecting changes in memory residency and data movement rather than literal super-linear compute scaling. In this setting, the efficiency ratio is influenced not only by parallel scaling itself but also by whether the 1-GPU reference has already transitioned to disk-backed execution while the multi-GPU configuration has not.
+Distributed execution should therefore be interpreted as workload-dependent rather than as a uniform multiplicative speedup. At small problem sizes, Ray startup, communication, and staging overheads appear to dominate, consistent with the lower efficiencies observed at the low end of the scaling curves. At larger workloads, the sharp rise in efficiency likely reflects both increased parallel throughput and a change in memory regime, where some multi-GPU configurations remain in RAM while the 1-GPU baseline has already entered disk-backed execution. Apparent efficiencies above 100\% should therefore be interpreted as reflecting this systems transition rather than literal super-linear compute scaling.
 
 Overall, these results support a practical deployment strategy that uses RNG, topology-aware tuned defaults, and the largest GPU count that available file I/O can sustain. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where paired $QE$ differences are not meaningfully detected. For workloads dominated by very large grid-size scaling, MST remains a reasonable alternative.
 
@@ -470,7 +470,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 **Supplementary Table S7. Paired topology-comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. See `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END -->
 
-**Supplementary Table S8. Figure 13 deployment-comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. See `assets/tables/supp_table_figure_12_xpysom_rng_deployment_summary.tsv`.
+**Supplementary Table S8. Figure 13 deployment-comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. See `assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv`.
 
 **Supplementary Table S9. Supplementary Figure S12 deployment-comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. See `assets/tables/supp_table_s13_xpysom_hexagonal_deployment_summary.tsv`.
 
