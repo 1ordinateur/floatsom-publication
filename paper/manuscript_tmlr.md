@@ -402,6 +402,8 @@ Distributed execution should therefore be interpreted as workload-dependent rath
 
 Overall, these results support a practical deployment strategy that uses RNG, topology-aware tuned defaults, and the largest GPU count that available file I/O can sustain. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where paired $QE$ differences are not meaningfully detected. For workloads dominated by very large grid-size scaling, MST remains a reasonable alternative.
 
+This work presents FloatSOM as a unified large-scale SOM framework that combines a novel graph-based topology with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution. This integrated design supports practical SOM deployment at scale, where topology choice, sampling, quantization performance, and systems constraints that can be managed together rather than in isolation.
+
 ## 9. Acknowledgements
 
 This work was supported by computational resources provided by the Australian Government through the National Computational Infrastructure (NCI) under the ANU Merit Allocation Scheme.
