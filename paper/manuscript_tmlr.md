@@ -92,7 +92,7 @@ HDSSSOM was re-implemented in multi-GPU-compatible form as an adaptive sampler t
 
 ### 3.2 Topology Definition
 
-After initialization, neighborhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts. Considering the previous SOM topology guidance concerning the preferability of ehxagonal topologies to rectangular ones, for this manuscript, we treat hexagonal as our standard reference topology. We implement the hexagonal lattice topology in accordance with [@vettigliJustGlowingMinisom2018]. For MST and RNG, neighborhood structure is derived from the current prototype geometry using the methodologies below.
+After initialization, neighborhood relations are defined by the selected topology. For regular-lattice baselines, we support both grid and hexagonal layouts. Consistent with prior SOM guidance, we treat hexagonal as the standard reference topology in this manuscript. We implement the hexagonal lattice topology in accordance with [@vettigliJustGlowingMinisom2018]. For MST and RNG, neighborhood structure is derived from the current prototype geometry using the methodologies below.
 
 #### 3.2.1 MST Topology Implementation
 
@@ -174,7 +174,7 @@ In implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker
 
 #### 3.3.2 Multi-GPU Implementation Details
 
-As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses JIT-compiled kernels for the core BMU and update steps, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations. Finally, for large topologies that would exceed VRAM, FloatSOM also features VRAM to RAM spilling for their graph-distance or influence structures. 
+As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses JIT-compiled kernels for the core BMU and update steps, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations. For large topologies that would otherwise exceed VRAM, FloatSOM also supports spilling the associated graph-distance or influence structures from VRAM to system RAM.
 
 ### 3.4 Multi-Objective Hyperparameter Optimization
 
@@ -240,7 +240,7 @@ All Optuna comparisons use matched pairs within dataset, seed, and split units t
 
 ### 5.1 XPySOM calibration (Equivalence)
 
-Under matched-configuration XPySOM-versus-FloatSOM calibration on hexagonal $QE$ (Fig. S3), the two implementations perform equivalently, with no $QE$ differences detected (Supplementary Table S6). Accordingly, we treat hexagonal FloatSOM batch as a valid proxy for XPySOM in the benchmarks that follow. Concerning the runtime differences, this is due to FloatSOM's usage of JIT kernels, which incur a small startup cost. This overhead is progressively amortized as workload size increases, with FloatSOM running faster than XPySOM on larger datasets due to the JIT kernel's efficiency.
+Under matched-configuration XPySOM-versus-FloatSOM calibration on hexagonal $QE$ (Fig. S3), the two implementations perform equivalently, with no $QE$ differences detected (Supplementary Table S6). Accordingly, we treat hexagonal FloatSOM batch as a valid proxy for XPySOM in the benchmarks that follow. The runtime differences are attributable to FloatSOM's JIT kernels, which incur a small startup cost. This overhead is progressively amortized as workload size increases, after which FloatSOM runs faster than XPySOM on larger datasets.
 
 ### 5.2 Comparison of Different Sampling Methods
 
@@ -293,7 +293,7 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
-To quantify the practical benefit of deploying tuned settings, we conduct a tuned-versus-default hyperparameter pooled topology $QE$ comparison in Fig. 8. We show the topology stratified $QE$ comparisons in Figs. S8-S10. Again, the tuned configurations are those we derived per section 4.3, with the default untuned being the XPySOM defaults. Broadly, we see substantial and significant $QE$ improvement when using these new parameters.
+To quantify the practical benefit of deploying tuned settings, we compare tuned and untuned configurations in Fig. 8 using pooled topology-level $QE$ summaries. Topology-stratified versions of the same comparison are provided in Figs. S8-S10. The tuned configurations are the Section 4.3 derived settings, and the untuned reference is the default XPySOM configuration. Broadly, tuning yields substantial and significant $QE$ improvement.
 
 ![Figure 8](assets_manual/figures/fig_8.svg)
 *Figure 8. Tuned-configuration-versus-untuned-reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned-configuration/untuned-reference pairs across datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
@@ -343,7 +343,7 @@ The grid-size scaling panel proves to be the main exception: at the largest test
 
 #### 6.2.2 GPU Scaling Efficiency
 
-We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which show the same non-linear pattern.
+We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which follow the same overall pattern.
 
 ### 6.3 Topology Runtime Comparisons
 
