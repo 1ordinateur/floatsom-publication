@@ -80,10 +80,10 @@ More generally, modern machine-learning workflows increasingly rely on automated
 
 FloatSOM combines four methodological components: sample selection, topology definition, batch SOM updates, and the compute framework used to execute them. The framework supports \texttt{random}, \texttt{full}, and \texttt{HDSSSOM} sampling; rectangular, hexagonal, MST, and RNG topologies; and execution modes ranging from local GPU training to single-node and multi-node multi-GPU operation. Hyperparameter optimization is treated as a separate layer applied across these configurations. Figure 1 summarizes this design.
 
-\begin{figure}[t]
+\begin{figure}[h]
 \centering
 % Original SVG: assets_manual/figures/fig_1.svg
-\includegraphics[width=0.5\linewidth]{assets/figures/fig_1.pdf}
+\includegraphics[width=0.4\linewidth]{assets/figures/fig_1.pdf}
 \caption{Schematic overview of the FloatSOM methods framing used in this manuscript. Sample selection and topology definition have configurable components that feed into the standard batch SOM training step, while the compute framework determines how that same training procedure is executed in practice. The options shown here summarize the FloatSOM configurations discussed in the following subsections.}
 \label{fig:1}
 \end{figure}

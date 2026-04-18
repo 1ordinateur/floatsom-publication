@@ -1,13 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1776463761.65122 "main.aux" "main.bbl" "main" 1776463765.38938 0
+["bibtex main"] 1776526614.54546 "main.aux" "main.bbl" "main" 1776526616.95571 0
   "./main.bib" 1776463710.74816 35533 f75a0872599b7d64ac408c964c4481ff ""
   "./tmlr.bst" 1776373909.42933 26969 9c641e8d820e63bb21b670dde311bfb2 ""
-  "main.aux" 1776463764.32864 38333 bfbc2e1889759702d48ecd2cac6ce524 "pdflatex"
+  "main.aux" 1776526616.26648 38332 70f5f311c61b571cae00dfcd80255341 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1776463761.98579 "main.tex" "main.pdf" "main" 1776463765.3898 0
+["pdflatex"] 1776526614.77887 "/Users/sarahklamt/Documents/floatsom-publication/latex_paper/main.tex" "main.pdf" "main" 1776526616.9561 0
+  "/Users/sarahklamt/Documents/floatsom-publication/latex_paper/main.tex" 1776526611.84766 62958 4bf5d56124d74a9239456f0614c3a92d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -170,10 +171,10 @@
   "assets/figures/supp_fig_s8.pdf" 1776462130.53636 95964 8a5690b568d9ab2b0c938c10856ab785 ""
   "assets/figures/supp_fig_s9.pdf" 1776462130.53771 93987 930f7875a2396a5cf3de7c6f8b344d89 ""
   "fancyhdr.sty" 1776373909.4155 17086 7ed8cbc4d361ec87392817e0dd4f65ec ""
-  "main.aux" 1776463764.32864 38333 bfbc2e1889759702d48ecd2cac6ce524 "pdflatex"
-  "main.bbl" 1776463761.97599 9636 824149d1af70f65a6be57fb45d2053e9 "bibtex main"
-  "main.out" 1776463764.33424 10876 8a355edb7dadad2c6b558e7f146f4bc1 "pdflatex"
-  "main.tex" 1776462756.6066 62958 1895fb1499520cac548f94d781a996ac ""
+  "main.aux" 1776526616.26648 38332 70f5f311c61b571cae00dfcd80255341 "pdflatex"
+  "main.bbl" 1776526614.77282 9523 b69ccd8770255cdd914caa47b5b7462d "bibtex main"
+  "main.out" 1776526616.26999 10876 8a355edb7dadad2c6b558e7f146f4bc1 "pdflatex"
+  "main.tex" 1776526611.84766 62958 4bf5d56124d74a9239456f0614c3a92d ""
   "math_commands.tex" 1776373909.42807 12284 a71653715108dc62b66e3a0bde0307d8 ""
   "tmlr.sty" 1776373909.43012 6560 e302463e460a0173d5bee936bc95a625 ""
   (generated)
