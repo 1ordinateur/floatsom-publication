@@ -2,7 +2,7 @@
 
 ## Title
 
-FloatSOM: Topology-Flexible, Out-of-Memory (OOM)-Capable Self-Organizing Maps for Multiple Graphics Processing Units (GPUs)
+FloatSOM: GPU Accelerated, Distributed, Topology-Flexible Self-Organizing Maps
 
 ## Authors
 
@@ -10,7 +10,7 @@ Anonymous Authors
 
 ## Abstract
 
-GPU-accelerated Self-Organizing Map (SOM) implementations are among the most competitive options for large-scale SOM analysis, but growing dataset sizes increasingly challenge their practical use because workloads no longer fit cleanly within device-memory limits. We introduce FloatSOM, a GPU-oriented SOM framework for scalable training and deployment that supports multi-GPU execution, out-of-memory disk-backed streaming, and the implementation of novel topologies beyond regular lattices. We evaluate FloatSOM on 14 synthetic and real benchmark datasets together with controlled speed-scaling benchmarks, and show that these improved topologies, combined with topology-aware hyperparameter fine-tuning, yield lower quantization error than current state-of-the-art SOM baselines. FloatSOM also sustains this performance at large scale with high-throughput distributed execution; in the largest benchmark, it trains a 1024-node SOM network on 1,000,000,000 samples with 50 features in 6.16 minutes on 8 GPUs across two separate high-performance-computing nodes.
+GPU-accelerated Self-Organizing Map (SOM) implementations are among the most competitive options for large-scale SOM analysis, but growing dataset sizes increasingly challenge their practical use because workloads no longer fit cleanly within device-memory limits. We introduce FloatSOM, a SOM framework for scalable training and deployment that supports multi-GPU execution, out-of-memory disk-backed streaming, and the implementation of novel topologies beyond regular lattices. We evaluate FloatSOM on 14 synthetic and real benchmark datasets together with controlled speed-scaling benchmarks, and show that these improved topologies, combined with topology-aware hyperparameter fine-tuning, yield lower quantization error than current state-of-the-art SOM baselines. FloatSOM also sustains this performance at large scale with high-throughput distributed execution; in the largest benchmark, it trains a 1024-node SOM network on 1,000,000,000 samples with 50 features in 6.16 minutes on 8 GPUs across two separate high-performance-computing nodes.
 
 ## 1. Introduction
 
@@ -40,7 +40,7 @@ To date, numerous subsampling strategies have been proposed. Beyond naive random
 
 Most practical SOM implementations retain regular rectangular or hexagonal lattices because they simplify neighborhood indexing, visualization, and vectorized updates [@kohonenSelforganizingMap1990; @kohonenEssentialsSelforganizingMap2013]. In comparison to rectangular lattices, hexagonal lattices are often preferred in the literature because their neighborhood geometry is more isotropic, reduces directional bias, and produces more accurate results [@whiteTopologyMattersNetwork2008; @kohonenEssentialsSelforganizingMap2013; @forestSurveyImplementationPerformance2020]. Nevertheless, fixed lattice topologies still assume that the data are best represented by a fixed mesh structure [@whiteTopologyMattersNetwork2008].
 
-The SOM literature has explored alternatives to fixed lattices, noting that realistic data distributions often do not map cleanly onto fixed meshes. These alternatives include dynamic maps that change their configuration, node number, or connections throughout the training cycle, such as DBGSOM and AMSOM [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016]. Graph-structured neighborhoods have also been proposed, including minimum spanning tree formulations in early SOM work [@kangasVariantsSelforganizingMaps1990] and later smaller-scale MST-based analyses [@jangUseMinimalSpanning2009]. However, these modified SOM topologies have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. Indeed, none of the distributed or current GPU SOM implementations support these non-lattice-based topologies.
+The SOM literature has explored alternatives to fixed lattices, noting that realistic data distributions often do not map cleanly onto fixed meshes. These alternatives include dynamic maps that change their configuration, node number, or connections throughout the training cycle, such as DBGSOM and AMSOM [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016]. Graph-structured neighborhoods have also been proposed, including MST formulations in early SOM work [@kangasVariantsSelforganizingMaps1990] and later smaller-scale MST-based analyses [@jangUseMinimalSpanning2009]. However, these modified SOM topologies have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. Indeed, none of the distributed or current GPU SOM implementations support these non-lattice-based topologies.
 
 Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] are of particular interest in this work; we return to their full rationale and implementation details in Section 3.2.2.
 
@@ -156,7 +156,7 @@ Output: topology state (E_t, g_t, cached influences)
 ```
 *Algorithm 2. Dynamic RNG topology update with refresh-triggered recomputation and cached influence reuse.*
 
-### 3.3 Multi-GPU + OOM Methodology and Implementation
+### 3.3 Multi-GPU + Larger-Than-Memory Methodology and Implementation
 
 This section covers how we distribute computation across GPUs, how data are streamed for large workloads, and how memory safeguards preserve progress under high-pressure regimes.
 
@@ -198,7 +198,7 @@ The loader enqueues upcoming chunks in pinned memory and replenishes consumed ch
 
 After all required data for the current iteration have been processed on each worker, NCCL performs a synchronous all-reduce over the worker-local accumulators, allowing for worker-local weight normalization and updating. Consequently, weights remain resident on worker GPUs across iterations, with the driver only exchanging lightweight metadata.
 
-#### 3.3.3 OOM-Capable Topology Updates
+#### 3.3.3 Larger-Than-Memory Capable Topology Updates
 
 Additional larger-than-memory support for topology updates is provided through topological chunking. Topological chunking applies the same idea to topology-side computations within each worker. When graph-distance or influence structures would otherwise exceed a worker's VRAM, those computations are tiled and evaluated in bounded pieces rather than materialized at once. This topology-side chunking is not depicted in the Fig. 2 data path, but it follows the same per-worker bounded-memory execution rule.
 
@@ -238,7 +238,7 @@ Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_
 
 ### 4.2 Speed-scaling benchmark protocol
 
-The speed-scaling benchmark evaluates runtime and distributed scaling behavior in different compute and algorithm configurations. Speed scaling is evaluated with runs across $G\in\{1,2,4,8\}$ GPUs under a series of fixed scaling protocols. Runtime summaries are computed from repeated executions per configuration and reported as both absolute training time and efficiency ratios relative to a 1-GPU comparison. These scaling and multi-GPU/OOM-capable runs use the Ray-orchestrated distributed execution layer built on top of the standard FloatSOM training path [@moritzRayDistributedFramework2018]. Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path.
+The speed-scaling benchmark evaluates runtime and distributed scaling behavior in different compute and algorithm configurations. Speed scaling is evaluated with runs across $G\in\{1,2,4,8\}$ GPUs under a series of fixed scaling protocols. Runtime summaries are computed from repeated executions per configuration and reported as both absolute training time and efficiency ratios relative to a 1-GPU comparison. These scaling runs use the Ray-orchestrated distributed execution layer built on top of the standard FloatSOM training path [@moritzRayDistributedFramework2018]. Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path.
 
 For scaling-efficiency calculations, when a single-GPU baseline was missing at a given axis value due to timeout, we estimated that baseline by local linear extrapolation from the last available 1-GPU point on the same curve. That is, runtime was assumed to scale proportionally with the axis variable for the extrapolation step (for example, doubling sample count or doubling dimensionality doubles the estimated 1-GPU runtime).
 
@@ -307,7 +307,7 @@ Under this pilot configuration, HDSSSOM was materially worse than the other samp
 ![Figure 3](assets_manual/figures/fig_3.svg)
 *Figure 3. HDSSSOM screening pilot on $QE_B$ (hexagonal topology): full vs HDSSSOM, using the restricted pilot configuration summarized in Supplementary Table S2 (10 datasets, 5 seeds, with all other pilot settings held fixed within that run envelope). Panels report dataset-matched paired top-$k$ within-unit medians plus dataset-level paired-effect summaries (Section 4.3). Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
-Conversely, the differences between full and random sampling are comparably much smaller. We observe that the effectiveness of random sampling is scale-dependent: above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes, consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random-sampling behavior.
+Conversely, the differences between full and random sampling are comparably much smaller relative to HDSSSOM. We observe that the effectiveness of random sampling is scale-dependent: above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes, consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random-sampling behavior.
 
 ![Figure 4](assets_manual/figures/fig_4.svg)
 *Figure 4. Sampling-mode comparison focused on full versus random under the paired analysis pipeline (Section 4.3). In the empirically larger-dataset regime observed here (>10,000 samples), little paired $QE$ separation is detected; at smaller dataset scales, random is more variable and less stable. In the forest panels, whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. [[AUTO-SAMPLING-REGRESSION-STATS]]*
@@ -388,11 +388,11 @@ Overall, the stability results indicate that full sampling remains the more stab
 
 ## 6. Speed Scaling
 
-This section addresses three practical deployment questions: how much runtime full sampling adds relative to random sampling, how additional GPUs scale performance with dataset size and runtime, and whether choosing MST or RNG topologies imposes a meaningful scalability penalty relative to a hexagonal topology. 
+This section addresses three practical deployment questions: how much runtime full sampling adds relative to random sampling, how additional GPUs scale performance with dataset size and runtime, and whether choosing MST or RNG topologies imposes a meaningful scalability penalty relative to a hexagonal topology.
 
 ### 6.1 Random versus Full Sampling Runtime
 
-We report sample-scaling runtime comparisons for full versus random sampling, stratified by hexagonal, MST, and RNG, for 1, 2, and 4 GPUs in Fig. 10.
+We report sample-scaling runtime comparisons for full versus random sampling using the synthetic datasets as outlined in 4.2.1. We stratify by hexagonal, MST, and RNG, for 1, 2, and 4 GPUs (Fig. 10).
 
 ![Figure 10](assets_manual/figures/fig_10.svg)
 
@@ -402,15 +402,15 @@ Across topologies, random sampling is faster than full sampling across all 1-, 2
 
 Expanding on the 1-GPU random-sampling runs, the last successful 1-GPU random point occurs at 100M samples, as in full sampling, despite random otherwise being much faster. We interpret the failed 500M point as the stage at which the single-GPU path has tipped into disk-backed operation, so the relevant cost is no longer only the reduced number of selected samples. The overhead incurred by staging data to disk and transferring them through the single-GPU path likely explains this timeout. We therefore treat the 1-GPU random failure at 500M samples as a disk-mode systems limitation rather than as evidence against the general random-versus-full runtime ordering. 
 
-### 6.2 Multi-GPU topology scaling and OOM context
+### 6.2 Multi-GPU topology scaling and Larger-Than-Memory context
 
-To further explore the effects of parallelising operations across multiple GPUs, we conducted a series of scaling runtime benchmarks. We maximally stress-test FloatSOM's speed performance by benchmarking with full-sampling across $G\in\{1,2,4,8\}$ GPUs, up to datasets that exceed RAM. This allows us to probe the computational limits leading up to out-of-memory (OOM) conditions. Under these conditions, runtime and efficiency exhibit consistent scaling behavior across workloads (Fig. 11).
+To further explore the effects of parallelising operations across multiple GPUs, we conducted a series of scaling runtime benchmarks. We maximally stress-test FloatSOM's speed performance by benchmarking with full-sampling across $G\in\{1,2,4,8\}$ GPUs, up to datasets that exceed RAM. This allows us to probe the computational limits leading up to larger-than-memory conditions. Under these conditions, runtime and efficiency exhibit consistent scaling behavior across workloads (Fig. 11).
 
 ![Figure 11](assets_manual/figures/fig_11.svg)
 
 *Figure 11. Multi-GPU full-batch scaling across $G\in\{1,2,4,8\}$ GPUs. Panels A-C show runtime (s) for dimension-, sample-, and grid-size-scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\% efficiency reference line indicates ideal linear scaling.*
 
-#### 6.2.1 GPU Scaling and OOM Runtime Acceleration
+#### 6.2.1 GPU Scaling and Larger-Than-Memory Runtime Performance
 
 <!-- AUTO-SYSTEMS-SCALING-STATS:START -->
 Fig. 11 suggests that increasing GPU count improves performance in the sample-scaling regime through three related mechanisms. First, computation is distributed across a larger number of workers, thereby increasing parallel throughput. Second, the onset of disk-backed execution is deferred to larger workloads because the aggregate worker-memory pool increases with GPU count. In the sample-scaling benchmark, for example, the 500,000,000 sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset. Third, when disk-backed staging is still required, higher GPU counts appear to improve runtime because staging and disk-to-GPU transfers are distributed across more nodes. As per-node disk bandwidth is limited, distributing the workload across additional nodes may reduce transfer-path saturation and enable more stable high-throughput operation.
@@ -463,7 +463,7 @@ This work introduces FloatSOM as a GPU-oriented SOM framework that combines topo
 
 The sampling trade-off is strongly scale dependent. In smaller datasets, random subsampling produces less stable outcomes, whereas above $10{,}000$ samples paired $QE$ differences between full and random are not meaningfully detected. Full sampling is therefore the safer choice when stability is the priority, while random sampling is better viewed as a throughput-oriented option at larger scales.
 
-This interpretation is qualified in the OOM regime. In the current implementation, random sampling still requires each worker-local chunk to be read before subsampling, so it reduces compute more directly than dataset I/O. This explains why random remains faster than full at large scale, while its advantage narrows once execution becomes disk-backed. 
+This interpretation is qualified in the Larger-Than-Memory regime. In the current implementation, random sampling still requires each worker-local chunk to be read before subsampling, so it reduces compute more directly than dataset I/O. This explains why random remains faster than full at large scale, while its advantage narrows once execution becomes disk-backed. 
 
 ### 8.2 Topology Comparisons (MST and RNG)
 
