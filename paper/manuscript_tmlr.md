@@ -101,15 +101,15 @@ At the beginning of training, the topology is refreshed every iteration: the pre
 ```text
 Input: node weights W_t, iteration t, topology-refresh policy
 Output: topology state (E_t, g_t, cached influences)
-1: Query the refresh policy for the current iteration
-2: if no topology refresh is due then
-3:     return previous topology state
-4: end if
-5: Compute pairwise squared node distances on GPU
-6: Transfer distances to CPU and run Kruskal to obtain MST edges E_t
-7: Build adjacency from E_t
-8: Compute all-pairs graph hop distances g_t with chunked GPU Floyd-Warshall
-9: Deduplicate active radii and rebuild/update cached influence maps
+ 1: Query the refresh policy for the current iteration
+ 2: if no topology refresh is due then
+ 3:     return previous topology state
+ 4: end if
+ 5: Compute pairwise squared node distances on GPU
+ 6: Transfer distances to CPU and run Kruskal to obtain MST edges E_t
+ 7: Build adjacency from E_t
+ 8: Compute all-pairs graph hop distances g_t with chunked GPU Floyd-Warshall
+ 9: Deduplicate active radii and rebuild/update cached influence maps
 10: Commit E_t, g_t, and cache state
 11: return topology state
 ```
@@ -122,15 +122,15 @@ Our RNG topology constructs a Relative Neighborhood Graph over current node dist
 ```text
 Input: node weights W_t, iteration t, topology-refresh policy
 Output: topology state (E_t, g_t, cached influences)
-1: Query the refresh policy for the current iteration
-2: if no topology refresh is due then
-3:     return previous topology state
-4: end if
-5: Compute pairwise squared node distances on GPU
-6: Evaluate RNG candidate elimination in chunks using the blocker test
-7: Retain surviving RNG edges E_t and build adjacency
-8: Compute all-pairs graph hop distances g_t with chunked GPU Floyd-Warshall
-9: Deduplicate active radii and rebuild/update cached influence maps
+ 1: Query the refresh policy for the current iteration
+ 2: if no topology refresh is due then
+ 3:     return previous topology state
+ 4: end if
+ 5: Compute pairwise squared node distances on GPU
+ 6: Evaluate RNG candidate elimination in chunks using the blocker test
+ 7: Retain surviving RNG edges E_t and build adjacency
+ 8: Compute all-pairs graph hop distances g_t with chunked GPU Floyd-Warshall
+ 9: Deduplicate active radii and rebuild/update cached influence maps
 10: Commit E_t, g_t, and cache state
 11: return topology state
 ```
@@ -257,7 +257,7 @@ Under that pilot configuration, HDSSSOM was materially worse than full sampling.
 ![Figure 3](assets_manual/figures/fig_3.svg)
 *Figure 3. HDSSSOM screening pilot on $QE_B$ (hexagonal topology): full vs HDSSSOM, using the smaller pilot configuration summarized in Supplementary Table S2 (10 datasets, 5 seeds, with all other pilot settings held fixed). Panels report dataset-matched paired top-$k$ within-unit medians plus dataset-level paired-effect summaries (Section 4.3). Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
-The full-versus-random analysis in Fig. 4 was generated from matched hexagonal Optuna runs in which the sampling selector was switched from full to random. Effects were computed within matched seed-specific units and then summarized across seeds. Fig. 4A-C summarize the matched full-versus-random paired effects for balanced, holdout, and train $QE$, respectively, showing that full sampling generally provides equal or better $QE$ than random sampling. Noteably, this full-versus-random separation is much smaller than the full-versus-HDSSSOM pilot effect shown in Fig. 3; in most dataset-level comparisons, the full-versus-HDSSSOM improvement is at least twice as large. 
+The full-versus-random analysis in Fig. 4 was generated from matched hexagonal Optuna runs in which the sampling selector was switched from full to random. Effects were computed within matched seed-specific units and then summarized across seeds. Fig. 4A-C summarize the matched full-versus-random paired effects for balanced, holdout, and train $QE$, respectively, showing that full sampling generally provides equal or better $QE$ than random sampling. Notably, this full-versus-random separation is much smaller than the full-versus-HDSSSOM pilot effect shown in Fig. 3; in most dataset-level comparisons, the full-versus-HDSSSOM improvement is at least twice as large. 
 
 We find the effectiveness of random sampling relative to full sampling is scale-dependent. Above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes. This is consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random-sampling behavior.
 
@@ -311,7 +311,7 @@ At the pooled overall level, the paired summaries across all matched tuned-confi
 
 #### 5.4.2 Hyperparameter Stability Across Topology and Sampling
 
-To assess whether the derived hyperparameters are robust across runs and datasets, we compare the within-topology seed-to-seed tuned-parameter drift (Section 4.3.2). MST and RNG perform overall have stabler hyperparameter behaviour than hexagonal when matching dataset, sampling mode, and seed structure (Fig. 9A,B). Fig. 9A summarizes the full-sampling stratum, and Fig. 9B the corresponding random-sampling analysis. Across these panels, full sampling is generally the more stable setting. Mirroring the sample-size-dependent $QE$ performance, Fig. 9C shows that random-sampling hyperparameter stability also improves with increasing sample size.
+To assess whether the derived hyperparameters are robust across runs and datasets, we compare the within-topology seed-to-seed tuned-parameter drift (Section 4.3.2). MST and RNG overall have stabler hyperparameter behaviour than hexagonal when matching dataset, sampling mode, and seed structure (Fig. 9A,B). Fig. 9A summarizes the full-sampling stratum, and Fig. 9B the corresponding random-sampling analysis. Across these panels, full sampling is generally the more stable setting. Mirroring the sample-size-dependent $QE$ performance, Fig. 9C shows that random-sampling hyperparameter stability also improves with increasing sample size.
 
 ![Figure 9](assets_manual/figures/fig_9.svg)
 *Figure 9. Hyperparameter stability by sampling mode. A: selected-parameter stability under full sampling for hexagonal, MST, and RNG topologies (lower stability score is better). B: selected-parameter stability under random sampling for the same topologies. C: dataset-size stability regression under random sampling, using the selected-parameter stability score against sample size (log10) across the included topology families.*
@@ -410,7 +410,7 @@ Distributed execution should therefore be interpreted as workload-dependent rath
 
 Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned defaults. For optimal speed, consider using the largest number of GPUs available, especially if this enables data to be kept in RAM. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where optimal $QE$ is not essential. For workloads dominated by very large grid-size scaling, MST remains a reasonable alternative to RNG and Hexagonal.
 
-This work presents FloatSOM as a unified large-scale SOM framework that combines a novel graph-based topology with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution. This integrated design supports practical SOM deployment at scale, where topology choice, sampling, quantization performance, and systems constraints that can be managed together rather than in isolation.
+This work presents FloatSOM as a unified large-scale SOM framework that combines a novel graph-based topology with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution. This integrated design supports practical SOM deployment at scale, where topology choice, sampling, quantization performance, and systems constraints can be managed together rather than in isolation.
 
 ## 9. Acknowledgements
 

@@ -175,7 +175,7 @@ FloatSOM is implemented for distributed GPU execution, with support for RAM spil
 \begin{figure}[t]
 \centering
 % Original SVG: assets_manual/figures/fig_2.svg
-\includegraphics[width=0.5\linewidth]{assets/figures/fig_2.pdf}
+\includegraphics[width=0.47\linewidth]{assets/figures/fig_2.pdf}
 \caption{Multi-GPU data loading and NCCL synchronization schematic. In disk-backed mode, data are sharded to worker-local storage, loaded chunk-wise into pinned host memory, transferred to GPU with transfer overlapped with compute, processed locally, and synchronized by NCCL all-reduce before one weight update per iteration. In RAM mode, data are instead pre-sharded into worker-local CPU RAM and follow the same pinned-memory-to-GPU path without disk reads.}
 \label{fig:2}
 \end{figure}
