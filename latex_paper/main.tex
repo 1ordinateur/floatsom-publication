@@ -10,6 +10,8 @@
 
 \usepackage{amsmath,amssymb}
 \usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{url}
@@ -128,51 +130,53 @@ In a standard lattice SOM, neighborhood distance is determined by fixed node gri
 
 At the beginning of training, the topology is refreshed every iteration: the previous tree edges are discarded, pairwise distances are recalculated from the updated node weights, and the MST is recomputed from those updated node locations. The refresh rate then decays as training proceeds, so topology updates become less frequent later in training. If the current iteration does not trigger recomputation, the previous graph state and cached influences are reused. Otherwise, the MST is recalculated and the influence cache is rebuilt.
 
-\begin{verbatim}
-Input: node weights W_t, iteration t, topology-refresh policy
-Output: topology state (E_t, g_t, cached influences)
-1: Query the refresh policy for the current iteration
-2: if no topology refresh is due then
-3:     return previous topology state
-4: end if
-5: Compute pairwise squared node distances on GPU
-6: Transfer distances to CPU and run Kruskal to obtain MST edges E_t
-7: Build adjacency from E_t
-8: Compute all-pairs graph hop distances g_t with chunked GPU Floyd-Warshall
-9: Deduplicate active radii and rebuild/update cached influence maps
-10: Commit E_t, g_t, and cache state
-11: return topology state
-\end{verbatim}
-
-\noindent\emph{Algorithm 1. Dynamic MST topology update with refresh-triggered recomputation and cached influence reuse.}
+\begin{algorithm}[H]
+\caption{Dynamic MST topology update with refresh-triggered recomputation and cached influence reuse.}
+\begin{algorithmic}[1]
+\State \textbf{Input:} node weights $W_t$, iteration $t$, topology-refresh policy
+\State \textbf{Output:} topology state $(E_t, g_t, \text{cached influences})$
+\State Query the refresh policy for the current iteration
+\If{no topology refresh is due}
+\State return previous topology state
+\EndIf
+\State Compute pairwise squared node distances on GPU
+\State Transfer distances to CPU and run Kruskal to obtain MST edges $E_t$
+\State Build adjacency from $E_t$
+\State Compute all-pairs graph hop distances $g_t$ with chunked GPU Floyd-Warshall
+\State Deduplicate active radii and rebuild/update cached influence maps
+\State Commit $E_t$, $g_t$, and cache state
+\State return topology state
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{RNG Topology Implementation}
 
 Our RNG topology constructs a Relative Neighborhood Graph over current node distances using the standard RNG criterion \citep{toussaintRelativeNeighbourhoodGraph1980}. Unlike MST, RNG is not restricted to a single spanning-tree backbone, so multiple locally supported neighborhood relations can be retained. Conceptually, the absence of this restriction permits the RNG topology to represent both tree-like and denser mesh-like local structures simultaneously throughout the training process. Consequently, we hypothesise that this greater freedom in topology will allow RNG-based SOM maps to better represent a variety of distributions.
 
-\begin{verbatim}
-Input: node weights W_t, iteration t, topology-refresh policy
-Output: topology state (E_t, g_t, cached influences)
-1: Query the refresh policy for the current iteration
-2: if no topology refresh is due then
-3:     return previous topology state
-4: end if
-5: Compute pairwise squared node distances on GPU
-6: Evaluate RNG candidate elimination in chunks using the blocker test
-7: Retain surviving RNG edges E_t and build adjacency
-8: Compute all-pairs graph hop distances g_t with chunked GPU Floyd-Warshall
-9: Deduplicate active radii and rebuild/update cached influence maps
-10: Commit E_t, g_t, and cache state
-11: return topology state
-\end{verbatim}
-
-\noindent\emph{Algorithm 2. Dynamic RNG topology update with refresh-triggered recomputation and cached influence reuse.}
+\begin{algorithm}[H]
+\caption{Dynamic RNG topology update with refresh-triggered recomputation and cached influence reuse.}
+\begin{algorithmic}[1]
+\State \textbf{Input:} node weights $W_t$, iteration $t$, topology-refresh policy
+\State \textbf{Output:} topology state $(E_t, g_t, \text{cached influences})$
+\State Query the refresh policy for the current iteration
+\If{no topology refresh is due}
+\State return previous topology state
+\EndIf
+\State Compute pairwise squared node distances on GPU
+\State Evaluate RNG candidate elimination in chunks using the blocker test
+\State Retain surviving RNG edges $E_t$ and build adjacency
+\State Compute all-pairs graph hop distances $g_t$ with chunked GPU Floyd-Warshall
+\State Deduplicate active radii and rebuild/update cached influence maps
+\State Commit $E_t$, $g_t$, and cache state
+\State return topology state
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Multi-GPU + Larger-Than-Memory Methodology and Implementation}
 
 FloatSOM is implemented for distributed GPU execution, with support for RAM spilling and disk-backed execution when datasets exceed available VRAM and RAM, respectively.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
 \centering
 % Original SVG: assets_manual/figures/fig_2.svg
 \includegraphics[width=0.47\linewidth]{assets/figures/fig_2.pdf}
@@ -286,7 +290,7 @@ We first report a focused HDSSSOM pilot as an elimination comparison rather than
 
 Under that pilot configuration, HDSSSOM was materially worse than full sampling. In the hexagonal view shown in Fig. 3, full outperformed HDSSSOM in all 50 paired comparisons (10 datasets $\times$ 5 seeds; 50 wins, 0 losses, 0 ties), with dataset-level median balanced-$QE$ improvements ranging from 2.5\% to 209.7\% and a global median improvement of 38.7\%. Given these large differences, we focused on the full and random sampling methodologies for the remainder of the manuscript.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_3.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_3.pdf}
@@ -298,7 +302,7 @@ The full-versus-random analysis in Fig. 4 was generated from matched hexagonal O
 
 We find the effectiveness of random sampling relative to full sampling is scale-dependent. Above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes. This is consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random-sampling behavior.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_4.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_4.pdf}
@@ -312,7 +316,7 @@ Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ 
 
 Topology comparisons are reported with $QE$-only metrics, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_5.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_5.pdf}
@@ -326,7 +330,7 @@ We report dataset-wise paired improvement summaries (hexagonal over MST) with th
 
 Overall, MST outperforms matched hexagonal on balanced QE (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by train QE (Fig. 6C), while holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The overall paired t-test p-values are balanced QE (p=1.12e-05), holdout QE (p=0.15), and train QE (p=0.0064).
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_6.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_6.pdf}
@@ -342,7 +346,7 @@ RNG has lower QE than matched hexagonal on the reported QE metrics (Fig. 7A-C), 
 
 The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced QE and especially in train QE, with the separation most apparent in the real and larger datasets where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_7.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_7.pdf}
@@ -356,7 +360,7 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 To quantify the practical benefit of deploying tuned settings, we compare tuned and untuned configurations in Fig. 8 using pooled topology-level $QE$ summaries. Topology-stratified versions of the same comparison are provided in Figs. S8-S10. The tuned configurations are the Section 4.3 derived settings, and the untuned reference is the default XPySOM configuration. Broadly, tuning yields substantial and significant $QE$ improvement.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_8.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_8.pdf}
@@ -370,7 +374,7 @@ At the pooled overall level, the paired summaries across all matched tuned-confi
 
 To assess whether the derived hyperparameters are robust across runs and datasets, we compare the within-topology seed-to-seed tuned-parameter drift (Section 4.3.2). MST and RNG perform overall have stabler hyperparameter behaviour than hexagonal when matching dataset, sampling mode, and seed structure (Fig. 9A,B). Fig. 9A summarizes the full-sampling stratum, and Fig. 9B the corresponding random-sampling analysis. Across these panels, full sampling is generally the more stable setting. Mirroring the sample-size-dependent $QE$ performance, Fig. 9C shows that random-sampling hyperparameter stability also improves with increasing sample size.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_9.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_9.pdf}
@@ -386,7 +390,7 @@ We next examine three aspects of FloatSOM runtime performance: the cost of full 
 
 We report sample-scaling runtime comparisons for full versus random sampling using the synthetic datasets as outlined in Section 4.2.1. We stratify by hexagonal, MST, and RNG, for 1, 2, and 4 GPUs (Fig. 10).
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_10.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_10.pdf}
@@ -402,7 +406,7 @@ For the 1-GPU random-sampling runs, the last successful 1-GPU random point occur
 
 To examine parallel scaling, we benchmarked FloatSOM under full sampling across $G\in\{1,2,4,8\}$ GPUs using workload-scaling benchmarks that extend from standard in-memory settings to larger workloads that exceed available memory. Across these increasingly demanding regimes, runtime and efficiency show a broadly consistent scaling pattern, with stable behaviour regardless of topology (Figs. 11 and S11).
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_11.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_11.pdf}
@@ -424,7 +428,7 @@ We next consider GPU efficiency under strong scaling, relative to ideal linear s
 
 With that systems context in place, we next compare topology runtimes across hexagonal, MST, and RNG configurations on 8 GPUs (Fig. 12).
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_12.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_12.pdf}
@@ -440,7 +444,7 @@ However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtim
 
 Fig. 13 tests whether the $QE$ gains from topology choice and tuning persist in deployment against XPySOM, a current high-performance Python SOM baseline in this benchmark context \citep{manciniXPySomHighPerformanceSelfOrganizing2020}.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 % Original SVG: assets_manual/figures/fig_13.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_13.pdf}

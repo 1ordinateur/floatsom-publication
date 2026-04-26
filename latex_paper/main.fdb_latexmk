@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1777146006.48924 "main.aux" "main.bbl" "main" 1777146009.2994 0
+["bibtex main"] 1777235362.35837 "main.aux" "main.bbl" "main" 1777235365.08484 0
   "./main.bib" 1776463710.74816 35533 f75a0872599b7d64ac408c964c4481ff ""
   "./tmlr.bst" 1776373909.42933 26969 9c641e8d820e63bb21b670dde311bfb2 ""
-  "main.aux" 1777146008.3543 37870 6f234d843ca957159e1289e5818d60da "pdflatex"
+  "main.aux" 1777235364.33642 38291 f2277449308f2dda488956bf20b2fd24 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1777146006.73586 "/Users/sarahklamt/Documents/floatsom-publication/latex_paper/main.tex" "main.pdf" "main" 1777146009.2998 0
-  "/Users/sarahklamt/Documents/floatsom-publication/latex_paper/main.tex" 1777145562.55017 67225 1506306dc274676216a054c291ad7d2a ""
+["pdflatex"] 1777235362.62722 "/Users/sarahklamt/Documents/floatsom-publication/latex_paper/main.tex" "main.pdf" "main" 1777235365.08516 0
+  "/Users/sarahklamt/Documents/floatsom-publication/latex_paper/main.tex" 1777235231.62869 67490 6d15933c0cd68b860c11caf0f5c0a8c1 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -29,6 +29,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr17.tfm" 1254269338 12156 ca1ae6a3c8564e89597f1f993fba1608 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm" 1254269338 12020 46464c854bf317de2a7a0bbe4a1160ca ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr7.tfm" 1254269338 12064 09aa3eeac96bf141d673bb1b0385ce55 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm" 1254269338 12064 a35db870f0b76c338d749c56dc030ef5 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr9.tfm" 1254269338 12084 b7f5e4c003de6f57f07c7e9fee73a37c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm" 1254269338 17148 9556e1b5f936b77a796f68d2d559ba99 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmssbx10.tfm" 1254269338 11168 06d87f5698fd1b642d96449b7c8d90b0 ""
@@ -70,6 +71,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr5.pfb" 1255129361 120387 212cad1e763d510fc9c3ce2466274a57 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr6.pfb" 1255129361 123394 d390152bb30feeb496aaaa93299ee9ba ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr7.pfb" 1255129361 121145 68312a933e2c689ed40ec0aba373e279 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr8.pfb" 1255129361 122174 a7a08406857c9530a0320a2517f60370 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr9.pfb" 1255129361 121065 50bbfa703ce7e11638752ef5a6d120c7 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri10.pfb" 1255129361 112593 fda2373ba4420af33949610de4c28fe8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb" 1255129361 119663 e82fa1a58f98ccd89bdbd77311ac9cf1 ""
@@ -91,6 +93,9 @@
   "/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty" 1593379760 20089 80423eac55aa175305d35b49e04fe23b ""
   "/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty" 1575152242 21514 b7557edcee22835ef6b03ede1802dad4 ""
   "/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty" 1576624663 7008 f92eaa0a3872ed622bbf538217cd2ab7 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty" 1160617237 26750 ce139c05a983e19ddca355b43e29c395 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty" 1160617237 3457 d9077efe6b74c5a094199256af8d7d9a ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/algorithms/algorithm.sty" 1251330371 3249 15763257e50278eef5db1952ccde229c ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty" 1359763108 5949 3f3fd50a8cc94c3d4cbf4fc66cd3df1c ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty" 1359763108 13829 94730e64147574077f8ecfea9bb69af4 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd" 1359763108 961 6518c6525a34feb5e8250ffa91731cff ""
@@ -102,6 +107,7 @@
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty" 1748806692 2444 9983e1d0683f102e3b190c64a49313aa ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls" 1748806692 20144 b966087dda3b194755eb460d32e2ef75 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty" 1761946296 5275 6f9d359641b36842524cdb97716ab75f ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty" 1748806692 5525 1593ca62a2554dd7423fc8a4e5a82125 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo" 1748806692 8448 686612a86f0e04f41ea577f5ec7e83d8 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1579991033 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/eso-pic/eso-pic.sty" 1765400421 11838 c56b1b2e06d66f65afcf19adbfba71b5 ""
@@ -170,10 +176,10 @@
   "assets/figures/supp_fig_s8.pdf" 1777144915.65837 413011 2ec4a7bac467874174e3220f6d1e31ee ""
   "assets/figures/supp_fig_s9.pdf" 1777144915.66076 356045 265a4115ca66f725e46885c241c5a319 ""
   "fancyhdr.sty" 1776373909.4155 17086 7ed8cbc4d361ec87392817e0dd4f65ec ""
-  "main.aux" 1777146008.3543 37870 6f234d843ca957159e1289e5818d60da "pdflatex"
-  "main.bbl" 1777146006.72986 9523 b69ccd8770255cdd914caa47b5b7462d "bibtex main"
-  "main.out" 1777146008.3579 11388 3681ec50fd62f40cf83177b8de977bec "pdflatex"
-  "main.tex" 1777145562.55017 67225 1506306dc274676216a054c291ad7d2a ""
+  "main.aux" 1777235364.33642 38291 f2277449308f2dda488956bf20b2fd24 "pdflatex"
+  "main.bbl" 1777235362.61951 9523 b69ccd8770255cdd914caa47b5b7462d "bibtex main"
+  "main.out" 1777235364.33998 11388 3681ec50fd62f40cf83177b8de977bec "pdflatex"
+  "main.tex" 1777235231.62869 67490 6d15933c0cd68b860c11caf0f5c0a8c1 ""
   "math_commands.tex" 1776373909.42807 12284 a71653715108dc62b66e3a0bde0307d8 ""
   "tmlr.sty" 1776373909.43012 6560 e302463e460a0173d5bee936bc95a625 ""
   (generated)
