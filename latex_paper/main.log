@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.11)  27 APR 2026 08:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.11)  27 APR 2026 08:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -486,146 +486,149 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 pdfTeX warning: pdflatex (file ./assets/figures/fig_6.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
-<assets/figures/fig_8.pdf, id=3063, 3277.52483pt x 1204.5pt>
+<assets/figures/fig_8.pdf, id=3063, 3345.49875pt x 1204.5pt>
 File: assets/figures/fig_8.pdf Graphic file (type pdf)
 <use assets/figures/fig_8.pdf>
 Package pdftex.def Info: assets/figures/fig_8.pdf  used on input line 368.
-(pdftex.def)             Requested size: 469.75499pt x 172.6355pt.
+(pdftex.def)             Requested size: 469.75499pt x 169.12509pt.
 
 Underfull \hbox (badness 1024) in paragraph at lines 369--369
 \T1/lmr/m/n/10 con-fig-u-ra-tion out-per-forms the un-tuned ref-er-ence; the global over-all row pools all matched tuned-
  []
 
-
-Underfull \vbox (badness 7308) has occurred while \output is active []
-
- [13 <./assets/figures/fig_7.pdf> <./assets/figures/fig_8.pdf
+[13 <./assets/figures/fig_7.pdf> <./assets/figures/fig_8.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/fig_8.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
-<assets/figures/fig_9.pdf, id=4582, 3327.92308pt x 1095.302pt>
+<assets/figures/fig_9.pdf, id=4526, 3327.92308pt x 1095.302pt>
 File: assets/figures/fig_9.pdf Graphic file (type pdf)
 <use assets/figures/fig_9.pdf>
 Package pdftex.def Info: assets/figures/fig_9.pdf  used on input line 382.
 (pdftex.def)             Requested size: 469.75499pt x 154.5947pt.
-<assets/figures/fig_10.pdf, id=4583, 3083.78099pt x 1065.40038pt>
+<assets/figures/fig_10.pdf, id=4527, 3083.78099pt x 1065.40038pt>
 File: assets/figures/fig_10.pdf Graphic file (type pdf)
 <use assets/figures/fig_10.pdf>
 Package pdftex.def Info: assets/figures/fig_10.pdf  used on input line 398.
 (pdftex.def)             Requested size: 469.75499pt x 162.29042pt.
+
+Underfull \vbox (badness 4403) has occurred while \output is active []
+
  [14 <./assets/figures/fig_9.pdf>]
-<assets/figures/fig_11.pdf, id=4968, 3072.24791pt x 2168.1pt>
+<assets/figures/fig_11.pdf, id=4913, 3072.24791pt x 2168.1pt>
 File: assets/figures/fig_11.pdf Graphic file (type pdf)
 <use assets/figures/fig_11.pdf>
 Package pdftex.def Info: assets/figures/fig_11.pdf  used on input line 414.
 (pdftex.def)             Requested size: 469.75499pt x 331.48665pt.
- [15 <./assets/figures/fig_10.pdf>]
-<assets/figures/fig_12.pdf, id=5050, 3163.72957pt x 1067.42784pt>
+<assets/figures/fig_12.pdf, id=4914, 3163.72957pt x 1067.42784pt>
 File: assets/figures/fig_12.pdf Graphic file (type pdf)
 <use assets/figures/fig_12.pdf>
 Package pdftex.def Info: assets/figures/fig_12.pdf  used on input line 436.
 (pdftex.def)             Requested size: 469.75499pt x 158.4785pt.
-<assets/figures/fig_13.pdf, id=5053, 3033.03133pt x 1923.61667pt>
+
+Underfull \vbox (badness 4429) has occurred while \output is active []
+
+ [15 <./assets/figures/fig_10.pdf>]
+<assets/figures/fig_13.pdf, id=4997, 3033.03133pt x 1923.61667pt>
 File: assets/figures/fig_13.pdf Graphic file (type pdf)
 <use assets/figures/fig_13.pdf>
 Package pdftex.def Info: assets/figures/fig_13.pdf  used on input line 452.
 (pdftex.def)             Requested size: 469.75499pt x 297.92268pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 4531) has occurred while \output is active []
 
  [16 <./assets/figures/fig_11.pdf>] [17 <./assets/figures/fig_12.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 1158) has occurred while \output is active []
 
- [18 <./assets/figures/fig_13.pdf>] (./main.bbl [19] [20]) [21]
+ [18 <./assets/figures/fig_13.pdf>] (./main.bbl [19]) [20]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <9> on input line 511.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 511.
- [22
+ [21
 
 ]
 Underfull \hbox (badness 1394) in paragraph at lines 595--596
 \T1/lmr/bx/n/10 mon 8-GPU axis value for the dimension-, sample-, and grid-size-scaling work-loads.
  []
 
-<assets/figures/supp_fig_s1.pdf, id=6018, 1423.18701pt x 1083.43773pt>
+<assets/figures/supp_fig_s1.pdf, id=5958, 1423.18701pt x 1083.43773pt>
 File: assets/figures/supp_fig_s1.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s1.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s1.pdf  used on input line 606.
 (pdftex.def)             Requested size: 469.75499pt x 357.61821pt.
-<assets/figures/supp_fig_s2.pdf, id=6019, 1423.18236pt x 1083.44226pt>
+<assets/figures/supp_fig_s2.pdf, id=5959, 1423.18236pt x 1083.44226pt>
 File: assets/figures/supp_fig_s2.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s2.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s2.pdf  used on input line 614.
 (pdftex.def)             Requested size: 469.75499pt x 357.6197pt.
-<assets/figures/supp_fig_s3.pdf, id=6020, 1423.18701pt x 1083.43773pt>
+<assets/figures/supp_fig_s3.pdf, id=5960, 1423.18701pt x 1083.43773pt>
 File: assets/figures/supp_fig_s3.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s3.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s3.pdf  used on input line 622.
 (pdftex.def)             Requested size: 469.75499pt x 357.61821pt.
-<assets/figures/supp_fig_s4.pdf, id=6021, 2649.9pt x 1023.97559pt>
+<assets/figures/supp_fig_s4.pdf, id=5961, 2649.9pt x 1023.97559pt>
 File: assets/figures/supp_fig_s4.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s4.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s4.pdf  used on input line 630.
 (pdftex.def)             Requested size: 469.75499pt x 181.51085pt.
-<assets/figures/supp_fig_s5.pdf, id=6022, 2649.9pt x 1171.52684pt>
+<assets/figures/supp_fig_s5.pdf, id=5962, 2649.9pt x 1171.52684pt>
 File: assets/figures/supp_fig_s5.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s5.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s5.pdf  used on input line 638.
 (pdftex.def)             Requested size: 469.75499pt x 207.66592pt.
-<assets/figures/supp_fig_s6.pdf, id=6023, 2649.9pt x 1171.52684pt>
+<assets/figures/supp_fig_s6.pdf, id=5963, 2649.9pt x 1171.52684pt>
 File: assets/figures/supp_fig_s6.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s6.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s6.pdf  used on input line 646.
 (pdftex.def)             Requested size: 469.75499pt x 207.66592pt.
-<assets/figures/supp_fig_s7.pdf, id=6024, 2649.9pt x 1171.52684pt>
+<assets/figures/supp_fig_s7.pdf, id=5964, 2649.9pt x 1171.52684pt>
 File: assets/figures/supp_fig_s7.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s7.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s7.pdf  used on input line 654.
 (pdftex.def)             Requested size: 469.75499pt x 207.66592pt.
-<assets/figures/supp_fig_s8.pdf, id=6025, 3533.2pt x 1365.3007pt>
+<assets/figures/supp_fig_s8.pdf, id=5965, 3533.2pt x 1365.3007pt>
 File: assets/figures/supp_fig_s8.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s8.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s8.pdf  used on input line 662.
 (pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
-<assets/figures/supp_fig_s9.pdf, id=6026, 3533.2pt x 1365.3007pt>
+<assets/figures/supp_fig_s9.pdf, id=5966, 3533.2pt x 1365.3007pt>
 File: assets/figures/supp_fig_s9.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s9.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s9.pdf  used on input line 670.
 (pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
-<assets/figures/supp_fig_s10.pdf, id=6027, 3533.2pt x 1365.3007pt>
+<assets/figures/supp_fig_s10.pdf, id=5967, 3533.2pt x 1365.3007pt>
 File: assets/figures/supp_fig_s10.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s10.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s10.pdf  used on input line 678.
 (pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
-<assets/figures/supp_fig_s11.pdf, id=6028, 3533.2pt x 1929.10715pt>
+<assets/figures/supp_fig_s11.pdf, id=5968, 3533.2pt x 1929.10715pt>
 File: assets/figures/supp_fig_s11.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s11.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s11.pdf  used on input line 686.
 (pdftex.def)             Requested size: 469.75499pt x 256.47383pt.
-<assets/figures/supp_fig_s12.pdf, id=6029, 3533.2pt x 1381.96304pt>
+<assets/figures/supp_fig_s12.pdf, id=5969, 3533.2pt x 1381.96304pt>
 File: assets/figures/supp_fig_s12.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s12.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s12.pdf  used on input line 694.
 (pdftex.def)             Requested size: 469.75499pt x 183.7313pt.
-<assets/figures/supp_fig_s13.pdf, id=6030, 3533.2pt x 1381.96304pt>
+<assets/figures/supp_fig_s13.pdf, id=5970, 3533.2pt x 1381.96304pt>
 File: assets/figures/supp_fig_s13.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s13.pdf>
 Package pdftex.def Info: assets/figures/supp_fig_s13.pdf  used on input line 702.
 (pdftex.def)             Requested size: 469.75499pt x 183.7313pt.
-[23] [24 <./assets/figures/supp_fig_s1.pdf>] [25 <./assets/figures/supp_fig_s2.pdf>] [26 <./assets/figures/supp_fig_s3.pdf>] [27 <./assets/figures/supp_fig_s4.pdf> <./assets/figures/supp_fig_s5.pdf
+[22] [23 <./assets/figures/supp_fig_s1.pdf>] [24 <./assets/figures/supp_fig_s2.pdf>] [25 <./assets/figures/supp_fig_s3.pdf>] [26 <./assets/figures/supp_fig_s4.pdf> <./assets/figures/supp_fig_s5.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s5.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [28 <./assets/figures/supp_fig_s6.pdf> <./assets/figures/supp_fig_s7.pdf
+>] [27 <./assets/figures/supp_fig_s6.pdf> <./assets/figures/supp_fig_s7.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s7.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [29 <./assets/figures/supp_fig_s8.pdf> <./assets/figures/supp_fig_s9.pdf
+>] [28 <./assets/figures/supp_fig_s8.pdf> <./assets/figures/supp_fig_s9.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s9.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [30 <./assets/figures/supp_fig_s10.pdf> <./assets/figures/supp_fig_s11.pdf
+>] [29 <./assets/figures/supp_fig_s10.pdf> <./assets/figures/supp_fig_s11.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s11.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [31 <./assets/figures/supp_fig_s12.pdf> <./assets/figures/supp_fig_s13.pdf
+>] [30 <./assets/figures/supp_fig_s12.pdf> <./assets/figures/supp_fig_s13.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s13.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >] (./main.aux)
@@ -637,18 +640,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 3681EC50FD62F40CF83177B8DE977BEC;11388.
  ) 
 Here is how much of TeX's memory you used:
- 12929 strings out of 467525
- 195372 string characters out of 5418982
+ 12928 strings out of 467525
+ 195365 string characters out of 5418982
  625891 words of memory out of 5000000
  41476 multiletter control sequences out of 15000+600000
  709912 words of font info for 98 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,90p,1307b,599s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,90p,1307b,575s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on main.pdf (31 pages, 20765351 bytes).
+Output written on main.pdf (30 pages, 20727561 bytes).
 PDF statistics:
- 9779 PDF objects out of 10688 (max. 8388607)
- 6027 compressed objects within 61 object streams
- 151 named destinations out of 1000 (max. 500000)
+ 9717 PDF objects out of 10688 (max. 8388607)
+ 5985 compressed objects within 60 object streams
+ 150 named destinations out of 1000 (max. 500000)
  539 words of extra memory for PDF output out of 10000 (max. 10000000)
 
