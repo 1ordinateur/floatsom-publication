@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: plainnat.bst
+Database file #1: main.bib
+Warning--to sort, need author or key in HPCSystemsNCI
+Warning--empty year in HPCSystemsNCI
+Warning--can't use both author and editor fields in kohonenSelfOrganizingMaps2001
+You've used 24 entries,
+            2773 wiz_defined-function locations,
+            798 strings with 11818 characters,
+and the built_in function-call counts, 13082 in all, are:
+= -- 1180
+> -- 903
+< -- 12
++ -- 306
+- -- 282
+* -- 1188
+:= -- 2049
+add.period$ -- 103
+call.type$ -- 24
+change.case$ -- 165
+chr.to.int$ -- 24
+cite$ -- 52
+duplicate$ -- 493
+empty$ -- 929
+format.name$ -- 311
+if$ -- 2690
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 20
+newline$ -- 158
+num.names$ -- 92
+pop$ -- 299
+preamble$ -- 1
+purify$ -- 142
+quote$ -- 0
+skip$ -- 398
+stack$ -- 0
+substring$ -- 450
+swap$ -- 64
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 259
+warning$ -- 3
+while$ -- 103
+width$ -- 0
+write$ -- 377
+(There were 3 warnings)
