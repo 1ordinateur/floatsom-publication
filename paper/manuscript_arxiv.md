@@ -2,11 +2,20 @@
 
 ## Title
 
-FloatSOM: GPU Accelerated, Distributed, Topology-Flexible Self-Organizing Maps
+FloatSOM: GPU-Accelerated, Distributed, Topology-Flexible Self-Organizing Maps
 
 ## Authors
 
-Anonymous Authors
+Tony Xu^1^, Sarah Klamt^2^, Katherine Turner^3^, Anne Bruestle^1^, Givanna Putri^4^, Felix Marsh-Wakefield^5,6^
+
+^1^ John Curtin School of Medical Research, Australian National University  
+^2^ Department of Information Technology and Electrical Engineering, ETH Zurich  
+^3^ Mathematical Data Science Centre, Australian National University  
+^4^ Walter and Eliza Hall Institute  
+^5^ Centenary Institute of Cancer Medicine and Cell Biology  
+^6^ University of Sydney  
+
+Corresponding author: tony.xu@anu.edu.au
 
 ## Abstract
 
