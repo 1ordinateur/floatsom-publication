@@ -44,7 +44,7 @@ GPU-accelerated Self-Organizing Map (SOM) implementations are among the most com
 
 \section{Introduction}
 
-Self-Organizing Map (SOM), originally introduced by Kohonen \citep{kohonenSelforganizingMap1990}, is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale \citep{kangasVariantsSelforganizingMaps1990}. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. Many current implementations, however, remain constrained to single-device workloads that must fit within video random-access memory (VRAM), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.
+Self-Organizing Map (SOM), originally introduced by Kohonen \citep{kohonenSelforganizingMap1990}, is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale \citep{kangasVariantsSelforganizingMaps1990}. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. Many current implementations, however, remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.
 
 SOM topology presents a second limitation. Classical SOMs are traditionally trained on regular rectangular or hexagonal lattices because fixed grids make neighborhood definition, visualization, and optimization straightforward. However, these regular lattices also impose a strong geometric prior on the learned representation. Accordingly, prior work on dynamic, growing, and graph-structured SOM variants reflects a long-standing recognition that fixed lattices are not always the best match for irregular data geometry \citep{alahakoonDynamicSelforganizingMaps2000,vasighiDirectedBatchGrowing2017,kangasVariantsSelforganizingMaps1990}. However, these alternatives have generally not been developed or evaluated in the high-throughput, large-sample regime targeted by modern GPU-enabled applications and are broadly impractical for deployment at scale.
 
@@ -70,29 +70,29 @@ Most practical SOM implementations retain regular rectangular or hexagonal latti
 
 The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods \citep{vasighiDirectedBatchGrowing2017,spanakisAMSOMAdaptiveMoving2016,kangasVariantsSelforganizingMaps1990,jangUseMinimalSpanning2009}. However, these alternatives have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. None of the current distributed or GPU SOM implementations support these non-lattice topologies.
 
-Relative Neighborhood Graphs (RNGs) \citep{toussaintRelativeNeighbourhoodGraph1980} are of particular interest in this work; we return to the full rationale and implementation for RNG in Section 3.2.2.
+Relative Neighborhood Graphs (RNGs) \citep{toussaintRelativeNeighbourhoodGraph1980} are of particular interest in presently; we return to the full rationale and implementation for RNG in Section 3.2.2.
 
 \subsection{Hyperparameter Optimization and Fair Comparison}
 
 SOM performance depends strongly on parameters such as map size, initialization, learning-rate schedule, and neighborhood schedule. Prior work shows that these choices can substantially affect observed performance \citep{akindukoSOMStochasticInitialization2016,forestSurveyImplementationPerformance2020}. This makes comparisons based only on untuned defaults difficult to interpret.
 
-More generally, modern machine-learning workflows increasingly rely on automated hyperparameter optimization rather than manual tuning alone. Frameworks such as Optuna provide bounded search over large hyperparameter spaces and can support multi-objective optimization, allowing parameter settings to be selected with respect to several benchmark criteria simultaneously rather than collapsed into a single score \citep{akibaOptunaNextgenerationHyperparameter2019}.
+More generally, modern machine-learning workflows increasingly rely on automated hyperparameter optimization rather than manual tuning alone. Tools such as Optuna provide bounded search over large hyperparameter spaces and can support multi-objective optimization, allowing parameter settings to be selected with respect to several benchmark criteria simultaneously rather than collapsed into a single score \citep{akibaOptunaNextgenerationHyperparameter2019}.
 
 \section{Methods}
 
-FloatSOM combines four methodological components: sample selection, topology definition, SOM updates, and the compute framework used to execute them. The framework supports \texttt{random}, \texttt{full}, and \texttt{HDSSSOM} sampling; rectangular, hexagonal, MST, and RNG topologies; and execution modes ranging from local GPU training to single-node and multi-node multi-GPU operation. Hyperparameter optimization is treated as a separate layer applied across these configurations. Figure 1 summarizes this design.
+FloatSOM combines four methodological components: sample selection, topology definition, SOM updates, and the compute architecture used to execute them. The framework supports \texttt{random}, \texttt{full}, and \texttt{HDSSSOM} sampling; rectangular, hexagonal, MST, and RNG topologies; and execution modes ranging from local GPU training to single-node and multi-node multi-GPU operation. Hyperparameter optimization is treated as a separate layer applied across these configurations. Figure 1 summarizes this design.
 
 \begin{figure}[h]
 \centering
 % Original SVG: assets_manual/figures/fig_1.svg
 \includegraphics[width=0.3\linewidth]{assets/figures/fig_1.pdf}
-\caption{Schematic overview of the FloatSOM methods framing used in this manuscript. Sample selection and topology definition have configurable components that feed into the standard SOM training step, while the compute framework determines how that same training procedure is executed in practice. The options shown here summarize the FloatSOM configurations discussed in the following subsections.}
+\caption{Schematic overview of the FloatSOM methods framing used in this manuscript. Sample selection and topology definition have configurable components that feed into the standard SOM training step, while the compute architecture determines how that same training procedure is executed in practice. The options shown here summarize the FloatSOM configurations discussed in the following subsections.}
 \label{fig:1}
 \end{figure}
 
 \subsection{Sampling Selector Mathematics}
 
-This section formalizes the sampling policies evaluated in this work.
+This section formalizes the sampling policies evaluated in this manuscript.
 
 Let the full dataset be $X=\{x_i\}_{i=1}^{N}$, where $N$ is the total number of samples in the dataset. Let $m$ denote the number of samples presented to the SOM in a given training iteration, or the sampling budget. This budget is either fixed directly or determined as a proportion $\rho$ of the dataset:
 
@@ -114,7 +114,7 @@ For index sets $\mathcal{I}_t^{(s)}$ at iteration $t$, the implemented full and 
 
 If $m\ge N$, random returns the full dataset (no subsampling). Otherwise, to avoid biasing training toward a single fixed subsample, the random selector redraws $\mathcal{I}_t^{\mathrm{random}}$ from the entire dataset at every training iteration. The selected training subset is $X_t^{(s)}=\{x_i:i\in\mathcal{I}_t^{(s)}\}$. Because random subsampling draws uniformly from size-$m$ subsets, we are able to better obtain coverage over the full dataset.
 
-HDSSSOM was re-implemented in multi-GPU-compatible form as an adaptive sampler that preferentially revisits difficult, under-trained, or stale samples \citep{wetmoreSpeedingSelfOrganizingFeature2005}.
+HDSSSOM is implemented in multi-GPU-compatible form as an adaptive sampler that preferentially revisits difficult, under-trained, or stale samples \citep{wetmoreSpeedingSelfOrganizingFeature2005}.
 
 \subsection{Topology Definition}
 
@@ -174,7 +174,7 @@ Our RNG topology constructs a Relative Neighborhood Graph over current node dist
 
 \subsection{Multi-GPU + Larger-Than-Memory Methodology and Implementation}
 
-FloatSOM is implemented for distributed GPU execution, with support for RAM spilling and disk-backed execution when datasets exceed available VRAM and RAM, respectively.
+FloatSOM is implemented for distributed GPU execution, with support for RAM (Random Access Memory, CPU memory) spilling and disk-backed execution when datasets exceed available VRAM and RAM, respectively.
 
 \begin{figure}[tbp]
 \centering
@@ -212,7 +212,7 @@ In implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker
 
 \subsubsection{Multi-GPU Implementation Details}
 
-As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses JIT-compiled kernels for the core BMU and update steps, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations. For large topologies that would otherwise exceed VRAM, FloatSOM also supports spilling the associated graph-distance or influence structures from VRAM to system RAM.
+As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses JIT-compiled kernels (Just-In-Time) for the core BMU and update steps, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations. For large topologies that would otherwise exceed VRAM, FloatSOM also supports spilling the associated graph-distance or influence structures from VRAM to system RAM.
 
 \subsubsection{Larger-Than-Memory Capable Topology Updates}
 
@@ -220,7 +220,7 @@ Additional larger-than-memory support for topology updates is provided through t
 
 \subsection{Multi-Objective Hyperparameter Optimization}
 
-We use Optuna as an automated multi-objective hyperparameter optimization framework to derive near-optimal performance and corresponding hyperparameters for each FloatSOM configuration under a given sampling, topology, and processing combination \citep{akibaOptunaNextgenerationHyperparameter2019}.
+We use Optuna as an automated multi-objective hyperparameter optimization tool to derive near-optimal performance and corresponding hyperparameters for each FloatSOM configuration under a given sampling and topology combination \citep{akibaOptunaNextgenerationHyperparameter2019}.
 
 \section{Experimental Setup}
 
@@ -228,13 +228,13 @@ We use two benchmark protocols: an Optuna quality benchmark and a speed-scaling 
 
 \subsection{Optuna benchmark protocol}
 
-We use Optuna-based multi-objective optimization to determine the best attainable performance and corresponding hyperparameters for each sampling (full and random) and topology (hexagonal, MST, and RNG) combination, optimizing jointly for train and holdout quantization error ($QE_T$ and $QE_H$). Each dataset-topology-sampling configuration is optimized for 200 trials across 10 seeds under variant-appropriate search constraints. These runs use the standard in-memory batch path rather than the Ray-distributed execution stack. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This corresponds to:
+We use Optuna-based multi-objective optimization to determine the best attainable performance and corresponding hyperparameters for each sampling (full and random) and topology (hexagonal, MST, and RNG) combination, optimizing jointly for train and holdout quantization error ($QE_T$ and $QE_H$). In this protocol, each dataset-topology-sampling configuration is optimized for 200 trials across 10 seeds under variant-appropriate search constraints. The reported runs used the standard in-memory batch path rather than the Ray-distributed execution stack. This corresponds to:
 
 \begin{equation*}
 14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ Runs}
 \end{equation*}
 
-Sampling comparisons in Section 5.2 compare full-vs-random paired analyses pooled across all topologies, with the HDSSSOM pilot also including the HDSSSOM sampling methodology. Topology comparisons in Sections 5.3-5.4 use full-sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling.
+Sampling comparisons in Section 5.2 compare full versus random paired analyses pooled across all topologies. Topology comparisons in Sections 5.3-5.4 use full sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This pilot additionally included the HDSSSOM sampling methodology alongside the full and random sampling methodologies.
 
 \subsubsection{Optuna benchmark datasets and preprocessing}
 
@@ -444,7 +444,7 @@ However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtim
 
 \section{Final FloatSOM RNG Comparison with XPySOM}
 
-Fig. 13 tests whether the $QE$ gains from topology choice and tuning persist in deployment against XPySOM, a current high-performance Python SOM baseline in this benchmark context \citep{manciniXPySomHighPerformanceSelfOrganizing2020}.
+Fig. 13 demonstrates the $QE$ gains from topology choice and tuning persist in deployment against default hexagonal XPySOM \citep{manciniXPySomHighPerformanceSelfOrganizing2020}.
 
 \begin{figure}[tb]
 \centering
@@ -460,7 +460,7 @@ For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^
 
 \section{Discussion}
 
-This work introduces FloatSOM as a GPU-oriented SOM framework that combines topology flexibility, out-of-memory execution, and distributed multi-GPU training in a single implementation. The study also provides a unified empirical analysis of sampling strategy, graph-based versus fixed-lattice topology, topology-aware hyperparameter tuning, and workload scaling across synthetic and real benchmarks. Taken together, these results clarify how algorithmic and systems choices jointly shape SOM quality and runtime under practical deployment constraints.
+This manuscript introduces FloatSOM as a GPU-oriented SOM framework that combines topology flexibility, out-of-memory execution, and distributed multi-GPU training in a single implementation. The study also provides a unified empirical analysis of sampling strategy, graph-based versus fixed-lattice topology, topology-aware hyperparameter tuning, and workload scaling across synthetic and real benchmarks. Taken together, these results clarify how algorithmic and systems choices jointly shape SOM quality and runtime under practical deployment constraints.
 
 \subsection{Sampling tradeoff (random versus full)}
 
@@ -484,9 +484,9 @@ The stability results suggest that graph topologies are recovered more consisten
 
 Distributed execution should therefore be interpreted as workload-dependent rather than as a uniform multiplicative speedup. At small problem sizes, Ray startup, communication, and staging overheads appear to dominate, consistent with the lower efficiencies observed at the low end of the scaling curves. At larger workloads, the sharp rise in efficiency likely reflects both increased parallel throughput and a change in memory regime, where some multi-GPU configurations remain in RAM while the 1-GPU baseline has already entered disk-backed execution. Apparent efficiencies above 100\% should therefore be interpreted as reflecting this systems transition rather than literal super-linear compute scaling.
 
-Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned defaults. For optimal speed, consider using the largest number of GPUs available, especially if this enables data to be kept in RAM. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where optimal $QE$ is not essential. For workloads dominated by very large grid-size scaling, MST remains a reasonable alternative to RNG and Hexagonal.
+Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned defaults. For optimal speed, consider using the largest number of GPUs available, especially if this enables data to be kept in RAM. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where optimal $QE$ is not essential. For workloads dominated by very large grid size scaling, MST remains a reasonable alternative to RNG and Hexagonal.
 
-This work presents FloatSOM as a unified large-scale SOM framework that combines a novel graph-based topology with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution. This integrated design supports practical SOM deployment at scale, where topology choice, sampling, quantization performance, and systems constraints can be managed together rather than in isolation.
+This manuscript presents FloatSOM as a unified large-scale SOM framework that combines a novel graph-based topology with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution. This integrated design supports practical SOM deployment at scale, where topology choice, sampling, quantization performance, and systems constraints can be managed together rather than in isolation.
 
 \section{Acknowledgements}
 
