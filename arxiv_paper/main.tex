@@ -16,26 +16,37 @@
 \usepackage{url}
 \usepackage{hyperref}
 
-\title{FloatSOM: GPU-Accelerated, Distributed, Topology-Flexible Self-Organizing Maps}
-\author{\textbf{Tony Xu}\\
-{\small\textit{John Curtin School of Medical Research, Australian National University}}\\
-{\small\texttt{tony.xu@anu.edu.au}}\\[1em]
-\textbf{Sarah Klamt}\\
-{\small\textit{Department of Information Technology and Electrical Engineering, ETH Zurich}}\\[1em]
-\textbf{Katherine Turner}\\
-{\small\textit{Mathematical Data Science Centre, Australian National University}}\\[1em]
-\textbf{Anne Bruestle}\\
-{\small\textit{John Curtin School of Medical Research, Australian National University}}\\[1em]
-\textbf{Givanna Putri}\\
-{\small\textit{Walter and Eliza Hall Institute}}\\[1em]
-\textbf{Felix Marsh-Wakefield}\\
-{\small\textit{Centenary Institute of Cancer Medicine and Cell Biology}}\\
-{\small\textit{University of Sydney}}}
-\date{}
-
 \begin{document}
 
-\maketitle
+\begin{center}
+{\LARGE\bfseries FloatSOM: GPU-Accelerated, Distributed, Topology-Flexible Self-Organizing Maps\par}
+\end{center}
+
+\vspace{1.8em}
+
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
+\textbf{Tony Xu} & \textit{tony.xu@anu.edu.au} \\
+\textit{John Curtin School of Medical Research, Australian National University} & \\
+\\[0.8em]
+\textbf{Sarah Klamt} & \\
+\textit{Department of Information Technology and Electrical Engineering, ETH Zürich} & \\
+\\[0.8em]
+\textbf{Katherine Turner} & \\
+\textit{Mathematical Data Science Centre, Australian National University} & \\
+\\[0.8em]
+\textbf{Anne Bruestle} & \\
+\textit{John Curtin School of Medical Research, Australian National University} & \\
+\\[0.8em]
+\textbf{Felix Marsh-Wakefield} & \\
+\textit{Centenary Institute of Cancer Medicine and Cell Biology} & \\
+\textit{University of Sydney} & \\
+\\[0.8em]
+\textbf{Givanna Putri} & \\
+\textit{Walter and Eliza Hall Institute} & \\
+\end{tabular*}
+
+\vspace{1.4em}
 
 \begin{abstract}
 GPU-accelerated Self-Organizing Map (SOM) implementations are among the most competitive options for large-scale SOM analysis, but growing dataset sizes increasingly challenge their practical use because workloads no longer fit cleanly within device-memory limits. We introduce FloatSOM, a SOM framework for scalable training and deployment that supports multi-GPU execution, out-of-memory disk-backed streaming, and novel topologies beyond regular lattices. We evaluate FloatSOM on 14 synthetic and real benchmark datasets together with controlled speed scaling benchmarks, and show that these improved topologies, combined with topology-aware hyperparameter fine-tuning, yield lower quantization error than current state-of-the-art SOM baselines. FloatSOM also sustains this performance at large scale with high-throughput distributed execution; in the largest benchmark, it trains a 1024-node SOM network on 1,000,000,000 samples with 50 features in 6.16 minutes on 8 GPUs across two separate high-performance-computing nodes.
