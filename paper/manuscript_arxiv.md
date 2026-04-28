@@ -1,24 +1,32 @@
-# FloatSOM: GPU-Accelerated, Distributed, Topology-Flexible Self-Organizing Maps
+\begin{center}
+{\LARGE\bfseries FloatSOM: GPU-Accelerated, Distributed, Topology-Flexible Self-Organizing Maps\par}
+\end{center}
 
-**Tony Xu**\
-*John Curtin School of Medical Research, Australian National University*\
-*tony.xu@anu.edu.au*
+\vspace{1.8em}
 
-**Sarah Klamt**\
-*Department of Information Technology and Electrical Engineering, ETH Zurich*
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
+\textbf{Tony Xu} & \textit{tony.xu@anu.edu.au} \\
+\textit{John Curtin School of Medical Research, Australian National University} & \\
+\\[0.8em]
+\textbf{Sarah Klamt} & \\
+\textit{Department of Information Technology and Electrical Engineering, ETH Zürich} & \\
+\\[0.8em]
+\textbf{Katherine Turner} & \\
+\textit{Mathematical Data Science Centre, Australian National University} & \\
+\\[0.8em]
+\textbf{Anne Bruestle} & \\
+\textit{John Curtin School of Medical Research, Australian National University} & \\
+\\[0.8em]
+\textbf{Felix Marsh-Wakefield} & \\
+\textit{Centenary Institute of Cancer Medicine and Cell Biology} & \\
+\textit{University of Sydney} & \\
+\\[0.8em]
+\textbf{Givanna Putri} & \\
+\textit{Walter and Eliza Hall Institute} & \\
+\end{tabular*}
 
-**Katherine Turner**\
-*Mathematical Data Science Centre, Australian National University*
-
-**Anne Bruestle**\
-*John Curtin School of Medical Research, Australian National University*
-
-**Givanna Putri**\
-*Walter and Eliza Hall Institute*
-
-**Felix Marsh-Wakefield**\
-*Centenary Institute of Cancer Medicine and Cell Biology*\
-*University of Sydney*
+\vspace{1.4em}
 
 ## Abstract
 
