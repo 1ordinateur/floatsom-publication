@@ -147,18 +147,18 @@ At the beginning of training, the topology is refreshed every iteration: the pre
 \begin{algorithm}[H]
 \caption{Dynamic MST topology update with refresh-triggered recomputation and cached influence reuse.}
 \begin{algorithmic}[1]
-\State Input: node weights W\_t, iteration t, topology-refresh policy
-\State Output: topology state (E\_t, g\_t, cached influences)
+\State \textbf{Input:} node weights $W_t$, iteration $t$, topology-refresh policy
+\State \textbf{Output:} topology state $(E_t, g_t, \text{cached influences})$
 \State Query the refresh policy for the current iteration
-\State if no topology refresh is due then
+\If{no topology refresh is due}
 \State return previous topology state
-\State end if
+\EndIf
 \State Compute pairwise squared node distances on GPU
-\State Transfer distances to CPU and run Kruskal to obtain MST edges E\_t
-\State Build adjacency from E\_t
-\State Compute all-pairs graph hop distances g\_t with chunked GPU Floyd-Warshall
+\State Transfer distances to CPU and run Kruskal to obtain MST edges $E_t$
+\State Build adjacency from $E_t$
+\State Compute all-pairs graph hop distances $g_t$ with chunked GPU Floyd-Warshall
 \State Deduplicate active radii and rebuild/update cached influence maps
-\State Commit E\_t, g\_t, and cache state
+\State Commit $E_t$, $g_t$, and cache state
 \State return topology state
 \end{algorithmic}
 \end{algorithm}
@@ -170,18 +170,18 @@ Our RNG topology constructs a Relative Neighborhood Graph over current node dist
 \begin{algorithm}[H]
 \caption{Dynamic RNG topology update with refresh-triggered recomputation and cached influence reuse.}
 \begin{algorithmic}[1]
-\State Input: node weights W\_t, iteration t, topology-refresh policy
-\State Output: topology state (E\_t, g\_t, cached influences)
+\State \textbf{Input:} node weights $W_t$, iteration $t$, topology-refresh policy
+\State \textbf{Output:} topology state $(E_t, g_t, \text{cached influences})$
 \State Query the refresh policy for the current iteration
-\State if no topology refresh is due then
+\If{no topology refresh is due}
 \State return previous topology state
-\State end if
+\EndIf
 \State Compute pairwise squared node distances on GPU
 \State Evaluate RNG candidate elimination in chunks using the blocker test
-\State Retain surviving RNG edges E\_t and build adjacency
-\State Compute all-pairs graph hop distances g\_t with chunked GPU Floyd-Warshall
+\State Retain surviving RNG edges $E_t$ and build adjacency
+\State Compute all-pairs graph hop distances $g_t$ with chunked GPU Floyd-Warshall
 \State Deduplicate active radii and rebuild/update cached influence maps
-\State Commit E\_t, g\_t, and cache state
+\State Commit $E_t$, $g_t$, and cache state
 \State return topology state
 \end{algorithmic}
 \end{algorithm}

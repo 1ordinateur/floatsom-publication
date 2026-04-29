@@ -209,7 +209,13 @@ def convert_algorithm(code_lines: list[str], caption_line: str) -> list[str]:
     ]
     for line in code_lines:
         line_text = re.sub(r"^\s*\d+:\s*", "", line)
-        output.append(rf"\State {convert_inline(line_text)}")
+        if line_text.startswith("if ") and line_text.endswith(" then"):
+            condition = line_text.removeprefix("if ").removesuffix(" then").strip()
+            output.append(rf"\If{{{convert_inline(condition)}}}")
+        elif line_text == "end if":
+            output.append(r"\EndIf")
+        else:
+            output.append(rf"\State {convert_inline(line_text)}")
     output.extend([r"\end{algorithmic}", r"\end{algorithm}", ""])
     return output
 
