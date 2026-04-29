@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.11)  28 APR 2026 15:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.11)  29 APR 2026 08:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -493,52 +493,52 @@ Overfull \hbox (26.49149pt too wide) in alignment at lines 28--47
 
 [1
 
-{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [2]
+{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [2]
 <assets/figures/fig_1.pdf, id=288, 387.87509pt x 462.83513pt>
 File: assets/figures/fig_1.pdf Graphic file (type pdf)
 <use assets/figures/fig_1.pdf>
-Package pdftex.def Info: assets/figures/fig_1.pdf  used on input line 97.
+Package pdftex.def Info: assets/figures/fig_1.pdf  used on input line 101.
 (pdftex.def)             Requested size: 234.8775pt x 280.2739pt.
- [3] [4{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc} <./assets/figures/fig_1.pdf>]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 144.
+ [3] [4{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc} <./assets/figures/fig_1.pdf>]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 148.
  [5]
-<assets/figures/fig_2.pdf, id=387, 515.49988pt x 1086.35867pt>
+<assets/figures/fig_2.pdf, id=388, 515.49988pt x 1086.35867pt>
 File: assets/figures/fig_2.pdf Graphic file (type pdf)
 <use assets/figures/fig_2.pdf>
-Package pdftex.def Info: assets/figures/fig_2.pdf  used on input line 191.
+Package pdftex.def Info: assets/figures/fig_2.pdf  used on input line 195.
 (pdftex.def)             Requested size: 234.8775pt x 494.99019pt.
  [6]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 197.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 201.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [7 <./assets/figures/fig_2.pdf>] [8] [9] [10] [11]
 <assets/figures/fig_3.pdf, id=534, 3312.375pt x 1204.5pt>
 File: assets/figures/fig_3.pdf Graphic file (type pdf)
 <use assets/figures/fig_3.pdf>
-Package pdftex.def Info: assets/figures/fig_3.pdf  used on input line 307.
+Package pdftex.def Info: assets/figures/fig_3.pdf  used on input line 311.
 (pdftex.def)             Requested size: 469.75502pt x 170.81596pt.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 308.
+(Font)              <10> on input line 312.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 308.
+(Font)              <7> on input line 312.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 308.
+(Font)              <5> on input line 312.
  [12 <./assets/figures/fig_3.pdf>]
 <assets/figures/fig_4.pdf, id=1056, 3193.9124pt x 2200.39056pt>
 File: assets/figures/fig_4.pdf Graphic file (type pdf)
 <use assets/figures/fig_4.pdf>
-Package pdftex.def Info: assets/figures/fig_4.pdf  used on input line 317.
+Package pdftex.def Info: assets/figures/fig_4.pdf  used on input line 321.
 (pdftex.def)             Requested size: 469.75502pt x 323.63148pt.
 <assets/figures/fig_5.pdf, id=1057, 3164.50249pt x 1159.90334pt>
 File: assets/figures/fig_5.pdf Graphic file (type pdf)
 <use assets/figures/fig_5.pdf>
-Package pdftex.def Info: assets/figures/fig_5.pdf  used on input line 329.
+Package pdftex.def Info: assets/figures/fig_5.pdf  used on input line 333.
 (pdftex.def)             Requested size: 469.75502pt x 172.17273pt.
  [13 <./assets/figures/fig_4.pdf>]
 <assets/figures/fig_6.pdf, id=2141, 3203.70901pt x 1204.5pt>
 File: assets/figures/fig_6.pdf Graphic file (type pdf)
 <use assets/figures/fig_6.pdf>
-Package pdftex.def Info: assets/figures/fig_6.pdf  used on input line 343.
+Package pdftex.def Info: assets/figures/fig_6.pdf  used on input line 347.
 (pdftex.def)             Requested size: 469.75502pt x 176.60541pt.
  [14 <./assets/figures/fig_5.pdf> <./assets/figures/fig_6.pdf
 
@@ -547,28 +547,28 @@ pdfTeX warning: pdflatex (file ./assets/figures/fig_6.pdf): PDF inclusion: multi
 <assets/figures/fig_7.pdf, id=3080, 3282.13213pt x 1204.5pt>
 File: assets/figures/fig_7.pdf Graphic file (type pdf)
 <use assets/figures/fig_7.pdf>
-Package pdftex.def Info: assets/figures/fig_7.pdf  used on input line 359.
+Package pdftex.def Info: assets/figures/fig_7.pdf  used on input line 363.
 (pdftex.def)             Requested size: 469.75502pt x 172.3782pt.
 <assets/figures/fig_8.pdf, id=3081, 3345.49875pt x 1204.5pt>
 File: assets/figures/fig_8.pdf Graphic file (type pdf)
 <use assets/figures/fig_8.pdf>
-Package pdftex.def Info: assets/figures/fig_8.pdf  used on input line 371.
+Package pdftex.def Info: assets/figures/fig_8.pdf  used on input line 375.
 (pdftex.def)             Requested size: 469.75502pt x 169.12509pt.
  [15 <./assets/figures/fig_7.pdf>]
-Overfull \hbox (2.61188pt too wide) in paragraph at lines 375--376
+Overfull \hbox (2.61188pt too wide) in paragraph at lines 379--380
 []\T1/lmr/m/n/10.95 At the pooled over-all level, the paired sum-maries across all matched tuned con-fig-u-ra-tion/untuned
  []
 
 <assets/figures/fig_9.pdf, id=3867, 3327.92308pt x 1095.302pt>
 File: assets/figures/fig_9.pdf Graphic file (type pdf)
 <use assets/figures/fig_9.pdf>
-Package pdftex.def Info: assets/figures/fig_9.pdf  used on input line 384.
+Package pdftex.def Info: assets/figures/fig_9.pdf  used on input line 388.
 (pdftex.def)             Requested size: 469.75502pt x 154.5947pt.
 [16 <./assets/figures/fig_8.pdf>]
 <assets/figures/fig_10.pdf, id=4548, 3083.78099pt x 1065.40038pt>
 File: assets/figures/fig_10.pdf Graphic file (type pdf)
 <use assets/figures/fig_10.pdf>
-Package pdftex.def Info: assets/figures/fig_10.pdf  used on input line 398.
+Package pdftex.def Info: assets/figures/fig_10.pdf  used on input line 402.
 (pdftex.def)             Requested size: 469.75502pt x 162.29042pt.
  [17 <./assets/figures/fig_9.pdf> <./assets/figures/fig_10.pdf
 
@@ -577,21 +577,21 @@ pdfTeX warning: pdflatex (file ./assets/figures/fig_10.pdf): PDF inclusion: mult
 <assets/figures/fig_11.pdf, id=5010, 3072.24791pt x 2168.1pt>
 File: assets/figures/fig_11.pdf Graphic file (type pdf)
 <use assets/figures/fig_11.pdf>
-Package pdftex.def Info: assets/figures/fig_11.pdf  used on input line 412.
+Package pdftex.def Info: assets/figures/fig_11.pdf  used on input line 416.
 (pdftex.def)             Requested size: 469.75502pt x 331.48665pt.
  [18] [19 <./assets/figures/fig_11.pdf>]
 <assets/figures/fig_12.pdf, id=5166, 3163.72957pt x 1067.42784pt>
 File: assets/figures/fig_12.pdf Graphic file (type pdf)
 <use assets/figures/fig_12.pdf>
-Package pdftex.def Info: assets/figures/fig_12.pdf  used on input line 434.
+Package pdftex.def Info: assets/figures/fig_12.pdf  used on input line 438.
 (pdftex.def)             Requested size: 469.75502pt x 158.4785pt.
 <assets/figures/fig_13.pdf, id=5169, 3033.03133pt x 1923.61667pt>
 File: assets/figures/fig_13.pdf Graphic file (type pdf)
 <use assets/figures/fig_13.pdf>
-Package pdftex.def Info: assets/figures/fig_13.pdf  used on input line 452.
+Package pdftex.def Info: assets/figures/fig_13.pdf  used on input line 456.
 (pdftex.def)             Requested size: 469.75502pt x 297.92268pt.
  [20 <./assets/figures/fig_12.pdf>] [21 <./assets/figures/fig_13.pdf>] [22] (./main.bbl [23] [24]) [25]
-Overfull \hbox (5.07845pt too wide) in paragraph at lines 575--576
+Overfull \hbox (5.07845pt too wide) in paragraph at lines 579--580
 \T1/lmr/m/n/10.95 Sup-ple-men-tary Fig-ure S3 panel D. See $\T1/lmtt/m/n/10.95 assets / tables / supp _ xpysom _ calibration _ QE _ Hexagonal .
  []
 
@@ -599,36 +599,36 @@ Overfull \hbox (5.07845pt too wide) in paragraph at lines 575--576
 <assets/figures/supp_fig_s1.pdf, id=6033, 1423.18701pt x 1083.43773pt>
 File: assets/figures/supp_fig_s1.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s1.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s1.pdf  used on input line 593.
+Package pdftex.def Info: assets/figures/supp_fig_s1.pdf  used on input line 597.
 (pdftex.def)             Requested size: 469.75502pt x 357.61821pt.
  [27]
 <assets/figures/supp_fig_s2.pdf, id=6038, 1423.18236pt x 1083.44226pt>
 File: assets/figures/supp_fig_s2.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s2.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s2.pdf  used on input line 599.
+Package pdftex.def Info: assets/figures/supp_fig_s2.pdf  used on input line 603.
 (pdftex.def)             Requested size: 469.75502pt x 357.6197pt.
  [28 <./assets/figures/supp_fig_s1.pdf>]
 <assets/figures/supp_fig_s3.pdf, id=6431, 1423.18701pt x 1083.43773pt>
 File: assets/figures/supp_fig_s3.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s3.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s3.pdf  used on input line 605.
+Package pdftex.def Info: assets/figures/supp_fig_s3.pdf  used on input line 609.
 (pdftex.def)             Requested size: 469.75502pt x 357.61821pt.
  [29 <./assets/figures/supp_fig_s2.pdf>]
 <assets/figures/supp_fig_s4.pdf, id=6439, 2649.9pt x 1023.97559pt>
 File: assets/figures/supp_fig_s4.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s4.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s4.pdf  used on input line 611.
+Package pdftex.def Info: assets/figures/supp_fig_s4.pdf  used on input line 615.
 (pdftex.def)             Requested size: 469.75502pt x 181.51085pt.
  [30 <./assets/figures/supp_fig_s3.pdf>]
 <assets/figures/supp_fig_s5.pdf, id=6848, 2649.9pt x 1171.52684pt>
 File: assets/figures/supp_fig_s5.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s5.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s5.pdf  used on input line 617.
+Package pdftex.def Info: assets/figures/supp_fig_s5.pdf  used on input line 621.
 (pdftex.def)             Requested size: 469.75502pt x 207.66592pt.
 <assets/figures/supp_fig_s6.pdf, id=6849, 2649.9pt x 1171.52684pt>
 File: assets/figures/supp_fig_s6.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s6.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s6.pdf  used on input line 623.
+Package pdftex.def Info: assets/figures/supp_fig_s6.pdf  used on input line 627.
 (pdftex.def)             Requested size: 469.75502pt x 207.66592pt.
  [31 <./assets/figures/supp_fig_s4.pdf> <./assets/figures/supp_fig_s5.pdf
 
@@ -637,12 +637,12 @@ pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s5.pdf): PDF inclusion:
 <assets/figures/supp_fig_s7.pdf, id=6892, 2649.9pt x 1171.52684pt>
 File: assets/figures/supp_fig_s7.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s7.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s7.pdf  used on input line 629.
+Package pdftex.def Info: assets/figures/supp_fig_s7.pdf  used on input line 633.
 (pdftex.def)             Requested size: 469.75502pt x 207.66592pt.
 <assets/figures/supp_fig_s8.pdf, id=6893, 3533.2pt x 1365.3007pt>
 File: assets/figures/supp_fig_s8.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s8.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s8.pdf  used on input line 635.
+Package pdftex.def Info: assets/figures/supp_fig_s8.pdf  used on input line 639.
 (pdftex.def)             Requested size: 469.75502pt x 181.51605pt.
  [32 <./assets/figures/supp_fig_s6.pdf> <./assets/figures/supp_fig_s7.pdf
 
@@ -651,12 +651,12 @@ pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s7.pdf): PDF inclusion:
 <assets/figures/supp_fig_s9.pdf, id=6930, 3533.2pt x 1365.3007pt>
 File: assets/figures/supp_fig_s9.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s9.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s9.pdf  used on input line 641.
+Package pdftex.def Info: assets/figures/supp_fig_s9.pdf  used on input line 645.
 (pdftex.def)             Requested size: 469.75502pt x 181.51605pt.
 <assets/figures/supp_fig_s10.pdf, id=6931, 3533.2pt x 1365.3007pt>
 File: assets/figures/supp_fig_s10.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s10.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s10.pdf  used on input line 647.
+Package pdftex.def Info: assets/figures/supp_fig_s10.pdf  used on input line 651.
 (pdftex.def)             Requested size: 469.75502pt x 181.51605pt.
  [33 <./assets/figures/supp_fig_s8.pdf> <./assets/figures/supp_fig_s9.pdf
 
@@ -665,12 +665,12 @@ pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s9.pdf): PDF inclusion:
 <assets/figures/supp_fig_s11.pdf, id=7845, 3533.2pt x 1929.10715pt>
 File: assets/figures/supp_fig_s11.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s11.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s11.pdf  used on input line 653.
+Package pdftex.def Info: assets/figures/supp_fig_s11.pdf  used on input line 657.
 (pdftex.def)             Requested size: 469.75502pt x 256.47383pt.
 <assets/figures/supp_fig_s12.pdf, id=7846, 3533.2pt x 1381.96304pt>
 File: assets/figures/supp_fig_s12.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s12.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s12.pdf  used on input line 659.
+Package pdftex.def Info: assets/figures/supp_fig_s12.pdf  used on input line 663.
 (pdftex.def)             Requested size: 469.75502pt x 183.7313pt.
  [34 <./assets/figures/supp_fig_s10.pdf> <./assets/figures/supp_fig_s11.pdf
 
@@ -679,7 +679,7 @@ pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s11.pdf): PDF inclusion
 <assets/figures/supp_fig_s13.pdf, id=8620, 3533.2pt x 1381.96304pt>
 File: assets/figures/supp_fig_s13.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s13.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s13.pdf  used on input line 665.
+Package pdftex.def Info: assets/figures/supp_fig_s13.pdf  used on input line 669.
 (pdftex.def)             Requested size: 469.75502pt x 183.7313pt.
  [35 <./assets/figures/supp_fig_s12.pdf> <./assets/figures/supp_fig_s13.pdf
 
@@ -701,7 +701,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  75i,11n,79p,1307b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (35 pages, 20657545 bytes).
+Output written on main.pdf (35 pages, 20659200 bytes).
 PDF statistics:
  9776 PDF objects out of 10688 (max. 8388607)
  6015 compressed objects within 61 object streams
