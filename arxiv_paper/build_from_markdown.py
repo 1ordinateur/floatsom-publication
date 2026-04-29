@@ -110,6 +110,7 @@ def restore_protected(text: str, protected: dict[str, str]) -> str:
 
 
 def convert_inline(text: str) -> str:
+    text = re.sub(r"<!--.*?-->", "", text).strip()
     outer_protected: dict[str, str] = {}
 
     def stash_outer(value: str) -> str:
@@ -267,7 +268,6 @@ def convert_body(lines: list[str]) -> str:
                 output.append(convert_inline(pending_table_caption))
                 output.append("")
                 pending_table_caption = None
-            output.append("% " + stripped[4:-3].strip())
             i += 1
             continue
 

@@ -338,10 +338,8 @@ Topology comparisons are reported with $QE$-only metrics, with the Optuna hexago
 
 We report dataset-wise paired improvement summaries (hexagonal over MST) with the same reporting logic as Section 5.1 in Fig. 6.
 
-% AUTO-TOPOLOGY-MST-PVALUES:START
 Overall, MST outperforms matched hexagonal on balanced QE (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by train QE (Fig. 6C), while holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The overall paired t-test p-values are balanced QE (p=1.12e-05), holdout QE (p=0.15), and train QE (p=0.0064).
 
-% AUTO-TOPOLOGY-MST-PVALUES:END
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{assets/figures/fig_6.pdf}
@@ -352,10 +350,8 @@ Overall, MST outperforms matched hexagonal on balanced QE (Fig. 6A), indicating 
 
 To evaluate RNG topology performance, we reuse the paired reporting logic on hexagonal versus RNG, again centered on $QE_B$ with $QE_H$ and $QE_T$ in Fig. 7.
 
-% AUTO-TOPOLOGY-RNG-PVALUES:START
 RNG has lower QE than matched hexagonal on the reported QE metrics (Fig. 7A-C), with overall paired t-test p-values of balanced QE (p=7.4e-10), holdout QE (p=0.0232), and train QE (p=4.69e-06).
 
-% AUTO-TOPOLOGY-RNG-PVALUES:END
 The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced QE and especially in train QE, with the separation most apparent in the real and larger datasets where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice.
 
 \begin{figure}[H]
@@ -376,9 +372,8 @@ To quantify the practical benefit of deploying tuned settings, we compare tuned 
 \caption{Tuned configuration versus untuned reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned configuration/untuned reference pairs across datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect.}
 \end{figure}
 
-At the pooled overall level, the paired summaries across all matched tuned configuration/untuned reference pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 8. <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:START --> The same tuning pattern is observed across topologies, indicating that tuning affects all topology families rather than a single-architecture artifact.
+At the pooled overall level, the paired summaries across all matched tuned configuration/untuned reference pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 8. The same tuning pattern is observed across topologies, indicating that tuning affects all topology families rather than a single-architecture artifact.
 
-% AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:END
 \subsubsection{Hyperparameter Stability Across Topology and Sampling}
 
 To assess whether the derived hyperparameters are robust across runs and datasets, we compare the within-topology seed-to-seed tuned-parameter drift (Section 4.3.2). Overall, MST and RNG exhibits less variability in performance compared to hexagons (Fig. 9A using full dataset, 9B using random sampling). Across these panels, full sampling is generally the more stable setting. Mirroring the sample-size-dependent $QE$ performance, Fig. 9C shows that random sampling hyperparameter stability also improves with increasing sample size.
@@ -419,12 +414,10 @@ To examine parallel scaling, we benchmarked FloatSOM under full sampling across 
 
 \subsubsection{GPU Scaling and Larger-Than-Memory Runtime Performance}
 
-% AUTO-SYSTEMS-SCALING-STATS:START
 Fig. 11 shows that increasing GPU count improves performance in the sample scaling regime by increasing parallel throughput and delaying the transition to disk-backed execution. In the sample scaling benchmark, the 500,000,000 sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset; when staging is still required, the disk-to-GPU path is distributed across more nodes. The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min). Note that this speed includes the time required to transfer data from shared storage to node-local shards, alongside the overhead associated with operating across multiple HPC nodes.
 
 The grid size scaling panel proves to be the main exception: at the largest tested grid size (64), runtime shortens from 934.01 s (15.57 min) on 1 GPU to only 880.83 s (14.68 min) on 8 GPUs, a 5.69\% reduction, indicating that once map-size/topology-refresh costs dominate, additional GPUs contribute little extra speedup.
 
-% AUTO-SYSTEMS-SCALING-STATS:END
 \subsubsection{GPU Scaling Efficiency}
 
 We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which follow the same overall pattern.
@@ -439,17 +432,13 @@ With that systems context in place, we next compare topology runtimes across hex
 \caption{Topology runtime comparison at fixed $G=8$ GPUs under full sampling. Panels A-C report mean wall-clock runtime (s) for dimension, sample, and grid size scaling workloads, respectively, with topology traces for hexagonal, MST, and RNG. Error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration. The largest-axis 8-GPU topology runtime summaries are listed in Supplementary Table S11.}
 \end{figure}
 
-% AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:START
 In Fig. 12A-B, the topologies scale similarly as input complexity and data volume increase: even at the largest tested axis values, the maximum pairwise runtime spread remains modest at dimension scaling (4.70\% at 5,000 dimensions) and sample scaling (3.26\% at 1,000,000,000 samples).
 
-% AUTO-FIGURE12-TOPOLOGY-RUNTIME-STATS:END
-% AUTO-FIGURE12-GRID-SIZE-DISCUSSION:START
 However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtime differences become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively.
 
-% AUTO-FIGURE12-GRID-SIZE-DISCUSSION:END
 \section{Final FloatSOM RNG Comparison with XPySOM}
 
-Fig. 13 demonstrates the $QE$ gains from topology choice and tuning persist in deployment against default hexagonal XPySOM.  \citep{manciniXPySomHighPerformanceSelfOrganizing2020}.
+Fig. 13 demonstrates the $QE$ gains from topology choice and tuning persist in deployment against default hexagonal XPySOM. \citep{manciniXPySomHighPerformanceSelfOrganizing2020}.
 
 \begin{figure}[H]
 \centering
@@ -457,10 +446,8 @@ Fig. 13 demonstrates the $QE$ gains from topology choice and tuning persist in d
 \caption{Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full sampling runs. Panel D provides the scaling/runtime context for the same comparison.}
 \end{figure}
 
-% AUTO-FIGURE13-DEPLOYMENT-QE-STATS:START
 At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5\%); $QE_H$ (9.1\%); and $QE_T$ (22.5\%) for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined deployment effect of topology choice and tuning on $QE$.
 
-% AUTO-FIGURE13-DEPLOYMENT-QE-STATS:END
 For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. Taken together, Fig. 13 shows the point at which the workload size is large enough to warrant the extra startup overhead incurred by tuned FloatSOM RNG: tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads.
 
 \section{Discussion}
@@ -578,10 +565,8 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 
 \textbf{Supplementary Table S6. FloatSOM versus XPySOM calibration $QE$ summary for the hexagonal topology path.} The \texttt{dataset\_index} column matches the numbered points in Supplementary Figure S3 panel D. See \path{assets/tables/supp_xpysom_calibration_QE_Hexagonal.tsv}.
 
-% AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:START
 \textbf{Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.} Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. See \path{assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv}.
 
-% AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END
 \textbf{Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.} Rows list per-dataset and \texttt{GLOBAL\_OVERALL} entries with the plotted median percent change and 95\% confidence interval. See \path{assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv}.
 
 \textbf{Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.} Rows list per-dataset and \texttt{GLOBAL\_OVERALL} entries with the plotted median percent change and 95\% confidence interval. See \path{assets/tables/supp_table_s13_xpysom_hexagonal_deployment_summary.tsv}.
