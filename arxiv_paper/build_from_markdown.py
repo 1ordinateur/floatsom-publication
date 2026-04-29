@@ -150,7 +150,7 @@ def extract_section(lines: list[str], heading: str) -> list[str]:
 
 def convert_authors(lines: list[str]) -> str:
     return r"""Tony Xu$^{1}$, Sarah Klamt$^{2}$, Katherine Turner$^{3}$\\
-Anne Bruestle$^{1}$, Givanna Putri$^{4}$, Felix Marsh-Wakefield$^{5,6}$\\[0.5em]
+Anne Brüstle$^{1}$, Givanna Putri$^{4}$, Felix Marsh-Wakefield$^{5,6}$\\[0.5em]
 \small $^{1}$ John Curtin School of Medical Research, Australian National University\\
 \small $^{2}$ Department of Information Technology and Electrical Engineering, ETH Zurich\\
 \small $^{3}$ Mathematical Data Science Centre, Australian National University\\
