@@ -46,7 +46,7 @@
   <rect class="st5" x="204.23" y="31.02" width="149" height="58" rx="10" ry="10"/>
   <text class="st1" transform="translate(266.04 47.02)"><tspan x="0" y="0">Full</tspan></text>
   <text class="st1" transform="translate(249.53 66.02)"><tspan x="0" y="0">Random</tspan></text>
-  <text class="st1" transform="translate(246.5 85.02)"><tspan x="0" y="0">HDSSOM</tspan></text>
+  <text class="st1" transform="translate(246.5 85.02)"><tspan x="0" y="0">HDSSSOM</tspan></text>
   <rect class="st4" x="217.23" y="161.02" width="149" height="58"/>
   <text class="st3" transform="translate(251.89 188.02)"><tspan x="0" y="0">Training</tspan></text>
   <text class="st1" transform="translate(267.02 210.02)"><tspan x="0" y="0">(Batch)</tspan></text>
