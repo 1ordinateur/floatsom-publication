@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 386.43 461.11">
-  <!-- Generator: Adobe Illustrator 30.3.0, SVG Export Plug-In . SVG Version: 2.1.3 Build 182)  -->
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 674.45 480.51">
+  <!-- Generator: Adobe Illustrator 30.4.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 226)  -->
   <defs>
     <style>
       .st0 {
-        fill: #f3a447;
-      }
-
-      .st1 {
         font-size: 16px;
       }
 
-      .st1, .st2, .st3 {
+      .st0, .st1 {
         font-family: ArialMT, Arial;
         isolation: isolate;
       }
 
-      .st4 {
-        fill: #fff;
-      }
-
       .st2 {
-        font-size: 14.67px;
+        fill: #b3c5da;
       }
 
       .st3 {
+        fill: #92d050;
+      }
+
+      .st4 {
+        fill: #ffa788;
+      }
+
+      .st1 {
         font-size: 24px;
       }
 
@@ -40,37 +40,45 @@
       }
     </style>
   </defs>
-  <rect class="st6" x="4.23" y="6.02" width="377" height="451" rx="10" ry="10"/>
-  <rect class="st5" x="26.23" y="32.02" width="149" height="58" rx="10" ry="10"/>
-  <text class="st3" transform="translate(60.81 68.02)"><tspan x="0" y="0">Sample</tspan></text>
-  <rect class="st5" x="204.23" y="31.02" width="149" height="58" rx="10" ry="10"/>
-  <text class="st1" transform="translate(266.04 47.02)"><tspan x="0" y="0">Full</tspan></text>
-  <text class="st1" transform="translate(249.53 66.02)"><tspan x="0" y="0">Random</tspan></text>
-  <text class="st1" transform="translate(246.5 85.02)"><tspan x="0" y="0">HDSSSOM</tspan></text>
-  <rect class="st4" x="217.23" y="161.02" width="149" height="58"/>
-  <text class="st3" transform="translate(251.89 188.02)"><tspan x="0" y="0">Training</tspan></text>
-  <text class="st1" transform="translate(267.02 210.02)"><tspan x="0" y="0">(Batch)</tspan></text>
-  <rect class="st0" x="26.23" y="161.02" width="149" height="58" rx="10" ry="10"/>
-  <text class="st3" transform="translate(54.66 198.02)"><tspan x="0" y="0">Topology</tspan></text>
-  <path d="M175.23,189.02h35.88v2h-35.88v-2ZM209.78,186.02l8,4-8,4v-8Z"/>
-  <rect class="st0" x="26.23" y="233.02" width="149" height="86" rx="10" ry="10"/>
-  <text class="st1" transform="translate(58.51 252.02)"><tspan x="0" y="0">Rectangular</tspan></text>
-  <text class="st1" transform="translate(63.87 271.02)"><tspan x="0" y="0">Hexagonal</tspan></text>
-  <text class="st1" transform="translate(84.23 290.02)"><tspan x="0" y="0">RNG</tspan></text>
-  <text class="st1" transform="translate(85.88 309.02)"><tspan x="0" y="0">MST</tspan></text>
-  <text class="st3" transform="translate(151.16 369.02)"><tspan x="0" y="0">Compute</tspan></text>
-  <text class="st3" transform="translate(253.54 369.02)"><tspan x="0" y="0">Framework</tspan></text>
-  <path d="M99.23,90.02v36.85h192.43l-1-1v29.18h2v-30.18H100.23l1,1v-35.85h-2ZM287.67,153.72l4,8,4-8h-8Z"/>
-  <path class="st6" d="M200.07,96.02c-3.27,0-5.92-2.65-5.92-5.92v-23.67c0-3.27-2.65-5.92-5.92-5.92,3.27,0,5.92-2.65,5.92-5.92v-23.67c0-3.27,2.65-5.92,5.92-5.92M357.4,25.02c3.27,0,5.92,2.65,5.92,5.92v23.67c0,3.27,2.65,5.92,5.92,5.92-3.27,0-5.92,2.65-5.92,5.92v23.67c0,3.27-2.65,5.92-5.92,5.92"/>
-  <path class="st6" d="M25.23,324.02c-4.42,0-8-3.58-8-8v-32c0-4.42-3.58-8-8-8,4.42,0,8-3.58,8-8v-32c0-4.42,3.58-8,8-8M174.24,228.02c4.42,0,8,3.58,8,8v32c0,4.42,3.58,8,8,8-4.42,0-8,3.58-8,8v32c0,4.42-3.58,8-8,8"/>
-  <path class="st6" d="M200.57,445.02c-2.85,0-5.17-2.31-5.17-5.17v-20.67c0-2.85-2.31-5.17-5.17-5.17,2.85,0,5.17-2.31,5.17-5.17v-20.67c0-2.85,2.31-5.17,5.17-5.17M362.9,383.02c2.85,0,5.17,2.31,5.17,5.17v20.67c0,2.85,2.31,5.17,5.17,5.17-2.85,0-5.17,2.31-5.17,5.17v20.67c0,2.85-2.31,5.17-5.17,5.17"/>
-  <text class="st2" transform="translate(249.95 401.02)"><tspan x="0" y="0">Local GPU</tspan></text>
-  <text class="st2" transform="translate(209.95 418.02)"><tspan x="0" y="0">Single</tspan></text>
-  <text class="st2" transform="translate(248.61 418.02)"><tspan x="0" y="0">-</tspan></text>
-  <text class="st2" transform="translate(253.61 418.02)"><tspan x="0" y="0">Node Multi</tspan></text>
-  <text class="st2" transform="translate(322.78 418.02)"><tspan x="0" y="0">-</tspan></text>
-  <text class="st2" transform="translate(327.78 418.02)"><tspan x="0" y="0">GPU</tspan></text>
-  <text class="st2" transform="translate(231.78 436.02)"><tspan x="0" y="0">Multi</tspan></text>
-  <text class="st2" transform="translate(263.61 436.02)"><tspan x="0" y="0">-</tspan></text>
-  <text class="st2" transform="translate(268.61 436.02)"><tspan x="0" y="0">Node GPU</tspan></text>
+  <rect class="st6" x="3" y="3.96" width="669" height="348"/>
+  <rect class="st5" x="12" y="12.96" width="270" height="58"/>
+  <text class="st1" transform="translate(107.42 48.96)"><tspan x="0" y="0">Sample</tspan></text>
+  <rect class="st3" x="262" y="271.96" width="148" height="58"/>
+  <text class="st1" transform="translate(296.06 298.96)"><tspan x="0" y="0">Training</tspan></text>
+  <text class="st0" transform="translate(311.2 320.96)"><tspan x="0" y="0">(Batch)</tspan></text>
+  <rect class="st4" x="291" y="12.96" width="370" height="58"/>
+  <text class="st1" transform="translate(430.29 48.96)"><tspan x="0" y="0">Topology</tspan></text>
+  <rect class="st5" x="85" y="77.96" width="84" height="48"/>
+  <text class="st0" transform="translate(97.46 107.96)"><tspan x="0" y="0">Random</tspan></text>
+  <rect class="st5" x="12" y="78.96" width="65" height="48"/>
+  <text class="st0" transform="translate(31.74 107.96)"><tspan x="0" y="0">Full</tspan></text>
+  <rect class="st5" x="177" y="77.96" width="105" height="48"/>
+  <text class="st0" transform="translate(192.39 106.96)"><tspan x="0" y="0">HDSSSOM</tspan></text>
+  <rect class="st4" x="290" y="78.96" width="108" height="48"/>
+  <text class="st0" transform="translate(302.36 107.96)"><tspan x="0" y="0">Rectangular</tspan></text>
+  <rect class="st4" x="405" y="78.96" width="107" height="48"/>
+  <text class="st0" transform="translate(421.94 107.96)"><tspan x="0" y="0">Hexagonal</tspan></text>
+  <rect class="st4" x="519" y="78.96" width="65" height="48"/>
+  <text class="st0" transform="translate(535.27 107.96)"><tspan x="0" y="0">RNG</tspan></text>
+  <rect class="st4" x="591" y="77.96" width="70" height="48"/>
+  <text class="st0" transform="translate(611.29 106.96)"><tspan x="0" y="0">MST</tspan></text>
+  <rect class="st2" x="2" y="361.96" width="670" height="58"/>
+  <text class="st1" transform="translate(227.8 398.96)"><tspan x="0" y="0">Compute Framework</tspan></text>
+  <rect class="st2" x="2" y="429.96" width="211" height="48"/>
+  <text class="st0" transform="translate(70.94 458.96)"><tspan x="0" y="0">Local GPU</tspan></text>
+  <rect class="st2" x="219" y="429.96" width="223" height="48"/>
+  <text class="st0" transform="translate(250.18 458.96)"><tspan x="0" y="0">Single</tspan></text>
+  <text class="st0" transform="translate(292.34 458.96)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st0" transform="translate(297.84 458.96)"><tspan x="0" y="0">Node Multi</tspan></text>
+  <text class="st0" transform="translate(373.68 458.96)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st0" transform="translate(379.18 458.96)"><tspan x="0" y="0">GPU</tspan></text>
+  <rect class="st2" x="448" y="429.96" width="224" height="48"/>
+  <text class="st0" transform="translate(503.66 458.96)"><tspan x="0" y="0">Multi</tspan></text>
+  <text class="st0" transform="translate(538.49 458.96)"><tspan x="0" y="0">-</tspan></text>
+  <text class="st0" transform="translate(543.99 458.96)"><tspan x="0" y="0">Node GPU</tspan></text>
+  <path d="M337,217.96v47.19h-2v-47.19h2ZM340,263.81l-4,8-4-8h8Z"/>
+  <path class="st6" d="M147,174.96h-.22v42.56h189.21"/>
+  <path class="st6" d="M483.33,175.96h0v42.22h-147.33"/>
+  <path class="st6" d="M244,133.96c0,7.46-1.01,13.5-2.25,13.5h-92.5c-1.24,0-2.25,6.04-2.25,13.5,0-7.46-1.01-13.5-2.25-13.5H52.25c-1.24,0-2.25-6.04-2.25-13.5"/>
+  <path class="st6" d="M621,133.96c0,7.18-.97,13-2.17,13h-133.67c-1.2,0-2.17,5.82-2.17,13,0-7.18-.97-13-2.17-13h-133.67c-1.2,0-2.17-5.82-2.17-13"/>
 </svg>
