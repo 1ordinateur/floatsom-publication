@@ -678,58 +678,55 @@ We thank Prof. Hanna Suominen for her input and advice.
 
 
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:START -->
-**Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
+**Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values using the manuscript reporting convention. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
 
-
-| metric | dataset | MST | RNG |
-| --- | --- | --- | --- |
-| Balanced QE | blobs | p=0.0163 | p=0.00134 |
-| Balanced QE | circles | p=0.868 | p=0.027 |
-| Balanced QE | moons | p=0.494 | p=0.0132 |
-| Balanced QE | s_curve | p=0.000559 | p=8.08e-05 |
-| Balanced QE | swiss_roll | p=0.247 | p=0.0661 |
-| Balanced QE | breast_cancer | p=0.208 | p=0.364 |
-| Balanced QE | wine | p=0.000686 | p=0.000229 |
-| Balanced QE | iris | p=0.58 | p=0.000924 |
-| Balanced QE | digits | p=0.165 | p=0.266 |
-| Balanced QE | olivetti_faces | p=0.0663 | p=0.0549 |
-| Balanced QE | diabetes | p=0.633 | p=0.267 |
-| Balanced QE | california_housing | p=0.000356 | p=5.65e-05 |
-| Balanced QE | covertype | p=0.477 | p=0.748 |
-| Balanced QE | kddcup99 | p=3.14e-08 | p=2.81e-05 |
-| Balanced QE | OVERALL | p=1.12e-05 | p=7.4e-10 |
-| Holdout QE | blobs | p=0.401 | p=0.0358 |
-| Holdout QE | circles | p=0.105 | p=0.828 |
-| Holdout QE | moons | p=0.216 | p=0.00122 |
-| Holdout QE | s_curve | p=0.00226 | p=0.000724 |
-| Holdout QE | swiss_roll | p=0.0913 | p=0.0221 |
-| Holdout QE | breast_cancer | p=0.0068 | p=0.0925 |
-| Holdout QE | wine | p=0.000275 | p=0.00244 |
-| Holdout QE | iris | p=0.0125 | p=0.0444 |
-| Holdout QE | digits | p=0.0609 | p=0.232 |
-| Holdout QE | olivetti_faces | p=3.93e-05 | p=9.96e-06 |
-| Holdout QE | diabetes | p=0.984 | p=0.351 |
-| Holdout QE | california_housing | p=0.00344 | p=0.0154 |
-| Holdout QE | covertype | p=0.472 | p=0.804 |
-| Holdout QE | kddcup99 | p=4.8e-08 | p=1.58e-05 |
-| Holdout QE | OVERALL | p=0.15 | p=0.0232 |
-| Train QE | blobs | p=0.0162 | p=0.00083 |
-| Train QE | circles | p=0.119 | p=0.000309 |
-| Train QE | moons | p=0.445 | p=0.0117 |
-| Train QE | s_curve | p=0.000219 | p=0.000132 |
-| Train QE | swiss_roll | p=0.362 | p=0.0774 |
-| Train QE | breast_cancer | p=0.17 | p=0.653 |
-| Train QE | wine | p=0.000156 | p=0.00114 |
-| Train QE | iris | p=0.565 | p=0.000872 |
-| Train QE | digits | p=0.234 | p=0.0623 |
-| Train QE | olivetti_faces | p=0.211 | p=0.191 |
-| Train QE | diabetes | p=0.75 | p=0.24 |
-| Train QE | california_housing | p=0.00137 | p=0.00144 |
-| Train QE | covertype | p=0.478 | p=0.691 |
-| Train QE | kddcup99 | p=1.09e-08 | p=7.18e-05 |
-| Train QE | OVERALL | p=0.0064 | p=4.69e-06 |
-
-
+| metric | dataset | MST_p | MST_q | RNG_p | RNG_q |
+| --- | --- | --- | --- | --- | --- |
+| Balanced QE | blobs | p=0.0163 | q=0.0456 | p=0.00134 | q=0.00313 |
+| Balanced QE | circles | p=0.868 | q=0.868 | p=0.027 | q=0.0473 |
+| Balanced QE | moons | p=0.494 | q=0.629 | p=0.0132 | q=0.0264 |
+| Balanced QE | s_curve | p=0.000559 | q=0.0024 | p=8.08e-05 | q=0.000377 |
+| Balanced QE | swiss_roll | p=0.247 | q=0.384 | p=0.0661 | q=0.0925 |
+| Balanced QE | breast_cancer | p=0.208 | q=0.364 | p=0.364 | q=0.392 |
+| Balanced QE | wine | p=0.000686 | q=0.0024 | p=0.000229 | q=0.000802 |
+| Balanced QE | iris | p=0.58 | q=0.677 | p=0.000924 | q=0.00259 |
+| Balanced QE | digits | p=0.165 | q=0.33 | p=0.266 | q=0.312 |
+| Balanced QE | olivetti_faces | p=0.0663 | q=0.155 | p=0.0549 | q=0.0854 |
+| Balanced QE | diabetes | p=0.633 | q=0.682 | p=0.267 | q=0.312 |
+| Balanced QE | california_housing | p=0.000356 | q=0.0024 | p=5.65e-05 | q=0.000377 |
+| Balanced QE | covertype | p=0.477 | q=0.629 | p=0.748 | q=0.748 |
+| Balanced QE | kddcup99 | p=3.14e-08 | q=4.4e-07 | p=2.81e-05 | q=0.000377 |
+| Balanced QE | OVERALL | p=1.12e-05 | q=NA | p=7.4e-10 | q=NA |
+| Holdout QE | blobs | p=0.401 | q=0.468 | p=0.0358 | q=0.0626 |
+| Holdout QE | circles | p=0.105 | q=0.147 | p=0.828 | q=0.828 |
+| Holdout QE | moons | p=0.216 | q=0.275 | p=0.00122 | q=0.00427 |
+| Holdout QE | s_curve | p=0.00226 | q=0.00791 | p=0.000724 | q=0.00338 |
+| Holdout QE | swiss_roll | p=0.0913 | q=0.142 | p=0.0221 | q=0.0442 |
+| Holdout QE | breast_cancer | p=0.0068 | q=0.0159 | p=0.0925 | q=0.13 |
+| Holdout QE | wine | p=0.000275 | q=0.00128 | p=0.00244 | q=0.00683 |
+| Holdout QE | iris | p=0.0125 | q=0.025 | p=0.0444 | q=0.0691 |
+| Holdout QE | digits | p=0.0609 | q=0.107 | p=0.232 | q=0.295 |
+| Holdout QE | olivetti_faces | p=3.93e-05 | q=0.000275 | p=9.96e-06 | q=0.000111 |
+| Holdout QE | diabetes | p=0.984 | q=0.984 | p=0.351 | q=0.409 |
+| Holdout QE | california_housing | p=0.00344 | q=0.00963 | p=0.0154 | q=0.0359 |
+| Holdout QE | covertype | p=0.472 | q=0.508 | p=0.804 | q=0.828 |
+| Holdout QE | kddcup99 | p=4.8e-08 | q=6.72e-07 | p=1.58e-05 | q=0.000111 |
+| Holdout QE | OVERALL | p=0.15 | q=NA | p=0.0232 | q=NA |
+| Train QE | blobs | p=0.0162 | q=0.0454 | p=0.00083 | q=0.00244 |
+| Train QE | circles | p=0.119 | q=0.278 | p=0.000309 | q=0.00144 |
+| Train QE | moons | p=0.445 | q=0.558 | p=0.0117 | q=0.0205 |
+| Train QE | s_curve | p=0.000219 | q=0.00102 | p=0.000132 | q=0.000924 |
+| Train QE | swiss_roll | p=0.362 | q=0.507 | p=0.0774 | q=0.108 |
+| Train QE | breast_cancer | p=0.17 | q=0.34 | p=0.653 | q=0.691 |
+| Train QE | wine | p=0.000156 | q=0.00102 | p=0.00114 | q=0.00266 |
+| Train QE | iris | p=0.565 | q=0.608 | p=0.000872 | q=0.00244 |
+| Train QE | digits | p=0.234 | q=0.364 | p=0.0623 | q=0.0969 |
+| Train QE | olivetti_faces | p=0.211 | q=0.364 | p=0.191 | q=0.243 |
+| Train QE | diabetes | p=0.75 | q=0.75 | p=0.24 | q=0.28 |
+| Train QE | california_housing | p=0.00137 | q=0.00479 | p=0.00144 | q=0.00288 |
+| Train QE | covertype | p=0.478 | q=0.558 | p=0.691 | q=0.691 |
+| Train QE | kddcup99 | p=1.09e-08 | q=1.53e-07 | p=7.18e-05 | q=0.000924 |
+| Train QE | OVERALL | p=0.0064 | q=NA | p=4.69e-06 | q=NA |
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END -->
 
 

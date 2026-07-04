@@ -323,7 +323,7 @@ def _pvalue_to_stars(value: float) -> str:
         return "*"
     return "ns"
 
-def _row_is_significant(row: pd.Series, alpha: float) -> bool:
+def _row_significance_value(row: pd.Series) -> float:
     q_raw = row.get("q_value", np.nan)
     if q_raw is not None and pd.notna(q_raw):
         try:
@@ -331,16 +331,20 @@ def _row_is_significant(row: pd.Series, alpha: float) -> bool:
         except (TypeError, ValueError):
             q_value = float("nan")
         if np.isfinite(q_value):
-            return q_value < alpha
+            return q_value
 
     p_raw = row.get("p_value", np.nan)
     if p_raw is None or pd.isna(p_raw):
-        return False
+        return float("nan")
     try:
         p_value = float(p_raw)
     except (TypeError, ValueError):
-        return False
-    return np.isfinite(p_value) and p_value < alpha
+        return float("nan")
+    return p_value if np.isfinite(p_value) else float("nan")
+
+def _row_is_significant(row: pd.Series, alpha: float) -> bool:
+    value = _row_significance_value(row)
+    return np.isfinite(value) and value < alpha
 
 def _paired_t_two_sided_pvalue(values: np.ndarray) -> float:
     finite = np.asarray(values, dtype=float)

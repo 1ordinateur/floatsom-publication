@@ -1583,16 +1583,22 @@ def test_sync_topology_pvalue_summary_to_paper_and_manuscript(
     assert summary["generated"] is True
     assert "Balanced QE (p=0.00091); Holdout QE (p=0.0032); and Train QE (p=0.0045)." in updated_text
     assert "Balanced QE (p=0.00012); Holdout QE (p=0.00034); and Train QE (p=0.00056)." in updated_text
-    assert "Supplementary Table S6" in updated_text
+    assert "Supplementary Table S7" in updated_text
     assert "`assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`" in updated_text
+    assert "| metric | dataset | MST_p | MST_q | RNG_p | RNG_q |" in updated_text
 
     paper_table_path = assets_dir / "tables" / "supp_table_topology_hex_vs_mst_rng_pvalues.tsv"
     assert paper_table_path.exists()
     table_df = pd.read_csv(paper_table_path, sep="\t")
-    assert list(table_df.columns) == ["metric", "dataset", "MST", "RNG"]
+    assert list(table_df.columns) == ["metric", "dataset", "MST_p", "MST_q", "RNG_p", "RNG_q"]
     overall_balanced = table_df[(table_df["metric"] == "Balanced QE") & (table_df["dataset"] == "OVERALL")].iloc[0]
-    assert overall_balanced["MST"] == "p=0.00091"
-    assert overall_balanced["RNG"] == "p=0.00012"
+    assert overall_balanced["MST_p"] == "p=0.00091"
+    assert overall_balanced["MST_q"] == "q=NA"
+    assert overall_balanced["RNG_p"] == "p=0.00012"
+    assert overall_balanced["RNG_q"] == "q=NA"
+    iris_balanced = table_df[(table_df["metric"] == "Balanced QE") & (table_df["dataset"] == "iris")].iloc[0]
+    assert iris_balanced["MST_q"] == "q=0.0246"
+    assert iris_balanced["RNG_q"] == "q=0.0023"
     assert "GLOBAL_REAL" not in set(table_df["dataset"].astype(str))
 
 

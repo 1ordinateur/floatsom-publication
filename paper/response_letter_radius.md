@@ -178,7 +178,7 @@ In Section 8.5, we will add:
 
 ### Response
 
-We agree that the statistical reporting should state whether the paired tests were multiplicity-corrected. On checking the analysis code, the publication-figure pipeline already computes Benjamini-Hochberg adjusted `q_value` fields for dataset-level summaries. However, the current manuscript-facing topology p-value table exports only formatted raw `p_value` entries, and some figure significance markers still threshold raw `p_value` even when `q_value` is available. The revision will therefore expose the already computed adjusted values and state the correction convention explicitly.
+We agree that the statistical reporting should state whether the paired tests were multiplicity-corrected. On checking the analysis code, the publication-figure pipeline already computes Benjamini-Hochberg adjusted `q_value` fields for dataset-level summaries. We have revised the manuscript-facing topology p-value table to report both raw `p_value` and adjusted `q_value` entries, and we have updated the plotting code so significance markers use `q_value` when available, falling back to `p_value` only when no adjusted value exists.
 
 ### Manuscript Amendment
 
@@ -186,7 +186,7 @@ In Section 4.4, we will add:
 
 > "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. The adjustment is applied across non-global dataset rows within each comparison family. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family."
 
-In the supplementary topology table captions, we will revise:
+In the supplementary topology table caption, we revised:
 
 > "Rows report raw paired $t$-test p-values and Benjamini-Hochberg adjusted q-values for the corresponding dataset-level comparison family; OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment."
 
