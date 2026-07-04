@@ -12,21 +12,29 @@ We thank the reviewer for the careful reading and for separating the systems con
 
 We agree with the reviewer that quantization error alone does not test the topology-preservation property of a SOM. The submitted manuscript used $QE$ as the principal deployment metric because the benchmark was designed around large-scale vector quantization and because $QE$ is the metric used in our XPySOM calibration. However, the reviewer is correct that lower $QE$ under MST or RNG could reflect a looser vector-quantizer-like fit rather than better preservation of neighborhood structure.
 
-We will therefore revise the topology comparison to either report preservation metrics alongside $QE$ or, if the additional runs are not completed in time for the revision, explicitly narrow the claim to quantization performance rather than topology preservation. Our preferred revision is to add topographic error and trustworthiness to the topology comparison, using the existing FloatSOM metric infrastructure and the same matched dataset/seed/split units used for the $QE$ analyses.
+We will therefore revise the topology comparison to report a preservation metric alongside $QE$. We will not use raw topographic error as the primary cross-topology statistic, because raw topographic error defines an error by whether the first and second best-matching units are immediate neighbors on the map. That adjacency relation is itself topology-dependent. Even when map size and output dimensionality are fixed, hexagonal, MST, and RNG maps have different connectivity and degree structure, so raw topographic error would partly measure the graph's one-hop neighbor convention rather than only topology preservation.
+
+This is not only a concern raised by Ramos et al. Uriarte and Diaz Martin showed in a rectangular versus hexagonal two-dimensional SOM comparison that raw topographic error can undervalue rectangular maps because diagonal near-neighbors are counted as non-neighbors, while central hexagonal units have more immediate neighbors. Neme and Miramontes further showed that topographic error is affected by statistical properties of the neuron lattice, including path length, clustering, and connectivity length. Other SOM comparisons, including Machon-Gonzalez and Lopez-Garcia, also caution that topographic-error comparisons require the same map size because the errors depend on map design. These results support the narrower point relevant here: holding map size fixed is necessary, but holding map size or output dimensionality fixed is not sufficient when the adjacency graph itself changes.
+
+Instead, we will use Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We will report MTR next to $QE$ and interpret the two metrics separately.
 
 ### Manuscript Amendment
 
 In Section 4.1, we will add:
 
-> "For topology comparisons, we report quantization error together with preservation-oriented diagnostics. Topographic error measures whether the first and second best-matching units are adjacent under the evaluated SOM topology, while trustworthiness measures local neighborhood preservation between the input space and the map representation. These metrics are reported alongside $QE$ because a lower $QE$ alone does not establish that a SOM preserves neighborhood structure."
+> "For cross-topology preservation comparisons, we report Mean Tied Rank (MTR) rather than raw topographic error. Raw topographic error classifies a sample as an error when its first and second best-matching units are not adjacent on the SOM graph. This makes the statistic directly dependent on the adjacency convention of the evaluated topology; maps with more immediate neighbors have more opportunities for the second BMU to be counted as adjacent. Prior work has noted this limitation in several forms. Uriarte and Diaz Martin show that rectangular and hexagonal two-dimensional lattices can receive different raw topographic-error scores because diagonal rectangular near-neighbors are treated differently from hexagonal immediate neighbors. Neme and Miramontes show that topographic error depends on lattice statistical properties such as path length and connectivity. Machon-Gonzalez and Lopez-Garcia also note that map size must be matched when topographic error is compared. Thus, fixed output dimensionality and fixed map size do not by themselves make raw topographic error directly comparable when the graph connectivity differs."
+
+We will then define the statistic as:
+
+> "For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second BMUs. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning average ranks to units tied at the same graph distance. The tied rank of $b_i^{(2)}$ is denoted $\tau_i$. Mean Tied Rank is then $MTR=N^{-1}\sum_i \tau_i$. Lower values indicate that the second BMU is closer to the first BMU under the map topology. Because all topology comparisons use the same number of SOM units, the unnormalized rank scale is shared across the compared maps."
 
 In Section 5.3, we will revise the opening sentence to:
 
-> "Topology comparisons are reported with $QE$ and preservation-oriented metrics, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG."
+> "Topology comparisons are reported with both $QE$ and Mean Tied Rank, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG."
 
-If the preservation-metric runs are not included in the final revision, we will instead use the narrower wording:
+In the Results and Discussion, we will add:
 
-> "Topology comparisons in this version are therefore interpreted as quantization-performance comparisons, not as a complete demonstration of improved topology preservation."
+> "$QE$ and MTR are interpreted as complementary quantities: $QE$ measures vector-quantization fidelity, whereas MTR evaluates whether the two closest prototypes for a sample remain close under the topology-induced graph distance. We therefore avoid treating a lower $QE$ alone as evidence of improved topology preservation."
 
 ## 2. Hexagonal neighborhood-radius control
 
@@ -62,21 +70,21 @@ In Section 5.3, we added:
 
 ### Response
 
-We agree that the related-work coverage should be expanded and that aweSOM should be discussed. We will add aweSOM as a recent Python CPU/GPU SOM implementation, but we will not add it as a new executable benchmark. We will instead cite the scaling results reported in the aweSOM paper. Those reported numbers are not close to the FloatSOM large-scale performance regime, and aweSOM is not a stronger runtime comparator than XPySOM for the Python GPU batch-SOM setting considered here.
+We agree that the related-work coverage should be expanded and that aweSOM should be discussed. We have added aweSOM as a recent Python CPU/GPU SOM implementation, but we do not add it as a new executable benchmark in this text-only revision. We discuss it as a recent single-node CPU/GPU implementation rather than as a distributed out-of-core comparator.
 
-For executable benchmarking, we retain XPySOM as the direct external implementation baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM paper already benchmarks against earlier open-source SOM implementations and reports large speed advantages over those alternatives. Since aweSOM's own literature numbers do not exceed XPySOM's relevance as the direct comparator, re-running aweSOM would not change the main systems comparison.
+For executable benchmarking, we retain XPySOM as the direct external implementation baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM paper already benchmarks against earlier open-source SOM implementations and reports large speed advantages over those alternatives.
 
-We will discuss Somoclu and GigaSOM more explicitly. Somoclu is an important CUDA/MPI SOM system, but it is not the closest baseline for the Python GPU batch-SOM workflow evaluated here. GigaSOM.jl is also important, especially for large cytometry workloads, but it is implemented in Julia and is not readily comparable as a drop-in Python baseline in our benchmark harness. We therefore discuss GigaSOM as a distributed large-scale SOM system precedent rather than as a directly benchmarked external Python implementation.
+We now discuss Somoclu and GigaSOM more explicitly. Somoclu is an important CUDA/MPI SOM system, but it is not the closest baseline for the Python GPU batch-SOM workflow evaluated here. GigaSOM.jl is also important, especially for large cytometry workloads, but it is implemented in Julia and was not readily executable in our benchmark environment because the required Julia package and dependency conditions were not met in our setup. We therefore discuss GigaSOM as a distributed large-scale SOM system precedent rather than as a directly benchmarked external Python implementation.
 
 ### Manuscript Amendment
 
-In Section 2.1, we will revise the related-work paragraph to:
+In Section 2.1, we revised the related-work discussion to:
 
-> "Open-source SOM libraries range from lightweight Python implementations to more performance-oriented systems. MiniSom is a compact Python implementation of the classical online regime [@vettigliJustGlowingMinisom2018], whereas XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. aweSOM is a recent Python CPU/GPU SOM implementation with ensemble stacking that targets large single-node workloads; we discuss it through its reported literature scaling rather than as a direct benchmark because its published performance regime is below the large-scale distributed setting evaluated here and it is not a stronger direct comparator than XPySOM. At larger scales, Somoclu and GigaSOM provide mature parallel SOM systems for large workloads [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
+> "Open-source SOM libraries range from lightweight to more performance-oriented implementations. MiniSom is a compact Python implementation of the classical online regime [@vettigliJustGlowingMinisom2018], whereas XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. aweSOM (Ha et al., JOSS 2025) is a recent Python CPU/GPU SOM implementation with ensemble stacking that targets large single-node workloads. At larger scales, Somoclu and GigaSOM provide mature parallel SOM systems for large workloads [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
 
-In Section 4.1 or Section 7, we will add:
+We also added:
 
-> "We selected XPySOM as the direct external implementation baseline because it is the closest Python GPU batch-SOM comparator and because prior XPySOM benchmarking already established strong runtime performance relative to earlier open-source SOM implementations. Somoclu, GigaSOM, and aweSOM are therefore discussed as important systems precedents using their reported literature results, but they are not directly benchmarked in this Python-centered deployment comparison; in particular, GigaSOM.jl is Julia-based and not readily integrated into the same benchmark harness."
+> "We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations. Somoclu remains an important CUDA/MPI SOM system, but it is less directly aligned with the Python GPU batch-SOM deployment setting evaluated here. GigaSOM.jl is an important large-scale cytometry-oriented SOM system, but it is implemented in Julia and was not readily executable in our Python/CUDA/Ray benchmark environment because the required Julia package and dependency conditions were not met in our setup. We therefore discuss GigaSOM as a large-scale systems precedent rather than as a directly benchmarked Python baseline. An important systems gap remains: XPySOM is limited to a single GPU and requires the full dataset to fit in VRAM, while GigaSOM does not provide a drop-in distributed GPU training baseline within the broadly used Python workflow targeted by FloatSOM."
 
 ## 4. Numbers should be embedded in the paper
 
@@ -132,13 +140,13 @@ We will revise the Fig. 13 caption to:
 
 ### Response
 
-We agree that MST itself should not be described as a novel SOM topology because prior work, including Jang et al., used MSTs in SOMs. We will revise the manuscript to remove broad novelty language for MSTs and instead frame the contribution as a scalable GPU implementation and large-scale evaluation of dynamic graph-based SOM topologies.
+We agree that MST itself should not be described as a novel SOM topology because prior work, including Jang et al., used MSTs in SOMs. We revised the manuscript to remove broad novelty language for MSTs and instead frame the contribution as a scalable GPU implementation and large-scale evaluation of dynamic graph-based SOM topologies.
 
-For RNG, we will retain a narrower and qualified novelty claim. We have not identified prior work applying dynamically refreshed Relative Neighborhood Graphs as the neighborhood topology in SOM training. To avoid overclaiming, we will phrase this as "to our knowledge" and distinguish it from the non-novel MST component.
+For RNG, we retain a narrower and qualified novelty claim. We have not identified prior work applying dynamically refreshed Relative Neighborhood Graphs as the neighborhood topology in SOM training. To avoid overclaiming, we now phrase this as "to our knowledge" and distinguish it from the non-novel MST component.
 
 ### Manuscript Amendment
 
-In the Abstract, we will replace:
+In the Abstract, we replaced:
 
 > "novel topologies beyond regular lattices"
 
@@ -146,13 +154,17 @@ with:
 
 > "scalable graph-based topologies beyond regular lattices"
 
-In Sections 1 and 3.2, we will add:
+In Section 2.3, we added:
 
-> "Prior work has used MST-based neighborhoods in SOMs, so we do not claim MST itself as a novel topology. Our contribution for MST is a scalable GPU-compatible dynamic implementation and large-scale evaluation. In contrast, to our knowledge, dynamically refreshed Relative Neighborhood Graph neighborhoods have not previously been used as a SOM training topology."
+> "The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. In particular, prior work has used MST-based neighborhoods in SOMs [@jangUseMinimalSpanning2009], so we do not claim MST itself as a novel SOM topology. Our MST contribution is a scalable GPU-compatible dynamic implementation and large-scale evaluation."
 
-In the Discussion, we will replace broad "novel graph-based topology" wording with:
+We also added:
 
-> "FloatSOM combines scalable graph-based topology support with out-of-memory execution and distributed multi-GPU training."
+> "Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] are of particular interest here. To our knowledge, dynamically refreshed RNG neighborhoods have not previously been used as a SOM training topology; we return to the full rationale and implementation for RNG in Section 3.2.2."
+
+In the Discussion, we replaced broad "novel graph-based topology" wording with:
+
+> "This manuscript presents FloatSOM as a unified large-scale SOM framework that combines scalable graph-based topology support with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution."
 
 ## 7. Runtime cost of RNG recommendation
 
@@ -162,13 +174,13 @@ In the Discussion, we will replace broad "novel graph-based topology" wording wi
 
 ### Response
 
-We agree that any recommendation of RNG must be paired with its runtime cost. No additional end-to-end benchmarking is needed to answer this reviewer request because the manuscript already reports this cost in Fig. 12 and the topology-runtime discussion: at grid size 64, the 8-GPU mean runtime was 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG, corresponding to 8.19x and 27.07x the hexagonal runtime for MST and RNG, respectively. The needed revision is to move this number into the recommendation/discussion context so the cost is visible at the point where RNG is recommended. A separate component-level microbenchmark of the RNG blocker test and all-pairs hop-distance step would be useful for diagnosis, but it is not necessary to satisfy the reviewer's request to "put a number on the RNG cost."
+We agree that any recommendation of RNG must be paired with its runtime cost. No additional end-to-end benchmarking is needed to answer this reviewer request because the manuscript already reports this cost in Fig. 12 and the topology-runtime discussion: at grid size 64, the 8-GPU mean runtime was 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG, corresponding to 8.19x and 27.07x the hexagonal runtime for MST and RNG, respectively. We revised the recommendation/discussion text so the cost is visible at the point where RNG is recommended, and specifically frame the caveat as most important for very large grids.
 
 ### Manuscript Amendment
 
-In Section 8.5, we will add:
+In Section 8.5, we added:
 
-> "The RNG recommendation is conditional on the user accepting its topology-construction overhead. In the grid-size scaling benchmark, the largest grid size tested (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making RNG 27.07x slower than hexagonal and MST 8.19x slower than hexagonal at that point. RNG should therefore be preferred when quantization performance is the priority and graph-refresh cost is acceptable; hexagonal remains the appropriate default when throughput dominates."
+> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned defaults when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default, and MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
 
 ## 8. Multiple-comparison correction
 
@@ -218,7 +230,7 @@ In Section 5.3, we will add:
 
 ### Response
 
-We agree and will preserve the current framing. The submitted manuscript already describes HDSSSOM as a focused screening pilot and not as part of the main full-versus-random sampling benchmark. We will keep that language and avoid broadening the claim beyond the pilot configuration.
+We agree and preserve the current framing. The submitted manuscript already describes HDSSSOM as a focused screening pilot and not as part of the main full-versus-random sampling benchmark. We kept that language and added a sentence to avoid broadening the claim beyond the pilot configuration.
 
 ### Manuscript Amendment
 
@@ -226,7 +238,7 @@ The current Section 5.2 text already states:
 
 > "We first report a focused HDSSSOM pilot as an elimination comparison rather than as part of the broader sampling benchmark. This pilot used a smaller, more limited configuration than the later full versus random analysis and is summarized in Supplementary Table S2."
 
-We will retain this framing and, if needed, add:
+We added:
 
 > "These HDSSSOM results should therefore be interpreted as a pilot screen under the stated configuration rather than as a comprehensive evaluation of all possible HDSSSOM schedules."
 
@@ -238,7 +250,7 @@ We will retain this framing and, if needed, add:
 
 ### Response
 
-We agree. The submitted manuscript already states that some efficiency denominators are locally extrapolated from the last available 1-GPU point when direct 1-GPU runs were unavailable. We will keep this limitation visible in the results and discussion and avoid interpreting the above-100% efficiency panels as pure compute scaling.
+We agree. The submitted manuscript already states that some efficiency denominators are locally extrapolated from the last available 1-GPU point when direct 1-GPU runs were unavailable. We retained this limitation and added explicit wording that above-100% efficiency should not be interpreted as pure superlinear compute scaling.
 
 ### Manuscript Amendment
 
@@ -246,6 +258,6 @@ The current Section 6.2 text states:
 
 > "When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range."
 
-We will retain this statement and add to the Discussion:
+In Section 6.2.2, we added:
 
-> "Efficiency values above 100% should be interpreted as a combined consequence of parallelism and a changed memory/data-staging regime, not as evidence of superlinear compute scaling."
+> "Efficiencies above 100% should also be interpreted as a combined consequence of parallelism and a changed memory/data-staging regime, not as evidence of superlinear compute scaling."
