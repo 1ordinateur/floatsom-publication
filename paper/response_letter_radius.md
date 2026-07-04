@@ -88,17 +88,17 @@ In Section 4.1 or Section 7, we will add:
 
 ### Response
 
-We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We will replace the path-only supplementary table captions with embedded tables for the per-dataset effect summaries and runtime summaries. The external `.tsv` files can remain as machine-readable artifacts, but the manuscript should contain the actual values needed to evaluate the claims.
+We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology p-value summary, deployment effect summaries, and topology runtime summary. The external `.tsv` files remain as machine-readable artifacts, but the manuscript now contains the numerical values needed to evaluate the corresponding figures.
 
 ### Manuscript Amendment
 
-In the Supplementary Tables section, we will replace the path-only captions with embedded tables. For example, the revised captions will read:
+In the Supplementary Tables section, we replaced the path-only captions with embedded tables. For example, the revised captions now read:
 
-> "Supplementary Table S7. Paired topology comparison p-values and effect summaries for hexagonal versus MST and hexagonal versus RNG across balanced $QE$, holdout $QE$, and train $QE$. Rows list metric/dataset entries, including the OVERALL row; the numerical values are embedded below and the corresponding machine-readable table is also provided in `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
+> "Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
 
-For the deployment comparison, we will revise the caption to:
+For the deployment comparison, the revised caption now reads:
 
-> "Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$. Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval; the numerical values are embedded below and the corresponding machine-readable table is also provided in `assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv`."
+> "Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$. Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv`."
 
 ## 5. Deployment comparison separates topology, tuning, and implementation
 

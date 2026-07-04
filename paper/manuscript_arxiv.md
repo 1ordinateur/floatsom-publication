@@ -496,23 +496,427 @@ We thank Prof. Hanna Suominen for her input and advice.
 | feature dimension | 50, 100, 200, 500, 1000, 2000, 5000 |
 | grid side length | 8, 16, 24, 32, 48, 64 |
 
-**Supplementary Table S4. FloatSOM versus XPySOM calibration $QE$ summary for the MST topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S1 panel D. See `assets/tables/supp_xpysom_calibration_qe_mst.tsv`.
+**Supplementary Table S4. FloatSOM versus XPySOM calibration summary for the MST topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties. The full machine-readable table is also provided in `assets/tables/supp_xpysom_calibration_qe_mst.tsv`.
 
-**Supplementary Table S5. FloatSOM versus XPySOM calibration $QE$ summary for the RNG topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S2 panel D. See `assets/tables/supp_xpysom_calibration_qe_rng.tsv`.
 
-**Supplementary Table S6. FloatSOM versus XPySOM calibration $QE$ summary for the hexagonal topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S3 panel D. See `assets/tables/supp_xpysom_calibration_QE_Hexagonal.tsv`.
+| idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 8 | blobs | QE | train | 0/10/0 | -3.6521 | -3.5612 | [-4.6291, -2.687] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | QE | train | 10/0/0 | 6.0461 | 5.7839 | [5.0244, 6.3682] | 0.002 | 10 | 1 |
+| 7 | california_housing | QE | train | 10/0/0 | 4.2199 | 4.3194 | [3.7617, 4.9195] | 0.002 | 10 | 1 |
+| 9 | circles | QE | train | 0/10/0 | -1.7629 | -2.1879 | [-3.655, -1.0873] | 0.002 | 10 | -1 |
+| 14 | covertype | QE | train | 10/0/0 | 15.3837 | 15.3479 | [13.9347, 16.925] | 0.002 | 10 | 1 |
+| 4 | diabetes | QE | train | 10/0/0 | 7.0091 | 7.0306 | [6.1295, 7.9882] | 0.002 | 10 | 1 |
+| 6 | digits | QE | train | 10/0/0 | 5.3038 | 5.3987 | [5.0889, 5.8056] | 0.002 | 10 | 1 |
+| 1 | iris | QE | train | 10/0/0 | 28.4174 | 28.3671 | [24.2551, 32.3913] | 0.002 | 10 | 1 |
+| 13 | kddcup99 | QE | train | 10/0/0 | 19.4133 | 19.693 | [16.1432, 23.2133] | 0.002 | 10 | 1 |
+| 10 | moons | QE | train | 1/9/0 | -3.7058 | -3.3568 | [-5.5241, -1.575] | 0.0098 | 10 | -0.8 |
+| 3 | olivetti_faces | QE | train | 10/0/0 | 8.4513 | 8.5474 | [7.1779, 9.6246] | 0.002 | 10 | 1 |
+| 11 | s_curve | QE | train | 10/0/0 | 3.3827 | 3.4166 | [1.906, 5.1934] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE | train | 10/0/0 | 5.271 | 5.0983 | [3.8948, 6.3949] | 0.002 | 10 | 1 |
+| 2 | wine | QE | train | 10/0/0 | 20.0992 | 20.1816 | [18.2671, 22.1871] | 0.002 | 10 | 1 |
+| - | GLOBAL | QE | train | 111/29/0 | 6.8961 | 8.1485 | [5.6474, 9.0003] | 1.49e-17 | 140 | 0.5857 |
+| 8 | blobs | QE | holdout | 0/10/0 | -4.1422 | -3.9793 | [-5.2037, -2.9583] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | QE | holdout | 2/8/0 | -0.6423 | -0.4735 | [-1.2282, 0.3513] | 0.1309 | 10 | -0.6 |
+| 7 | california_housing | QE | holdout | 10/0/0 | 3.8135 | 3.8367 | [3.1391, 4.5531] | 0.002 | 10 | 1 |
+| 9 | circles | QE | holdout | 0/10/0 | -2.5762 | -3.1314 | [-4.9792, -1.4919] | 0.002 | 10 | -1 |
+| 14 | covertype | QE | holdout | 10/0/0 | 15.4626 | 15.3225 | [13.8381, 16.8307] | 0.002 | 10 | 1 |
+| 4 | diabetes | QE | holdout | 4/6/0 | -0.1376 | 0.0531 | [-1.2671, 1.4709] | 1 | 10 | -0.2 |
+| 6 | digits | QE | holdout | 10/0/0 | 2.5919 | 2.7034 | [2.2909, 3.2567] | 0.002 | 10 | 1 |
+| 1 | iris | QE | holdout | 4/6/0 | 0.1297 | -0.4991 | [-4.9164, 4.9562] | 1 | 10 | -0.2 |
+| 13 | kddcup99 | QE | holdout | 10/0/0 | 19.2029 | 19.4801 | [15.8968, 23.1041] | 0.002 | 10 | 1 |
+| 10 | moons | QE | holdout | 1/9/0 | -3.6371 | -3.4648 | [-5.2819, -1.8559] | 0.0059 | 10 | -0.8 |
+| 3 | olivetti_faces | QE | holdout | 10/0/0 | 1.915 | 1.8944 | [1.55, 2.2547] | 0.002 | 10 | 1 |
+| 11 | s_curve | QE | holdout | 10/0/0 | 3.1294 | 3.2429 | [1.9458, 4.4824] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE | holdout | 10/0/0 | 5.1413 | 5.1294 | [3.9965, 6.4501] | 0.002 | 10 | 1 |
+| 2 | wine | QE | holdout | 7/3/0 | 0.1337 | -0.0378 | [-1.2204, 0.9745] | 0.8457 | 10 | 0.4 |
+| - | GLOBAL | QE | holdout | 88/52/0 | 1.7869 | 2.8626 | [0.8691, 2.7426] | 6.33e-05 | 140 | 0.2571 |
+| 8 | blobs | QE_B | both | 0/10/0 | -3.91 | -3.7703 | [-4.93, -2.7417] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | QE_B | both | 10/0/0 | 2.4588 | 2.4478 | [1.8439, 2.987] | 0.002 | 10 | 1 |
+| 7 | california_housing | QE_B | both | 10/0/0 | 3.9644 | 4.0771 | [3.6418, 4.7324] | 0.002 | 10 | 1 |
+| 9 | circles | QE_B | both | 0/10/0 | -2.0639 | -2.6605 | [-4.3931, -1.3869] | 0.002 | 10 | -1 |
+| 14 | covertype | QE_B | both | 10/0/0 | 15.3975 | 15.3352 | [13.8864, 16.8854] | 0.002 | 10 | 1 |
+| 4 | diabetes | QE_B | both | 10/0/0 | 3.1657 | 3.1796 | [2.2103, 4.1719] | 0.002 | 10 | 1 |
+| 6 | digits | QE_B | both | 10/0/0 | 3.997 | 4.0139 | [3.6762, 4.3228] | 0.002 | 10 | 1 |
+| 1 | iris | QE_B | both | 10/0/0 | 9.1407 | 9.5616 | [5.9156, 13.6397] | 0.002 | 10 | 1 |
+| 13 | kddcup99 | QE_B | both | 10/0/0 | 19.3064 | 19.5854 | [16.0187, 23.1588] | 0.002 | 10 | 1 |
+| 10 | moons | QE_B | both | 1/9/0 | -3.4326 | -3.4102 | [-5.2683, -1.7163] | 0.0059 | 10 | -0.8 |
+| 3 | olivetti_faces | QE_B | both | 10/0/0 | 4.8444 | 4.8685 | [4.365, 5.4342] | 0.002 | 10 | 1 |
+| 11 | s_curve | QE_B | both | 10/0/0 | 3.292 | 3.3299 | [1.8567, 4.777] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE_B | both | 10/0/0 | 5.2033 | 5.1138 | [4.0306, 6.4161] | 0.002 | 10 | 1 |
+| 2 | wine | QE_B | both | 10/0/0 | 7.8522 | 7.7725 | [6.9044, 8.686] | 0.002 | 10 | 1 |
+| - | GLOBAL | QE_B | both | 111/29/0 | 4.2807 | 4.9603 | [3.4978, 5.2317] | 1.35e-13 | 140 | 0.5857 |
+| 8 | blobs | train time | train | 0/10/0 | -730.1165 | -757.4247 | [-864.8227, -727.7904] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | train time | train | 0/10/0 | -1011.2684 | -1004.5725 | [-1016.3642, -976.4259] | 0.002 | 10 | -1 |
+| 7 | california_housing | train time | train | 0/10/0 | -972.0213 | -950.4554 | [-1011.7249, -888.6339] | 0.002 | 10 | -1 |
+| 9 | circles | train time | train | 0/10/0 | -728.984 | -728.8823 | [-733.0182, -724.2827] | 0.002 | 10 | -1 |
+| 14 | covertype | train time | train | 0/10/0 | -37.4988 | -37.8968 | [-42.3539, -32.87] | 0.002 | 10 | -1 |
+| 4 | diabetes | train time | train | 0/10/0 | -1010.0585 | -1043.324 | [-1183.0245, -1002.8581] | 0.002 | 10 | -1 |
+| 6 | digits | train time | train | 0/10/0 | -1004.8808 | -1005.1876 | [-1011.5931, -998.5865] | 0.002 | 10 | -1 |
+| 1 | iris | train time | train | 0/10/0 | -1037.1907 | -1036.0797 | [-1042.8531, -1029.1162] | 0.002 | 10 | -1 |
+| 13 | kddcup99 | train time | train | 0/10/0 | -36.9051 | -35.1756 | [-38.6464, -32.0512] | 0.002 | 10 | -1 |
+| 10 | moons | train time | train | 0/10/0 | -734.37 | -734.8929 | [-740.0781, -731.5506] | 0.002 | 10 | -1 |
+| 3 | olivetti_faces | train time | train | 0/10/0 | -1019.8923 | -1016.4567 | [-1030.2974, -1000.3188] | 0.002 | 10 | -1 |
+| 11 | s_curve | train time | train | 0/10/0 | -736.215 | -736.5435 | [-741.9456, -732.008] | 0.002 | 10 | -1 |
+| 12 | swiss_roll | train time | train | 1/9/0 | -726.5489 | -649.8592 | [-732.2277, -336.7629] | 0.0039 | 10 | -0.8 |
+| 2 | wine | train time | train | 0/10/0 | -1030.4764 | -1064.4839 | [-1204.4846, -1025.0949] | 0.002 | 10 | -1 |
+| - | GLOBAL | train time | train | 1/139/0 | -868.8976 | -771.5168 | [-875.2748, -760.3798] | 1.59e-24 | 140 | -0.9857 |
+
+
+**Supplementary Table S5. FloatSOM versus XPySOM calibration summary for the RNG topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties. The full machine-readable table is also provided in `assets/tables/supp_xpysom_calibration_qe_rng.tsv`.
+
+
+| idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 8 | blobs | QE | train | 0/10/0 | -2.7298 | -2.6927 | [-3.7585, -1.6597] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | QE | train | 10/0/0 | 5.4998 | 5.465 | [5.0315, 5.9377] | 0.002 | 10 | 1 |
+| 7 | california_housing | QE | train | 10/0/0 | 3.6187 | 3.641 | [3.0746, 4.2359] | 0.002 | 10 | 1 |
+| 9 | circles | QE | train | 1/9/0 | -1.7013 | -2.1091 | [-3.9805, -0.3778] | 0.0137 | 10 | -0.8 |
+| 14 | covertype | QE | train | 10/0/0 | 13.6239 | 13.5016 | [10.9438, 15.887] | 0.002 | 10 | 1 |
+| 4 | diabetes | QE | train | 10/0/0 | 6.2882 | 6.3332 | [5.2073, 7.5187] | 0.002 | 10 | 1 |
+| 6 | digits | QE | train | 10/0/0 | 4.4749 | 4.5437 | [4.073, 5.0017] | 0.002 | 10 | 1 |
+| 1 | iris | QE | train | 10/0/0 | 25.6985 | 25.9471 | [20.7469, 31.2163] | 0.002 | 10 | 1 |
+| 13 | kddcup99 | QE | train | 10/0/0 | 18.8172 | 18.2227 | [14.5027, 22.0324] | 0.002 | 10 | 1 |
+| 10 | moons | QE | train | 2/8/0 | -2.6397 | -2.3844 | [-4.0907, -0.5701] | 0.0195 | 10 | -0.6 |
+| 3 | olivetti_faces | QE | train | 10/0/0 | 6.9757 | 7.4422 | [5.9654, 9.3791] | 0.002 | 10 | 1 |
+| 11 | s_curve | QE | train | 10/0/0 | 3.0675 | 2.9986 | [1.5732, 4.5318] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE | train | 10/0/0 | 5.7819 | 5.3025 | [4.1229, 6.2356] | 0.002 | 10 | 1 |
+| 2 | wine | QE | train | 10/0/0 | 18.7804 | 18.6217 | [15.9669, 21.416] | 0.002 | 10 | 1 |
+| - | GLOBAL | QE | train | 113/27/0 | 6.1574 | 7.4881 | [5.0617, 8.1204] | 5.8e-18 | 140 | 0.6143 |
+| 8 | blobs | QE | holdout | 0/10/0 | -3.0403 | -2.9146 | [-3.8854, -1.8988] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | QE | holdout | 3/7/0 | -0.1679 | -0.0809 | [-0.6344, 0.5026] | 0.4316 | 10 | -0.4 |
+| 7 | california_housing | QE | holdout | 10/0/0 | 3.5473 | 3.4616 | [2.8161, 3.9656] | 0.002 | 10 | 1 |
+| 9 | circles | QE | holdout | 2/8/0 | -2.435 | -2.5817 | [-4.2591, -0.7108] | 0.0098 | 10 | -0.6 |
+| 14 | covertype | QE | holdout | 10/0/0 | 13.5339 | 13.4773 | [11.0872, 15.767] | 0.002 | 10 | 1 |
+| 4 | diabetes | QE | holdout | 8/2/0 | 0.993 | 0.9845 | [0.0524, 1.9348] | 0.0488 | 10 | 0.6 |
+| 6 | digits | QE | holdout | 10/0/0 | 2.6213 | 2.6133 | [2.0362, 3.1169] | 0.002 | 10 | 1 |
+| 1 | iris | QE | holdout | 3/7/0 | -1.3579 | -1.2948 | [-4.6315, 2.0699] | 0.375 | 10 | -0.4 |
+| 13 | kddcup99 | QE | holdout | 10/0/0 | 18.8346 | 18.178 | [14.6321, 21.9247] | 0.002 | 10 | 1 |
+| 10 | moons | QE | holdout | 1/9/0 | -2.9592 | -2.5631 | [-4.2128, -0.9289] | 0.0137 | 10 | -0.8 |
+| 3 | olivetti_faces | QE | holdout | 8/2/0 | 1.5548 | 1.5684 | [0.0193, 3.2179] | 0.0371 | 10 | 0.6 |
+| 11 | s_curve | QE | holdout | 10/0/0 | 2.8467 | 3.0331 | [1.8244, 4.3726] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE | holdout | 10/0/0 | 5.5918 | 5.3626 | [3.9067, 6.5351] | 0.002 | 10 | 1 |
+| 2 | wine | QE | holdout | 5/5/0 | -0.0877 | -0.2419 | [-1.2255, 0.6779] | 0.6953 | 10 | 0 |
+| - | GLOBAL | QE | holdout | 90/50/0 | 1.7513 | 2.7858 | [0.9907, 2.6251] | 1.02e-05 | 140 | 0.2857 |
+| 8 | blobs | QE_B | both | 0/10/0 | -2.8719 | -2.8032 | [-3.8029, -1.9134] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | QE_B | both | 10/0/0 | 2.4644 | 2.4959 | [2.075, 2.9683] | 0.002 | 10 | 1 |
+| 7 | california_housing | QE_B | both | 10/0/0 | 3.6308 | 3.5512 | [2.9851, 4.109] | 0.002 | 10 | 1 |
+| 9 | circles | QE_B | both | 2/8/0 | -2.1386 | -2.3461 | [-3.9949, -0.5829] | 0.0098 | 10 | -0.6 |
+| 14 | covertype | QE_B | both | 10/0/0 | 13.6109 | 13.4894 | [11.0155, 15.826] | 0.002 | 10 | 1 |
+| 4 | diabetes | QE_B | both | 10/0/0 | 3.3183 | 3.3817 | [2.369, 4.1991] | 0.002 | 10 | 1 |
+| 6 | digits | QE_B | both | 10/0/0 | 3.5551 | 3.5512 | [3.034, 3.9851] | 0.002 | 10 | 1 |
+| 1 | iris | QE_B | both | 10/0/0 | 7.914 | 8.1514 | [4.7671, 10.8707] | 0.002 | 10 | 1 |
+| 13 | kddcup99 | QE_B | both | 10/0/0 | 18.8261 | 18.1997 | [14.5584, 21.9789] | 0.002 | 10 | 1 |
+| 10 | moons | QE_B | both | 2/8/0 | -2.8707 | -2.4735 | [-4.1471, -0.7217] | 0.0195 | 10 | -0.6 |
+| 3 | olivetti_faces | QE_B | both | 10/0/0 | 4.1052 | 4.1971 | [2.6366, 5.7848] | 0.002 | 10 | 1 |
+| 11 | s_curve | QE_B | both | 10/0/0 | 2.9385 | 3.0161 | [1.6726, 4.3754] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE_B | both | 10/0/0 | 5.7209 | 5.3327 | [4.0146, 6.334] | 0.002 | 10 | 1 |
+| 2 | wine | QE_B | both | 10/0/0 | 7.1548 | 7.0442 | [5.7434, 8.3772] | 0.002 | 10 | 1 |
+| - | GLOBAL | QE_B | both | 114/26/0 | 3.9446 | 4.6277 | [3.2069, 4.8515] | 1.27e-14 | 140 | 0.6286 |
+| 8 | blobs | train time | train | 0/10/0 | -725.754 | -726.3513 | [-729.2884, -724.0566] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | train time | train | 0/10/0 | -1028.7409 | -1021.2214 | [-1033.9516, -990.4514] | 0.002 | 10 | -1 |
+| 7 | california_housing | train time | train | 0/10/0 | -959.1137 | -935.4774 | [-997.3973, -863.1072] | 0.002 | 10 | -1 |
+| 9 | circles | train time | train | 0/10/0 | -728.9236 | -729.3583 | [-734.228, -723.7248] | 0.002 | 10 | -1 |
+| 14 | covertype | train time | train | 0/10/0 | -38.0038 | -37.1495 | [-41.0157, -32.7859] | 0.002 | 10 | -1 |
+| 4 | diabetes | train time | train | 0/10/0 | -1029.3356 | -1028.7558 | [-1034.5884, -1022.6478] | 0.002 | 10 | -1 |
+| 6 | digits | train time | train | 0/10/0 | -1029.1819 | -1028.6713 | [-1034.196, -1022.846] | 0.002 | 10 | -1 |
+| 1 | iris | train time | train | 0/10/0 | -1030.5871 | -1029.7524 | [-1035.7818, -1023.3311] | 0.002 | 10 | -1 |
+| 13 | kddcup99 | train time | train | 0/10/0 | -36.6803 | -35.3473 | [-39.0245, -32.0055] | 0.002 | 10 | -1 |
+| 10 | moons | train time | train | 0/10/0 | -731.1551 | -730.6761 | [-733.0006, -727.7656] | 0.002 | 10 | -1 |
+| 3 | olivetti_faces | train time | train | 0/10/0 | -1054.7323 | -1050.5264 | [-1064.173, -1034.3248] | 0.002 | 10 | -1 |
+| 11 | s_curve | train time | train | 0/10/0 | -749.2016 | -800.7466 | [-1011.2814, -744.996] | 0.002 | 10 | -1 |
+| 12 | swiss_roll | train time | train | 1/9/0 | -741.1606 | -661.2161 | [-745.7479, -339.5738] | 0.0039 | 10 | -0.8 |
+| 2 | wine | train time | train | 0/10/0 | -1040.5015 | -1039.5076 | [-1043.8579, -1034.1717] | 0.002 | 10 | -1 |
+| - | GLOBAL | train time | train | 1/139/0 | -877.7086 | -775.3398 | [-884.2881, -753.573] | 1.59e-24 | 140 | -0.9857 |
+
+
+**Supplementary Table S6. FloatSOM versus XPySOM calibration summary for the hexagonal topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties. The full machine-readable table is also provided in `assets/tables/supp_xpysom_calibration_qe_hexagonal.tsv`.
+
+
+| idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 8 | blobs | QE | train | 7/3/0 | 0.0042 | 0.0034 | [-0.0023, 0.0089] | 0.1602 | 10 | 0.4 |
+| 5 | breast_cancer | QE | train | 1/1/8 | 1.46e-08 | 2.92e-09 | [-1.04e-05, 1.04e-05] | 1 | 10 | 0 |
+| 7 | california_housing | QE | train | 7/1/2 | 1.13e-05 | 0.0016 | [-0.0046, 0.0095] | 0.1484 | 10 | 0.75 |
+| 9 | circles | QE | train | 6/4/0 | -0.0156 | -0.0142 | [-0.0446, 0.0107] | 0.5566 | 10 | 0.2 |
+| 14 | covertype | QE | train | 3/7/0 | -0.000333 | -0.0021 | [-0.0152, 0.0059] | 0.3223 | 10 | -0.4 |
+| 4 | diabetes | QE | train | 2/2/6 | -8.76e-08 | -3.5e-08 | [-8.88e-06, 8.68e-06] | 0.625 | 10 | 0 |
+| 6 | digits | QE | train | 0/2/8 | -1.08e-05 | -2.16e-06 | [-1.08e-05, -1.08e-05] | 0.5 | 10 | -1 |
+| 1 | iris | QE | train | 3/1/6 | 7.85e-06 | 1.66e-06 | [-7.64e-06, 8.43e-06] | 0.25 | 10 | 0.5 |
+| 13 | kddcup99 | QE | train | 4/6/0 | -0.037 | -0.2112 | [-0.5893, 0.0103] | 0.1309 | 10 | -0.2 |
+| 10 | moons | QE | train | 8/2/0 | 0.0021 | 0.0114 | [-0.000313, 0.0481] | 0.084 | 10 | 0.6 |
+| 3 | olivetti_faces | QE | train | 2/4/4 | -0.6875 | -0.3985 | [-1.5487, 0.3296] | 0.2188 | 10 | -0.3333 |
+| 11 | s_curve | QE | train | 9/1/0 | 0.0024 | 0.0041 | [1.78e-05, 0.0092] | 0.0195 | 10 | 0.8 |
+| 12 | swiss_roll | QE | train | 6/4/0 | 0.0019 | 0.0019 | [-0.0046, 0.0087] | 0.625 | 10 | 0.2 |
+| 2 | wine | QE | train | 0/1/9 | -1.02e-05 | -1.02e-06 | [-1.02e-05, -1.02e-05] | 1 | 10 | -1 |
+| - | GLOBAL | QE | train | 58/39/43 | 1.51e-05 | -0.0431 | [-0.000899, 0.0016] | 0.484 | 140 | 0.1959 |
+| 8 | blobs | QE | holdout | 7/3/0 | 0.0026 | 0.0032 | [-0.001, 0.0074] | 0.2324 | 10 | 0.4 |
+| 5 | breast_cancer | QE | holdout | 1/1/8 | -2.38e-07 | -4.76e-08 | [-9.3e-06, 8.82e-06] | 1 | 10 | 0 |
+| 7 | california_housing | QE | holdout | 7/2/1 | 7.32e-06 | -0.0011 | [-0.0113, 0.0069] | 0.4961 | 10 | 0.5556 |
+| 9 | circles | QE | holdout | 6/4/0 | 0.0017 | 0.0011 | [-0.0504, 0.0522] | 0.9219 | 10 | 0.2 |
+| 14 | covertype | QE | holdout | 3/7/0 | -0.000325 | -0.0022 | [-0.0154, 0.0059] | 0.3223 | 10 | -0.4 |
+| 4 | diabetes | QE | holdout | 0/2/8 | -7.11e-06 | -1.42e-06 | [-7.17e-06, -7.05e-06] | 0.5 | 10 | -1 |
+| 6 | digits | QE | holdout | 1/1/8 | 6.39e-08 | 1.28e-08 | [-1.05e-05, 1.06e-05] | 1 | 10 | 0 |
+| 1 | iris | QE | holdout | 4/2/4 | 5.77e-06 | 3.63e-06 | [-8.4e-06, 1.94e-05] | 0.4375 | 10 | 0.3333 |
+| 13 | kddcup99 | QE | holdout | 4/6/0 | -0.0381 | -0.2277 | [-0.6099, 0.0098] | 0.1602 | 10 | -0.2 |
+| 10 | moons | QE | holdout | 6/3/1 | 0.0026 | 0.0049 | [-0.009, 0.0308] | 0.4961 | 10 | 0.3333 |
+| 3 | olivetti_faces | QE | holdout | 4/2/4 | 0.2291 | 0.1813 | [-0.3845, 1.4392] | 0.3125 | 10 | 0.3333 |
+| 11 | s_curve | QE | holdout | 10/0/0 | 0.003 | 0.0034 | [0.000108, 0.0061] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE | holdout | 6/4/0 | 0.000823 | 0.0011 | [-0.0056, 0.007] | 0.625 | 10 | 0.2 |
+| 2 | wine | QE | holdout | 4/1/5 | 6.17e-06 | 2.54e-06 | [-1.18e-05, 1.31e-05] | 0.4375 | 10 | 0.6 |
+| - | GLOBAL | QE | holdout | 63/38/39 | 0.000105 | -0.0026 | [-0.000154, 0.0021] | 0.1633 | 140 | 0.2475 |
+| 8 | blobs | QE_B | both | 8/2/0 | 0.0025 | 0.0033 | [0.000283, 0.0064] | 0.0488 | 10 | 0.6 |
+| 5 | breast_cancer | QE_B | both | 2/2/6 | -1.11e-08 | -4.43e-09 | [-4.92e-06, 4.92e-06] | 1 | 10 | 0 |
+| 7 | california_housing | QE_B | both | 9/1/0 | 7.42e-06 | 0.000257 | [-0.0069, 0.0082] | 0.0645 | 10 | 0.8 |
+| 9 | circles | QE_B | both | 6/4/0 | -0.0012 | -0.0065 | [-0.0372, 0.0231] | 0.9219 | 10 | 0.2 |
+| 14 | covertype | QE_B | both | 3/7/0 | -0.000329 | -0.0022 | [-0.0153, 0.0059] | 0.3223 | 10 | -0.4 |
+| 4 | diabetes | QE_B | both | 1/3/6 | -3.92e-06 | -7.82e-07 | [-3.93e-06, 3.95e-06] | 0.875 | 10 | -0.5 |
+| 6 | digits | QE_B | both | 1/2/7 | -3.98e-06 | -1.06e-06 | [-1.06e-05, 5.35e-06] | 0.75 | 10 | -0.3333 |
+| 1 | iris | QE_B | both | 4/2/4 | 4.93e-06 | 2.86e-06 | [-7.76e-06, 1.4e-05] | 0.2188 | 10 | 0.3333 |
+| 13 | kddcup99 | QE_B | both | 4/6/0 | -0.0376 | -0.2194 | [-0.5996, 0.0099] | 0.1602 | 10 | -0.2 |
+| 10 | moons | QE_B | both | 7/3/0 | 0.0018 | 0.0081 | [-0.003, 0.0377] | 0.2754 | 10 | 0.4 |
+| 3 | olivetti_faces | QE_B | both | 4/3/3 | -0.0802 | -0.0794 | [-0.789, 0.4756] | 0.9375 | 10 | 0.1429 |
+| 11 | s_curve | QE_B | both | 10/0/0 | 0.0037 | 0.0038 | [8.5e-05, 0.0073] | 0.002 | 10 | 1 |
+| 12 | swiss_roll | QE_B | both | 6/4/0 | 0.000814 | 0.0015 | [-0.0051, 0.0079] | 0.6953 | 10 | 0.2 |
+| 2 | wine | QE_B | both | 4/2/4 | 2.01e-06 | 1.15e-06 | [-7.44e-06, 7.84e-06] | 0.6875 | 10 | 0.3333 |
+| - | GLOBAL | QE_B | both | 69/41/30 | 1.58e-05 | -0.0208 | [-3.92e-06, 0.0011] | 0.0923 | 140 | 0.2545 |
+| 8 | blobs | train time | train | 0/10/0 | -82.1972 | -82.2698 | [-82.616, -81.8815] | 0.002 | 10 | -1 |
+| 5 | breast_cancer | train time | train | 0/10/0 | -124.4887 | -123.0875 | [-125.5044, -117.1834] | 0.002 | 10 | -1 |
+| 7 | california_housing | train time | train | 0/10/0 | -112.7705 | -107.7269 | [-120.1093, -94.1388] | 0.002 | 10 | -1 |
+| 9 | circles | train time | train | 0/10/0 | -82.011 | -82.0468 | [-82.6543, -81.5143] | 0.002 | 10 | -1 |
+| 14 | covertype | train time | train | 8/2/0 | 4.5544 | 3.1364 | [-0.2416, 4.7034] | 0.1055 | 10 | 0.6 |
+| 4 | diabetes | train time | train | 0/10/0 | -124.7165 | -130.8947 | [-156.4431, -123.3642] | 0.002 | 10 | -1 |
+| 6 | digits | train time | train | 0/10/0 | -124.2555 | -124.4075 | [-126.3659, -122.7873] | 0.002 | 10 | -1 |
+| 1 | iris | train time | train | 0/10/0 | -126.2679 | -127.1989 | [-132.6232, -124.6813] | 0.002 | 10 | -1 |
+| 13 | kddcup99 | train time | train | 10/0/0 | 12.295 | 12.5548 | [8.0787, 15.7426] | 0.002 | 10 | 1 |
+| 10 | moons | train time | train | 0/10/0 | -82.0957 | -88.2408 | [-112.9703, -81.6979] | 0.002 | 10 | -1 |
+| 3 | olivetti_faces | train time | train | 0/10/0 | -200.8962 | -199.5774 | [-203.2204, -194.7869] | 0.002 | 10 | -1 |
+| 11 | s_curve | train time | train | 0/10/0 | -83.1004 | -83.8438 | [-87.0546, -82.4761] | 0.002 | 10 | -1 |
+| 12 | swiss_roll | train time | train | 1/9/0 | -81.642 | -65.9893 | [-82.6048, -3.0855] | 0.0039 | 10 | -0.8 |
+| 2 | wine | train time | train | 0/10/0 | -126.5213 | -126.5147 | [-127.7591, -125.2633] | 0.002 | 10 | -1 |
+| - | GLOBAL | train time | train | 19/121/0 | -102.7688 | -94.7219 | [-103.9162, -95.6444] | 1.02e-22 | 140 | -0.7286 |
+
 
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:START -->
-**Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. See `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
+**Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
+
+
+| metric | dataset | MST | RNG |
+| --- | --- | --- | --- |
+| Balanced QE | blobs | p=0.0163 | p=0.00134 |
+| Balanced QE | circles | p=0.868 | p=0.027 |
+| Balanced QE | moons | p=0.494 | p=0.0132 |
+| Balanced QE | s_curve | p=0.000559 | p=8.08e-05 |
+| Balanced QE | swiss_roll | p=0.247 | p=0.0661 |
+| Balanced QE | breast_cancer | p=0.208 | p=0.364 |
+| Balanced QE | wine | p=0.000686 | p=0.000229 |
+| Balanced QE | iris | p=0.58 | p=0.000924 |
+| Balanced QE | digits | p=0.165 | p=0.266 |
+| Balanced QE | olivetti_faces | p=0.0663 | p=0.0549 |
+| Balanced QE | diabetes | p=0.633 | p=0.267 |
+| Balanced QE | california_housing | p=0.000356 | p=5.65e-05 |
+| Balanced QE | covertype | p=0.477 | p=0.748 |
+| Balanced QE | kddcup99 | p=3.14e-08 | p=2.81e-05 |
+| Balanced QE | OVERALL | p=1.12e-05 | p=7.4e-10 |
+| Holdout QE | blobs | p=0.401 | p=0.0358 |
+| Holdout QE | circles | p=0.105 | p=0.828 |
+| Holdout QE | moons | p=0.216 | p=0.00122 |
+| Holdout QE | s_curve | p=0.00226 | p=0.000724 |
+| Holdout QE | swiss_roll | p=0.0913 | p=0.0221 |
+| Holdout QE | breast_cancer | p=0.0068 | p=0.0925 |
+| Holdout QE | wine | p=0.000275 | p=0.00244 |
+| Holdout QE | iris | p=0.0125 | p=0.0444 |
+| Holdout QE | digits | p=0.0609 | p=0.232 |
+| Holdout QE | olivetti_faces | p=3.93e-05 | p=9.96e-06 |
+| Holdout QE | diabetes | p=0.984 | p=0.351 |
+| Holdout QE | california_housing | p=0.00344 | p=0.0154 |
+| Holdout QE | covertype | p=0.472 | p=0.804 |
+| Holdout QE | kddcup99 | p=4.8e-08 | p=1.58e-05 |
+| Holdout QE | OVERALL | p=0.15 | p=0.0232 |
+| Train QE | blobs | p=0.0162 | p=0.00083 |
+| Train QE | circles | p=0.119 | p=0.000309 |
+| Train QE | moons | p=0.445 | p=0.0117 |
+| Train QE | s_curve | p=0.000219 | p=0.000132 |
+| Train QE | swiss_roll | p=0.362 | p=0.0774 |
+| Train QE | breast_cancer | p=0.17 | p=0.653 |
+| Train QE | wine | p=0.000156 | p=0.00114 |
+| Train QE | iris | p=0.565 | p=0.000872 |
+| Train QE | digits | p=0.234 | p=0.0623 |
+| Train QE | olivetti_faces | p=0.211 | p=0.191 |
+| Train QE | diabetes | p=0.75 | p=0.24 |
+| Train QE | california_housing | p=0.00137 | p=0.00144 |
+| Train QE | covertype | p=0.478 | p=0.691 |
+| Train QE | kddcup99 | p=1.09e-08 | p=7.18e-05 |
+| Train QE | OVERALL | p=0.0064 | p=4.69e-06 |
+
+
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END -->
 
-**Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. See `assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv`.
 
-**Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. See `assets/tables/supp_table_s13_xpysom_hexagonal_deployment_summary.tsv`.
+**Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv`.
 
-**Supplementary Table S10. Supplementary Figure S13 deployment comparison percent summary for tuned FloatSOM MST versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. See `assets/tables/supp_table_s14_xpysom_mst_deployment_summary.tsv`.
 
-**Supplementary Table S11. Figure 12 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.** Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread. See `assets/tables/supp_table_figure_12_topology_runtime_summary.tsv`.
+| metric | dataset | median % change | 95% CI |
+| --- | --- | --- | --- |
+| QE_B | blobs | 5.4588 | [3.8282, 7.0895] |
+| QE_B | circles | 5.6542 | [4.552, 6.7563] |
+| QE_B | moons | 4.4217 | [2.6294, 6.2141] |
+| QE_B | s_curve | 10.0599 | [9.2501, 10.8696] |
+| QE_B | swiss_roll | 19.7271 | [18.4881, 20.9661] |
+| QE_B | breast_cancer | 7.2273 | [6.3913, 8.0633] |
+| QE_B | wine | 20.5163 | [19.3744, 21.6583] |
+| QE_B | iris | 23.2197 | [20.569, 25.8704] |
+| QE_B | digits | 8.3021 | [7.8283, 8.7758] |
+| QE_B | olivetti_faces | 10.9797 | [10.0517, 11.9077] |
+| QE_B | diabetes | 9.2085 | [8.1874, 10.2296] |
+| QE_B | california_housing | 9.4344 | [9.0497, 9.8191] |
+| QE_B | covertype | 30.3468 | [29.1115, 31.5821] |
+| QE_B | kddcup99 | 38.2338 | [35.8971, 40.5705] |
+| QE_B | GLOBAL_OVERALL | 14.485 | [12.7836, 16.1865] |
+| QE_H | blobs | 4.8943 | [3.3372, 6.4515] |
+| QE_H | circles | 4.98 | [3.8583, 6.1016] |
+| QE_H | moons | 3.8767 | [1.9564, 5.797] |
+| QE_H | s_curve | 9.4896 | [8.5416, 10.4377] |
+| QE_H | swiss_roll | 19.2924 | [17.9583, 20.6264] |
+| QE_H | breast_cancer | 0.1143 | [-0.6627, 0.8913] |
+| QE_H | wine | -1.8427 | [-3.2635, -0.4218] |
+| QE_H | iris | 0.4853 | [-2.8955, 3.8661] |
+| QE_H | digits | 4.9934 | [4.5072, 5.4796] |
+| QE_H | olivetti_faces | 2.6384 | [1.2928, 3.9839] |
+| QE_H | diabetes | 1.3763 | [-0.3528, 3.1055] |
+| QE_H | california_housing | 8.5235 | [8.0055, 9.0414] |
+| QE_H | covertype | 30.3196 | [29.0984, 31.5408] |
+| QE_H | kddcup99 | 37.9291 | [35.5645, 40.2937] |
+| QE_H | GLOBAL_OVERALL | 9.0765 | [7.1203, 11.0326] |
+| QE_T | blobs | 6.0226 | [4.2924, 7.7527] |
+| QE_T | circles | 6.3297 | [5.1892, 7.4702] |
+| QE_T | moons | 4.968 | [3.2744, 6.6616] |
+| QE_T | s_curve | 10.6309 | [9.9339, 11.3279] |
+| QE_T | swiss_roll | 20.1631 | [18.9915, 21.3347] |
+| QE_T | breast_cancer | 15.8475 | [14.5024, 17.1926] |
+| QE_T | wine | 56.1875 | [54.54, 57.8351] |
+| QE_T | iris | 63.2439 | [60.2553, 66.2326] |
+| QE_T | digits | 11.8094 | [11.1554, 12.4634] |
+| QE_T | olivetti_faces | 21.029 | [19.7281, 22.3298] |
+| QE_T | diabetes | 18.9602 | [18.1282, 19.7921] |
+| QE_T | california_housing | 10.3513 | [9.7384, 10.9642] |
+| QE_T | covertype | 30.3738 | [29.1225, 31.6251] |
+| QE_T | kddcup99 | 38.5352 | [36.2102, 40.8602] |
+| QE_T | GLOBAL_OVERALL | 22.4609 | [19.4613, 25.4605] |
+
+
+**Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_s13_xpysom_hexagonal_deployment_summary.tsv`.
+
+
+| metric | dataset | median % change | 95% CI |
+| --- | --- | --- | --- |
+| QE_B | blobs | 4.5418 | [3.0375, 6.0462] |
+| QE_B | circles | 4.5998 | [3.6022, 5.5974] |
+| QE_B | moons | 3.5895 | [2.051, 5.128] |
+| QE_B | s_curve | 9.7727 | [9.0814, 10.464] |
+| QE_B | swiss_roll | 17.6702 | [16.7526, 18.5878] |
+| QE_B | breast_cancer | 6.399 | [5.5895, 7.2084] |
+| QE_B | wine | 15.0518 | [13.113, 16.9905] |
+| QE_B | iris | 19.6158 | [17.7567, 21.475] |
+| QE_B | digits | 7.7568 | [7.3648, 8.1489] |
+| QE_B | olivetti_faces | 10.367 | [9.5746, 11.1594] |
+| QE_B | diabetes | 9.133 | [8.2954, 9.9707] |
+| QE_B | california_housing | 8.9193 | [8.4319, 9.4067] |
+| QE_B | covertype | 29.6621 | [28.3242, 31] |
+| QE_B | kddcup99 | 35.5053 | [34.0328, 36.9779] |
+| QE_B | GLOBAL_OVERALL | 13.0417 | [11.4631, 14.6204] |
+| QE_H | blobs | 3.8869 | [2.4806, 5.2931] |
+| QE_H | circles | 4.1388 | [3.1274, 5.1503] |
+| QE_H | moons | 2.9919 | [1.3076, 4.6761] |
+| QE_H | s_curve | 9.2419 | [8.4744, 10.0095] |
+| QE_H | swiss_roll | 17.3207 | [16.3909, 18.2504] |
+| QE_H | breast_cancer | -0.997 | [-1.683, -0.311] |
+| QE_H | wine | -2.8868 | [-4.4124, -1.3613] |
+| QE_H | iris | -0.4904 | [-2.1865, 1.2058] |
+| QE_H | digits | 4.5103 | [4.0172, 5.0034] |
+| QE_H | olivetti_faces | 1.9861 | [0.769, 3.2032] |
+| QE_H | diabetes | 2.245 | [1.1198, 3.3702] |
+| QE_H | california_housing | 8.0301 | [7.4144, 8.6458] |
+| QE_H | covertype | 29.6665 | [28.3026, 31.0305] |
+| QE_H | kddcup99 | 35.1253 | [33.6747, 36.5759] |
+| QE_H | GLOBAL_OVERALL | 8.1978 | [6.3289, 10.0667] |
+| QE_T | blobs | 5.1961 | [3.5689, 6.8233] |
+| QE_T | circles | 5.0606 | [4.0085, 6.1127] |
+| QE_T | moons | 4.1898 | [2.7833, 5.5963] |
+| QE_T | s_curve | 10.3044 | [9.6672, 10.9416] |
+| QE_T | swiss_roll | 18.021 | [17.101, 18.9411] |
+| QE_T | breast_cancer | 15.3534 | [14.1184, 16.5884] |
+| QE_T | wine | 43.6818 | [39.113, 48.2507] |
+| QE_T | iris | 55.1557 | [50.9804, 59.331] |
+| QE_T | digits | 11.2012 | [10.7183, 11.6841] |
+| QE_T | olivetti_faces | 20.4609 | [19.2364, 21.6853] |
+| QE_T | diabetes | 17.7191 | [16.8369, 18.6013] |
+| QE_T | california_housing | 9.8167 | [9.2321, 10.4012] |
+| QE_T | covertype | 29.6576 | [28.3443, 30.9708] |
+| QE_T | kddcup99 | 35.8819 | [34.3431, 37.4206] |
+| QE_T | GLOBAL_OVERALL | 20.1214 | [17.5722, 22.6707] |
+
+
+**Supplementary Table S10. Supplementary Figure S13 deployment comparison percent summary for tuned FloatSOM MST versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_s14_xpysom_mst_deployment_summary.tsv`.
+
+
+| metric | dataset | median % change | 95% CI |
+| --- | --- | --- | --- |
+| QE_B | blobs | 5.2243 | [3.6173, 6.8314] |
+| QE_B | circles | 5.5236 | [4.4413, 6.6059] |
+| QE_B | moons | 4.2266 | [2.4056, 6.0477] |
+| QE_B | s_curve | 9.968 | [9.2244, 10.7116] |
+| QE_B | swiss_roll | 19.5015 | [18.1673, 20.8356] |
+| QE_B | breast_cancer | 7.2275 | [6.4917, 7.9633] |
+| QE_B | wine | 18.0952 | [16.4439, 19.7464] |
+| QE_B | iris | 17.3842 | [13.8051, 20.9634] |
+| QE_B | digits | 8.5168 | [7.9287, 9.105] |
+| QE_B | olivetti_faces | 11.9472 | [10.795, 13.0994] |
+| QE_B | diabetes | 9.2961 | [8.2097, 10.3825] |
+| QE_B | california_housing | 9.474 | [9.0518, 9.8963] |
+| QE_B | covertype | 32.2987 | [30.9976, 33.5997] |
+| QE_B | kddcup99 | 40.8705 | [39.5821, 42.159] |
+| QE_B | GLOBAL_OVERALL | 14.2539 | [12.4871, 16.0207] |
+| QE_H | blobs | 4.5705 | [3.0306, 6.1104] |
+| QE_H | circles | 4.8064 | [3.6639, 5.9489] |
+| QE_H | moons | 3.768 | [1.7919, 5.744] |
+| QE_H | s_curve | 9.4507 | [8.6251, 10.2763] |
+| QE_H | swiss_roll | 19.0489 | [17.593, 20.5048] |
+| QE_H | breast_cancer | -0.7772 | [-1.3919, -0.1624] |
+| QE_H | wine | -2.2046 | [-3.9272, -0.4821] |
+| QE_H | iris | -0.872 | [-3.7238, 1.9798] |
+| QE_H | digits | 5.2512 | [4.6436, 5.8587] |
+| QE_H | olivetti_faces | 2.5542 | [0.9211, 4.1873] |
+| QE_H | diabetes | 1.059 | [-0.5135, 2.6316] |
+| QE_H | california_housing | 8.4673 | [7.9248, 9.0099] |
+| QE_H | covertype | 32.2708 | [30.9787, 33.5629] |
+| QE_H | kddcup99 | 40.3684 | [39.0453, 41.6915] |
+| QE_H | GLOBAL_OVERALL | 9.1258 | [7.0316, 11.2201] |
+| QE_T | blobs | 5.8778 | [4.178, 7.5776] |
+| QE_T | circles | 6.2415 | [5.1655, 7.3175] |
+| QE_T | moons | 4.6869 | [3.0023, 6.3715] |
+| QE_T | s_curve | 10.486 | [9.7854, 11.1866] |
+| QE_T | swiss_roll | 19.9554 | [18.7303, 21.1804] |
+| QE_T | breast_cancer | 16.9227 | [15.7815, 18.0639] |
+| QE_T | wine | 50.5129 | [47.2136, 53.8122] |
+| QE_T | iris | 49.5872 | [43.4267, 55.7476] |
+| QE_T | digits | 11.9794 | [11.277, 12.6817] |
+| QE_T | olivetti_faces | 23.2531 | [21.9339, 24.5724] |
+| QE_T | diabetes | 19.5575 | [18.2819, 20.8331] |
+| QE_T | california_housing | 10.4893 | [9.9385, 11.04] |
+| QE_T | covertype | 32.3264 | [31.0143, 33.6385] |
+| QE_T | kddcup99 | 41.3715 | [40.0794, 42.6636] |
+| QE_T | GLOBAL_OVERALL | 21.6605 | [19.0539, 24.2672] |
+
+
+**Supplementary Table S11. Figure 12 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.** Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread. The embedded table is reproduced from `assets/tables/supp_table_figure_12_topology_runtime_summary.tsv`.
+
+
+| axis | axis value | hexagonal s | MST s | RNG s | fastest | slowest | spread % |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Dimension Scaling | 5000 | 404.17 | 423.15 | 409.94 | hexagonal | mst | 4.7 |
+| Sample Scaling | 1e+09 | 363.58 | 375.44 | 369.41 | hexagonal | mst | 3.26 |
+| Grid-Size Scaling | 64 | 32.54 | 266.45 | 880.83 | hexagonal | rng | 2606.61 |
 
 ## 12. Supplementary Figures (End Matter)
 
