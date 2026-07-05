@@ -165,7 +165,7 @@ def _publication_forest_legend_item_specs(*, alpha: float) -> List[Tuple[str, Di
                 "markerfacecolor": SAMPLING_SIGNIFICANT_COLOR,
                 "markeredgecolor": SAMPLING_SIGNIFICANT_COLOR,
                 "markersize": 11,
-                "label": f"Significant (p < {alpha:.2g})",
+                "label": f"Significant (q < {alpha:.2g})",
             },
         ),
         (
@@ -176,7 +176,7 @@ def _publication_forest_legend_item_specs(*, alpha: float) -> List[Tuple[str, Di
                 "markerfacecolor": SAMPLING_NON_SIGNIFICANT_COLOR,
                 "markeredgecolor": SAMPLING_NON_SIGNIFICANT_COLOR,
                 "markersize": 11,
-                "label": f"Non-Significant (p > {alpha:.2g})",
+                "label": f"Non-Significant (q >= {alpha:.2g})",
             },
         ),
         (
