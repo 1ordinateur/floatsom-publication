@@ -18,7 +18,7 @@ module use /g/data/dk92/apps/Modules/modulefiles/
 NCI_AI_ML_MODULE="${NCI_AI_ML_MODULE:-NCI-ai-ml/24.11}"
 module load "$NCI_AI_ML_MODULE"
 
-cd /g/data/eu59/SIFEAN/sfa/
+cd /g/data/eu59/piblo_project/floatsom-publication/
 
 export MPLCONFIGDIR="${PBS_JOBFS}/matplotlib"
 mkdir -p "$MPLCONFIGDIR"
@@ -26,7 +26,7 @@ unset PYTHONNOUSERSITE
 unset PYTHONPATH
 
 RUN_TAG="${PBS_JOBID:-manual}"
-OUTPUT_DIR="/g/data/eu59/SIFEAN/sfa/awesom_100m_hex_baseline_${RUN_TAG}"
+OUTPUT_DIR="/g/data/eu59/piblo_project/floatsom-publication/awesom_100m_hex_baseline_${RUN_TAG}"
 mkdir -p "$OUTPUT_DIR"
 
 python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
