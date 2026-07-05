@@ -7,7 +7,7 @@
 #PBS -l ngpus=1
 #PBS -l walltime=24:00:00
 #PBS -l storage=gdata/eu59+gdata/dk92+scratch/eu59
-#PBS -l jobfs=10GB
+#PBS -l jobfs=50GB
 #PBS -l wd
 #PBS -M tony.xu@anu.edu.au
 #PBS -m abe
@@ -25,9 +25,13 @@ mkdir -p "$MPLCONFIGDIR"
 unset PYTHONNOUSERSITE
 unset PYTHONPATH
 
-RUN_TAG="${PBS_JOBID:-manual}"
+RUN_TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+RUN_TAG="${RUN_TIMESTAMP}_${PBS_JOBID:-manual}"
 OUTPUT_DIR="/g/data/eu59/piblo_project/floatsom-publication/awesom_100m_hex_baseline_${RUN_TAG}"
 mkdir -p "$OUTPUT_DIR"
+
+echo "Started aweSOM 100M hex baseline at ${RUN_TIMESTAMP}"
+echo "Output directory: ${OUTPUT_DIR}"
 
 python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
   --output-dir "$OUTPUT_DIR" \
@@ -36,3 +40,5 @@ python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
   --grid-size 32 \
   --timeout-minutes 30 \
   --numba-threads "${PBS_NCPUS:-12}"
+
+echo "Finished aweSOM 100M hex baseline at $(date -u +%Y%m%dT%H%M%SZ)"
