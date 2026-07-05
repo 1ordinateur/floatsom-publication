@@ -5,6 +5,7 @@ import base64
 import html
 import json
 import shutil
+import sys
 from collections import OrderedDict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -115,6 +116,7 @@ def _sync_sampling_comparison_assets_to_paper(
 
     copied_figures: Dict[str, str] = {}
     copied_tables: List[str] = []
+    missing_publication_figure_sources: List[Dict[str, str]] = []
     sampling_comparison_scope = "all_sampling_modes"
     required_publication_figure_sources: Dict[str, str] = {
         "figure_3_algorithm_sampling_stratified_full_random_only_all_metrics.svg": "fig_4.svg",
@@ -150,20 +152,40 @@ def _sync_sampling_comparison_assets_to_paper(
     elif (publication_figures_path / "figure_3_algorithm_sampling_stratified_full_hdsssom_only_all_metrics.svg").exists():
         sampling_comparison_scope = "full_hdsssom_only"
     if publication_figures_path.exists():
-        missing_required_sources = [
-            f"{src_name} -> {dst_name}"
-            for src_name, dst_name in required_publication_figure_sources.items()
-            if not (publication_figures_path / src_name).exists()
-        ]
+        missing_required_sources = []
+        for src_name, dst_name in required_publication_figure_sources.items():
+            if (publication_figures_path / src_name).exists():
+                continue
+            missing_required_sources.append(f"{src_name} -> {dst_name}")
+            missing_publication_figure_sources.append(
+                {
+                    "source": src_name,
+                    "destination": dst_name,
+                    "required": True,
+                    "reason": f"Source figure not found in {publication_figures_path}",
+                }
+            )
         if missing_required_sources:
-            raise RuntimeError(
+            print(
                 "Sampling publication sync is missing required manuscript figure source(s): "
                 + ", ".join(missing_required_sources)
                 + f". Expected these in {publication_figures_path}."
+                + " Continuing with best-effort asset sync.",
+                file=sys.stderr,
             )
         for src_name, dst_names in publication_figure_name_map.items():
             src_path = publication_figures_path / src_name
             if not src_path.exists():
+                if src_name not in required_publication_figure_sources:
+                    missing_publication_figure_sources.extend(
+                        {
+                            "source": src_name,
+                            "destination": dst_name,
+                            "required": False,
+                            "reason": f"Source figure not found in {publication_figures_path}",
+                        }
+                        for dst_name in dst_names
+                    )
                 continue
             for dst_name in dst_names:
                 dst_path = dst_figures_dir / dst_name
@@ -197,6 +219,7 @@ def _sync_sampling_comparison_assets_to_paper(
         "sampling_comparison_scope": sampling_comparison_scope,
         "figures": copied_figures,
         "tables": copied_tables,
+        "missing_publication_figure_sources": missing_publication_figure_sources,
     }
 
 def _sync_sampling_regression_stats_to_manuscript(

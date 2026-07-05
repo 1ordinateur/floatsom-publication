@@ -161,8 +161,52 @@ if grep -R "Significant (p <\|Non-Significant (p >\|p &lt; 0.05\|p &gt; 0.05" \
 fi
 
 echo "Generated run manifest:"
-if [ -f "$PUBLICATION_ROOT/$RUN_TAG/manifest.json" ]; then
-  echo "$PUBLICATION_ROOT/$RUN_TAG/manifest.json"
+MANIFEST_PATH="$PUBLICATION_ROOT/$RUN_TAG/manifest.json"
+if [ -f "$MANIFEST_PATH" ]; then
+  echo "$MANIFEST_PATH"
 fi
+
+echo "Publication figure sync summary:"
+"$PYTHON_BIN" - "$MANIFEST_PATH" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+manifest_path = Path(sys.argv[1])
+
+def emit_warning(line: str) -> None:
+    print(line)
+    print(line, file=sys.stderr)
+
+if not manifest_path.exists():
+    emit_warning(f"WARNING: publication figure manifest was not created: {manifest_path}")
+    raise SystemExit(0)
+
+payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+diagnostics = payload.get("diagnostics", {})
+missing = []
+if isinstance(diagnostics, dict):
+    for diagnostic_name, diagnostic_payload in diagnostics.items():
+        if not isinstance(diagnostic_payload, dict):
+            continue
+        for item in diagnostic_payload.get("missing_publication_figure_sources", []) or []:
+            if isinstance(item, dict):
+                missing.append((diagnostic_name, item))
+
+if not missing:
+    print("No missing publication figure sync sources were reported.")
+    raise SystemExit(0)
+
+emit_warning("WARNING: publication figure sync completed with missing source figure(s):")
+for diagnostic_name, item in missing:
+    source = item.get("source", "<unknown source>")
+    destination = item.get("destination", "<unknown destination>")
+    reason = item.get("reason", "No reason recorded.")
+    required = item.get("required", False)
+    emit_warning(
+        f"  - {diagnostic_name}: {source} -> {destination} "
+        f"(required={required}; {reason})"
+    )
+PY
 
 echo "Job finished: $(date)"
