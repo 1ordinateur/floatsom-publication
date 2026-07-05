@@ -3,9 +3,10 @@
 SOM evaluation metrics for FloatSOM benchmarks.
 """
 
+from collections import deque
 import numpy as np
 import cupy as cp
-from typing import Union, Tuple, Optional
+from typing import Any, Dict, List, Union, Tuple, Optional
 
 try:
     from scipy.spatial import cKDTree
@@ -68,6 +69,304 @@ def _flatten_som_weights(weights: Union[np.ndarray, cp.ndarray]) -> Tuple[Union[
 
     n_neurons = int(np.prod(weights.shape[:-1]))
     return weights.reshape(n_neurons, -1), n_neurons
+
+
+def calculate_bmu1_bmu2(
+    data: Union[np.ndarray, cp.ndarray],
+    weights: Union[np.ndarray, cp.ndarray],
+    *,
+    use_gpu: bool = True,
+    batch_size: int = 50_000,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Compute first and second best matching units for each sample.
+
+    Distances are squared Euclidean distances; this is rank-equivalent to the
+    Euclidean distance used by quantization error and avoids an unnecessary
+    square-root pass.
+    """
+    weights_flat, total_nodes = _flatten_som_weights(weights)
+    if total_nodes < 2:
+        raise ValueError("At least two SOM nodes are required to compute first and second BMUs.")
+
+    n_samples = int(data.shape[0])
+    if n_samples <= 0:
+        return np.asarray([], dtype=np.int64), np.asarray([], dtype=np.int64)
+
+    effective_batch_size = max(1, int(batch_size))
+    use_cupy = bool(use_gpu)
+    bmu1_chunks: List[np.ndarray] = []
+    bmu2_chunks: List[np.ndarray] = []
+
+    if use_cupy:
+        weights_xp = cp.asarray(weights_flat, dtype=cp.float32)
+        weights_sqnorms = cp.einsum("ij,ij->i", weights_xp, weights_xp)
+    else:
+        weights_xp = np.asarray(
+            cp.asnumpy(weights_flat) if isinstance(weights_flat, cp.ndarray) else weights_flat,
+            dtype=np.float32,
+        )
+        weights_sqnorms = np.einsum("ij,ij->i", weights_xp, weights_xp)
+
+    xp = cp if use_cupy else np
+    for start in range(0, n_samples, effective_batch_size):
+        stop = min(start + effective_batch_size, n_samples)
+        batch = data[start:stop]
+        if use_cupy:
+            batch_xp = cp.asarray(batch, dtype=cp.float32)
+        else:
+            batch_xp = np.asarray(
+                cp.asnumpy(batch) if isinstance(batch, cp.ndarray) else batch,
+                dtype=np.float32,
+            )
+
+        batch_sqnorms = xp.einsum("ij,ij->i", batch_xp, batch_xp)
+        cross_term = xp.einsum("ik,jk->ij", batch_xp, weights_xp)
+        squared_distances = batch_sqnorms[:, xp.newaxis] + weights_sqnorms[xp.newaxis, :] - 2 * cross_term
+
+        top2 = xp.argpartition(squared_distances, kth=1, axis=1)[:, :2]
+        rows = xp.arange(int(top2.shape[0]))[:, xp.newaxis]
+        top2_distances = squared_distances[rows, top2]
+        order = xp.argsort(top2_distances, axis=1)
+        top2_sorted = xp.take_along_axis(top2, order, axis=1)
+
+        if use_cupy:
+            top2_sorted_np = cp.asnumpy(top2_sorted)
+        else:
+            top2_sorted_np = np.asarray(top2_sorted)
+        bmu1_chunks.append(top2_sorted_np[:, 0].astype(np.int64, copy=False))
+        bmu2_chunks.append(top2_sorted_np[:, 1].astype(np.int64, copy=False))
+
+    return np.concatenate(bmu1_chunks), np.concatenate(bmu2_chunks)
+
+
+def build_hexagonal_adjacency_list(grid_size: int) -> Dict[int, List[int]]:
+    """Build planar offset-row six-neighbor adjacency for a square hexagonal map."""
+    size = _to_positive_int(grid_size)
+    if size is None:
+        raise ValueError(f"Invalid hexagonal grid_size: {grid_size!r}")
+
+    offset_parity = (size - 1) % 2
+    adjacency: Dict[int, List[int]] = {node_idx: [] for node_idx in range(size * size)}
+
+    def node(row: int, col: int) -> int:
+        return int(row * size + col)
+
+    for row in range(size):
+        for col in range(size):
+            neighbors: List[Tuple[int, int]] = [(row, col - 1), (row, col + 1)]
+            if row % 2 == offset_parity:
+                diagonal_cols = (col, col + 1)
+            else:
+                diagonal_cols = (col - 1, col)
+            for adj_row in (row - 1, row + 1):
+                for adj_col in diagonal_cols:
+                    neighbors.append((adj_row, adj_col))
+
+            current = node(row, col)
+            for adj_row, adj_col in neighbors:
+                if 0 <= adj_row < size and 0 <= adj_col < size:
+                    adjacency[current].append(node(adj_row, adj_col))
+
+    return adjacency
+
+
+def _adjacency_list_to_distance_matrix(
+    adjacency_list: Any,
+    total_nodes: int,
+) -> np.ndarray:
+    """Build all-pairs unweighted shortest-path distances from an adjacency list."""
+    adjacency: List[List[int]] = [[] for _ in range(total_nodes)]
+    if isinstance(adjacency_list, dict):
+        items = adjacency_list.items()
+    else:
+        items = enumerate(adjacency_list)
+
+    for raw_node, raw_neighbors in items:
+        try:
+            node = int(raw_node)
+        except (TypeError, ValueError):
+            continue
+        if node < 0 or node >= total_nodes or raw_neighbors is None:
+            continue
+        if hasattr(raw_neighbors, "tolist"):
+            raw_neighbors = raw_neighbors.tolist()
+        for raw_neighbor in raw_neighbors:
+            try:
+                neighbor = int(raw_neighbor)
+            except (TypeError, ValueError):
+                continue
+            if 0 <= neighbor < total_nodes and neighbor != node:
+                adjacency[node].append(neighbor)
+                adjacency[neighbor].append(node)
+
+    distances = np.full((total_nodes, total_nodes), np.inf, dtype=np.float32)
+    for source in range(total_nodes):
+        distances[source, source] = 0.0
+        queue = deque([source])
+        while queue:
+            node = queue.popleft()
+            next_distance = distances[source, node] + 1.0
+            for neighbor in adjacency[node]:
+                if not np.isfinite(distances[source, neighbor]):
+                    distances[source, neighbor] = next_distance
+                    queue.append(neighbor)
+
+    if not np.isfinite(distances).all():
+        raise ValueError("SOM topology graph is disconnected; mean tied rank requires finite graph distances.")
+    return distances
+
+
+def _as_numpy_array(value: Any) -> np.ndarray:
+    if isinstance(value, cp.ndarray):
+        return cp.asnumpy(value)
+    return np.asarray(value)
+
+
+def _extract_topology_type(som_wrapper) -> str:
+    topology_type = getattr(som_wrapper, "topology_type", None)
+    if isinstance(topology_type, str) and topology_type.strip():
+        return topology_type.strip().lower()
+
+    topology = getattr(som_wrapper, "topology", None)
+    for attr_name in ("topology_type", "name"):
+        value = getattr(topology, attr_name, None)
+        if isinstance(value, str) and value.strip():
+            text = value.strip().lower()
+            if "hex" in text:
+                return "hexagonal"
+            if "mst" in text:
+                return "mst"
+            if "rng" in text:
+                return "rng"
+            return text
+    return ""
+
+
+def _extract_graph_distances(som_wrapper) -> Optional[np.ndarray]:
+    candidates = [
+        getattr(som_wrapper, "graph_distances", None),
+        getattr(getattr(som_wrapper, "topology", None), "graph_distances", None),
+        getattr(getattr(som_wrapper, "floatsom", None), "graph_distances", None),
+        getattr(getattr(getattr(som_wrapper, "floatsom", None), "topology", None), "graph_distances", None),
+    ]
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        distances = _as_numpy_array(candidate).astype(np.float32, copy=False)
+        if distances.ndim == 2 and distances.shape[0] == distances.shape[1]:
+            return distances
+    return None
+
+
+def _extract_adjacency_list(som_wrapper) -> Optional[Any]:
+    for owner in (
+        som_wrapper,
+        getattr(som_wrapper, "topology", None),
+        getattr(som_wrapper, "floatsom", None),
+        getattr(getattr(som_wrapper, "floatsom", None), "topology", None),
+    ):
+        adjacency_list = getattr(owner, "adjacency_list", None)
+        if adjacency_list:
+            return adjacency_list
+    return None
+
+
+def extract_topology_distance_matrix(
+    som_wrapper,
+    weights: Union[np.ndarray, cp.ndarray],
+) -> np.ndarray:
+    """Extract final topology shortest-path distances for MTR evaluation."""
+    _, total_nodes = _flatten_som_weights(weights)
+    topology_type = _extract_topology_type(som_wrapper)
+
+    if topology_type == "hexagonal" or not _is_graph_topology(som_wrapper):
+        grid_size = _to_positive_int(getattr(som_wrapper, "grid_size", None))
+        if grid_size is None:
+            n_rows, n_cols = _infer_grid_shape(som_wrapper, weights, total_nodes)
+            if n_rows != n_cols:
+                raise ValueError(
+                    "Hexagonal mean tied rank requires a square grid_size or square inferred grid shape."
+                )
+            grid_size = n_rows
+        if int(grid_size) * int(grid_size) != total_nodes:
+            raise ValueError(
+                f"Hexagonal grid_size={grid_size} does not match {total_nodes} SOM nodes."
+            )
+        return _adjacency_list_to_distance_matrix(
+            build_hexagonal_adjacency_list(int(grid_size)),
+            total_nodes,
+        )
+
+    distances = _extract_graph_distances(som_wrapper)
+    if distances is not None:
+        if distances.shape != (total_nodes, total_nodes):
+            raise ValueError(
+                f"Graph distance matrix shape {distances.shape} does not match {total_nodes} SOM nodes."
+            )
+        if not np.isfinite(distances).all():
+            raise ValueError("SOM topology graph is disconnected; mean tied rank requires finite graph distances.")
+        return distances
+
+    adjacency_list = _extract_adjacency_list(som_wrapper)
+    if adjacency_list is None:
+        raise ValueError("Graph topology has no graph_distances or adjacency_list for mean tied rank.")
+    return _adjacency_list_to_distance_matrix(adjacency_list, total_nodes)
+
+
+def calculate_tied_rank_table(graph_distances: np.ndarray) -> np.ndarray:
+    """Return tied ranks of every possible second BMU for every winning BMU."""
+    distances = np.asarray(graph_distances, dtype=np.float32)
+    if distances.ndim != 2 or distances.shape[0] != distances.shape[1]:
+        raise ValueError("graph_distances must be a square matrix.")
+    if not np.isfinite(distances).all():
+        raise ValueError("SOM topology graph is disconnected; mean tied rank requires finite graph distances.")
+
+    total_nodes = int(distances.shape[0])
+    if total_nodes < 2:
+        raise ValueError("At least two SOM nodes are required to compute mean tied rank.")
+
+    tied_ranks = np.full((total_nodes, total_nodes), np.nan, dtype=np.float32)
+    for winner in range(total_nodes):
+        row = distances[winner].copy()
+        row[winner] = np.nan
+        shells = np.unique(row[np.isfinite(row)])
+        closer_count = 0
+        for shell_distance in np.sort(shells):
+            shell_mask = row == shell_distance
+            shell_size = int(np.count_nonzero(shell_mask))
+            if shell_size <= 0:
+                continue
+            tied_rank = closer_count + ((shell_size + 1.0) / 2.0)
+            tied_ranks[winner, shell_mask] = float(tied_rank)
+            closer_count += shell_size
+    return tied_ranks
+
+
+def calculate_mean_tied_rank(
+    som_wrapper,
+    data: Union[np.ndarray, cp.ndarray],
+    *,
+    use_gpu: bool = True,
+    batch_size: int = 50_000,
+) -> float:
+    """Compute Mean Tied Rank for the supplied trained SOM and evaluation data."""
+    weights = som_wrapper.weights if hasattr(som_wrapper, "weights") else som_wrapper.get_weights()
+    if int(data.shape[0]) <= 0:
+        return float("nan")
+
+    bmu1, bmu2 = calculate_bmu1_bmu2(
+        data,
+        weights,
+        use_gpu=use_gpu,
+        batch_size=batch_size,
+    )
+    graph_distances = extract_topology_distance_matrix(som_wrapper, weights)
+    tied_rank_table = calculate_tied_rank_table(graph_distances)
+    sample_ranks = tied_rank_table[bmu1, bmu2]
+    if not np.isfinite(sample_ranks).all():
+        raise ValueError("Mean tied rank encountered invalid BMU rank values.")
+    return float(np.mean(sample_ranks))
 
 
 def _extract_grid_node_mapping(som_wrapper, n_neurons: int) -> Optional[np.ndarray]:
@@ -211,6 +510,131 @@ def calculate_quantization_error(data: Union[np.ndarray, cp.ndarray], weights: U
 
     min_distances = cp.concatenate(all_min_distances)
     return float(cp.mean(min_distances).get())
+
+
+def calculate_node_usage_stats(
+    som_wrapper,
+    data: Union[np.ndarray, cp.ndarray],
+    *,
+    use_gpu: bool = True,
+    batch_size: int = 50_000,
+) -> Dict[str, float]:
+    """
+    Count how many SOM nodes are selected as BMUs for an evaluation split.
+
+    Returns used/dead node counts and their fractions. The implementation uses
+    the trained FloatSOM prediction path when available, and falls back to
+    direct distance-based BMU calculation otherwise.
+    """
+    weights = som_wrapper.weights if hasattr(som_wrapper, "weights") else som_wrapper.get_weights()
+    weights_flat, total_nodes = _flatten_som_weights(weights)
+    if total_nodes <= 0:
+        return {
+            "used_nodes": 0.0,
+            "dead_nodes": 0.0,
+            "total_nodes": 0.0,
+            "node_utilization": float("nan"),
+            "dead_node_fraction": float("nan"),
+        }
+
+    n_samples = int(data.shape[0])
+    if n_samples <= 0:
+        return {
+            "used_nodes": 0.0,
+            "dead_nodes": float(total_nodes),
+            "total_nodes": float(total_nodes),
+            "node_utilization": 0.0,
+            "dead_node_fraction": 1.0,
+        }
+
+    effective_batch_size = max(1, int(batch_size))
+    predictor = getattr(getattr(som_wrapper, "floatsom", None), "predict", None)
+    use_cupy = bool(use_gpu)
+
+    if use_cupy:
+        used_mask = cp.zeros(total_nodes, dtype=bool)
+        weights_gpu = cp.asarray(weights_flat, dtype=cp.float32)
+        weights_sqnorms = cp.einsum("ij,ij->i", weights_gpu, weights_gpu)
+    else:
+        used_mask = np.zeros(total_nodes, dtype=bool)
+        weights_cpu = np.asarray(
+            cp.asnumpy(weights_flat) if isinstance(weights_flat, cp.ndarray) else weights_flat,
+            dtype=np.float32,
+        )
+        weights_sqnorms = np.einsum("ij,ij->i", weights_cpu, weights_cpu)
+
+    for start in range(0, n_samples, effective_batch_size):
+        stop = min(start + effective_batch_size, n_samples)
+        batch = data[start:stop]
+
+        if predictor is not None:
+            bmus = predictor(batch)
+            if isinstance(bmus, tuple):
+                bmus = bmus[0]
+            if use_cupy:
+                bmus = cp.asarray(bmus, dtype=cp.int32)
+            else:
+                bmus = cp.asnumpy(bmus) if isinstance(bmus, cp.ndarray) else np.asarray(bmus, dtype=np.int32)
+        elif use_cupy:
+            batch_gpu = cp.asarray(batch, dtype=cp.float32)
+            batch_sqnorms = cp.einsum("ij,ij->i", batch_gpu, batch_gpu)
+            cross_term = cp.einsum("ik,jk->ij", batch_gpu, weights_gpu)
+            squared_distances = batch_sqnorms[:, cp.newaxis] + weights_sqnorms[cp.newaxis, :] - 2 * cross_term
+            bmus = cp.argmin(squared_distances, axis=1).astype(cp.int32, copy=False)
+        else:
+            batch_cpu = np.asarray(
+                cp.asnumpy(batch) if isinstance(batch, cp.ndarray) else batch,
+                dtype=np.float32,
+            )
+            batch_sqnorms = np.einsum("ij,ij->i", batch_cpu, batch_cpu)
+            cross_term = np.einsum("ik,jk->ij", batch_cpu, weights_cpu)
+            squared_distances = batch_sqnorms[:, np.newaxis] + weights_sqnorms[np.newaxis, :] - 2 * cross_term
+            bmus = np.argmin(squared_distances, axis=1).astype(np.int32, copy=False)
+
+        if use_cupy:
+            counts = cp.bincount(bmus, minlength=total_nodes)
+            used_mask = cp.logical_or(used_mask, counts[:total_nodes] > 0)
+        else:
+            counts = np.bincount(bmus, minlength=total_nodes)
+            used_mask = np.logical_or(used_mask, counts[:total_nodes] > 0)
+
+    used_nodes = int(cp.count_nonzero(used_mask).get()) if use_cupy else int(np.count_nonzero(used_mask))
+    dead_nodes = int(total_nodes - used_nodes)
+    return {
+        "used_nodes": float(used_nodes),
+        "dead_nodes": float(dead_nodes),
+        "total_nodes": float(total_nodes),
+        "node_utilization": float(used_nodes / total_nodes),
+        "dead_node_fraction": float(dead_nodes / total_nodes),
+    }
+
+
+class MeanTiedRank:
+    """
+    Mean tied rank of the second BMU under the evaluated SOM topology graph.
+
+    Lower values indicate that the second-best prototype is closer to the
+    winning prototype in graph-shortest-path distance. Unlike raw topographic
+    error, this keeps tied graph-distance shells rather than reducing each
+    topology to a one-hop adjacency convention.
+    """
+
+    def __init__(self, use_gpu: bool = True, batch_size: int = 50_000):
+        self.use_gpu = use_gpu
+        self.batch_size = batch_size
+        self.name = "mean_tied_rank"
+
+    @property
+    def requires_gpu(self) -> bool:
+        return self.use_gpu
+
+    def compute(self, som_wrapper, data: Union[np.ndarray, cp.ndarray]) -> float:
+        return calculate_mean_tied_rank(
+            som_wrapper,
+            data,
+            use_gpu=self.use_gpu,
+            batch_size=self.batch_size,
+        )
 
 
 class QuantizationError:

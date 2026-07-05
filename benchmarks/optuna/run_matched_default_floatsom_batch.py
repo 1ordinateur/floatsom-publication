@@ -51,7 +51,52 @@ KNOWN_RUNS_CSV_NAMES: Tuple[str, ...] = (
     "matched_default_runs.csv",
     "matched_true_default_runs.csv",
     "matched_tuned_fixed_runs.csv",
+    "matched_default_topology_diagnostics_runs.csv",
+    "matched_tuned_topology_diagnostics_runs.csv",
 )
+MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS: Tuple[str, ...] = (
+    "mean_tied_rank",
+    "node_utilization",
+    "dead_node_fraction",
+    "used_nodes",
+    "dead_nodes",
+    "total_nodes",
+)
+BALANCED_DIAGNOSTIC_COLUMNS: Dict[str, str] = {
+    "mean_tied_rank": "balanced_mean_tied_rank_raw",
+    "node_utilization": "balanced_node_utilization_raw",
+    "dead_node_fraction": "balanced_dead_node_fraction_raw",
+}
+DIAGNOSTIC_REPORT_METRICS: Tuple[str, ...] = (
+    "quantization_error_holdout",
+    "quantization_error_train",
+    "balanced_qe_raw",
+    "mean_tied_rank_holdout",
+    "mean_tied_rank_train",
+    "balanced_mean_tied_rank_raw",
+    "node_utilization_holdout",
+    "node_utilization_train",
+    "balanced_node_utilization_raw",
+    "dead_node_fraction_holdout",
+    "dead_node_fraction_train",
+    "balanced_dead_node_fraction_raw",
+)
+LOWER_IS_BETTER_REPORT_METRICS = {
+    "quantization_error_holdout",
+    "quantization_error_train",
+    "balanced_qe_raw",
+    "mean_tied_rank_holdout",
+    "mean_tied_rank_train",
+    "balanced_mean_tied_rank_raw",
+    "dead_node_fraction_holdout",
+    "dead_node_fraction_train",
+    "balanced_dead_node_fraction_raw",
+}
+HIGHER_IS_BETTER_REPORT_METRICS = {
+    "node_utilization_holdout",
+    "node_utilization_train",
+    "balanced_node_utilization_raw",
+}
 
 
 def _resolve_dataset_config() -> Dict[str, Any]:
@@ -577,6 +622,17 @@ def _validate_json_name(filename: str, *, arg_name: str) -> str:
     return text
 
 
+def _validate_markdown_name(filename: str, *, arg_name: str) -> str:
+    text = str(filename).strip()
+    if not text:
+        raise ValueError(f"{arg_name} must be a non-empty filename ending with .md")
+    if "/" in text or "\\" in text:
+        raise ValueError(f"{arg_name} must be a filename only, not a path: {filename!r}")
+    if not text.lower().endswith(".md"):
+        raise ValueError(f"{arg_name} must end with .md: {filename!r}")
+    return text
+
+
 def _validate_subdir_name(value: str, *, arg_name: str) -> str:
     text = str(value).strip()
     if not text:
@@ -696,6 +752,331 @@ def _generate_comparison_report(
     return comparison_output_dir.resolve(), comparison_report.resolve()
 
 
+def _to_markdown_table(df: pd.DataFrame) -> str:
+    if df.empty:
+        return "_No rows available._"
+    try:
+        return df.to_markdown(index=False, disable_numparse=True)
+    except ImportError:
+        return df.to_string(index=False)
+
+
+def _metric_direction(metric_name: str) -> str:
+    if metric_name in LOWER_IS_BETTER_REPORT_METRICS:
+        return "lower"
+    if metric_name in HIGHER_IS_BETTER_REPORT_METRICS:
+        return "higher"
+    return "unspecified"
+
+
+def _signed_effect(reference_values: np.ndarray, comparator_values: np.ndarray, metric_name: str) -> np.ndarray:
+    if _metric_direction(metric_name) == "higher":
+        return comparator_values - reference_values
+    return reference_values - comparator_values
+
+
+def _paired_ttest_pvalue(values: np.ndarray) -> float:
+    finite = np.asarray(values, dtype=float)
+    finite = finite[np.isfinite(finite)]
+    if finite.size == 0:
+        return float("nan")
+    if np.allclose(finite, 0.0):
+        return 1.0
+    if finite.size < 2:
+        return float("nan")
+    if float(np.std(finite, ddof=1)) == 0.0:
+        return 0.0
+    try:
+        from scipy import stats
+
+        return float(stats.ttest_1samp(finite, popmean=0.0, nan_policy="omit").pvalue)
+    except Exception:
+        return float("nan")
+
+
+def _mean_ci95(values: np.ndarray) -> Tuple[float, float, float]:
+    finite = np.asarray(values, dtype=float)
+    finite = finite[np.isfinite(finite)]
+    if finite.size == 0:
+        return float("nan"), float("nan"), float("nan")
+    mean_value = float(np.mean(finite))
+    if finite.size < 2:
+        return mean_value, float("nan"), float("nan")
+    sd = float(np.std(finite, ddof=1))
+    if sd == 0.0:
+        return mean_value, mean_value, mean_value
+    try:
+        from scipy import stats
+
+        critical = float(stats.t.ppf(0.975, df=int(finite.size - 1)))
+    except Exception:
+        critical = 1.96
+    half_width = critical * sd / float(np.sqrt(finite.size))
+    return mean_value, float(mean_value - half_width), float(mean_value + half_width)
+
+
+def _cohen_dz(values: np.ndarray) -> float:
+    finite = np.asarray(values, dtype=float)
+    finite = finite[np.isfinite(finite)]
+    if finite.size < 2:
+        return float("nan")
+    sd = float(np.std(finite, ddof=1))
+    mean_value = float(np.mean(finite))
+    if sd == 0.0:
+        if mean_value == 0.0:
+            return 0.0
+        return float(np.sign(mean_value) * np.inf)
+    return float(mean_value / sd)
+
+
+def _benjamini_hochberg_qvalues(p_values: Sequence[float]) -> List[float]:
+    p = np.asarray([float(value) if value is not None else np.nan for value in p_values], dtype=float)
+    q = np.full_like(p, np.nan, dtype=float)
+    finite_mask = np.isfinite(p)
+    finite_indices = np.flatnonzero(finite_mask)
+    if finite_indices.size == 0:
+        return q.tolist()
+
+    ordered_indices = finite_indices[np.argsort(p[finite_indices])]
+    ordered_p = p[ordered_indices]
+    m = float(ordered_p.size)
+    raw_q = ordered_p * m / np.arange(1, ordered_p.size + 1, dtype=float)
+    adjusted = np.minimum.accumulate(raw_q[::-1])[::-1]
+    adjusted = np.minimum(adjusted, 1.0)
+    q[ordered_indices] = adjusted
+    return q.tolist()
+
+
+def _load_profile_runs_csv(path_value: object, profile: str) -> pd.DataFrame:
+    csv_path = Path(str(path_value)).resolve()
+    df = _load_runs_df_from_csv(csv_path)
+    out = df.copy()
+    out["profile"] = str(profile)
+    if "architecture" not in out.columns and "config_topology_type" in out.columns:
+        out["architecture"] = out["config_topology_type"]
+    if "sampling_method" not in out.columns and "config_sampling_method" in out.columns:
+        out["sampling_method"] = out["config_sampling_method"]
+    out["architecture"] = out["architecture"].astype(str).str.strip().str.lower()
+    out["sampling_method"] = out["sampling_method"].astype(str).str.strip().str.lower()
+    out["dataset"] = out["dataset"].astype(str).str.strip()
+    return out
+
+
+def _load_manifest_profile_runs(manifest_path: Path) -> Tuple[Dict[str, Any], pd.DataFrame]:
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    default_csv = manifest.get("default_runs_file") or manifest.get("true_default", {}).get("runs_csv")
+    tuned_csv = manifest.get("default_aware_tuned_runs_file") or manifest.get("tuned_fixed", {}).get("runs_csv")
+    if not default_csv or not tuned_csv:
+        raise ValueError(f"Manifest does not contain both default and tuned runs CSV paths: {manifest_path}")
+
+    default_df = _load_profile_runs_csv(default_csv, "true_default")
+    tuned_df = _load_profile_runs_csv(tuned_csv, "tuned_fixed")
+    return manifest, pd.concat([default_df, tuned_df], axis=0, ignore_index=True)
+
+
+def _diagnostic_dataset_summary(combined_df: pd.DataFrame) -> pd.DataFrame:
+    metric_columns = [column for column in DIAGNOSTIC_REPORT_METRICS if column in combined_df.columns]
+    if not metric_columns:
+        raise ValueError("No diagnostic metric columns were found in combined profile runs.")
+
+    group_columns = ["profile", "dataset", "architecture", "sampling_method"]
+    aggregation = {column: "median" for column in metric_columns}
+    aggregation["seed"] = "nunique"
+    summary = (
+        combined_df.groupby(group_columns, dropna=False)
+        .agg(aggregation)
+        .reset_index()
+        .rename(columns={"architecture": "topology", "seed": "n_seeds"})
+    )
+    ordered_columns = ["profile", "dataset", "topology", "sampling_method", "n_seeds"] + metric_columns
+    return summary[ordered_columns].sort_values(
+        ["profile", "dataset", "topology", "sampling_method"]
+    ).reset_index(drop=True)
+
+
+def _build_metric_pairs(
+    *,
+    combined_df: pd.DataFrame,
+    reference_filter: Dict[str, str],
+    comparator_filter: Dict[str, str],
+    metric_name: str,
+    key_columns: Sequence[str],
+) -> pd.DataFrame:
+    ref_df = combined_df.copy()
+    cmp_df = combined_df.copy()
+    for column, value in reference_filter.items():
+        ref_df = ref_df[ref_df[column].astype(str).str.lower() == str(value).lower()]
+    for column, value in comparator_filter.items():
+        cmp_df = cmp_df[cmp_df[column].astype(str).str.lower() == str(value).lower()]
+
+    if metric_name not in ref_df.columns or metric_name not in cmp_df.columns:
+        return pd.DataFrame()
+
+    ref = ref_df[list(key_columns) + [metric_name]].rename(columns={metric_name: "reference_value"})
+    cmp = cmp_df[list(key_columns) + [metric_name]].rename(columns={metric_name: "comparator_value"})
+    pairs = ref.merge(cmp, on=list(key_columns), how="inner")
+    if pairs.empty:
+        return pairs
+
+    pairs["reference_value"] = pd.to_numeric(pairs["reference_value"], errors="coerce")
+    pairs["comparator_value"] = pd.to_numeric(pairs["comparator_value"], errors="coerce")
+    pairs = pairs.dropna(subset=["reference_value", "comparator_value"]).copy()
+    if pairs.empty:
+        return pairs
+    pairs["raw_delta_comparator_minus_reference"] = pairs["comparator_value"] - pairs["reference_value"]
+    pairs["signed_effect_favoring_comparator"] = _signed_effect(
+        pairs["reference_value"].to_numpy(dtype=float),
+        pairs["comparator_value"].to_numpy(dtype=float),
+        metric_name,
+    )
+    return pairs
+
+
+def _diagnostic_paired_summaries(combined_df: pd.DataFrame) -> pd.DataFrame:
+    comparisons = [
+        {
+            "comparison": "default_hexagonal_vs_default_mst",
+            "reference_label": "true_default:hexagonal",
+            "comparator_label": "true_default:mst",
+            "reference_filter": {"profile": "true_default", "architecture": "hexagonal"},
+            "comparator_filter": {"profile": "true_default", "architecture": "mst"},
+            "key_columns": ("dataset", "seed", "sampling_method"),
+        },
+        {
+            "comparison": "default_hexagonal_vs_default_rng",
+            "reference_label": "true_default:hexagonal",
+            "comparator_label": "true_default:rng",
+            "reference_filter": {"profile": "true_default", "architecture": "hexagonal"},
+            "comparator_filter": {"profile": "true_default", "architecture": "rng"},
+            "key_columns": ("dataset", "seed", "sampling_method"),
+        },
+        {
+            "comparison": "tuned_hexagonal_vs_tuned_mst",
+            "reference_label": "tuned_fixed:hexagonal",
+            "comparator_label": "tuned_fixed:mst",
+            "reference_filter": {"profile": "tuned_fixed", "architecture": "hexagonal"},
+            "comparator_filter": {"profile": "tuned_fixed", "architecture": "mst"},
+            "key_columns": ("dataset", "seed", "sampling_method"),
+        },
+        {
+            "comparison": "tuned_hexagonal_vs_tuned_rng",
+            "reference_label": "tuned_fixed:hexagonal",
+            "comparator_label": "tuned_fixed:rng",
+            "reference_filter": {"profile": "tuned_fixed", "architecture": "hexagonal"},
+            "comparator_filter": {"profile": "tuned_fixed", "architecture": "rng"},
+            "key_columns": ("dataset", "seed", "sampling_method"),
+        },
+        {
+            "comparison": "tuned_vs_default_hexagonal",
+            "reference_label": "true_default:hexagonal",
+            "comparator_label": "tuned_fixed:hexagonal",
+            "reference_filter": {"profile": "true_default", "architecture": "hexagonal"},
+            "comparator_filter": {"profile": "tuned_fixed", "architecture": "hexagonal"},
+            "key_columns": ("dataset", "seed", "sampling_method", "architecture"),
+        },
+        {
+            "comparison": "tuned_vs_default_mst",
+            "reference_label": "true_default:mst",
+            "comparator_label": "tuned_fixed:mst",
+            "reference_filter": {"profile": "true_default", "architecture": "mst"},
+            "comparator_filter": {"profile": "tuned_fixed", "architecture": "mst"},
+            "key_columns": ("dataset", "seed", "sampling_method", "architecture"),
+        },
+        {
+            "comparison": "tuned_vs_default_rng",
+            "reference_label": "true_default:rng",
+            "comparator_label": "tuned_fixed:rng",
+            "reference_filter": {"profile": "true_default", "architecture": "rng"},
+            "comparator_filter": {"profile": "tuned_fixed", "architecture": "rng"},
+            "key_columns": ("dataset", "seed", "sampling_method", "architecture"),
+        },
+    ]
+
+    metric_columns = [column for column in DIAGNOSTIC_REPORT_METRICS if column in combined_df.columns]
+    rows: List[Dict[str, Any]] = []
+    for comparison in comparisons:
+        for metric_name in metric_columns:
+            pairs = _build_metric_pairs(
+                combined_df=combined_df,
+                reference_filter=comparison["reference_filter"],
+                comparator_filter=comparison["comparator_filter"],
+                metric_name=metric_name,
+                key_columns=comparison["key_columns"],
+            )
+            effects = (
+                pairs["signed_effect_favoring_comparator"].to_numpy(dtype=float)
+                if not pairs.empty
+                else np.asarray([], dtype=float)
+            )
+            mean_effect, ci_low, ci_high = _mean_ci95(effects)
+            row = {
+                "comparison": comparison["comparison"],
+                "reference": comparison["reference_label"],
+                "comparator": comparison["comparator_label"],
+                "metric": metric_name,
+                "direction": _metric_direction(metric_name),
+                "n_pairs": int(np.isfinite(effects).sum()),
+                "mean_signed_effect_favoring_comparator": mean_effect,
+                "ci95_low": ci_low,
+                "ci95_high": ci_high,
+                "effect_size_cohen_dz": _cohen_dz(effects),
+                "raw_p": _paired_ttest_pvalue(effects),
+                "comparator_wins": int(np.sum(effects > 0)),
+                "reference_wins": int(np.sum(effects < 0)),
+                "ties": int(np.sum(effects == 0)),
+            }
+            rows.append(row)
+
+    summary = pd.DataFrame(rows)
+    if not summary.empty:
+        summary["bh_q"] = _benjamini_hochberg_qvalues(summary["raw_p"].tolist())
+    return summary
+
+
+def _generate_matched_topology_diagnostic_report(
+    *,
+    manifest_path: Path,
+    output_dir: Path,
+    markdown_name: str,
+) -> Dict[str, str]:
+    manifest, combined_df = _load_manifest_profile_runs(manifest_path)
+    _ = manifest
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    dataset_summary = _diagnostic_dataset_summary(combined_df)
+    paired_summary = _diagnostic_paired_summaries(combined_df)
+
+    dataset_summary_path = output_dir / "supp_matched_topology_diagnostics_by_dataset.tsv"
+    paired_summary_path = output_dir / "supp_matched_topology_diagnostics_paired_summaries.tsv"
+    markdown_path = output_dir / _validate_markdown_name(markdown_name, arg_name="markdown_name")
+
+    dataset_summary.to_csv(dataset_summary_path, sep="\t", index=False)
+    paired_summary.to_csv(paired_summary_path, sep="\t", index=False)
+
+    markdown_lines = [
+        "# Matched Topology Diagnostics",
+        "",
+        "Positive signed effects in the paired table favor the comparator after applying metric directionality.",
+        "Lower is better for QE, mean tied rank, and dead-node fraction; higher is better for node utilization.",
+        "",
+        "## Supplementary Diagnostics By Dataset",
+        "",
+        _to_markdown_table(dataset_summary),
+        "",
+        "## Paired Summaries",
+        "",
+        _to_markdown_table(paired_summary),
+        "",
+    ]
+    markdown_path.write_text("\n".join(markdown_lines), encoding="utf-8")
+
+    return {
+        "diagnostic_dataset_summary_tsv": str(dataset_summary_path.resolve()),
+        "diagnostic_paired_summary_tsv": str(paired_summary_path.resolve()),
+        "diagnostic_markdown_report": str(markdown_path.resolve()),
+    }
+
+
 def _normalize_run_key(dataset: object, seed: object, topology: object, sampling_method: object) -> Tuple[str, int, str, str]:
     dataset_key = str(dataset).strip().lower()
     topology_key = str(topology).strip().lower()
@@ -806,6 +1187,19 @@ def _extract_metric(trial: optuna.trial.FrozenTrial, metric_name: str, split: st
     raise KeyError(f"Missing metric '{metric_name}_{split}' in trial user_attrs.")
 
 
+def _extract_optional_metric(trial: optuna.trial.FrozenTrial, metric_name: str, split: str) -> float:
+    try:
+        return _extract_metric(trial, metric_name, split)
+    except (KeyError, TypeError, ValueError):
+        return float("nan")
+
+
+def _balanced_optional_metric(holdout_value: float, train_value: float) -> float:
+    if np.isfinite(float(holdout_value)) and np.isfinite(float(train_value)):
+        return float((float(holdout_value) + float(train_value)) / 2.0)
+    return float("nan")
+
+
 def _build_success_row(
     *,
     trial: optuna.trial.FrozenTrial,
@@ -822,6 +1216,15 @@ def _build_success_row(
     qe_holdout = _extract_metric(trial, "quantization_error", "holdout")
     qe_train = _extract_metric(trial, "quantization_error", "train")
     balanced_qe_raw = float((qe_holdout + qe_train) / 2.0)
+    diagnostic_metrics: Dict[str, float] = {}
+    for metric_name in MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS:
+        holdout_value = _extract_optional_metric(trial, metric_name, "holdout")
+        train_value = _extract_optional_metric(trial, metric_name, "train")
+        diagnostic_metrics[f"{metric_name}_holdout"] = holdout_value
+        diagnostic_metrics[f"{metric_name}_train"] = train_value
+        balanced_column = BALANCED_DIAGNOSTIC_COLUMNS.get(metric_name)
+        if balanced_column:
+            diagnostic_metrics[balanced_column] = _balanced_optional_metric(holdout_value, train_value)
 
     row: Dict[str, Any] = {
         "scenario_id": _create_scenario_id(dataset, forced_params),
@@ -840,6 +1243,7 @@ def _build_success_row(
         "quantization_error_holdout": qe_holdout,
         "quantization_error_train": qe_train,
         "balanced_qe_raw": balanced_qe_raw,
+        **diagnostic_metrics,
         "run_profile": str(run_profile),
         "run_label": str(run_label),
         "status": "ok",
@@ -1002,6 +1406,7 @@ def _execute_profile_runs(
                             n_trials=1,
                             timeout=timeout,
                             objectives=list(base_objectives),
+                            diagnostic_metrics=list(MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS),
                             evaluation_split=evaluation_split,
                             output_dir=None,
                             use_ray_tune=False,
@@ -1286,6 +1691,21 @@ def parse_args() -> argparse.Namespace:
         help="Top-level manifest filename for --run-both-profiles outputs.",
     )
     parser.add_argument(
+        "--generate-diagnostic-report",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "When --run-both-profiles is enabled, generate supplementary diagnostic TSVs and a Markdown report "
+            "from the dual-profile manifest (default: true)."
+        ),
+    )
+    parser.add_argument(
+        "--diagnostic-report-markdown-name",
+        type=str,
+        default="MATCHED_TOPOLOGY_DIAGNOSTICS_SUMMARY.md",
+        help="Markdown filename for the dual-profile matched topology diagnostic report.",
+    )
+    parser.add_argument(
         "--require-complete-sampling-topology-overrides",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -1392,6 +1812,7 @@ def main() -> int:
         sampling_methods=sampling_methods,
         topologies=topologies,
         json_path=args.fixed_params_by_sampling_topology_json,
+        allow_unselected_keys=True,
     )
     _validate_manual_fixed_params_for_scope(
         manual_fixed_params,
@@ -1508,8 +1929,8 @@ def main() -> int:
             timeout=args.timeout,
             evaluation_split=str(args.evaluation_split),
             save_study_json_enabled=bool(args.save_study_json),
-            run_profile="manual_fixed",
-            run_label="manual_fixed",
+            run_profile="tuned_fixed",
+            run_label="tuned_fixed",
             runs_csv_name=tuned_fixed_runs_csv_name,
             manual_fixed_params=manual_fixed_params,
             manual_fixed_params_by_topology=manual_fixed_params_by_topology,
@@ -1536,6 +1957,15 @@ def main() -> int:
         }
         manifest_path = output_dir / manifest_name
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        if bool(args.generate_diagnostic_report):
+            diagnostic_report = _generate_matched_topology_diagnostic_report(
+                manifest_path=manifest_path,
+                output_dir=output_dir,
+                markdown_name=str(args.diagnostic_report_markdown_name),
+            )
+            manifest["diagnostic_report"] = diagnostic_report
+            manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+            print(f"Saved matched topology diagnostic report to {diagnostic_report['diagnostic_markdown_report']}")
         print(f"Saved dual-profile manifest to {manifest_path}")
     else:
         run_profile = "manual_fixed" if has_any_fixed_overrides else "true_default"
