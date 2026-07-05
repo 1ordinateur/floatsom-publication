@@ -417,7 +417,6 @@ class FloatSOMParams:
     
     # MiniSOM integration parameters
     minisom_defaults: bool = False  # Use MiniSOM default hyperparameters instead of FloatSOM defaults
-    use_contextual_defaults: bool = False  # Explicit opt-in for JSON-backed tuned defaults
     
     # Dynamic runtime attributes (set during training)
     current_radius: Optional[float] = None
@@ -431,12 +430,10 @@ class FloatSOMParams:
     def __post_init__(self):
         """Validate and initialize parameters"""
         is_dynamic_graph_topology = self.topology_config.topology_type in {"mst", "rng"}
-        contextual_defaults = {}
-        if self.use_contextual_defaults:
-            contextual_defaults = resolve_contextual_floatsom_defaults(
-                self.sampling_config.method,
-                self.topology_config.topology_type,
-            )
+        contextual_defaults = resolve_contextual_floatsom_defaults(
+            self.sampling_config.method,
+            self.topology_config.topology_type,
+        )
 
         if is_dynamic_graph_topology:
             if self.topology_config.num_nodes is None:
@@ -454,13 +451,11 @@ class FloatSOMParams:
         if self.initial_radius is None:
             if "initial_radius" in contextual_defaults:
                 self.initial_radius = float(contextual_defaults["initial_radius"])
+            elif is_dynamic_graph_topology:
+                self.initial_radius = max(1, int(np.sqrt(self.total_nodes)))
             else:
-                # Match XPySOM: sigma=0 resolves to min(x, y) / 2.
-                if is_dynamic_graph_topology and self.topology_config.grid_dim == 2:
-                    map_extent = float(np.sqrt(self.total_nodes))
-                else:
-                    map_extent = float(self.topology_config.grid_size)
-                self.initial_radius = map_extent / 2.0
+                # Match XPySOM: sigma defaults to min(x, y) / 2 (float).
+                self.initial_radius = float(self.topology_config.grid_size) / 2.0
 
         if self.initialization_method is None:
             self.initialization_method = contextual_defaults.get("initialization_method", "random")

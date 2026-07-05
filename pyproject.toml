@@ -102,4 +102,4 @@ floatsom = "."
 "floatsom.topology" = "topology"
 
 [tool.setuptools.package-data]
-floatsom = ["floatsom_min1000_tuned_defaults.json"]
+floatsom = ["floatsom_min1000_tuned_defaults.json", "xpysom_untuned_defaults.json"]

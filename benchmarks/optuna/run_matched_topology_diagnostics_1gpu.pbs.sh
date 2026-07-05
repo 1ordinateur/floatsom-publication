@@ -24,6 +24,7 @@ cd "$REPO_ROOT"
 RUN_TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 RUN_TAG="${RUN_TIMESTAMP}_${PBS_JOBID:-manual}"
 OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/Results/topology_diagnostics_matched_profiles_${RUN_TAG}}"
+TRUE_DEFAULT_PARAMS_JSON="${TRUE_DEFAULT_PARAMS_JSON:-xpysom_untuned_defaults.json}"
 FIXED_PARAMS_JSON="${FIXED_PARAMS_JSON:-floatsom_min1000_tuned_defaults.json}"
 SKLEARN_DATA_HOME="${SKLEARN_DATA_HOME:-${REPO_ROOT}/sklearn_data}"
 
@@ -40,7 +41,8 @@ echo "Started matched topology diagnostics at ${RUN_TIMESTAMP}"
 echo "Repository: ${REPO_ROOT}"
 echo "Module: ${FLOATSOM_MODULE}"
 echo "Output directory: ${OUTPUT_DIR}"
-echo "Fixed params JSON: ${FIXED_PARAMS_JSON}"
+echo "True-default params JSON: ${TRUE_DEFAULT_PARAMS_JSON}"
+echo "Tuned fixed params JSON: ${FIXED_PARAMS_JSON}"
 echo "SCIKIT_LEARN_DATA: ${SCIKIT_LEARN_DATA}"
 
 DATASET_ARGS=()
@@ -66,6 +68,7 @@ python3 benchmarks/optuna/run_matched_default_floatsom_batch.py \
   --sampling-methods full \
   --evaluation-split both \
   --scikit-learn-data-home "$SKLEARN_DATA_HOME" \
+  --true-default-fixed-params-by-sampling-topology-json "$TRUE_DEFAULT_PARAMS_JSON" \
   --fixed-params-by-sampling-topology-json "$FIXED_PARAMS_JSON" \
   --true-default-runs-csv-name matched_default_topology_diagnostics_runs.csv \
   --tuned-fixed-runs-csv-name matched_tuned_topology_diagnostics_runs.csv \

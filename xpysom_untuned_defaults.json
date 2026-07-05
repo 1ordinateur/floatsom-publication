@@ -1,0 +1,48 @@
+{
+  "full": {
+    "hexagonal": {
+      "initial_radius": 5.0,
+      "initialization_method": "random",
+      "momentum_init": 0.5,
+      "radius_decay_type": "exponential",
+      "use_momentum": false
+    },
+    "mst": {
+      "initial_radius": 5.0,
+      "initialization_method": "random",
+      "momentum_init": 0.5,
+      "radius_decay_type": "exponential",
+      "use_momentum": false
+    },
+    "rng": {
+      "initial_radius": 5.0,
+      "initialization_method": "random",
+      "momentum_init": 0.5,
+      "radius_decay_type": "exponential",
+      "use_momentum": false
+    }
+  },
+  "random": {
+    "hexagonal": {
+      "initial_radius": 5.0,
+      "initialization_method": "random",
+      "momentum_init": 0.5,
+      "radius_decay_type": "exponential",
+      "use_momentum": false
+    },
+    "mst": {
+      "initial_radius": 5.0,
+      "initialization_method": "random",
+      "momentum_init": 0.5,
+      "radius_decay_type": "exponential",
+      "use_momentum": false
+    },
+    "rng": {
+      "initial_radius": 5.0,
+      "initialization_method": "random",
+      "momentum_init": 0.5,
+      "radius_decay_type": "exponential",
+      "use_momentum": false
+    }
+  }
+}

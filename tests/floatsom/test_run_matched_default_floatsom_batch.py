@@ -197,6 +197,25 @@ def test_resolve_manual_fixed_params_by_sampling_topology_parses_json(tmp_path, 
     assert resolved["random"]["mst"]["use_momentum"] is False
 
 
+def test_xpysom_untuned_defaults_json_resolves_for_true_default_profile(matched_runner_module):
+    defaults_path = Path(matched_runner_module.__file__).resolve().parents[2] / "xpysom_untuned_defaults.json"
+
+    resolved = matched_runner_module._resolve_manual_fixed_params_by_sampling_topology(
+        sampling_methods=["full"],
+        topologies=["hexagonal", "mst", "rng"],
+        json_path=str(defaults_path),
+        allow_unselected_keys=True,
+    )
+
+    for topology in ["hexagonal", "mst", "rng"]:
+        params = resolved["full"][topology]
+        assert params["initial_radius"] == pytest.approx(5.0)
+        assert params["initialization_method"] == "random"
+        assert params["momentum_init"] == pytest.approx(0.5)
+        assert params["radius_decay_type"] == "exponential"
+        assert params["use_momentum"] is False
+
+
 def test_resolve_manual_fixed_params_by_sampling_topology_rejects_unselected_sampling(tmp_path, matched_runner_module):
     json_path = tmp_path / "sampling_topology.json"
     json_path.write_text(

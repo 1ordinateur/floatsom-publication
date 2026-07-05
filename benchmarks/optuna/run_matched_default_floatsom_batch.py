@@ -68,6 +68,7 @@ KNOWN_RUNS_CSV_NAMES: Tuple[str, ...] = (
     "matched_default_topology_diagnostics_runs.csv",
     "matched_tuned_topology_diagnostics_runs.csv",
 )
+DEFAULT_TRUE_DEFAULT_FIXED_PARAMS_JSON = "xpysom_untuned_defaults.json"
 MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS: Tuple[str, ...] = (
     "mean_tied_rank",
     "node_utilization",
@@ -363,10 +364,21 @@ def _parse_fixed_param_entries(entries: Optional[Sequence[str]]) -> Dict[str, ob
     return parsed
 
 
+def _resolve_json_path(path: str) -> Path:
+    raw_path = Path(path).expanduser()
+    candidates = [raw_path]
+    if not raw_path.is_absolute():
+        candidates.append(Path(__file__).resolve().parents[2] / raw_path)
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate.resolve()
+    return raw_path.resolve()
+
+
 def _load_fixed_params_json(path: Optional[str]) -> Dict[str, object]:
     if not path:
         return {}
-    params_path = Path(path).resolve()
+    params_path = _resolve_json_path(path)
     if not params_path.exists():
         raise FileNotFoundError(f"Fixed-params JSON not found: {params_path}")
     payload = json.loads(params_path.read_text(encoding="utf-8"))
@@ -416,7 +428,7 @@ def _resolve_manual_fixed_params_by_topology(
     if not json_path:
         return {}
 
-    params_path = Path(json_path).resolve()
+    params_path = _resolve_json_path(json_path)
     if not params_path.exists():
         raise FileNotFoundError(f"Topology fixed-params JSON not found: {params_path}")
     payload = json.loads(params_path.read_text(encoding="utf-8"))
@@ -472,7 +484,7 @@ def _resolve_manual_fixed_params_by_sampling_topology(
     if not json_path:
         return {}
 
-    params_path = Path(json_path).resolve()
+    params_path = _resolve_json_path(json_path)
     if not params_path.exists():
         raise FileNotFoundError(f"Sampling-topology fixed-params JSON not found: {params_path}")
     payload = json.loads(params_path.read_text(encoding="utf-8"))
@@ -595,10 +607,11 @@ def _validate_sampling_topology_override_coverage(
     fixed_params_by_sampling_topology: Dict[str, Dict[str, Dict[str, Any]]],
     sampling_methods: Sequence[str],
     topologies: Sequence[str],
+    profile_label: str = "profile",
 ) -> None:
     if not fixed_params_by_sampling_topology:
         raise ValueError(
-            "Expected sampling-topology fixed params for tuned-fixed profile but received an empty mapping."
+            f"Expected sampling-topology fixed params for {profile_label} profile but received an empty mapping."
         )
 
     selected_sampling = sorted({str(sampling).strip().lower() for sampling in sampling_methods})
@@ -1753,6 +1766,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--true-default-fixed-params-by-sampling-topology-json",
+        type=str,
+        default=DEFAULT_TRUE_DEFAULT_FIXED_PARAMS_JSON,
+        help=(
+            "JSON file containing sampling+topology-specific fixed overrides for the true-default profile "
+            f"when --run-both-profiles is enabled (default: {DEFAULT_TRUE_DEFAULT_FIXED_PARAMS_JSON})."
+        ),
+    )
+    parser.add_argument(
         "--run-label",
         type=str,
         default=None,
@@ -1929,6 +1951,18 @@ def main() -> int:
         json_path=args.fixed_params_by_sampling_topology_json,
         allow_unselected_keys=True,
     )
+    true_default_fixed_params_by_sampling_topology: Dict[str, Dict[str, Dict[str, Any]]] = {}
+    if bool(args.run_both_profiles):
+        if not args.true_default_fixed_params_by_sampling_topology_json:
+            raise ValueError(
+                "--run-both-profiles requires --true-default-fixed-params-by-sampling-topology-json."
+            )
+        true_default_fixed_params_by_sampling_topology = _resolve_manual_fixed_params_by_sampling_topology(
+            sampling_methods=sampling_methods,
+            topologies=topologies,
+            json_path=args.true_default_fixed_params_by_sampling_topology_json,
+            allow_unselected_keys=True,
+        )
     _validate_manual_fixed_params_for_scope(
         manual_fixed_params,
         processing_method="batch",
@@ -1941,6 +1975,13 @@ def main() -> int:
             topologies=[topology],
         )
     for sampling, topology_map in manual_fixed_params_by_sampling_topology.items():
+        for topology, topology_params in topology_map.items():
+            _validate_manual_fixed_params_for_scope(
+                topology_params,
+                processing_method="batch",
+                topologies=[topology],
+            )
+    for sampling, topology_map in true_default_fixed_params_by_sampling_topology.items():
         for topology, topology_params in topology_map.items():
             _validate_manual_fixed_params_for_scope(
                 topology_params,
@@ -1961,6 +2002,18 @@ def main() -> int:
             fixed_params_by_sampling_topology=manual_fixed_params_by_sampling_topology,
             sampling_methods=sampling_methods,
             topologies=topologies,
+            profile_label="tuned-fixed",
+        )
+    if (
+        bool(args.run_both_profiles)
+        and bool(args.require_complete_sampling_topology_overrides)
+        and args.true_default_fixed_params_by_sampling_topology_json
+    ):
+        _validate_sampling_topology_override_coverage(
+            fixed_params_by_sampling_topology=true_default_fixed_params_by_sampling_topology,
+            sampling_methods=sampling_methods,
+            topologies=topologies,
+            profile_label="true-default",
         )
 
     dataset_config = _resolve_dataset_config()
@@ -2023,7 +2076,7 @@ def main() -> int:
             runs_csv_name=true_default_runs_csv_name,
             manual_fixed_params={},
             manual_fixed_params_by_topology={},
-            manual_fixed_params_by_sampling_topology={},
+            manual_fixed_params_by_sampling_topology=true_default_fixed_params_by_sampling_topology,
             compare_against_csv=None,
             compare_output_subdir=str(args.compare_output_subdir),
             compare_markdown_name=str(args.compare_markdown_name),
@@ -2065,6 +2118,16 @@ def main() -> int:
             "seeds": [int(seed) for seed in seeds],
             "topologies": list(topologies),
             "sampling_methods": list(sampling_methods),
+            "true_default_fixed_params_by_sampling_topology_json": (
+                str(_resolve_json_path(args.true_default_fixed_params_by_sampling_topology_json))
+                if args.true_default_fixed_params_by_sampling_topology_json
+                else None
+            ),
+            "tuned_fixed_params_by_sampling_topology_json": (
+                str(_resolve_json_path(args.fixed_params_by_sampling_topology_json))
+                if args.fixed_params_by_sampling_topology_json
+                else None
+            ),
             "default_runs_file": str(true_default_result["runs_csv"]),
             "default_aware_tuned_runs_file": str(tuned_fixed_result["runs_csv"]),
             "true_default": true_default_result,

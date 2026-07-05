@@ -37,10 +37,7 @@ def _build_default_floatsom_for_context(forced_params: Dict[str, Any]) -> FloatS
             normalization='xpysom',
             use_sparse_influence=False,
         ),
-        topology_config=TopologyConfig(
-            topology_type=topology_type,
-            grid_size=int(forced_params.get('grid_size', 10)),
-        ),
+        topology_config=TopologyConfig(topology_type=topology_type),
     )
 
 
