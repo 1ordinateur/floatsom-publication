@@ -34,5 +34,5 @@ python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
   --sample-size 100000000 \
   --input-dim 50 \
   --grid-size 32 \
-  --timeout-minutes 1380 \
+  --timeout-minutes 30 \
   --numba-threads "${PBS_NCPUS:-12}"
