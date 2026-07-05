@@ -44,19 +44,6 @@ module load rapids/25.06
 
 cd "$REPO_ROOT"
 
-# The publication sync helpers look for a sibling/ancestor path named
-# "floatsom/paper/assets". This checkout is named "floatsom-publication", so
-# create a stable sibling alias if it does not already exist.
-REPO_PARENT="$(dirname "$REPO_ROOT")"
-SYNC_ALIAS="${REPO_PARENT}/floatsom"
-if [ ! -e "$SYNC_ALIAS" ]; then
-  ln -s "$REPO_ROOT" "$SYNC_ALIAS"
-fi
-if [ "$(readlink -f "$SYNC_ALIAS")" != "$(readlink -f "$REPO_ROOT")" ]; then
-  echo "ERROR: $SYNC_ALIAS exists but does not point to $REPO_ROOT" >&2
-  exit 1
-fi
-
 echo "Checking Python dependencies..."
 "$PYTHON_BIN" - <<'PY'
 import matplotlib

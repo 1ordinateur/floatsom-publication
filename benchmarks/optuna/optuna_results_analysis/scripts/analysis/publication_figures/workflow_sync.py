@@ -51,18 +51,24 @@ def _resolve_run_output_dir(base_output_dir: Path, run_name: Optional[str]) -> P
 def _resolve_paper_assets_dir() -> Optional[Path]:
     script_path = Path(__file__).resolve()
     for parent in script_path.parents:
-        candidate = parent / "floatsom" / "paper" / "assets"
-        if candidate.is_dir():
-            return candidate
+        for candidate in (
+            parent / "paper" / "assets",
+            parent / "floatsom" / "paper" / "assets",
+        ):
+            if candidate.is_dir():
+                return candidate
     return None
 
 
 def _resolve_paper_manual_assets_dir() -> Optional[Path]:
     script_path = Path(__file__).resolve()
     for parent in script_path.parents:
-        candidate = parent / "floatsom" / "paper" / "assets_manual"
-        if candidate.is_dir():
-            return candidate
+        for candidate in (
+            parent / "paper" / "assets_manual",
+            parent / "floatsom" / "paper" / "assets_manual",
+        ):
+            if candidate.is_dir():
+                return candidate
     return None
 
 
@@ -87,7 +93,7 @@ def _sync_sampling_comparison_assets_to_paper(
     if assets_dir is None:
         return {
             "copied": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     raw_suite = suite_outputs.get("raw", {})
@@ -200,7 +206,7 @@ def _sync_sampling_regression_stats_to_manuscript(
     if assets_dir is None:
         return {
             "updated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -358,7 +364,7 @@ def _sync_figure12_topology_runtime_stats_to_manuscript() -> Dict[str, object]:
     if assets_dir is None:
         return {
             "updated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -535,7 +541,7 @@ def _sync_figure13_deployment_runtime_stats_to_manuscript() -> Dict[str, object]
     if assets_dir is None:
         return {
             "updated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -725,7 +731,7 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
     if assets_dir is None:
         return {
             "generated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -1017,7 +1023,7 @@ def _sync_systems_scaling_stats_to_manuscript() -> Dict[str, object]:
     if assets_dir is None:
         return {
             "updated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -1218,7 +1224,7 @@ def _sync_default_aware_stats_to_manuscript(
     if assets_dir is None:
         return {
             "updated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -1580,7 +1586,7 @@ def _sync_default_aware_stability_regression_stats_to_manuscript(
     if assets_dir is None:
         return {
             "updated": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
     manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
@@ -1745,7 +1751,7 @@ def _sync_default_aware_assets_to_paper(
     if assets_dir is None:
         return {
             "copied": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
     if not bool(default_aware_analysis.get("enabled")):
         return {
@@ -1820,7 +1826,7 @@ def _sync_xpysom_calibration_assets_to_paper(
     if assets_dir is None:
         return {
             "copied": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
     if not bool(xpysom_calibration_publication.get("enabled")):
         return {
@@ -1895,7 +1901,7 @@ def _sync_xpysom_rng_publication_assets_to_paper(
     if assets_dir is None:
         return {
             "copied": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
     if not bool(xpysom_rng_publication.get("enabled")):
         return {
@@ -1940,7 +1946,7 @@ def _sync_xpysom_topology_tripanel_assets_to_paper(
     if assets_dir is None:
         return {
             "copied": False,
-            "reason": "Could not locate floatsom/paper/assets from script path.",
+            "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
     if not bool(xpysom_topology_tripanel_publication.get("enabled")):
         return {
