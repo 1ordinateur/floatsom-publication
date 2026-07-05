@@ -6,7 +6,7 @@ import html
 import json
 import shutil
 from collections import OrderedDict
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
@@ -45,7 +45,7 @@ def _resolve_run_output_dir(base_output_dir: Path, run_name: Optional[str]) -> P
     if run_name:
         run_slug = _slug(run_name)
     else:
-        run_slug = datetime.now(UTC).strftime("run_%Y%m%d_%H%M%S_utc")
+        run_slug = datetime.now(timezone.utc).strftime("run_%Y%m%d_%H%M%S_utc")
     return base_output_dir / run_slug
 
 def _resolve_paper_assets_dir() -> Optional[Path]:

@@ -14,7 +14,7 @@ output schema as true-default runs.
 from __future__ import annotations
 
 import argparse
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
@@ -1880,7 +1880,7 @@ def main() -> int:
             "comparison_reference_csv": str(Path(args.compare_against_csv).resolve()),
             "comparison_output_dir": str(comparison_output_dir),
             "comparison_report": str(comparison_report),
-            "generated_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         }
         metadata_path = compare_base_dir / "COMPARE_ONLY_METADATA.json"
         metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
@@ -2044,7 +2044,7 @@ def main() -> int:
         )
 
         manifest = {
-            "generated_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "output_dir": str(output_dir.resolve()),
             "evaluation_split": str(args.evaluation_split),
             "datasets": list(datasets),

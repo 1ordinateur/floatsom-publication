@@ -4,7 +4,7 @@ import argparse
 import atexit
 import json
 from collections import OrderedDict
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Dict, List, Optional, Sequence
@@ -844,7 +844,7 @@ def main() -> int:
         )
     if not manuscript_only:
         manifest = {
-            'generated_utc': datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'generated_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'data_file': str(data_file.resolve()),
             'run_output_dir': str(run_output_dir.resolve()),
             'params': {

@@ -6,7 +6,6 @@ import html
 import json
 import shutil
 from collections import OrderedDict
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
