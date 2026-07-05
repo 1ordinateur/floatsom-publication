@@ -25,6 +25,14 @@ mkdir -p "$MPLCONFIGDIR"
 export PYTHONNOUSERSITE=1
 unset PYTHONPATH
 
+AWESOM_VENV="${AWESOM_VENV:-/g/data/eu59/${USER}/venvs/awesom-only}"
+if [ ! -f "${AWESOM_VENV}/bin/activate" ]; then
+  echo "Missing aweSOM venv activation script: ${AWESOM_VENV}/bin/activate" >&2
+  echo "Create it with NCI-ai-ml loaded, then install aweSOM with pip --no-deps." >&2
+  exit 2
+fi
+source "${AWESOM_VENV}/bin/activate"
+
 RUN_TAG="${PBS_JOBID:-manual}"
 OUTPUT_DIR="/g/data/eu59/SIFEAN/sfa/awesom_100m_hex_baseline_${RUN_TAG}"
 mkdir -p "$OUTPUT_DIR"
