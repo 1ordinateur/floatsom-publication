@@ -234,6 +234,8 @@ We use Optuna-based multi-objective optimization to determine the best attainabl
 14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ Runs}
 \end{equation*}
 
+The neighborhood-radius search space was shared across topology families. In particular, \texttt{initial\_radius} was an Optuna-optimized parameter for hexagonal, MST, and RNG runs, with the same search interval of 0.5 to 10.0 in each case. Thus, the hexagonal topology comparisons below use a tuned hexagonal comparator rather than a default-radius hexagonal baseline.
+
 Sampling comparisons in Section 5.2 compare full versus random paired analyses pooled across all topologies. Topology comparisons in Sections 5.3-5.4 use full sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This pilot additionally included the HDSSSOM sampling methodology alongside the full and random sampling methodologies.
 
 \subsubsection{Optuna benchmark datasets and preprocessing}
@@ -317,6 +319,8 @@ Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ 
 \subsection{Topology Results}
 
 Topology comparisons are reported with $QE$-only metrics, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG.
+
+Because \texttt{initial\_radius} was tuned for every topology family, the topology comparison is a best-observed-versus-best-observed comparison under the same Optuna budget rather than a comparison against an untuned hexagonal radius. The distilled deployable defaults selected tighter hexagonal radii than the graph topologies: under full sampling the selected \texttt{initial\_radius} values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG, while under random sampling they were 1.17, 1.82, and 1.77, respectively. These values show that the reported MST/RNG $QE$ gains are not explained by evaluating hexagonal only at a broader default neighborhood radius.
 
 \begin{figure}[tb]
 \centering

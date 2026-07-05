@@ -14,7 +14,7 @@ output schema as true-default runs.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 import importlib.machinery
 import json
 import os
