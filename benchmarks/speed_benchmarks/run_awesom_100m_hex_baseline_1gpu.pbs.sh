@@ -35,7 +35,7 @@ echo "Output directory: ${OUTPUT_DIR}"
 
 python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
   --output-dir "$OUTPUT_DIR" \
-  --sample-size 100000000 \
+  --sample-size 10000000 \
   --input-dim 50 \
   --grid-size 32 \
   --timeout-minutes 30 \
