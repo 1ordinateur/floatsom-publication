@@ -376,13 +376,14 @@ class TestDecayParameterCoupling:
 class TestInitialRadiusDefaults:
     """Test initial_radius default calculation."""
 
-    def test_contextual_defaults_for_random_mst(self):
-        """random+mst should use the tuned JSON-backed defaults."""
+    def test_contextual_defaults_for_random_mst_are_opt_in(self):
+        """random+mst should only use tuned JSON-backed defaults when requested."""
         params = FloatSOMParams(
             input_dim=10,
             sampling_config=SamplingConfig(method="random"),
             topology_config=TopologyConfig(topology_type="mst", num_nodes=100),
             processing_config=ProcessingConfig(chunk_size=1000),
+            use_contextual_defaults=True,
         )
 
         assert params.initial_radius == pytest.approx(1.8177068157674101)
@@ -411,7 +412,7 @@ class TestInitialRadiusDefaults:
         assert params.processing_config.initial_momentum == pytest.approx(0.5)
 
     def test_initial_radius_defaults_for_mst(self):
-        """Initial radius for MST should default to sqrt(num_nodes)."""
+        """Initial radius for MST should default to the XPySOM-equivalent map width / 2."""
         params = FloatSOMParams(
             input_dim=10,
             topology_config=TopologyConfig(
@@ -422,8 +423,8 @@ class TestInitialRadiusDefaults:
             processing_config=ProcessingConfig(chunk_size=1000)
         )
 
-        # Should be sqrt(100) = 10
-        assert params.initial_radius == 10
+        # Should match XPySOM sigma=0 for the equivalent 10x10 map.
+        assert params.initial_radius == pytest.approx(5.0)
 
     def test_hdsssom_hexagonal_does_not_borrow_random_or_full_contextual_defaults(self):
         """Unsupported sampling/topology pairs should keep legacy defaults."""
