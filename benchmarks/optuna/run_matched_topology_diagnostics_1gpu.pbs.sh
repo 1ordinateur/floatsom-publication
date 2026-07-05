@@ -15,8 +15,7 @@
 set -euo pipefail
 
 module use /g/data/dk92/apps/Modules/modulefiles/
-FLOATSOM_MODULE="${FLOATSOM_MODULE:-NCI-ai-ml/24.11}"
-module load "$FLOATSOM_MODULE"
+module load rapids/25.06
 
 REPO_ROOT="${REPO_ROOT:-/g/data/eu59/piblo_project/floatsom-publication}"
 cd "$REPO_ROOT"
