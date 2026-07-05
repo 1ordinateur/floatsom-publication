@@ -38,6 +38,15 @@ DEFAULT_GRID_SIZE = 32
 DEFAULT_TIMEOUT_MINUTES = 30
 RAW_RESULT_FILENAME = "awesom_100m_hex_baseline_result.csv"
 METADATA_FILENAME = "awesom_100m_hex_baseline_metadata.json"
+AUDITED_MODULES = (
+    "aweSOM",
+    "numpy",
+    "numba",
+    "scipy",
+    "sklearn",
+    "matplotlib",
+    "jax",
+)
 
 
 def _parse_args() -> argparse.Namespace:
@@ -48,7 +57,11 @@ def _parse_args() -> argparse.Namespace:
         )
     )
     parser.add_argument("--output-dir", required=True, help="Directory for result CSV/JSON files.")
-    parser.add_argument("--cache-dir", required=True, help="Directory for generated memory-mapped data.")
+    parser.add_argument(
+        "--cache-dir",
+        default=None,
+        help="Deprecated; aweSOM input data are generated in memory for this benchmark.",
+    )
     parser.add_argument(
         "--awesom-source-root",
         default=None,
@@ -89,12 +102,12 @@ def _parse_args() -> argparse.Namespace:
         "--data-chunk-rows",
         type=int,
         default=250_000,
-        help="Rows per chunk when generating the memory-mapped random dataset.",
+        help="Rows per chunk when generating the in-memory float32 NumPy array.",
     )
     parser.add_argument(
         "--force-regenerate",
         action="store_true",
-        help="Regenerate the cached .npy data file even if it already exists.",
+        help="Deprecated no-op; data are generated in memory for each run.",
     )
     parser.add_argument(
         "--timeout-minutes",
@@ -133,11 +146,19 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _result_row_base(args: argparse.Namespace, data_path: Path, generation_seconds: float) -> Dict[str, Any]:
+def _result_row_base(
+    args: argparse.Namespace,
+    generation_seconds: float,
+    metadata: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     xdim = int(args.xdim if args.xdim is not None else args.grid_size)
     ydim = int(args.ydim if args.ydim is not None else args.grid_size)
     train_steps = int(args.train_steps if args.train_steps is not None else args.sample_size)
     timeout_seconds = None if args.timeout_minutes <= 0 else float(args.timeout_minutes) * 60.0
+    metadata = metadata or {}
+    chunks = metadata.get("chunks", "")
+    if isinstance(chunks, (tuple, list)):
+        chunks = "x".join(str(value) for value in chunks)
     return {
         "benchmark": "awesom_100m_hex_baseline",
         "implementation": "aweSOM",
@@ -153,8 +174,10 @@ def _result_row_base(args: argparse.Namespace, data_path: Path, generation_secon
         "alpha_type": str(args.alpha_type),
         "sampling_type": str(args.sampling_type),
         "seed": int(args.seed),
-        "data_path": str(data_path),
-        "data_dtype": "float32",
+        "data_path": "in_memory",
+        "data_storage_format": "numpy.ndarray",
+        "data_dtype": str(metadata.get("dtype", "float32")),
+        "data_chunks": chunks,
         "data_distribution": "uniform[0,1)",
         "data_generation_seconds": float(generation_seconds),
         "timeout_seconds": timeout_seconds if timeout_seconds is not None else "",
@@ -197,43 +220,57 @@ def _validate_awesom_import(source_root: Optional[str]) -> Dict[str, Any]:
     }
 
 
-def _data_cache_path(cache_dir: Path, *, sample_size: int, input_dim: int, seed: int) -> Path:
-    return cache_dir / f"awesom_uniform_{sample_size}_{input_dim}_seed{seed}.npy"
+def _module_origin(module_name: str) -> str:
+    if module_name == "numpy":
+        return getattr(np, "__file__", "")
+    spec = importlib.util.find_spec(module_name)
+    if spec is None:
+        return "missing"
+    return str(spec.origin or "namespace")
 
 
-def _ensure_memmap_data(args: argparse.Namespace, data_path: Path) -> float:
-    data_path.parent.mkdir(parents=True, exist_ok=True)
-    expected_shape = (int(args.sample_size), int(args.input_dim))
-    if data_path.exists() and not args.force_regenerate:
-        existing = np.load(data_path, mmap_mode="r")
-        if tuple(existing.shape) != expected_shape or existing.dtype != np.float32:
-            raise ValueError(
-                "Cached data shape/dtype mismatch. "
-                f"Expected {expected_shape} float32, got {existing.shape} {existing.dtype}. "
-                "Use --force-regenerate to replace it."
-            )
-        return 0.0
+def _collect_import_provenance() -> Dict[str, str]:
+    return {
+        f"module_origin_{module_name.lower().replace('.', '_')}": _module_origin(module_name)
+        for module_name in AUDITED_MODULES
+    }
 
+
+def _resolve_generation_chunk_rows(args: argparse.Namespace) -> int:
+    return int(args.data_chunk_rows)
+
+
+def _generate_in_memory_data(
+    *,
+    sample_size: int,
+    input_dim: int,
+    seed: int,
+    chunk_rows: int,
+) -> tuple[np.ndarray, Dict[str, Any], float]:
+    if chunk_rows <= 0:
+        raise ValueError(f"data generation chunk_rows must be positive, got {chunk_rows}")
+
+    # Match the existing scaling benchmark's random-data convention while
+    # avoiding a full float64 temporary for the 100M x 50 case.
     start_time = time.perf_counter()
-    rng = np.random.default_rng(int(args.seed))
-    data = np.lib.format.open_memmap(
-        data_path,
-        mode="w+",
-        dtype=np.float32,
-        shape=expected_shape,
-    )
-    chunk_rows = max(1, int(args.data_chunk_rows))
-    for start_idx in range(0, expected_shape[0], chunk_rows):
-        end_idx = min(start_idx + chunk_rows, expected_shape[0])
-        data[start_idx:end_idx, :] = rng.random(
-            (end_idx - start_idx, expected_shape[1]),
-            dtype=np.float32,
+    np.random.seed(seed)
+    data = np.empty((sample_size, input_dim), dtype=np.float32)
+    for start_idx in range(0, sample_size, chunk_rows):
+        end_idx = min(start_idx + chunk_rows, sample_size)
+        data[start_idx:end_idx, :] = np.random.rand(end_idx - start_idx, input_dim).astype(
+            np.float32
         )
-        data.flush()
-        if start_idx == 0 or end_idx == expected_shape[0] or end_idx % (chunk_rows * 10) == 0:
-            progress = 100.0 * end_idx / expected_shape[0]
-            print(f"Generated {end_idx:,}/{expected_shape[0]:,} rows ({progress:.1f}%).", flush=True)
-    return time.perf_counter() - start_time
+        if start_idx == 0 or end_idx == sample_size or end_idx % (chunk_rows * 10) == 0:
+            progress = 100.0 * end_idx / sample_size
+            print(f"Generated {end_idx:,}/{sample_size:,} rows ({progress:.1f}%).", flush=True)
+
+    metadata = {
+        "shape": data.shape,
+        "dtype": str(data.dtype),
+        "chunks": (min(chunk_rows, sample_size), input_dim),
+        "generation_backend": "numpy.random.rand",
+    }
+    return data, metadata, time.perf_counter() - start_time
 
 
 def _sampled_quantization_error(
@@ -279,8 +316,12 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
         from aweSOM import Lattice  # type: ignore
         import aweSOM  # type: ignore
 
-        np.random.seed(int(args_dict["seed"]))
-        data = np.load(args_dict["data_path"], mmap_mode="r")
+        data, data_metadata, generation_seconds = _generate_in_memory_data(
+            sample_size=int(args_dict["sample_size"]),
+            input_dim=int(args_dict["input_dim"]),
+            seed=int(args_dict["seed"]),
+            chunk_rows=int(args_dict["data_chunk_rows"]),
+        )
         feature_names = [f"feature{i}" for i in range(1, int(args_dict["input_dim"]) + 1)]
 
         lattice = Lattice(
@@ -313,6 +354,9 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
         result_queue.put(
             {
                 "status": "ok",
+                "data_generation_seconds": float(generation_seconds),
+                "data_shape": "x".join(str(value) for value in data_metadata["shape"]),
+                "data_generation_backend": str(data_metadata["generation_backend"]),
                 "train_time_s": float(train_time_s),
                 "qe_sampled": qe_value,
                 "qe_time_s": qe_time_s,
@@ -333,6 +377,9 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
         result_queue.put(
             {
                 "status": "error",
+                "data_generation_seconds": float("nan"),
+                "data_shape": "",
+                "data_generation_backend": "",
                 "train_time_s": float("nan"),
                 "qe_sampled": float("nan"),
                 "qe_time_s": float("nan"),
@@ -347,7 +394,7 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
         )
 
 
-def _run_training_with_watchdog(args: argparse.Namespace, data_path: Path) -> Dict[str, Any]:
+def _run_training_with_watchdog(args: argparse.Namespace) -> Dict[str, Any]:
     xdim = int(args.xdim if args.xdim is not None else args.grid_size)
     ydim = int(args.ydim if args.ydim is not None else args.grid_size)
     train_steps = int(args.train_steps if args.train_steps is not None else args.sample_size)
@@ -355,7 +402,6 @@ def _run_training_with_watchdog(args: argparse.Namespace, data_path: Path) -> Di
     result_queue: mp.Queue = ctx.Queue(maxsize=1)
     child_args = {
         "awesom_source_root": args.awesom_source_root,
-        "data_path": str(data_path),
         "sample_size": int(args.sample_size),
         "input_dim": int(args.input_dim),
         "xdim": xdim,
@@ -365,6 +411,7 @@ def _run_training_with_watchdog(args: argparse.Namespace, data_path: Path) -> Di
         "alpha_type": str(args.alpha_type),
         "sampling_type": str(args.sampling_type),
         "seed": int(args.seed),
+        "data_chunk_rows": _resolve_generation_chunk_rows(args),
         "numba_threads": int(args.numba_threads) if args.numba_threads is not None else None,
         "qe_sample_size": int(args.qe_sample_size),
         "qe_chunk_rows": int(args.qe_chunk_rows),
@@ -423,20 +470,19 @@ def _run_training_with_watchdog(args: argparse.Namespace, data_path: Path) -> Di
 def main() -> int:
     args = _parse_args()
     output_dir = Path(args.output_dir).expanduser().resolve()
-    cache_dir = Path(args.cache_dir).expanduser().resolve()
-    data_path = _data_cache_path(
-        cache_dir,
-        sample_size=int(args.sample_size),
-        input_dim=int(args.input_dim),
-        seed=int(args.seed),
-    )
+    data_chunk_rows = _resolve_generation_chunk_rows(args)
+    placeholder_metadata = {
+        "dtype": str(np.dtype(np.float32)),
+        "chunks": (min(data_chunk_rows, int(args.sample_size)), int(args.input_dim)),
+    }
 
     run_start = time.perf_counter()
     import_probe: Dict[str, Any]
     try:
         import_probe = _validate_awesom_import(args.awesom_source_root)
     except BaseException as exc:  # noqa: BLE001 - result should record import failures
-        row = _result_row_base(args, data_path, generation_seconds=0.0)
+        row = _result_row_base(args, generation_seconds=0.0, metadata=placeholder_metadata)
+        row.update(_collect_import_provenance())
         row.update(
             {
                 "status": "import_error",
@@ -459,8 +505,12 @@ def main() -> int:
         print(f"aweSOM import failed; wrote {output_dir / RAW_RESULT_FILENAME}", flush=True)
         return 1
 
-    generation_seconds = _ensure_memmap_data(args, data_path)
-    row = _result_row_base(args, data_path, generation_seconds=generation_seconds)
+    row = _result_row_base(
+        args,
+        generation_seconds=float("nan"),
+        metadata=placeholder_metadata,
+    )
+    row.update(_collect_import_provenance())
     row.update(import_probe)
 
     if args.dry_run:
@@ -480,13 +530,17 @@ def main() -> int:
             }
         )
     else:
-        result = _run_training_with_watchdog(args, data_path)
+        result = _run_training_with_watchdog(args)
         row.update(result)
 
     row["script"] = str(Path(__file__).resolve())
     row["published_awesom_som_context"] = (
         "aweSOM JOSS Figure 1 SOM scaling reports F=6 and F=10 on one CPU node; "
         "the JAX/GPU panel is for SCE rather than SOM training."
+    )
+    row["jax_note"] = (
+        "This benchmark exercises aweSOM's SOM Lattice path, which uses NumPy/Numba "
+        "rather than JAX; JAX is audited for environment provenance but not invoked."
     )
     row["topology_note"] = (
         "aweSOM Lattice does not expose a hexagonal topology flag; this run records "

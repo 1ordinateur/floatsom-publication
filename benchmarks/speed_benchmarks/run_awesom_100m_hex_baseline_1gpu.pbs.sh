@@ -15,27 +15,22 @@
 set -euo pipefail
 
 module use /g/data/dk92/apps/Modules/modulefiles/
-module load rapids/25.06
+NCI_AI_ML_MODULE="${NCI_AI_ML_MODULE:-NCI-ai-ml/24.11}"
+module load "$NCI_AI_ML_MODULE"
 
 cd /g/data/eu59/SIFEAN/sfa/
 
 export MPLCONFIGDIR="${PBS_JOBFS}/matplotlib"
 mkdir -p "$MPLCONFIGDIR"
+export PYTHONNOUSERSITE=1
+unset PYTHONPATH
 
 RUN_TAG="${PBS_JOBID:-manual}"
 OUTPUT_DIR="/g/data/eu59/SIFEAN/sfa/awesom_100m_hex_baseline_${RUN_TAG}"
-CACHE_DIR="/scratch/eu59/${USER}/awesom_100m_hex_cache"
-mkdir -p "$OUTPUT_DIR" "$CACHE_DIR"
-
-AWESOM_ARGS=()
-if [ -n "${AWESOM_SOURCE_ROOT:-}" ]; then
-  AWESOM_ARGS+=(--awesom-source-root "$AWESOM_SOURCE_ROOT")
-fi
+mkdir -p "$OUTPUT_DIR"
 
 python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
   --output-dir "$OUTPUT_DIR" \
-  --cache-dir "$CACHE_DIR" \
-  "${AWESOM_ARGS[@]}" \
   --sample-size 100000000 \
   --input-dim 50 \
   --grid-size 32 \
