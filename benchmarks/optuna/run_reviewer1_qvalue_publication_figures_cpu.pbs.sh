@@ -17,6 +17,8 @@ RUN_TAG="${RUN_TAG:-reviewer1_qvalues_${PBS_JOBID:-manual}_$(date +%Y%m%d_%H%M%S
 WORK_ROOT="${WORK_ROOT:-${REPO_ROOT}/Results/${RUN_TAG}}"
 PUBLICATION_ROOT="${PUBLICATION_ROOT:-${REPO_ROOT}/Results/publication_figures}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
+IMPORT_SHIM_ROOT="${IMPORT_SHIM_ROOT:-${WORK_ROOT}/pythonpath}"
+IMPORT_SHIM_PACKAGE="${IMPORT_SHIM_ROOT}/floatsom"
 
 RAW_OPTUNA_DIR="${RAW_OPTUNA_DIR:-${REPO_ROOT}/outputs/noninf_optuna_benchmarks_28022026/both}"
 TRUE_DEFAULT_CSV="${TRUE_DEFAULT_CSV:-${REPO_ROOT}/outputs/tuned_default_comparison_10032026/true_default/matched_true_default_runs.csv}"
@@ -30,8 +32,10 @@ export MKL_NUM_THREADS="${PBS_NCPUS:-12}"
 export NUMEXPR_NUM_THREADS="${PBS_NCPUS:-12}"
 export MPLCONFIGDIR="${PBS_JOBFS:-/tmp}/${USER:-floatsom}-matplotlib"
 export TMPDIR="${PBS_JOBFS:-/tmp}"
+export FLOATSOM_REPO_ROOT="$REPO_ROOT"
+export FLOATSOM_IMPORT_SHIM_PACKAGE="$IMPORT_SHIM_PACKAGE"
 
-mkdir -p "$MPLCONFIGDIR" "$WORK_ROOT" "$PUBLICATION_ROOT"
+mkdir -p "$MPLCONFIGDIR" "$WORK_ROOT" "$PUBLICATION_ROOT" "$IMPORT_SHIM_PACKAGE"
 
 echo "Job started: $(date)"
 echo "Host: $(hostname)"
@@ -44,8 +48,36 @@ module load rapids/25.06
 
 cd "$REPO_ROOT"
 
+echo "Configuring FloatSOM import path..."
+"$PYTHON_BIN" - <<'PY'
+from pathlib import Path
+import os
+
+repo_root = Path(os.environ["FLOATSOM_REPO_ROOT"]).resolve()
+shim_package = Path(os.environ["FLOATSOM_IMPORT_SHIM_PACKAGE"]).resolve()
+shim_package.mkdir(parents=True, exist_ok=True)
+(shim_package / "__init__.py").write_text(
+    "\n".join(
+        [
+            '"""Job-local import shim for the FloatSOM publication checkout."""',
+            "from pathlib import Path as _Path",
+            f"_REPO_ROOT = _Path({str(repo_root)!r})",
+            "__path__ = [str(_REPO_ROOT)]",
+            "if __spec__ is not None:",
+            "    __spec__.submodule_search_locations = __path__",
+            "",
+        ]
+    ),
+    encoding="utf-8",
+)
+PY
+export PYTHONPATH="${IMPORT_SHIM_ROOT}:${PYTHONPATH:-}"
+echo "PYTHONPATH import shim: $IMPORT_SHIM_ROOT"
+
 echo "Checking Python dependencies..."
 "$PYTHON_BIN" - <<'PY'
+import floatsom
+import floatsom.benchmarks
 import matplotlib
 import numpy
 import pandas
