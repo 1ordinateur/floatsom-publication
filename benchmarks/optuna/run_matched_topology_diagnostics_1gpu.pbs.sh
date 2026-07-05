@@ -15,7 +15,8 @@
 set -euo pipefail
 
 module use /g/data/dk92/apps/Modules/modulefiles/
-module load rapids/25.06
+FLOATSOM_MODULE="${FLOATSOM_MODULE:-rapids/25.06}"
+module load "$FLOATSOM_MODULE"
 
 REPO_ROOT="${REPO_ROOT:-/g/data/eu59/piblo_project/floatsom-publication}"
 cd "$REPO_ROOT"
@@ -24,11 +25,14 @@ RUN_TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 RUN_TAG="${RUN_TIMESTAMP}_${PBS_JOBID:-manual}"
 OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/Results/topology_diagnostics_matched_profiles_${RUN_TAG}}"
 FIXED_PARAMS_JSON="${FIXED_PARAMS_JSON:-floatsom_min1000_tuned_defaults.json}"
+SKLEARN_DATA_HOME="${SKLEARN_DATA_HOME:-${REPO_ROOT}/sklearn_data}"
 
 mkdir -p "$OUTPUT_DIR"
+mkdir -p "$SKLEARN_DATA_HOME"
 
 export MPLCONFIGDIR="${PBS_JOBFS:-/tmp}/matplotlib"
 mkdir -p "$MPLCONFIGDIR"
+export SCIKIT_LEARN_DATA="$SKLEARN_DATA_HOME"
 
 unset PYTHONPATH
 
@@ -37,6 +41,7 @@ echo "Repository: ${REPO_ROOT}"
 echo "Module: ${FLOATSOM_MODULE}"
 echo "Output directory: ${OUTPUT_DIR}"
 echo "Fixed params JSON: ${FIXED_PARAMS_JSON}"
+echo "SCIKIT_LEARN_DATA: ${SCIKIT_LEARN_DATA}"
 
 DATASET_ARGS=()
 if [[ -n "${DATASETS:-}" ]]; then
@@ -60,6 +65,7 @@ python3 benchmarks/optuna/run_matched_default_floatsom_batch.py \
   --topologies hexagonal mst rng \
   --sampling-methods full \
   --evaluation-split both \
+  --scikit-learn-data-home "$SKLEARN_DATA_HOME" \
   --fixed-params-by-sampling-topology-json "$FIXED_PARAMS_JSON" \
   --true-default-runs-csv-name matched_default_topology_diagnostics_runs.csv \
   --tuned-fixed-runs-csv-name matched_tuned_topology_diagnostics_runs.csv \
