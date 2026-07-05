@@ -12,7 +12,6 @@ Usage:
 import argparse
 import json
 import sys
-import os
 import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
@@ -22,15 +21,20 @@ import optuna
 from optuna.trial import FrozenTrial
 import numpy as np
 
-# Add parent directories to path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-grandparent_dir = os.path.dirname(parent_dir)
-sys.path.append(parent_dir)
-sys.path.append(grandparent_dir)
-
-from harmonization.harmonization import ParetoHarmonizer
-from harmonization.pareto_utils import find_best_trial_by_distance
+if __package__:
+    from .harmonization import ParetoHarmonizer
+    from .pareto_utils import find_best_trial_by_distance
+else:
+    current_dir = Path(__file__).resolve().parent
+    parent_dir = current_dir.parent
+    sys.path = [
+        entry
+        for entry in sys.path
+        if Path(entry or ".").resolve() != current_dir
+    ]
+    sys.path.insert(0, str(parent_dir))
+    from harmonization.harmonization import ParetoHarmonizer
+    from harmonization.pareto_utils import find_best_trial_by_distance
 
 
 @dataclass

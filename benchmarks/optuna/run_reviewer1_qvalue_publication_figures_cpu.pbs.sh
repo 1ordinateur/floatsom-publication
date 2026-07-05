@@ -112,13 +112,13 @@ for path in \
 done
 
 echo "Stage 1/4: harmonizing raw Optuna JSON studies..."
-"$PYTHON_BIN" benchmarks/optuna/harmonization/harmonize_optuna_results.py \
+"$PYTHON_BIN" -m floatsom.benchmarks.optuna.harmonization.harmonize_optuna_results \
   --results-dir "$RAW_OPTUNA_DIR" \
   --output-dir "$WORK_ROOT/harmonized" \
   --objectives quantization_error_holdout quantization_error_train
 
 echo "Stage 2/4: exporting harmonized Pareto CSV..."
-"$PYTHON_BIN" benchmarks/optuna/harmonization/export_pareto_to_csv.py \
+"$PYTHON_BIN" -m floatsom.benchmarks.optuna.harmonization.export_pareto_to_csv \
   --input-dir "$WORK_ROOT/harmonized" \
   --output "$WORK_ROOT/pareto_front_results.csv"
 

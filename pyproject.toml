@@ -39,6 +39,25 @@ packages = [
     "floatsom.adapters",
     "floatsom.base",
     "floatsom.benchmarks",
+    "floatsom.benchmarks.evaluation",
+    "floatsom.benchmarks.mst_comparison",
+    "floatsom.benchmarks.optuna",
+    "floatsom.benchmarks.optuna.analysis",
+    "floatsom.benchmarks.optuna.config",
+    "floatsom.benchmarks.optuna.core",
+    "floatsom.benchmarks.optuna.harmonization",
+    "floatsom.benchmarks.optuna.optuna_results_analysis",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.modules",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.scripts",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis",
+    "floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures",
+    "floatsom.benchmarks.optuna.orchestration",
+    "floatsom.benchmarks.optuna.utils",
+    "floatsom.benchmarks.speed_benchmarks",
+    "floatsom.benchmarks.speed_benchmarks.gpu_scaling",
     "floatsom.data",
     "floatsom.evaluation",
     "floatsom.processing",
@@ -54,6 +73,25 @@ floatsom = "."
 "floatsom.adapters" = "adapters"
 "floatsom.base" = "base"
 "floatsom.benchmarks" = "benchmarks"
+"floatsom.benchmarks.evaluation" = "benchmarks/evaluation"
+"floatsom.benchmarks.mst_comparison" = "benchmarks/mst_comparison"
+"floatsom.benchmarks.optuna" = "benchmarks/optuna"
+"floatsom.benchmarks.optuna.analysis" = "benchmarks/optuna/analysis"
+"floatsom.benchmarks.optuna.config" = "benchmarks/optuna/config"
+"floatsom.benchmarks.optuna.core" = "benchmarks/optuna/core"
+"floatsom.benchmarks.optuna.harmonization" = "benchmarks/optuna/harmonization"
+"floatsom.benchmarks.optuna.optuna_results_analysis" = "benchmarks/optuna/optuna_results_analysis"
+"floatsom.benchmarks.optuna.optuna_results_analysis.modules" = "benchmarks/optuna/optuna_results_analysis/modules"
+"floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis" = "benchmarks/optuna/optuna_results_analysis/modules/core_analysis"
+"floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis" = "benchmarks/optuna/optuna_results_analysis/modules/overall_score_analysis"
+"floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis" = "benchmarks/optuna/optuna_results_analysis/modules/parameter_analysis"
+"floatsom.benchmarks.optuna.optuna_results_analysis.scripts" = "benchmarks/optuna/optuna_results_analysis/scripts"
+"floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis" = "benchmarks/optuna/optuna_results_analysis/scripts/analysis"
+"floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures" = "benchmarks/optuna/optuna_results_analysis/scripts/analysis/publication_figures"
+"floatsom.benchmarks.optuna.orchestration" = "benchmarks/optuna/orchestration"
+"floatsom.benchmarks.optuna.utils" = "benchmarks/optuna/utils"
+"floatsom.benchmarks.speed_benchmarks" = "benchmarks/speed_benchmarks"
+"floatsom.benchmarks.speed_benchmarks.gpu_scaling" = "benchmarks/speed_benchmarks/gpu_scaling"
 "floatsom.data" = "data"
 "floatsom.evaluation" = "evaluation"
 "floatsom.processing" = "processing"
