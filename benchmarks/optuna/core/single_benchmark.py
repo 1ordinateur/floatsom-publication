@@ -346,6 +346,7 @@ def run_single_benchmark(
     n_trials: int = 100,
     timeout: Optional[float] = None,
     objectives: Optional[List[str]] = None,
+    diagnostic_metrics: Optional[List[str]] = None,
     evaluation_split: str = 'both',
     output_dir: Optional[str] = None,
     use_ray_tune: bool = False,
@@ -365,6 +366,7 @@ def run_single_benchmark(
         timeout: Maximum time in seconds for optimization (None for no limit)
         objectives: List of objective metrics to optimize. If None or single objective,
                    uses single-objective TPE. If multiple objectives, uses NSGA-II.
+        diagnostic_metrics: Extra metrics to evaluate and store without optimizing.
         evaluation_split: Which dataset split(s) to optimise ('both', 'holdout', 'train')
         output_dir: Directory to save results (None for default)
         use_ray_tune: Whether to use Ray Tune for distributed execution (default: False)
@@ -389,7 +391,8 @@ def run_single_benchmark(
     metrics_config = get_metrics_config(
         objectives=base_objectives,
         include_train_objectives=include_train_objectives,
-        evaluation_split=evaluation_split
+        evaluation_split=evaluation_split,
+        diagnostic_metrics=diagnostic_metrics,
     )
     expanded_objectives = metrics_config['objectives']
 
@@ -407,6 +410,8 @@ def run_single_benchmark(
     print(f"  Dataset: {dataset_name}")
     print(f"  Objectives (base): {base_objectives}")
     print(f"  Optimizing metrics: {expanded_objectives} ({'multi-objective' if multi_objective else 'single-objective'})")
+    if diagnostic_metrics:
+        print(f"  Diagnostic metrics: {list(diagnostic_metrics)}")
     print(f"  Evaluation split: {evaluation_split}")
     print(f"  Forced params: {forced_params}")
     print(f"  Seed: {seed}")

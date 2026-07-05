@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -15,6 +16,11 @@ _SCRIPT_PATH = (
     Path(__file__).resolve().parents[2]
     / "floatsom/benchmarks/optuna/run_matched_default_floatsom_batch.py"
 )
+if not _SCRIPT_PATH.exists():
+    _SCRIPT_PATH = (
+        Path(__file__).resolve().parents[2]
+        / "benchmarks/optuna/run_matched_default_floatsom_batch.py"
+    )
 
 
 @pytest.fixture(scope="module")
@@ -26,13 +32,44 @@ def matched_runner_module():
     if spec is None or spec.loader is None:
         pytest.fail("Unable to create import spec for run_matched_default_floatsom_batch.py")
 
-    repo_root = _SCRIPT_PATH.parents[3]
+    repo_root = _SCRIPT_PATH.parents[2] if (_SCRIPT_PATH.parents[2] / "pyproject.toml").exists() else _SCRIPT_PATH.parents[3]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
+    previous_floatsom_modules = {
+        name: module
+        for name, module in sys.modules.items()
+        if name == "floatsom" or name.startswith("floatsom.")
+    }
+    previous_optuna = sys.modules.get("optuna")
+    inserted_optuna_stub = False
+    for module_name in list(sys.modules):
+        if module_name == "floatsom" or module_name.startswith("floatsom."):
+            del sys.modules[module_name]
+    package = types.ModuleType("floatsom")
+    package.__path__ = [str(repo_root)]
+    sys.modules["floatsom"] = package
+    if "optuna" not in sys.modules and importlib.util.find_spec("optuna") is None:
+        optuna_stub = types.ModuleType("optuna")
+        optuna_stub.trial = types.SimpleNamespace(
+            FrozenTrial=object,
+            TrialState=types.SimpleNamespace(COMPLETE="COMPLETE"),
+        )
+        optuna_stub.Study = object
+        sys.modules["optuna"] = optuna_stub
+        inserted_optuna_stub = True
 
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module
+    yield module
+
+    for module_name in list(sys.modules):
+        if module_name == "floatsom" or module_name.startswith("floatsom."):
+            del sys.modules[module_name]
+    sys.modules.update(previous_floatsom_modules)
+    if inserted_optuna_stub:
+        sys.modules.pop("optuna", None)
+    elif previous_optuna is not None:
+        sys.modules["optuna"] = previous_optuna
 
 
 def test_resolve_manual_fixed_params_parses_cli_and_json(tmp_path, matched_runner_module):
@@ -306,3 +343,246 @@ def test_validate_resume_profile_compatibility_rejects_profile_mismatch(matched_
             expected_profile="manual_fixed",
             expected_split="both",
         )
+
+
+def test_build_success_row_includes_mtr_and_balanced_diagnostics(matched_runner_module):
+    class Trial:
+        number = 0
+        params = {}
+        user_attrs = {
+            "metrics_holdout": {
+                "quantization_error": 2.0,
+                "mean_tied_rank": 4.0,
+                "node_utilization": 0.5,
+                "dead_node_fraction": 0.5,
+                "used_nodes": 5,
+                "dead_nodes": 5,
+                "total_nodes": 10,
+            },
+            "metrics_train": {
+                "quantization_error": 1.0,
+                "mean_tied_rank": 2.0,
+                "node_utilization": 0.7,
+                "dead_node_fraction": 0.3,
+                "used_nodes": 7,
+                "dead_nodes": 3,
+                "total_nodes": 10,
+            },
+        }
+
+    row = matched_runner_module._build_success_row(
+        trial=Trial(),
+        dataset="iris",
+        seed=42,
+        topology="hexagonal",
+        sampling_method="full",
+        evaluation_split="both",
+        forced_params={
+            "sampling_method": "full",
+            "processing_method": "batch",
+            "batch_mode": "full_batch",
+            "topology_type": "hexagonal",
+        },
+        manual_fixed_params={},
+        run_profile="true_default",
+        run_label="true_default",
+    )
+
+    assert row["mean_tied_rank_holdout"] == pytest.approx(4.0)
+    assert row["mean_tied_rank_train"] == pytest.approx(2.0)
+    assert row["balanced_mean_tied_rank_raw"] == pytest.approx(3.0)
+    assert row["balanced_node_utilization_raw"] == pytest.approx(0.6)
+    assert row["balanced_dead_node_fraction_raw"] == pytest.approx(0.4)
+    assert row["used_nodes_holdout"] == pytest.approx(5.0)
+    assert row["total_nodes_train"] == pytest.approx(10.0)
+
+
+def test_build_success_row_rejects_missing_required_diagnostics(matched_runner_module):
+    class Trial:
+        number = 0
+        params = {}
+        user_attrs = {
+            "metrics_holdout": {
+                "quantization_error": 2.0,
+                "node_utilization": 0.5,
+                "dead_node_fraction": 0.5,
+                "used_nodes": 5,
+                "dead_nodes": 5,
+                "total_nodes": 10,
+            },
+            "metrics_train": {
+                "quantization_error": 1.0,
+                "node_utilization": 0.7,
+                "dead_node_fraction": 0.3,
+                "used_nodes": 7,
+                "dead_nodes": 3,
+                "total_nodes": 10,
+            },
+        }
+
+    with pytest.raises(ValueError, match="required matched topology diagnostics"):
+        matched_runner_module._build_success_row(
+            trial=Trial(),
+            dataset="iris",
+            seed=42,
+            topology="hexagonal",
+            sampling_method="full",
+            evaluation_split="both",
+            forced_params={
+                "sampling_method": "full",
+                "processing_method": "batch",
+                "batch_mode": "full_batch",
+                "topology_type": "hexagonal",
+            },
+            manual_fixed_params={},
+            run_profile="true_default",
+            run_label="true_default",
+        )
+
+
+def test_resume_validation_rejects_pre_diagnostic_rows(matched_runner_module):
+    import pandas as pd
+
+    old_rows = pd.DataFrame(
+        [
+            {
+                "dataset": "iris",
+                "seed": 1,
+                "architecture": "hexagonal",
+                "sampling_method": "full",
+                "quantization_error_holdout": 2.0,
+                "quantization_error_train": 1.0,
+                "balanced_qe_raw": 1.5,
+            }
+        ]
+    )
+
+    with pytest.raises(ValueError, match="missing required matched topology diagnostic columns"):
+        matched_runner_module._validate_required_numeric_columns(
+            old_rows,
+            required_columns=matched_runner_module.REQUIRED_MATCHED_TOPOLOGY_ROW_COLUMNS,
+            context="Resume CSV test",
+        )
+
+
+def test_report_generation_rejects_pre_diagnostic_manifest_rows(tmp_path, matched_runner_module):
+    import json
+    import pandas as pd
+
+    old_rows = pd.DataFrame(
+        [
+            {
+                "dataset": "iris",
+                "seed": 1,
+                "architecture": "hexagonal",
+                "sampling_method": "full",
+                "quantization_error_holdout": 2.0,
+                "quantization_error_train": 1.0,
+                "balanced_qe_raw": 1.5,
+            }
+        ]
+    )
+    default_csv = tmp_path / "matched_default.csv"
+    tuned_csv = tmp_path / "matched_tuned.csv"
+    old_rows.to_csv(default_csv, index=False)
+    old_rows.to_csv(tuned_csv, index=False)
+
+    manifest_path = tmp_path / "MATCHED_TOPOLOGY_DIAGNOSTICS_MANIFEST.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "default_runs_file": str(default_csv),
+                "default_aware_tuned_runs_file": str(tuned_csv),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="missing required matched topology diagnostic columns"):
+        matched_runner_module._generate_matched_topology_diagnostic_report(
+            manifest_path=manifest_path,
+            output_dir=tmp_path,
+            markdown_name="DIAGNOSTICS.md",
+        )
+
+
+def test_generate_matched_topology_diagnostic_report_from_manifest(tmp_path, matched_runner_module):
+    import json
+    import pandas as pd
+
+    def make_row(profile, dataset, seed, topology, qe, mtr, utilization, dead_fraction):
+        return {
+            "dataset": dataset,
+            "seed": seed,
+            "architecture": topology,
+            "sampling_method": "full",
+            "run_profile": profile,
+            "evaluation_split": "both",
+            "quantization_error_holdout": qe + 0.1,
+            "quantization_error_train": qe - 0.1,
+            "balanced_qe_raw": qe,
+            "mean_tied_rank_holdout": mtr + 0.1,
+            "mean_tied_rank_train": mtr - 0.1,
+            "balanced_mean_tied_rank_raw": mtr,
+            "node_utilization_holdout": utilization - 0.05,
+            "node_utilization_train": utilization + 0.05,
+            "balanced_node_utilization_raw": utilization,
+            "dead_node_fraction_holdout": dead_fraction + 0.05,
+            "dead_node_fraction_train": dead_fraction - 0.05,
+            "balanced_dead_node_fraction_raw": dead_fraction,
+        }
+
+    default_rows = []
+    tuned_rows = []
+    for seed in (1, 2):
+        default_rows.extend(
+            [
+                make_row("true_default", "iris", seed, "hexagonal", 10.0, 5.0, 0.50, 0.50),
+                make_row("true_default", "iris", seed, "mst", 9.0, 4.0, 0.60, 0.40),
+                make_row("true_default", "iris", seed, "rng", 8.0, 3.0, 0.70, 0.30),
+            ]
+        )
+        tuned_rows.extend(
+            [
+                make_row("manual_fixed", "iris", seed, "hexagonal", 7.0, 4.5, 0.65, 0.35),
+                make_row("manual_fixed", "iris", seed, "mst", 6.0, 3.5, 0.75, 0.25),
+                make_row("manual_fixed", "iris", seed, "rng", 5.0, 2.5, 0.85, 0.15),
+            ]
+        )
+
+    default_csv = tmp_path / "matched_default.csv"
+    tuned_csv = tmp_path / "matched_tuned.csv"
+    pd.DataFrame(default_rows).to_csv(default_csv, index=False)
+    pd.DataFrame(tuned_rows).to_csv(tuned_csv, index=False)
+
+    manifest_path = tmp_path / "MATCHED_TOPOLOGY_DIAGNOSTICS_MANIFEST.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "default_runs_file": str(default_csv),
+                "default_aware_tuned_runs_file": str(tuned_csv),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    outputs = matched_runner_module._generate_matched_topology_diagnostic_report(
+        manifest_path=manifest_path,
+        output_dir=tmp_path,
+        markdown_name="DIAGNOSTICS.md",
+    )
+
+    dataset_summary = pd.read_csv(outputs["diagnostic_dataset_summary_tsv"], sep="\t")
+    paired_summary = pd.read_csv(outputs["diagnostic_paired_summary_tsv"], sep="\t")
+
+    assert Path(outputs["diagnostic_markdown_report"]).exists()
+    assert set(dataset_summary["profile"]) == {"true_default", "tuned_fixed"}
+    assert {"hexagonal", "mst", "rng"}.issubset(set(dataset_summary["topology"]))
+
+    row = paired_summary[
+        (paired_summary["comparison"] == "default_hexagonal_vs_default_mst")
+        & (paired_summary["metric"] == "balanced_qe_raw")
+    ].iloc[0]
+    assert row["mean_signed_effect_favoring_comparator"] == pytest.approx(1.0)
+    assert row["comparator_wins"] == 2
+    assert "bh_q" in paired_summary.columns

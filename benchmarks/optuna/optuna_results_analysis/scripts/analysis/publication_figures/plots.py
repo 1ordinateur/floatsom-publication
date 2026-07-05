@@ -502,7 +502,10 @@ def _plot_dataset_forest(
     plot_df = plot_df.sort_values("plot_order", ascending=True).reset_index(drop=True)
     plot_df["y"] = np.arange(len(plot_df))[::-1]
     plot_df["is_global"] = plot_df[dataset_col].map(_is_global_dataset_label)
-    plot_df["is_significant"] = plot_df["p_value"] < alpha
+    plot_df["is_significant"] = plot_df.apply(
+        lambda row: _row_is_significant(row, alpha=alpha),
+        axis=1,
+    )
     plot_df["sig_color"] = np.where(plot_df["is_significant"], "#d7301f", "#7a7a7a")
 
     _set_plot_theme(style="whitegrid", context="talk")
@@ -543,7 +546,7 @@ def _plot_dataset_forest(
         for _, row in nonglobal.iterrows():
             if not bool(row["is_significant"]):
                 continue
-            stars = _pvalue_to_stars(row["p_value"])
+            stars = _pvalue_to_stars(_row_significance_value(row))
             if stars == "ns":
                 continue
             ax.annotate(
@@ -571,7 +574,7 @@ def _plot_dataset_forest(
                 zorder=3,
             )
             if bool(row["is_significant"]):
-                stars = _pvalue_to_stars(row["p_value"])
+                stars = _pvalue_to_stars(_row_significance_value(row))
                 if stars != "ns":
                     ax.annotate(
                         stars,
@@ -753,7 +756,7 @@ def _plot_topology_algorithm_strata(
     for _, row in plot_df.iterrows():
         if not _row_is_significant(row, alpha=alpha):
             continue
-        stars = _pvalue_to_stars(row.get("p_value", np.nan))
+        stars = _pvalue_to_stars(_row_significance_value(row))
         if stars == "ns":
             continue
         ax.annotate(
@@ -1187,7 +1190,7 @@ def _plot_sensitivity_curve(
     ax.axhline(0.0, color="black", linestyle="-", linewidth=2.2, alpha=0.98, zorder=0)
 
     for _, row in plot_df.iterrows():
-        label = _pvalue_to_stars(row["p_value"])
+        label = _pvalue_to_stars(_row_significance_value(row))
         is_significant = label != "ns"
         label_color = SAMPLING_SIGNIFICANT_COLOR if is_significant else "#303030"
         ax.annotate(
@@ -1391,7 +1394,7 @@ def _plot_sensitivity_curve_multiseries(
 
         if is_primary:
             for _, row in plot_df.iterrows():
-                label = _pvalue_to_stars(row["p_value"])
+                label = _pvalue_to_stars(_row_significance_value(row))
                 is_significant = label != "ns"
                 label_color = SAMPLING_SIGNIFICANT_COLOR if is_significant else "#303030"
                 ax.annotate(
@@ -1506,8 +1509,14 @@ def _plot_pvalue_panel(
         return
 
     plot_df["dataset"] = plot_df[dataset_col].astype(str)
-    plot_df["minus_log10_p"] = -np.log10(np.clip(plot_df["p_value"].astype(float), 1e-300, 1.0))
-    plot_df["is_significant"] = plot_df["p_value"] < alpha
+    plot_df["significance_value"] = plot_df.apply(_row_significance_value, axis=1)
+    plot_df["minus_log10_p"] = -np.log10(
+        np.clip(plot_df["significance_value"].astype(float), 1e-300, 1.0)
+    )
+    plot_df["is_significant"] = plot_df.apply(
+        lambda row: _row_is_significant(row, alpha=alpha),
+        axis=1,
+    )
     plot_df["dataset_group"] = plot_df["dataset"].map(_dataset_group_key)
     plot_df["group_order"] = plot_df["dataset_group"].map(_dataset_group_rank)
     plot_df = plot_df.sort_values(
@@ -1525,7 +1534,20 @@ def _plot_pvalue_panel(
     ax.scatter(plot_df["minus_log10_p"], plot_df["y"], c=colors, s=_scaled_scatter(75), zorder=3)
 
     threshold = -np.log10(alpha)
-    ax.axvline(threshold, color="black", linestyle="--", linewidth=1.1, alpha=0.9, label=f"p={alpha:.2g} threshold")
+    uses_q_values = bool(
+        "q_value" in plot_df.columns
+        and pd.to_numeric(plot_df["q_value"], errors="coerce").notna().any()
+    )
+    significance_label = "q-value" if uses_q_values else "p-value"
+    threshold_label = "q" if uses_q_values else "p"
+    ax.axvline(
+        threshold,
+        color="black",
+        linestyle="--",
+        linewidth=1.1,
+        alpha=0.9,
+        label=f"{threshold_label}={alpha:.2g} threshold",
+    )
     y_positions = {
         str(dataset): float(len(plot_df) - 1 - idx)
         for idx, dataset in enumerate(plot_df["dataset"].tolist())
@@ -1538,7 +1560,7 @@ def _plot_pvalue_panel(
 
     ax.set_yticks(plot_df["y"])
     ax.set_yticklabels(plot_df["dataset"])
-    ax.set_xlabel("-log10(p-value)")
+    ax.set_xlabel(f"-log10({significance_label})")
     ax.set_ylabel("")
 
     legend_item_specs = [
@@ -1570,7 +1592,7 @@ def _plot_pvalue_panel(
                 "color": "black",
                 "linestyle": "--",
                 "linewidth": 1.1,
-                "label": f"Threshold p={alpha:.2g}",
+                "label": f"Threshold {threshold_label}={alpha:.2g}",
             },
         ),
     ]

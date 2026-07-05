@@ -781,8 +781,25 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
         numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
         return f"{float(numeric):.3g}" if np.isfinite(numeric) else "NA"
 
+    def _format_test_value_text(value: object, label: str) -> str:
+        return f"{label}={_format_p_value(value)}"
+
     def _format_p_value_text(value: object) -> str:
-        return f"p={_format_p_value(value)}"
+        return _format_test_value_text(value, "p")
+
+    def _format_q_value_text(value: object) -> str:
+        return _format_test_value_text(value, "q")
+
+    def _markdown_table_from_df(df: pd.DataFrame) -> str:
+        columns = [str(column) for column in df.columns]
+        lines = [
+            "| " + " | ".join(columns) + " |",
+            "| " + " | ".join(["---"] * len(columns)) + " |",
+        ]
+        for _, row in df.iterrows():
+            values = [str(row[column]).replace("|", "\\|") for column in df.columns]
+            lines.append("| " + " | ".join(values) + " |")
+        return "\n".join(lines)
 
     stats_sources: Dict[str, str] = {}
     summary_frames: Dict[Tuple[str, str], pd.DataFrame] = {}
@@ -797,9 +814,14 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             summary_df = pd.read_csv(summary_path)
             if summary_df.empty or not {"dataset", "p_value"}.issubset(set(summary_df.columns)):
                 continue
-            working = summary_df[["dataset", "p_value"]].copy()
+            columns = ["dataset", "p_value"]
+            if "q_value" in summary_df.columns:
+                columns.append("q_value")
+            working = summary_df[columns].copy()
             working["dataset"] = working["dataset"].astype(str).str.strip()
             working = working[working["dataset"] != "GLOBAL_REAL"].copy()
+            if "q_value" not in working.columns:
+                working = _apply_q_values(working, dataset_col="dataset")
             if working.empty:
                 continue
             summary_frames[(comparison_slug, metric_slug)] = working
@@ -815,11 +837,14 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
                     {
                         "metric": metric_label,
                         "dataset": dataset_display,
-                        "MST": "p=NA",
-                        "RNG": "p=NA",
+                        "MST_p": "p=NA",
+                        "MST_q": "q=NA",
+                        "RNG_p": "p=NA",
+                        "RNG_q": "q=NA",
                     },
                 )
-                table_rows[row_key][comparison_label] = _format_p_value_text(row["p_value"])
+                table_rows[row_key][f"{comparison_label}_p"] = _format_p_value_text(row["p_value"])
+                table_rows[row_key][f"{comparison_label}_q"] = _format_q_value_text(row.get("q_value", np.nan))
 
     if not table_rows:
         return {
@@ -837,7 +862,10 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             row = table_rows.get((metric_label, dataset_label))
             if row is not None:
                 ordered_rows.append(row)
-    supp_table_df = pd.DataFrame(ordered_rows, columns=["metric", "dataset", "MST", "RNG"])
+    supp_table_df = pd.DataFrame(
+        ordered_rows,
+        columns=["metric", "dataset", "MST_p", "MST_q", "RNG_p", "RNG_q"],
+    )
 
     run_table_path = publication_tables_dir / "supp_table_topology_hex_vs_mst_rng_pvalues.tsv"
     supp_table_df.to_csv(run_table_path, sep="\t", index=False)
@@ -885,8 +913,8 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             "(Fig. 6C), while Holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall "
             "holdout advantage. The overall paired t-test p-values are "
             + _join_metric_phrases(mst_phrases)
-            + ". Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST "
-            "and RNG."
+            + ". Supplementary Table S7 lists the per-dataset and overall hexagonal-comparison raw p-values and "
+            "Benjamini-Hochberg q-values for MST and RNG."
         )
 
     rng_sentence = (
@@ -898,15 +926,16 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             "RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 7A-7C), with overall paired "
             "t-test p-values of "
             + _join_metric_phrases(rng_phrases)
-            + ". Supplementary Table S6 lists the per-dataset and overall hexagonal-comparison p-values for MST "
-            "and RNG."
+            + ". Supplementary Table S7 lists the per-dataset and overall hexagonal-comparison raw p-values and "
+            "Benjamini-Hochberg q-values for MST and RNG."
         )
 
     supp_table_caption = (
-        "**Supplementary Table S6. Paired topology-comparison p-values for hexagonal versus MST and hexagonal "
+        "**Supplementary Table S7. Paired topology-comparison p-values for hexagonal versus MST and hexagonal "
         "versus RNG across Balanced QE, Holdout QE, and Train QE.** Rows list metric/dataset entries, including "
-        "the OVERALL row. The MST and RNG columns report p-values using the manuscript reporting convention. "
-        "See `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
+        "the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values using the "
+        "manuscript reporting convention. The embedded table is reproduced from "
+        "`assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
     )
 
     def _upsert_block(
@@ -936,7 +965,15 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
 
     mst_block = "\n".join([mst_start, mst_sentence, mst_end])
     rng_block = "\n".join([rng_start, rng_sentence, rng_end])
-    supp_block = "\n".join([supp_start, supp_table_caption, supp_end])
+    supp_block = "\n".join(
+        [
+            supp_start,
+            supp_table_caption,
+            "",
+            _markdown_table_from_df(supp_table_df),
+            supp_end,
+        ]
+    )
 
     manuscript_text = manuscript_path.read_text(encoding="utf-8")
     updated_text = _upsert_block(

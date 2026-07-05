@@ -19,11 +19,13 @@ from floatsom.floatsom_params import FloatSOMParams, SamplingConfig, ProcessingC
 # Evaluation metrics from existing benchmarks
 from floatsom.benchmarks.evaluation.metrics import (
     QuantizationError,
+    MeanTiedRank,
     TopographicError, 
     Trustworthiness, 
     NeighborhoodPreservation,
     DistortionMeasure,
-    TopographicFunction
+    TopographicFunction,
+    calculate_node_usage_stats,
 )
 
 # sklearn datasets
@@ -41,6 +43,18 @@ TOPOLOGY_ONLY_METRICS = {
     'neighborhood_preservation',
     'distortion_measure',
     'topographic_function'
+}
+
+NODE_USAGE_METRICS = {
+    'node_utilization',
+    'dead_node_fraction',
+    'used_nodes',
+    'dead_nodes',
+    'total_nodes',
+}
+
+DIAGNOSTIC_ONLY_METRICS = NODE_USAGE_METRICS | {
+    'mean_tied_rank',
 }
 
 
@@ -98,6 +112,15 @@ class FloatSOMWrapper:
     def __init__(self, som: FloatSOM):
         self.floatsom = som
         self.weights = som.get_weights()
+        self.topology = getattr(som, 'topology', None)
+        self.adjacency_list = getattr(som, 'adjacency_list', None)
+        if self.adjacency_list is None and self.topology is not None:
+            self.adjacency_list = getattr(self.topology, 'adjacency_list', None)
+        self.original_adjacency_list = getattr(som, 'original_adjacency_list', None)
+        self.grid_node_mapping = getattr(som, 'grid_node_mapping', None)
+        self.graph_distances = getattr(self.topology, 'graph_distances', None) if self.topology is not None else None
+        topology_config = getattr(getattr(som, 'params', None), 'topology_config', None)
+        self.topology_type = getattr(topology_config, 'topology_type', None)
         
         # Handle different SOM types
         if hasattr(som, 'params'):
@@ -504,7 +527,11 @@ def calculate_metrics(
         'trustworthiness': Trustworthiness(k=metrics_config.get('topology_k', 7)),
         'neighborhood_preservation': NeighborhoodPreservation(k=metrics_config.get('topology_k', 7)),
         'distortion_measure': DistortionMeasure(use_gpu=use_gpu, sigma=1.0),
-        'topographic_function': TopographicFunction(use_gpu=use_gpu)
+        'topographic_function': TopographicFunction(use_gpu=use_gpu),
+        'mean_tied_rank': MeanTiedRank(
+            use_gpu=use_gpu,
+            batch_size=int(metrics_config.get('mean_tied_rank_batch_size', 50_000)),
+        ),
     }
     
     # Default metrics to compute if configuration is missing specific guidance
@@ -513,9 +540,27 @@ def calculate_metrics(
     
     # Create wrapper for metric compatibility
     som_wrapper = FloatSOMWrapper(som)
+
+    requested_node_usage_metrics = [name for name in requested_metrics if name in NODE_USAGE_METRICS]
+    if requested_node_usage_metrics:
+        try:
+            node_usage_stats = calculate_node_usage_stats(
+                som_wrapper,
+                data,
+                use_gpu=use_gpu,
+                batch_size=int(metrics_config.get('node_usage_batch_size', 50_000)),
+            )
+            for metric_name in requested_node_usage_metrics:
+                metrics[metric_name] = float(node_usage_stats[metric_name])
+        except Exception as e:
+            print(f"Warning: Node usage metrics failed with error: {str(e)}")
+            for metric_name in requested_node_usage_metrics:
+                metrics[metric_name] = float('nan')
     
     # Compute each requested metric
     for metric_name in requested_metrics:
+        if metric_name in NODE_USAGE_METRICS:
+            continue
         if metric_name in available_metrics:
             try:
                 metric_calculator = available_metrics[metric_name]
@@ -525,7 +570,10 @@ def calculate_metrics(
             except Exception as e:
                 # If metric calculation fails, set a penalty value
                 print(f"Warning: Metric '{metric_name}' failed with error: {str(e)}")
-                metrics[metric_name] = sanitize_objective_value(float('inf'), metric_name)
+                if metric_name in DIAGNOSTIC_ONLY_METRICS:
+                    metrics[metric_name] = float('nan')
+                else:
+                    metrics[metric_name] = sanitize_objective_value(float('inf'), metric_name)
         else:
             print(f"Warning: Unknown metric '{metric_name}', skipping")
     
@@ -534,7 +582,8 @@ def calculate_metrics(
 def get_metrics_config(
     objectives: Optional[List[str]] = None,
     include_train_objectives: Optional[bool] = None,
-    evaluation_split: str = 'both'
+    evaluation_split: str = 'both',
+    diagnostic_metrics: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Get metrics configuration for specific objectives.
@@ -545,6 +594,8 @@ def get_metrics_config(
         include_train_objectives: Whether to include training metrics in the optimization objective.
             If None, this is inferred from `evaluation_split`.
         evaluation_split: Which dataset split(s) should contribute to the optimization objective.
+        diagnostic_metrics: Extra metrics to evaluate and store without adding them
+            to the Optuna objective vector.
 
     Returns:
         Metrics configuration dictionary
@@ -554,6 +605,13 @@ def get_metrics_config(
         objectives = ['quantization_error']
 
     base_objectives = list(objectives)
+    diagnostic_metrics = list(diagnostic_metrics or [])
+    invalid_objectives = sorted(set(base_objectives).intersection(DIAGNOSTIC_ONLY_METRICS))
+    if invalid_objectives:
+        raise ValueError(
+            "The following metrics are diagnostics and cannot be optimized as Optuna objectives: "
+            f"{invalid_objectives}"
+        )
 
     if include_train_objectives is None:
         include_train_objectives = evaluation_split in ('both', 'train')
@@ -600,7 +658,15 @@ def get_metrics_config(
 
     # Only request the metrics explicitly supplied by the caller, preserving order
     metrics_to_compute: List[str] = []
-    for metric in base_objectives:
+    objective_metric_set = set(base_objectives)
+    diagnostic_objective_overlap = sorted(set(diagnostic_metrics).intersection(objective_metric_set))
+    if diagnostic_objective_overlap:
+        raise ValueError(
+            "Diagnostic metrics must not duplicate optimization objectives: "
+            f"{diagnostic_objective_overlap}"
+        )
+
+    for metric in list(base_objectives) + diagnostic_metrics:
         if metric not in metrics_to_compute:
             metrics_to_compute.append(metric)
 
@@ -610,6 +676,7 @@ def get_metrics_config(
         'metrics': metrics_to_compute,
         'objectives': expanded_objectives,
         'base_objectives': base_objectives,
+        'diagnostic_metrics': diagnostic_metrics,
         'include_train_objectives': include_train_objectives,
         'include_holdout_objectives': include_holdout_objectives,
         'evaluation_split': evaluation_split,
