@@ -14,7 +14,7 @@ GPU-accelerated Self-Organizing Map (SOM) implementations are among the most com
 
 ## 1. Introduction
 
-Self-Organizing Map (SOM), originally introduced by Kohonen [@kohonenSelforganizingMap1990], is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale [@kangasVariantsSelforganizingMaps1990]. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. Many current implementations, however, remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.
+Self-Organizing Map (SOM), originally introduced by Kohonen [@kohonenSelforganizingMap1990], is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale [@kangasVariantsSelforganizingMaps1990]. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. Recent tools have improved single-node SOM execution. In particular, aweSOM is, to our knowledge, the strongest contemporary open-source serial-online SOM implementation, combining CPU/GPU acceleration with ensemble stacking for large single-node datasets [@haAweSOMCPUGPUaccelerated2025]. However, serial-online training remains algorithmically different from batch SOM training and requires pointwise updates, so it does not address the distributed batch and out-of-core training setting targeted here. Many current implementations also remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.
 
 SOM topology presents a second limitation. Classical SOMs are traditionally trained on regular rectangular or hexagonal lattices because fixed grids make neighborhood definition, visualization, and optimization straightforward. However, these regular lattices also impose a strong geometric prior on the learned representation. Accordingly, prior work on dynamic, growing, and graph-structured SOM variants reflects a long-standing recognition that fixed lattices are not always the best match for irregular data geometry [@alahakoonDynamicSelforganizingMaps2000; @vasighiDirectedBatchGrowing2017; @kangasVariantsSelforganizingMaps1990]. However, these alternatives have generally not been developed or evaluated in the high-throughput, large-sample regime targeted by modern GPU-enabled applications and are broadly impractical for deployment at scale.
 
@@ -26,9 +26,11 @@ Related work on practical SOM deployment spans software implementations, samplin
 
 ### 2.1 Open-Source SOM Implementations and Systems
 
-Open-source SOM libraries range from lightweight to more performance-oriented implementations. MiniSom is a compact Python implementation of the classical online regime [@vettigliJustGlowingMinisom2018], whereas XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. aweSOM is a recent Python CPU/GPU SOM implementation with ensemble stacking that targets large single-node workloads [@haAweSOMCPUGPUaccelerated2025], but it follows a serial online SOM training regime rather than the batch SOM formulation evaluated here. At larger scales, Somoclu and GigaSOM provide mature parallel SOM systems for large workloads [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020].
+Open-source SOM libraries range from lightweight implementations to systems-oriented packages. One family follows the classical serial-online regime, where the map is updated immediately after each sampled point. MiniSom is a compact Python implementation of this regime [@vettigliJustGlowingMinisom2018]. aweSOM is, to our knowledge, the strongest contemporary open-source serial-online SOM implementation: it combines CPU/GPU acceleration with statistically combined ensemble stacking, targets large single-node workloads, and reports good performance up to approximately $10^8$ points [@haAweSOMCPUGPUaccelerated2025]. Because aweSOM is serial online, its training cost scales with the number of pointwise updates rather than with batch iterations over aggregated assignments.
 
-We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations. We also attempted to benchmark aweSOM on our standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map). Using aweSOM's standard training configuration and only one online update step per sample ($N$ updates), the run consistently reached our 30-minute timeout (1800 s). A fully matched serial online comparison would require $10N$ updates to mirror the 10 full batch iterations used in FloatSOM, so we proceeded with XPySOM as the executable external baseline. Somoclu remains an important CUDA/MPI SOM system, but it is less directly aligned with the Python GPU batch-SOM deployment setting evaluated here. GigaSOM.jl is an important large-scale cytometry-oriented SOM system, but it is implemented in Julia and was not readily executable in our Python/CUDA/Ray benchmark environment because the required Julia package and dependency conditions were not met in our setup. We therefore discuss GigaSOM as a large-scale systems precedent rather than as a directly benchmarked Python baseline. An important systems gap remains: XPySOM is limited to a single GPU and requires the full dataset to fit in VRAM, while GigaSOM does not provide a drop-in distributed GPU training baseline within the broadly used Python workflow targeted by FloatSOM.
+A second family targets batch or parallel SOM execution. XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. Its original evaluation directly compared against MiniSom, Somoclu, and TensorFlow SOM, and reported substantial speedups over the strongest open-source multicore and GPU-accelerated comparators in that benchmark setting [@manciniXPySomHighPerformanceSelfOrganizing2020].
+
+For executable external benchmarking, this training-regime distinction determines which systems are directly comparable. We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations, including Somoclu. We also attempted to benchmark aweSOM because it is the strongest serial-online comparator we are aware of. On our standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), using aweSOM's standard training configuration and only one online update step per sample ($N$ updates), the run consistently reached our 30-minute timeout across three attempts ($n=3$; 1800 s). A fully matched serial-online comparison would require $10N$ updates to mirror the 10 full batch iterations used in FloatSOM. Because serial-online training scales with the number of pointwise updates, this would require approximately 10 times as many updates as a setting that already timed out, so we proceeded with XPySOM as the executable external baseline. Somoclu remains an important CUDA/MPI SOM system, but it is less directly aligned with the Python GPU batch-SOM deployment setting evaluated here and has already been included in the prior XPySOM comparator study. GigaSOM.jl is an important large-scale cytometry-oriented SOM system and large-scale distributed SOM precedent. In its IMPC demonstration, GigaSOM.jl trained a $32 \times 32$ SOM on 1,167,129,317 cells and completed the full Julia workflow--initialization, loading 82.6 GB of FCS files, 30 SOM epochs, EmbedSOM embedding, and export--in under 25 minutes on an 11-node, 256-core CPU cluster, with each SOM epoch taking approximately 25 s [@kratochvilGigaSOMjlHighperformanceClustering2020]. This is not directly comparable to our Python/CUDA/Ray benchmark because the implementation language, hardware, feature dimensionality, epoch count, and included workflow stages differ. Nevertheless, FloatSOM's largest run trains a 1,000,000,000-sample, 50-feature, 1024-node SOM in 6.16 minutes for 10 batch iterations on 8 V100 GPUs across two HPC nodes; even a simple linear 30-iteration normalization remains below the GigaSOM full-workflow time, despite the larger feature count in our benchmark. We therefore discuss GigaSOM as a large-scale systems precedent rather than as a directly benchmarked Python baseline. An important systems gap remains: XPySOM is limited to a single GPU and requires the full dataset to fit in VRAM, while GigaSOM does not provide a drop-in distributed GPU training baseline within the broadly used Python workflow targeted by FloatSOM.
 
 ### 2.2 Sampling Methodologies for SOM Training
 
@@ -486,7 +488,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | feature dimension | 50, 100, 200, 500, 1000, 2000, 5000 |
 | grid side length | 8, 16, 24, 32, 48, 64 |
 
-**Supplementary Table S4. FloatSOM versus XPySOM calibration summary for the MST topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties. The full machine-readable table is also provided in `assets/tables/supp_xpysom_calibration_qe_mst.tsv`.
+**Supplementary Table S4. FloatSOM versus XPySOM calibration summary for the MST topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
 
 
 | idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
@@ -553,7 +555,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | - | GLOBAL | train time | train | 1/139/0 | -868.8976 | -771.5168 | [-875.2748, -760.3798] | 1.59e-24 | 140 | -0.9857 |
 
 
-**Supplementary Table S5. FloatSOM versus XPySOM calibration summary for the RNG topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties. The full machine-readable table is also provided in `assets/tables/supp_xpysom_calibration_qe_rng.tsv`.
+**Supplementary Table S5. FloatSOM versus XPySOM calibration summary for the RNG topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
 
 
 | idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
@@ -620,7 +622,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | - | GLOBAL | train time | train | 1/139/0 | -877.7086 | -775.3398 | [-884.2881, -753.573] | 1.59e-24 | 140 | -0.9857 |
 
 
-**Supplementary Table S6. FloatSOM versus XPySOM calibration summary for the hexagonal topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties. The full machine-readable table is also provided in `assets/tables/supp_xpysom_calibration_qe_hexagonal.tsv`.
+**Supplementary Table S6. FloatSOM versus XPySOM calibration summary for the hexagonal topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
 
 
 | idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
@@ -688,7 +690,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 
 
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:START -->
-**Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values for the corresponding dataset-level comparison family. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
+**Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values for the corresponding dataset-level comparison family. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`.
 
 | metric | dataset | MST_p | MST_q | RNG_p | RNG_q |
 | --- | --- | --- | --- | --- | --- |
@@ -740,7 +742,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END -->
 
 
-**Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_figure_13_xpysom_rng_deployment_summary.tsv`.
+**Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
 
 
 | metric | dataset | median % change | 95% CI |
@@ -792,7 +794,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | QE_T | GLOBAL_OVERALL | 22.4609 | [19.4613, 25.4605] |
 
 
-**Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_s13_xpysom_hexagonal_deployment_summary.tsv`.
+**Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
 
 
 | metric | dataset | median % change | 95% CI |
@@ -844,7 +846,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | QE_T | GLOBAL_OVERALL | 20.1214 | [17.5722, 22.6707] |
 
 
-**Supplementary Table S10. Supplementary Figure S13 deployment comparison percent summary for tuned FloatSOM MST versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval. The embedded table is reproduced from `assets/tables/supp_table_s14_xpysom_mst_deployment_summary.tsv`.
+**Supplementary Table S10. Supplementary Figure S13 deployment comparison percent summary for tuned FloatSOM MST versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
 
 
 | metric | dataset | median % change | 95% CI |
@@ -896,7 +898,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | QE_T | GLOBAL_OVERALL | 21.6605 | [19.0539, 24.2672] |
 
 
-**Supplementary Table S11. Figure 12 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.** Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread. The embedded table is reproduced from `assets/tables/supp_table_figure_12_topology_runtime_summary.tsv`.
+**Supplementary Table S11. Figure 12 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.** Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread.
 
 
 | axis | axis value | hexagonal s | MST s | RNG s | fastest | slowest | spread % |
