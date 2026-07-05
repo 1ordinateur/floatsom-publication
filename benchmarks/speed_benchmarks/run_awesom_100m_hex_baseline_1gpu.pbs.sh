@@ -32,12 +32,17 @@ if [ ! -f "${AWESOM_VENV}/bin/activate" ]; then
   exit 2
 fi
 source "${AWESOM_VENV}/bin/activate"
+AWESOM_PYTHON="${AWESOM_VENV}/bin/python"
+if [ ! -x "$AWESOM_PYTHON" ]; then
+  echo "Missing executable aweSOM venv Python: ${AWESOM_PYTHON}" >&2
+  exit 2
+fi
 
 RUN_TAG="${PBS_JOBID:-manual}"
 OUTPUT_DIR="/g/data/eu59/SIFEAN/sfa/awesom_100m_hex_baseline_${RUN_TAG}"
 mkdir -p "$OUTPUT_DIR"
 
-python3 benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
+"$AWESOM_PYTHON" benchmarks/speed_benchmarks/run_awesom_100m_hex_baseline.py \
   --output-dir "$OUTPUT_DIR" \
   --sample-size 100000000 \
   --input-dim 50 \
