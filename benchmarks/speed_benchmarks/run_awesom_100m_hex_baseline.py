@@ -122,6 +122,23 @@ def _parse_args() -> argparse.Namespace:
         help="Optional NUMBA_NUM_THREADS value to set before importing aweSOM.",
     )
     parser.add_argument(
+        "--jax-platforms",
+        default=None,
+        help=(
+            "Optional JAX_PLATFORMS override, for example 'cuda,cpu'. "
+            "By default the harness leaves JAX platform selection unset so a "
+            "GPU-enabled JAX install can choose CUDA automatically."
+        ),
+    )
+    parser.add_argument(
+        "--require-jax-gpu",
+        action="store_true",
+        help=(
+            "Record an error status if JAX imports but does not expose a GPU/CUDA device. "
+            "This validates the environment; aweSOM SOM Lattice training itself does not use JAX."
+        ),
+    )
+    parser.add_argument(
         "--qe-sample-size",
         type=int,
         default=0,
@@ -236,6 +253,72 @@ def _collect_import_provenance() -> Dict[str, str]:
     }
 
 
+def _configure_jax_environment(jax_platforms: Optional[str]) -> None:
+    if jax_platforms:
+        os.environ["JAX_PLATFORMS"] = str(jax_platforms)
+
+
+def _collect_jax_provenance(*, require_gpu: bool = False) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {
+        "jax_import_status": "not_checked",
+        "jax_version": "",
+        "jaxlib_version": "",
+        "jax_default_backend": "",
+        "jax_device_count": "",
+        "jax_gpu_device_count": "",
+        "jax_devices": "",
+        "jax_gpu_required": bool(require_gpu),
+        "jax_gpu_requirement_satisfied": "",
+        "jax_platforms_env": os.environ.get("JAX_PLATFORMS", ""),
+        "jax_platform_name_env": os.environ.get("JAX_PLATFORM_NAME", ""),
+        "cuda_visible_devices_env": os.environ.get("CUDA_VISIBLE_DEVICES", ""),
+        "xla_flags_env": os.environ.get("XLA_FLAGS", ""),
+        "jax_error_type": "",
+        "jax_error_message": "",
+    }
+    try:
+        import jax  # type: ignore
+
+        try:
+            import jaxlib  # type: ignore
+
+            payload["jaxlib_version"] = getattr(jaxlib, "__version__", "")
+        except BaseException as exc:  # noqa: BLE001 - provenance only
+            payload["jaxlib_version"] = f"unavailable:{type(exc).__name__}:{exc}"
+
+        devices = list(jax.devices())
+        device_descriptions = [
+            f"{idx}:{getattr(device, 'platform', '')}:{getattr(device, 'device_kind', '')}"
+            for idx, device in enumerate(devices)
+        ]
+        gpu_devices = [
+            device
+            for device in devices
+            if str(getattr(device, "platform", "")).lower() in {"gpu", "cuda", "rocm"}
+        ]
+        payload.update(
+            {
+                "jax_import_status": "ok",
+                "jax_version": getattr(jax, "__version__", ""),
+                "jax_default_backend": str(jax.default_backend()),
+                "jax_device_count": len(devices),
+                "jax_gpu_device_count": len(gpu_devices),
+                "jax_devices": ";".join(device_descriptions),
+                "jax_gpu_requirement_satisfied": (not require_gpu) or bool(gpu_devices),
+            }
+        )
+    except BaseException as exc:  # noqa: BLE001 - benchmark should record failures
+        payload.update(
+            {
+                "jax_import_status": "error",
+                "jax_gpu_requirement_satisfied": False if require_gpu else "",
+                "jax_error_type": type(exc).__name__,
+                "jax_error_message": str(exc),
+            }
+        )
+    return payload
+
+
 def _resolve_generation_chunk_rows(args: argparse.Namespace) -> int:
     return int(args.data_chunk_rows)
 
@@ -311,6 +394,20 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
         os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
         if args_dict.get("numba_threads") is not None:
             os.environ["NUMBA_NUM_THREADS"] = str(args_dict["numba_threads"])
+        _configure_jax_environment(args_dict.get("jax_platforms"))
+        jax_provenance = _collect_jax_provenance(
+            require_gpu=bool(args_dict.get("require_jax_gpu", False))
+        )
+        if bool(args_dict.get("require_jax_gpu", False)) and not jax_provenance.get(
+            "jax_gpu_requirement_satisfied"
+        ):
+            raise RuntimeError(
+                "JAX GPU was required, but no JAX GPU/CUDA/ROCm device was visible. "
+                f"JAX status={jax_provenance.get('jax_import_status')}; "
+                f"devices={jax_provenance.get('jax_devices')}; "
+                f"error={jax_provenance.get('jax_error_type')}:"
+                f"{jax_provenance.get('jax_error_message')}"
+            )
 
         _add_awesom_source_root(args_dict.get("awesom_source_root"))
         from aweSOM import Lattice  # type: ignore
@@ -367,6 +464,7 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
                 "error_type": "",
                 "error_message": "",
                 "traceback": "",
+                **jax_provenance,
             }
         )
     except BaseException as exc:  # noqa: BLE001 - benchmark should record failures
@@ -390,6 +488,12 @@ def _child_train_awesom(args_dict: Dict[str, Any], result_queue: mp.Queue) -> No
                 "error_type": type(exc).__name__,
                 "error_message": str(exc),
                 "traceback": traceback.format_exc(),
+                **locals().get(
+                    "jax_provenance",
+                    _collect_jax_provenance(
+                        require_gpu=bool(args_dict.get("require_jax_gpu", False))
+                    ),
+                ),
             }
         )
 
@@ -413,6 +517,8 @@ def _run_training_with_watchdog(args: argparse.Namespace) -> Dict[str, Any]:
         "seed": int(args.seed),
         "data_chunk_rows": _resolve_generation_chunk_rows(args),
         "numba_threads": int(args.numba_threads) if args.numba_threads is not None else None,
+        "jax_platforms": args.jax_platforms,
+        "require_jax_gpu": bool(args.require_jax_gpu),
         "qe_sample_size": int(args.qe_sample_size),
         "qe_chunk_rows": int(args.qe_chunk_rows),
     }
@@ -469,6 +575,7 @@ def _run_training_with_watchdog(args: argparse.Namespace) -> Dict[str, Any]:
 
 def main() -> int:
     args = _parse_args()
+    _configure_jax_environment(args.jax_platforms)
     output_dir = Path(args.output_dir).expanduser().resolve()
     data_chunk_rows = _resolve_generation_chunk_rows(args)
     placeholder_metadata = {
@@ -483,6 +590,7 @@ def main() -> int:
     except BaseException as exc:  # noqa: BLE001 - result should record import failures
         row = _result_row_base(args, generation_seconds=0.0, metadata=placeholder_metadata)
         row.update(_collect_import_provenance())
+        row.update(_collect_jax_provenance(require_gpu=bool(args.require_jax_gpu)))
         row.update(
             {
                 "status": "import_error",
@@ -511,6 +619,7 @@ def main() -> int:
         metadata=placeholder_metadata,
     )
     row.update(_collect_import_provenance())
+    row.update(_collect_jax_provenance(require_gpu=bool(args.require_jax_gpu)))
     row.update(import_probe)
 
     if args.dry_run:
@@ -534,13 +643,23 @@ def main() -> int:
         row.update(result)
 
     row["script"] = str(Path(__file__).resolve())
+    if args.require_jax_gpu and not row.get("jax_gpu_requirement_satisfied"):
+        row["status"] = "jax_gpu_unavailable"
+        row["error_type"] = row.get("error_type") or "JaxGpuUnavailable"
+        row["error_message"] = row.get("error_message") or (
+            "JAX GPU was required by --require-jax-gpu, but no JAX GPU/CUDA/ROCm "
+            "device was visible to the benchmark harness."
+        )
     row["published_awesom_som_context"] = (
         "aweSOM JOSS Figure 1 SOM scaling reports F=6 and F=10 on one CPU node; "
         "the JAX/GPU panel is for SCE rather than SOM training."
     )
     row["jax_note"] = (
-        "This benchmark exercises aweSOM's SOM Lattice path, which uses NumPy/Numba "
-        "rather than JAX; JAX is audited for environment provenance but not invoked."
+        "This benchmark leaves JAX platform selection unset unless --jax-platforms or "
+        "external JAX_* environment variables are provided, and records the visible JAX "
+        "backend/devices. The benchmarked aweSOM SOM path is Lattice.train_lattice, "
+        "which uses NumPy/Numba rather than JAX; JAX GPU availability alone therefore "
+        "does not imply GPU use during this SOM training run."
     )
     row["topology_note"] = (
         "aweSOM Lattice does not expose a hexagonal topology flag; this run records "
