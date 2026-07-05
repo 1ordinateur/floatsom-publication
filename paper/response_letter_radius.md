@@ -1,6 +1,6 @@
 # Response Letter Draft: Reviewer 1
 
-We thank the reviewer for the careful reading and for separating the systems contribution from the quality/topology claims. We agree that the systems evidence is stronger in the submitted version than the topology-quality evidence, and the revision is structured to make that distinction explicit. Where the manuscript already contained the relevant analysis but did not state the point clearly enough, we have clarified the text. Where the reviewer identified a missing control or missing reporting detail, we have added or planned the corresponding amendment below.
+We thank the reviewer for the careful reading and for separating the systems contribution from the quality/topology claims. We agree that the systems evidence is stronger in the submitted version than the topology-quality evidence, and the revision is structured to make that distinction explicit. Where the manuscript already contained the relevant analysis but did not state the point clearly enough, we have clarified the text. Where the reviewer identified a missing control or missing reporting detail, we have added the corresponding amendment below.
 
 ## 1. Quality claims rely on QE alone
 
@@ -14,27 +14,23 @@ We agree with the reviewer that quantization error alone does not test the topol
 
 We have therefore revised the topology comparison to report a preservation metric alongside $QE$. We do not use raw topographic error as the primary cross-topology statistic, because raw topographic error defines an error by whether the first and second best-matching units are immediate neighbors on the map. That adjacency relation is itself topology-dependent. Even when map size and output dimensionality are fixed, hexagonal, MST, and RNG maps have different connectivity and degree structure, so raw topographic error would partly measure the graph's one-hop neighbor convention rather than only topology preservation.
 
-This is not only a concern raised by Ramos et al. Uriarte and Diaz Martin showed in a rectangular versus hexagonal two-dimensional SOM comparison that raw topographic error can undervalue rectangular maps because diagonal near-neighbors are counted as non-neighbors, while central hexagonal units have more immediate neighbors. Neme and Miramontes further showed that topographic error is affected by statistical properties of the neuron lattice, including path length, clustering, and connectivity length. Other SOM comparisons, including Machon-Gonzalez and Lopez-Garcia, also caution that topographic-error comparisons require the same map size because the errors depend on map design. These results support the narrower point relevant here: holding map size fixed is necessary, but holding map size or output dimensionality fixed is not sufficient when the adjacency graph itself changes.
+This is not only a concern raised by Ramos et al. [@ramosROLELATTICEDIMENSIONALITY2018]. Neme and Miramontes further showed that topographic error is affected by statistical properties of the neuron lattice, including path length, clustering, and connectivity length [@nemeStatisticalPropertiesLattices2005]. Other SOM comparisons, including Machon-Gonzalez and Lopez-Garcia, also caution that topographic-error comparisons require the same map size because the errors depend on map design [@machon-gonzalezFLSOMIndividualKernel2010]. These results support the narrower point relevant here: holding map size fixed is necessary, but holding map size or output dimensionality fixed is not sufficient when the adjacency graph itself changes.
 
-Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We report MTR next to $QE$ and interpret the two metrics separately.
+Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018]. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We report MTR next to $QE$ and interpret the two metrics separately.
 
-We also added a matched tuned and untuned/default diagnostic benchmark for the final trained FloatSOM maps. This benchmark is configured to evaluate the same dataset, seed, sampling, and topology units under both the true-default and tuned-fixed profiles, so the reviewer can see whether graph topologies improve $QE$ while preserving local topology and using map nodes effectively once the diagnostic campaign is run.
+We also added matched post hoc topology diagnostics for the final trained FloatSOM maps. These diagnostics evaluate the same dataset, seed, sampling, and topology units, so the reviewer can see whether graph topologies improve $QE$ while preserving local topology and using map nodes effectively.
 
 ### Manuscript Amendment
 
-In Section 4.1, we will add:
+In Section 4.1, we added:
 
-> "For cross-topology preservation comparisons, we report Mean Tied Rank (MTR) rather than raw topographic error. Raw topographic error classifies a sample as an error when its first and second best-matching units are not adjacent on the SOM graph. This makes the statistic directly dependent on the adjacency convention of the evaluated topology; maps with more immediate neighbors have more opportunities for the second BMU to be counted as adjacent. Prior work has noted this limitation in several forms. Uriarte and Diaz Martin show that rectangular and hexagonal two-dimensional lattices can receive different raw topographic-error scores because diagonal rectangular near-neighbors are treated differently from hexagonal immediate neighbors. Neme and Miramontes show that topographic error depends on lattice statistical properties such as path length and connectivity. Machon-Gonzalez and Lopez-Garcia also note that map size must be matched when topographic error is compared. Thus, fixed output dimensionality and fixed map size do not by themselves make raw topographic error directly comparable when the graph connectivity differs."
+> "For cross-topology preservation diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. We do not use raw topographic error as the primary cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
 
-We will then define the statistic as:
+In Section 5.3, we revised the opening sentence to:
 
-> "For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second BMUs. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning average ranks to units tied at the same graph distance. The tied rank of $b_i^{(2)}$ is denoted $\tau_i$. Mean Tied Rank is then $MTR=N^{-1}\sum_i \tau_i$. Lower values indicate that the second BMU is closer to the first BMU under the map topology. Because all topology comparisons use the same number of SOM units, the unnormalized rank scale is shared across the compared maps."
+> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. To test whether graph-topology $QE$ gains reflect useful topology behavior rather than only looser vector quantization, the same final maps are also evaluated post hoc for MTR, node utilization, and dead-node fraction under matched tuned and untuned/default profiles."
 
-In Section 5.3, we will revise the opening sentence to:
-
-> "Topology comparisons are reported with both $QE$ and Mean Tied Rank, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG."
-
-In the Results and Discussion, we will add:
+In the Discussion, we added:
 
 > "$QE$ and MTR are interpreted as complementary quantities: $QE$ measures vector-quantization fidelity, whereas MTR evaluates whether the two closest prototypes for a sample remain close under the topology-induced graph distance. We therefore avoid treating a lower $QE$ alone as evidence of improved topology preservation."
 
@@ -82,7 +78,7 @@ We now discuss Somoclu and GigaSOM more explicitly. Somoclu is an important CUDA
 
 In Section 2.1, we revised the related-work discussion to:
 
-> "Open-source SOM libraries range from lightweight to more performance-oriented implementations. MiniSom is a compact Python implementation of the classical online regime [@vettigliJustGlowingMinisom2018], whereas XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. aweSOM (Ha et al., JOSS 2025) is a recent Python CPU/GPU SOM implementation with ensemble stacking that targets large single-node workloads. At larger scales, Somoclu and GigaSOM provide mature parallel SOM systems for large workloads [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
+> "Open-source SOM libraries range from lightweight to more performance-oriented implementations. MiniSom is a compact Python implementation of the classical online regime [@vettigliJustGlowingMinisom2018], whereas XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. aweSOM is a recent Python CPU/GPU SOM implementation with ensemble stacking that targets large single-node workloads [@haAweSOMCPUGPUaccelerated2025]. At larger scales, Somoclu and GigaSOM provide mature parallel SOM systems for large workloads [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
 
 We also added:
 
@@ -122,17 +118,17 @@ For the deployment comparison, the revised caption now reads:
 
 We agree that Fig. 13 should not be read as attributing the full gain to topology alone. Our intent was to show the integrated deployment comparison between a practical default XPySOM run and the recommended tuned FloatSOM RNG configuration. The submitted manuscript already separates several components: Section 5.1 calibrates FloatSOM against XPySOM under matched hexagonal settings, Section 5.3 compares topologies inside FloatSOM under a matched Optuna budget, and Section 5.4 evaluates tuning relative to an untuned reference. However, Section 7 did not state this decomposition clearly enough.
 
-We will revise Section 7 and the Fig. 13 caption so that the 14.5%, 9.1%, and 22.5% improvements are described as an integrated deployment effect, not a topology-only effect. We will also point readers to the existing tuned-hexagonal and tuned-MST deployment figures in the Supplementary material so that the effect of topology can be read separately from the effect of tuning and implementation.
+We revised Section 7 and the Fig. 13 caption so that the 14.5%, 9.1%, and 22.5% improvements are described as an integrated deployment effect, not a topology-only effect. We also point readers to the tuned-hexagonal and tuned-MST deployment figures in the Supplementary material so that the effect of topology can be read separately from the effect of tuning and implementation.
 
 ### Manuscript Amendment
 
-In Section 7, we will revise the opening paragraph to:
+In Section 7, we revised the opening paragraph to:
 
-> "Fig. 13 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned default hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice. The components are separated in the preceding analyses: Section 5.1 calibrates FloatSOM and XPySOM under matched hexagonal settings, Section 5.3 compares hexagonal, MST, and RNG inside FloatSOM under the same Optuna budget, and Section 5.4 evaluates tuned configurations against the untuned reference."
+> "Fig. 13 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned default hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice [@manciniXPySomHighPerformanceSelfOrganizing2020]. The components are separated in the preceding analyses: Section 5.1 calibrates FloatSOM and XPySOM under matched hexagonal settings, Section 5.3 compares hexagonal, MST, and RNG inside FloatSOM under the same Optuna budget, and Section 5.4 evaluates tuned configurations against the untuned reference. Supplementary Figures S12-S13 provide the corresponding tuned hexagonal and tuned MST deployment comparisons against default hexagonal XPySOM."
 
-We will revise the Fig. 13 caption to:
+We revised the Fig. 13 caption to:
 
-> "Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. The comparison intentionally combines implementation, tuning, and topology choice and should not be interpreted as attributing the full difference to topology alone."
+> "Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. The comparison intentionally combines implementation, hyperparameter tuning, and topology choice and should not be interpreted as attributing the full difference to topology alone."
 
 ## 6. MST and RNG novelty claims
 
@@ -196,13 +192,25 @@ We agree that the statistical reporting should state whether the paired tests we
 
 ### Manuscript Amendment
 
-In Section 4.4, we will add:
+In Section 4.4, we added:
 
-> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. The adjustment is applied across non-global dataset rows within each comparison family. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family."
+> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. The adjustment is applied across non-global dataset rows within each comparison family. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
+
+In the Fig. 6 and Fig. 7 result text, we added:
+
+> "Dataset-level Benjamini-Hochberg adjusted q-values for the same Fig. 6 comparisons are reported in Supplementary Table S7; q<0.05 in 5/14 balanced QE rows, 7/14 holdout QE rows, and 5/14 train QE rows."
+
+and:
+
+> "Dataset-level Benjamini-Hochberg adjusted q-values for the same Fig. 7 comparisons are reported in Supplementary Table S7; q<0.05 in 8/14 balanced QE rows, 7/14 holdout QE rows, and 8/14 train QE rows."
+
+In the Fig. 6 and Fig. 7 captions, we added:
+
+> "Dataset-level raw p-values and Benjamini-Hochberg adjusted q-values are reported in Supplementary Table S7."
 
 In the supplementary topology table caption, we revised:
 
-> "Rows report raw paired $t$-test p-values and Benjamini-Hochberg adjusted q-values for the corresponding dataset-level comparison family; OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment."
+> "Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values for the corresponding dataset-level comparison family. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
 
 ## 9. Dead-node and node-utilization reporting
 
@@ -216,13 +224,13 @@ We agree. Node utilization is a useful diagnostic for determining whether lower 
 
 ### Manuscript Amendment
 
-In Section 4.1, we will add:
+In Section 4.1, we added:
 
-> "We additionally report node utilization, defined as the fraction of SOM nodes selected as the best-matching unit by at least one evaluated sample. The complementary dead-node fraction is one minus this utilization. This diagnostic helps distinguish broadly used map capacity from solutions in which lower $QE$ is accompanied by unused nodes."
+> "We also report node utilization diagnostics for the same fitted maps. Node utilization is the fraction of SOM nodes selected as a best-matching unit by at least one sample in the evaluated split, and dead-node fraction is its complement. MTR, node utilization, and dead-node fraction are computed for both training and holdout splits and summarized with the same balanced train-holdout convention used for $QE$; these diagnostics are not optimized by Optuna."
 
-In Section 5.3, we will add:
+In Section 5.3, we added:
 
-> "Node-utilization summaries are reported alongside the topology metrics to test whether graph-based improvements coincide with higher or lower use of the available SOM nodes."
+> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. To test whether graph-topology $QE$ gains reflect useful topology behavior rather than only looser vector quantization, the same final maps are also evaluated post hoc for MTR, node utilization, and dead-node fraction under matched tuned and untuned/default profiles."
 
 ## 10. HDSSSOM framing
 
