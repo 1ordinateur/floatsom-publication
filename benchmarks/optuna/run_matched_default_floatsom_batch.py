@@ -67,6 +67,11 @@ BALANCED_DIAGNOSTIC_COLUMNS: Dict[str, str] = {
     "node_utilization": "balanced_node_utilization_raw",
     "dead_node_fraction": "balanced_dead_node_fraction_raw",
 }
+REQUIRED_MATCHED_TOPOLOGY_ROW_COLUMNS: Tuple[str, ...] = tuple(
+    f"{metric_name}_{split}"
+    for metric_name in MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS
+    for split in ("holdout", "train")
+) + tuple(BALANCED_DIAGNOSTIC_COLUMNS.values())
 DIAGNOSTIC_REPORT_METRICS: Tuple[str, ...] = (
     "quantization_error_holdout",
     "quantization_error_train",
@@ -97,6 +102,7 @@ HIGHER_IS_BETTER_REPORT_METRICS = {
     "node_utilization_train",
     "balanced_node_utilization_raw",
 }
+REQUIRED_MATCHED_TOPOLOGY_REPORT_COLUMNS: Tuple[str, ...] = DIAGNOSTIC_REPORT_METRICS
 
 
 def _resolve_dataset_config() -> Dict[str, Any]:
@@ -859,6 +865,11 @@ def _load_profile_runs_csv(path_value: object, profile: str) -> pd.DataFrame:
     out["architecture"] = out["architecture"].astype(str).str.strip().str.lower()
     out["sampling_method"] = out["sampling_method"].astype(str).str.strip().str.lower()
     out["dataset"] = out["dataset"].astype(str).str.strip()
+    _validate_required_numeric_columns(
+        out,
+        required_columns=REQUIRED_MATCHED_TOPOLOGY_REPORT_COLUMNS,
+        context=f"Matched topology diagnostic report CSV {csv_path}",
+    )
     return out
 
 
@@ -875,6 +886,11 @@ def _load_manifest_profile_runs(manifest_path: Path) -> Tuple[Dict[str, Any], pd
 
 
 def _diagnostic_dataset_summary(combined_df: pd.DataFrame) -> pd.DataFrame:
+    _validate_required_numeric_columns(
+        combined_df,
+        required_columns=REQUIRED_MATCHED_TOPOLOGY_REPORT_COLUMNS,
+        context="Combined matched topology diagnostic runs",
+    )
     metric_columns = [column for column in DIAGNOSTIC_REPORT_METRICS if column in combined_df.columns]
     if not metric_columns:
         raise ValueError("No diagnostic metric columns were found in combined profile runs.")
@@ -1162,6 +1178,78 @@ def _validate_resume_profile_compatibility(
             )
 
 
+def _format_missing_or_nonfinite_columns(columns: Sequence[str], *, max_items: int = 12) -> str:
+    values = [str(column) for column in columns]
+    shown = values[:max_items]
+    suffix = "" if len(values) <= max_items else f" ... (+{len(values) - max_items} more)"
+    return ", ".join(shown) + suffix
+
+
+def _validate_required_numeric_values(
+    row: Dict[str, Any],
+    *,
+    required_columns: Sequence[str],
+    context: str,
+) -> None:
+    missing_or_nonfinite: List[str] = []
+    for column in required_columns:
+        if column not in row:
+            missing_or_nonfinite.append(column)
+            continue
+        try:
+            value = float(row[column])
+        except (TypeError, ValueError):
+            missing_or_nonfinite.append(column)
+            continue
+        if not np.isfinite(value):
+            missing_or_nonfinite.append(column)
+
+    if missing_or_nonfinite:
+        raise ValueError(
+            f"{context} has missing or non-finite required matched topology diagnostics: "
+            f"{_format_missing_or_nonfinite_columns(missing_or_nonfinite)}"
+        )
+
+
+def _validate_required_numeric_columns(
+    df: pd.DataFrame,
+    *,
+    required_columns: Sequence[str],
+    context: str,
+) -> None:
+    if df.empty:
+        return
+
+    missing = [column for column in required_columns if column not in df.columns]
+    if missing:
+        raise ValueError(
+            f"{context} is missing required matched topology diagnostic columns: "
+            f"{_format_missing_or_nonfinite_columns(missing)}"
+        )
+
+    numeric_df = df[list(required_columns)].apply(pd.to_numeric, errors="coerce")
+    numeric_values = numeric_df.to_numpy(dtype=float)
+    nonfinite_positions = np.argwhere(~np.isfinite(numeric_values))
+    if nonfinite_positions.size == 0:
+        return
+
+    examples: List[str] = []
+    for row_idx, col_idx in nonfinite_positions[:8]:
+        row = df.iloc[int(row_idx)]
+        run_key = (
+            row.get("dataset", "?"),
+            row.get("seed", "?"),
+            row.get("architecture", "?"),
+            row.get("sampling_method", "?"),
+        )
+        examples.append(f"row={int(row_idx)} key={run_key} column={required_columns[int(col_idx)]}")
+    suffix = "" if len(nonfinite_positions) <= 8 else f" ... (+{len(nonfinite_positions) - 8} more)"
+    raise ValueError(
+        f"{context} contains non-finite matched topology diagnostics: "
+        f"{'; '.join(examples)}{suffix}"
+    )
+
+
 def _first_completed_trial(study: optuna.Study) -> optuna.trial.FrozenTrial:
     completed = [trial for trial in study.trials if trial.state == optuna.trial.TrialState.COMPLETE]
     if not completed:
@@ -1252,6 +1340,14 @@ def _build_success_row(
         row[f"param_{param_name}"] = value
     for param_name, value in manual_fixed_params.items():
         row[f"param_{param_name}"] = value
+    _validate_required_numeric_values(
+        row,
+        required_columns=REQUIRED_MATCHED_TOPOLOGY_ROW_COLUMNS,
+        context=(
+            f"Matched topology row dataset={dataset!r} seed={int(seed)} "
+            f"topology={topology!r} sampling={sampling_method!r}"
+        ),
+    )
     return row
 
 
@@ -1322,6 +1418,11 @@ def _execute_profile_runs(
                 existing_df=existing_runs_df,
                 expected_profile=run_profile,
                 expected_split=evaluation_split,
+            )
+            _validate_required_numeric_columns(
+                existing_runs_df,
+                required_columns=REQUIRED_MATCHED_TOPOLOGY_ROW_COLUMNS,
+                context=f"Resume CSV {runs_csv}",
             )
             deduped_runs_df = _dedupe_runs_df_by_key(existing_runs_df)
             dropped_duplicates = int(len(existing_runs_df) - len(deduped_runs_df))

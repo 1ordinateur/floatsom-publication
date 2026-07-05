@@ -18,7 +18,7 @@ This is not only a concern raised by Ramos et al. Uriarte and Diaz Martin showed
 
 Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We report MTR next to $QE$ and interpret the two metrics separately.
 
-We also added a matched tuned and untuned/default diagnostic benchmark for the final trained FloatSOM maps. This benchmark evaluates the same dataset, seed, sampling, and topology units under both the true-default and tuned-fixed profiles, so the reviewer can see whether graph topologies improve $QE$ while preserving local topology and using map nodes effectively.
+We also added a matched tuned and untuned/default diagnostic benchmark for the final trained FloatSOM maps. This benchmark is configured to evaluate the same dataset, seed, sampling, and topology units under both the true-default and tuned-fixed profiles, so the reviewer can see whether graph topologies improve $QE$ while preserving local topology and using map nodes effectively once the diagnostic campaign is run.
 
 ### Manuscript Amendment
 
@@ -212,7 +212,7 @@ In the supplementary topology table caption, we revised:
 
 ### Response
 
-We agree. Node utilization is a useful diagnostic for determining whether lower $QE$ comes from broadly used map capacity or from uneven allocation in which some nodes are effectively unused. We added node-utilization and dead-node-fraction summaries across hexagonal, MST, and RNG using the same matched units as the topology comparison.
+We agree. Node utilization is a useful diagnostic for determining whether lower $QE$ comes from broadly used map capacity or from uneven allocation in which some nodes are effectively unused. We added node-utilization and dead-node-fraction diagnostics to the matched topology benchmark outputs, using the same matched units as the topology comparison.
 
 ### Manuscript Amendment
 

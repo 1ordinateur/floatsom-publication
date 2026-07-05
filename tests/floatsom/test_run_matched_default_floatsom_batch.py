@@ -397,6 +397,115 @@ def test_build_success_row_includes_mtr_and_balanced_diagnostics(matched_runner_
     assert row["total_nodes_train"] == pytest.approx(10.0)
 
 
+def test_build_success_row_rejects_missing_required_diagnostics(matched_runner_module):
+    class Trial:
+        number = 0
+        params = {}
+        user_attrs = {
+            "metrics_holdout": {
+                "quantization_error": 2.0,
+                "node_utilization": 0.5,
+                "dead_node_fraction": 0.5,
+                "used_nodes": 5,
+                "dead_nodes": 5,
+                "total_nodes": 10,
+            },
+            "metrics_train": {
+                "quantization_error": 1.0,
+                "node_utilization": 0.7,
+                "dead_node_fraction": 0.3,
+                "used_nodes": 7,
+                "dead_nodes": 3,
+                "total_nodes": 10,
+            },
+        }
+
+    with pytest.raises(ValueError, match="required matched topology diagnostics"):
+        matched_runner_module._build_success_row(
+            trial=Trial(),
+            dataset="iris",
+            seed=42,
+            topology="hexagonal",
+            sampling_method="full",
+            evaluation_split="both",
+            forced_params={
+                "sampling_method": "full",
+                "processing_method": "batch",
+                "batch_mode": "full_batch",
+                "topology_type": "hexagonal",
+            },
+            manual_fixed_params={},
+            run_profile="true_default",
+            run_label="true_default",
+        )
+
+
+def test_resume_validation_rejects_pre_diagnostic_rows(matched_runner_module):
+    import pandas as pd
+
+    old_rows = pd.DataFrame(
+        [
+            {
+                "dataset": "iris",
+                "seed": 1,
+                "architecture": "hexagonal",
+                "sampling_method": "full",
+                "quantization_error_holdout": 2.0,
+                "quantization_error_train": 1.0,
+                "balanced_qe_raw": 1.5,
+            }
+        ]
+    )
+
+    with pytest.raises(ValueError, match="missing required matched topology diagnostic columns"):
+        matched_runner_module._validate_required_numeric_columns(
+            old_rows,
+            required_columns=matched_runner_module.REQUIRED_MATCHED_TOPOLOGY_ROW_COLUMNS,
+            context="Resume CSV test",
+        )
+
+
+def test_report_generation_rejects_pre_diagnostic_manifest_rows(tmp_path, matched_runner_module):
+    import json
+    import pandas as pd
+
+    old_rows = pd.DataFrame(
+        [
+            {
+                "dataset": "iris",
+                "seed": 1,
+                "architecture": "hexagonal",
+                "sampling_method": "full",
+                "quantization_error_holdout": 2.0,
+                "quantization_error_train": 1.0,
+                "balanced_qe_raw": 1.5,
+            }
+        ]
+    )
+    default_csv = tmp_path / "matched_default.csv"
+    tuned_csv = tmp_path / "matched_tuned.csv"
+    old_rows.to_csv(default_csv, index=False)
+    old_rows.to_csv(tuned_csv, index=False)
+
+    manifest_path = tmp_path / "MATCHED_TOPOLOGY_DIAGNOSTICS_MANIFEST.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "default_runs_file": str(default_csv),
+                "default_aware_tuned_runs_file": str(tuned_csv),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="missing required matched topology diagnostic columns"):
+        matched_runner_module._generate_matched_topology_diagnostic_report(
+            manifest_path=manifest_path,
+            output_dir=tmp_path,
+            markdown_name="DIAGNOSTICS.md",
+        )
+
+
 def test_generate_matched_topology_diagnostic_report_from_manifest(tmp_path, matched_runner_module):
     import json
     import pandas as pd
