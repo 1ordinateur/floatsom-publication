@@ -39,7 +39,6 @@ unset PYTHONPATH
 
 echo "Started matched topology diagnostics at ${RUN_TIMESTAMP}"
 echo "Repository: ${REPO_ROOT}"
-echo "Module: ${FLOATSOM_MODULE}"
 echo "Output directory: ${OUTPUT_DIR}"
 echo "True-default params JSON: ${TRUE_DEFAULT_PARAMS_JSON}"
 echo "Tuned fixed params JSON: ${FIXED_PARAMS_JSON}"

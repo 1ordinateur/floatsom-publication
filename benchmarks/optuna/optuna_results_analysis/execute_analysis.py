@@ -97,13 +97,19 @@ def _coalesce_distortion_columns(df):
 
 def _coalesce_architecture_column(df):
     """Ensure a canonical architecture column exists for downstream tooling."""
-    df['architecture'] = df['map_type']
-    if 'config_topology_type' in df.columns:
-        df['architecture'] = df['architecture'].fillna(df['config_topology_type'])
-    if 'param_topology_type' in df.columns:
-        df['architecture'] = df['architecture'].fillna(df['param_topology_type'])
+    known_topologies = {'hexagonal', 'mst', 'rng', 'grid'}
+    df['architecture'] = df.get('map_type', np.nan)
+    for column in ('config_topology_type', 'param_topology_type'):
+        if column not in df.columns:
+            continue
+        candidate = df[column].astype(str).str.lower().str.strip()
+        candidate_valid = candidate.isin(known_topologies)
+        current = df['architecture'].astype(str).str.lower().str.strip()
+        current_invalid = ~current.isin(known_topologies)
+        df.loc[candidate_valid & current_invalid, 'architecture'] = candidate[candidate_valid & current_invalid]
+        df.loc[candidate_valid & current.isin({'nan', 'none', ''}), 'architecture'] = candidate[candidate_valid & current.isin({'nan', 'none', ''})]
     df['architecture'] = df['architecture'].astype(str).str.lower().str.strip()
-    df.loc[df['architecture'].isin(['nan', 'none', '']), 'architecture'] = np.nan
+    df.loc[~df['architecture'].isin(known_topologies), 'architecture'] = np.nan
 
 
 def run_analysis(data_file='results/pareto_front_results.csv', 
