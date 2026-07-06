@@ -20,7 +20,7 @@ PYTHON_BIN="${PYTHON_BIN:-python3}"
 IMPORT_SHIM_ROOT="${IMPORT_SHIM_ROOT:-${WORK_ROOT}/pythonpath}"
 IMPORT_SHIM_PACKAGE="${IMPORT_SHIM_ROOT}/floatsom"
 
-RAW_OPTUNA_DIR="${RAW_OPTUNA_DIR:-${REPO_ROOT}/outputs/noninf_optuna_benchmarks_28022026/both}"
+PROCESSED_CSV="${PROCESSED_CSV:-}"
 TRUE_DEFAULT_CSV="${TRUE_DEFAULT_CSV:-${REPO_ROOT}/outputs/tuned_default_comparison_10032026/true_default/matched_true_default_runs.csv}"
 TUNED_FIXED_CSV="${TUNED_FIXED_CSV:-${REPO_ROOT}/outputs/tuned_default_comparison_10032026/tuned_fixed/matched_tuned_fixed_runs.csv}"
 XPYSOM_ROOT="${XPYSOM_ROOT:-${REPO_ROOT}/data/xpysom_hex_batch_full_benchmark_tuned_20032026}"
@@ -87,16 +87,17 @@ import sklearn
 print("Python dependency check passed.")
 PY
 
-echo "Patching visible forest-legend labels from p to q if needed..."
-PLOTS_FILE="benchmarks/optuna/optuna_results_analysis/scripts/analysis/publication_figures/plots.py"
-if grep -q 'Significant (p <\|Non-Significant (p >' "$PLOTS_FILE"; then
-  cp "$PLOTS_FILE" "${PLOTS_FILE}.pre_qvalue_label_patch"
-  perl -0pi -e 's/Significant \(p </Significant (q </g; s/Non-Significant \(p >/Non-Significant (q >=/g' "$PLOTS_FILE"
+if [ -z "$PROCESSED_CSV" ]; then
+  echo "ERROR: PROCESSED_CSV must point to the original processed_data_with_overall_score.csv." >&2
+  echo "Do not pass raw Optuna JSON results here; this job only regenerates figures from the original processed analysis table." >&2
+  echo "Example:" >&2
+  echo "  qsub -v PROCESSED_CSV=/path/to/unified/processed_data_with_overall_score.csv benchmarks/optuna/run_reviewer1_qvalue_publication_figures_cpu.pbs.sh" >&2
+  exit 1
 fi
 
 echo "Validating input paths..."
 for path in \
-  "$RAW_OPTUNA_DIR" \
+  "$PROCESSED_CSV" \
   "$TRUE_DEFAULT_CSV" \
   "$TUNED_FIXED_CSV" \
   "$XPYSOM_ROOT/mst/xpysom_mst_batch_full_runs.csv" \
@@ -111,32 +112,21 @@ for path in \
   echo "  OK: $path"
 done
 
-echo "Stage 1/4: harmonizing raw Optuna JSON studies..."
-"$PYTHON_BIN" -m floatsom.benchmarks.optuna.harmonization.harmonize_optuna_results \
-  --results-dir "$RAW_OPTUNA_DIR" \
-  --output-dir "$WORK_ROOT/harmonized" \
-  --objectives quantization_error_holdout quantization_error_train
+echo "Stage 1/2: using original processed analysis CSV..."
+"$PYTHON_BIN" - "$PROCESSED_CSV" <<'PY'
+import sys
+from pathlib import Path
+import pandas as pd
 
-echo "Stage 2/4: exporting harmonized Pareto CSV..."
-"$PYTHON_BIN" -m floatsom.benchmarks.optuna.harmonization.export_pareto_to_csv \
-  --input-dir "$WORK_ROOT/harmonized" \
-  --output "$WORK_ROOT/pareto_front_results.csv"
+path = Path(sys.argv[1])
+df = pd.read_csv(path, nrows=5)
+if "dataset" not in df.columns:
+    raise SystemExit("ERROR: processed CSV is missing expected column: dataset")
+print(f"Processed CSV check passed: {path}")
+print(f"First columns: {', '.join(list(df.columns[:12]))}")
+PY
 
-echo "Stage 3/4: creating processed analysis CSV..."
-"$PYTHON_BIN" benchmarks/optuna/optuna_results_analysis/execute_analysis.py \
-  --data-file "$WORK_ROOT/pareto_front_results.csv" \
-  --output-dir "$WORK_ROOT/analysis" \
-  --no-filter \
-  --best-performers \
-  --by-architecture
-
-PROCESSED_CSV="$WORK_ROOT/analysis/unified/processed_data_with_overall_score.csv"
-if [ ! -f "$PROCESSED_CSV" ]; then
-  echo "ERROR: expected processed CSV was not created: $PROCESSED_CSV" >&2
-  exit 1
-fi
-
-echo "Stage 4/4: regenerating publication figures and paper assets..."
+echo "Stage 2/2: regenerating publication figures and paper assets..."
 "$PYTHON_BIN" benchmarks/optuna/optuna_results_analysis/scripts/analysis/generate_publication_figures.py \
   --data-file "$PROCESSED_CSV" \
   --output-dir "$PUBLICATION_ROOT" \

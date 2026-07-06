@@ -132,5 +132,9 @@ benchmarks/optuna/optuna_results_analysis.old/
 data/
 benchmarks/gpu_scaling_cache/
 outputs/
+Results/
+topology_diag_*
+sklearn_data/
+*.pkz
 
 

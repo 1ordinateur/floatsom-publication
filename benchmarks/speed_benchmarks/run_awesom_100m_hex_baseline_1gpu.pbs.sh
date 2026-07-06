@@ -15,7 +15,7 @@
 set -euo pipefail
 
 module use /g/data/dk92/apps/Modules/modulefiles/
-NCI_AI_ML_MODULE="${NCI_AI_ML_MODULE:-NCI-ai-ml/24.11}"
+NCI_AI_ML_MODULE="${NCI_AI_ML_MODULE:-NCI-ai-ml/25.07}"
 module load "$NCI_AI_ML_MODULE"
 
 cd /g/data/eu59/piblo_project/floatsom-publication/
