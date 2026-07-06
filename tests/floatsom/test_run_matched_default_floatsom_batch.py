@@ -604,4 +604,5 @@ def test_generate_matched_topology_diagnostic_report_from_manifest(tmp_path, mat
     ].iloc[0]
     assert row["mean_signed_effect_favoring_comparator"] == pytest.approx(1.0)
     assert row["comparator_wins"] == 2
-    assert "bh_q" in paired_summary.columns
+    assert "raw_p" in paired_summary.columns
+    assert "bh_q" not in paired_summary.columns

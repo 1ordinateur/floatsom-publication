@@ -1071,8 +1071,6 @@ def _diagnostic_paired_summaries(combined_df: pd.DataFrame) -> pd.DataFrame:
             rows.append(row)
 
     summary = pd.DataFrame(rows)
-    if not summary.empty:
-        summary["bh_q"] = _benjamini_hochberg_qvalues(summary["raw_p"].tolist())
     return summary
 
 
@@ -1101,6 +1099,7 @@ def _generate_matched_topology_diagnostic_report(
         "",
         "Positive signed effects in the paired table favor the comparator after applying metric directionality.",
         "Lower is better for QE, mean tied rank, and dead-node fraction; higher is better for node utilization.",
+        "Paired-summary rows are pre-specified pooled comparisons and therefore report raw paired-test p-values (`raw_p`); Benjamini-Hochberg q-values are reserved for dataset-level test families.",
         "",
         "## Supplementary Diagnostics By Dataset",
         "",
