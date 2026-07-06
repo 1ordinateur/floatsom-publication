@@ -20,13 +20,17 @@ Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed b
 
 We also added matched post hoc topology diagnostics for the final trained FloatSOM maps. These diagnostics evaluate the same dataset, seed, sampling, and topology units, so the reviewer can see whether graph topologies improve $QE$ while preserving local topology and using map nodes effectively.
 
-The matched diagnostics show that the RNG improvement is not strictly a tuning artifact. Under the untuned/default profile, RNG outperformed untuned/default hexagonal maps on balanced MTR by 2.38 tied-rank positions (95% CI 1.95 to 2.82; Benjamini-Hochberg q=7.31e-16; 67/70 matched pairs favoring RNG), and also on balanced $QE$ (effect favoring RNG=0.267; 95% CI 0.109 to 0.425; q=0.00204). Under the tuned profile, RNG had a larger balanced MTR advantage of 25.74 tied-rank positions (95% CI 23.87 to 27.61; q=3.41e-37; 70/70 matched pairs favoring RNG). Node-use diagnostics are framed as confirmatory checks rather than as the central preservation metric: tuned RNG increased balanced node utilization by 0.0179 (95% CI 0.00950 to 0.0262; q=1.33e-4) and reduced balanced dead-node fraction by the same amount. We embedded the full paired diagnostic table and full by-dataset diagnostic table in the manuscript supplement rather than leaving them as external TSV-only outputs.
+The matched diagnostics show that the RNG improvement is not strictly a tuning artifact. Under the untuned/default profile, RNG outperformed untuned/default hexagonal maps on balanced MTR by [TBD after 15-seed run] tied-rank positions (95% CI [TBD after 15-seed run]; Benjamini-Hochberg q=[TBD after 15-seed run]; [TBD after 15-seed run] matched pairs favoring RNG), and also on balanced $QE$ (effect favoring RNG=[TBD after 15-seed run]; 95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]). Under the tuned profile, RNG had a larger balanced MTR advantage of [TBD after 15-seed run] tied-rank positions (95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]; [TBD after 15-seed run] matched pairs favoring RNG).
+
+We also added the tuned-versus-default MTR comparison because it directly addresses whether $QE$ optimization itself changes topology preservation. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each topology. The MTR penalty was much larger for hexagonal ([TBD after 15-seed run] tied-rank positions) than for MST ([TBD after 15-seed run]) or RNG ([TBD after 15-seed run]). We interpret this as evidence that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to local BMU-neighborhood ordering than the graph topologies do.
+
+Node utilization results support this interpretation, as the reviewer kindly pointed out. Considering this, we calculated node utilization and dead-node fraction for the same matched maps and showed that the MTR results are not explained by graph topologies abandoning map units. For example, tuned RNG increased balanced node utilization by [TBD after 15-seed run] (95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]) and reduced balanced dead-node fraction by the same amount. We will embed the full paired diagnostic table and full by-dataset diagnostic table in the manuscript supplement after the 15-seed random-seed run completes, rather than leaving them as external TSV-only outputs.
 
 ### Manuscript Amendment
 
 In Section 4.1, we added:
 
-> "For cross-topology preservation diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. We do not use raw topographic error as the primary cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
+> "For cross-topology preservation diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. MTR is therefore reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. We do not use raw topographic error as the primary cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
 
 In Section 5.3, we revised the opening sentence to:
 
@@ -34,13 +38,19 @@ In Section 5.3, we revised the opening sentence to:
 
 We also added the tuned and untuned/default RNG diagnostic result:
 
-> "The matched diagnostic benchmark indicates that the RNG topology advantage is not strictly a tuning artifact. Under the untuned/default profile, RNG outperformed untuned/default hexagonal maps on both balanced $QE$ (effect favoring RNG=0.267; 95% CI 0.109 to 0.425; q=0.00204) and balanced MTR (2.38 tied-rank positions; 95% CI 1.95 to 2.82; q=7.31e-16; 67/70 matched pairs favoring RNG). In the tuned RNG-versus-tuned hexagonal comparison, the MTR separation was larger: RNG lowered balanced MTR by 25.74 tied-rank positions (95% CI 23.87 to 27.61; q=3.41e-37; 70/70 matched pairs favoring RNG). Node utilization and dead-node fraction are interpreted as confirmatory diagnostics for this MTR result: tuned RNG increased balanced node utilization by 0.0179 (95% CI 0.00950 to 0.0262; q=1.33e-4) and reduced balanced dead-node fraction by the same amount, while holdout-only node utilization was directionally higher but did not pass correction (q=0.106). The full paired and by-dataset diagnostics are embedded in Supplementary Tables S12 and S13."
+> "The matched diagnostic benchmark indicates that the RNG topology advantage is not strictly a tuning artifact. Under the untuned/default profile, RNG outperformed untuned/default hexagonal maps on both balanced $QE$ (effect favoring RNG=[TBD after 15-seed run]; 95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]) and balanced MTR ([TBD after 15-seed run] tied-rank positions; 95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]; [TBD after 15-seed run] matched pairs favoring RNG). In the tuned RNG-versus-tuned hexagonal comparison, the MTR separation was larger: RNG lowered balanced MTR by [TBD after 15-seed run] tied-rank positions (95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]; [TBD after 15-seed run] matched pairs favoring RNG). Node utilization and dead-node fraction are interpreted as confirmatory diagnostics for this MTR result: tuned RNG increased balanced node utilization by [TBD after 15-seed run] (95% CI [TBD after 15-seed run]; q=[TBD after 15-seed run]) and reduced balanced dead-node fraction by the same amount, while holdout-only node utilization was directionally higher but did not pass correction (q=[TBD after 15-seed run]). The full paired and by-dataset diagnostics will be embedded in Supplementary Tables S12 and S13 after the 15-seed random-seed run completes."
+
+In Section 5.4, we added:
+
+> "The matched diagnostics show that this $QE$ gain has different topology-preservation costs across topology families. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each case. The MTR increase was much larger for hexagonal ([TBD after 15-seed run] tied-rank positions) than for MST ([TBD after 15-seed run]) or RNG ([TBD after 15-seed run]), indicating that the fixed hexagonal lattice pays a substantially larger local BMU-neighborhood ordering cost to achieve lower $QE$. Node-utilization and dead-node diagnostics support this interpretation as confirmatory checks: tuned RNG and tuned MST slightly increased balanced node utilization rather than improving $QE$ by leaving more map units unused."
 
 In the Discussion, we added:
 
 > "$QE$ and MTR are interpreted as complementary quantities: $QE$ measures vector-quantization fidelity, whereas MTR evaluates whether the two closest prototypes for a sample remain close under the topology-induced graph distance. We therefore avoid treating a lower $QE$ alone as evidence of improved topology preservation, and use MTR as the primary post hoc topology-preservation diagnostic."
 
 > "In the matched diagnostics, RNG showed lower MTR than hexagonal under both untuned/default and tuned profiles. The same direction under the untuned/default profile indicates that the MTR improvement is not solely introduced by the tuned fixed defaults. Node utilization and dead-node fraction support this interpretation by showing no evidence that the RNG MTR advantage is achieved by leaving more map units unused."
+
+> "The tuned-versus-default comparisons also suggest a topology-specific trade-off between the $QE$ objective and MTR. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but the MTR penalty was much larger for hexagonal: tuned hexagonal maps worsened balanced MTR by [TBD after 15-seed run] tied-rank positions relative to untuned/default hexagonal maps, whereas tuned MST and tuned RNG worsened balanced MTR by [TBD after 15-seed run] and [TBD after 15-seed run] tied-rank positions, respectively. This pattern suggests that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to the local BMU-neighborhood ordering measured by MTR, while the graph topologies absorb the same $QE$-oriented tuning with a much smaller MTR cost."
 
 ## 2. Hexagonal neighborhood-radius control
 
@@ -112,13 +122,13 @@ We also added:
 
 ### Response
 
-We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology p-value summary, deployment effect summaries, and topology runtime summary. The manuscript now contains the numerical values needed to evaluate the corresponding figures.
+We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology q-value summary, deployment effect summaries, and topology runtime summary. The manuscript now contains the numerical values needed to evaluate the corresponding figures.
 
 ### Manuscript Amendment
 
 In the Supplementary Tables section, we replaced the path-only captions with embedded tables. For example, the revised captions now read:
 
-> "Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values for the corresponding dataset-level comparison family. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`."
+> "Supplementary Table S7. Paired topology comparison q-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST_q and RNG_q columns report Benjamini-Hochberg q-values for the corresponding dataset-level comparison family; raw p-values are retained in the MST_p and RNG_p columns for audit. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`."
 
 For the deployment comparison, the revised caption now reads:
 
@@ -206,13 +216,17 @@ In Section 8.5, we added:
 
 ### Response
 
-We agree that the statistical reporting should state whether the paired tests were multiplicity-corrected. On checking the analysis code, the publication-figure pipeline already computes Benjamini-Hochberg adjusted `q_value` fields for dataset-level summaries. We have revised the manuscript-facing topology p-value table to report both raw `p_value` and adjusted `q_value` entries, and we have updated the plotting code so significance markers use `q_value` when available, falling back to `p_value` only when no adjusted value exists.
+We agree that the statistical reporting should state whether the paired tests were multiplicity-corrected. On checking the analysis code, the publication-figure pipeline already computes Benjamini-Hochberg adjusted `q_value` fields for dataset-level summaries. We have revised the manuscript-facing topology q-value table to report adjusted `q_value` entries alongside raw `p_value` entries retained for audit, and all affected forest-plot significance legends now use q-value notation rather than p-value notation.
 
 ### Manuscript Amendment
 
 In Section 4.4, we added:
 
-> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. The adjustment is applied across non-global dataset rows within each comparison family. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
+> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and dataset-level significance counts use these adjusted q-values. The adjustment is applied across non-global dataset rows within each comparison family. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
+
+In the Fig. 4 caption, we added:
+
+> "Figure significance markers use Benjamini-Hochberg adjusted q-values."
 
 In the Fig. 6 and Fig. 7 result text, we added:
 
@@ -224,11 +238,11 @@ and:
 
 In the Fig. 6 and Fig. 7 captions, we added:
 
-> "Dataset-level raw p-values and Benjamini-Hochberg adjusted q-values are reported in Supplementary Table S7."
+> "Figure significance markers use dataset-level Benjamini-Hochberg adjusted q-values, which are reported in Supplementary Table S7 alongside raw p-values retained for audit."
 
 In the supplementary topology table caption, we revised:
 
-> "Supplementary Table S7. Paired topology comparison p-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values for the corresponding dataset-level comparison family. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`."
+> "Supplementary Table S7. Paired topology comparison q-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST_q and RNG_q columns report Benjamini-Hochberg q-values for the corresponding dataset-level comparison family; raw p-values are retained in the MST_p and RNG_p columns for audit. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`."
 
 ## 9. Dead-node and node-utilization reporting
 
@@ -238,9 +252,9 @@ In the supplementary topology table caption, we revised:
 
 ### Response
 
-We agree. Node utilization is a useful confirmatory diagnostic for checking whether the MTR result is accompanied by broadly used map capacity rather than uneven allocation in which some nodes are effectively unused. We added node-utilization and dead-node-fraction diagnostics to the matched topology benchmark outputs, using the same matched units as the topology comparison.
+We agree, and thank the reviewer for pointing this out. Node utilization is a useful confirmatory diagnostic for checking whether the MTR result is accompanied by broadly used map capacity rather than uneven allocation in which some nodes are effectively unused. Considering this, we added node-utilization and dead-node-fraction diagnostics to the matched topology benchmark outputs, using the same matched units as the topology comparison.
 
-The matched tuned-profile result favored RNG rather than indicating poorer map use. Relative to tuned hexagonal maps, tuned RNG increased balanced node utilization by 0.0179 (95% CI 0.00950 to 0.0262; Benjamini-Hochberg q=1.33e-4) and reduced balanced dead-node fraction by the same amount. Holdout-only node utilization was positive but did not pass correction (q=0.106), so we report the split-specific and balanced diagnostics separately and do not present node utilization as the primary topology-preservation statistic.
+The matched tuned-profile result favored RNG rather than indicating poorer map use. Relative to tuned hexagonal maps, tuned RNG increased balanced node utilization by [TBD after 15-seed run] (95% CI [TBD after 15-seed run]; Benjamini-Hochberg q=[TBD after 15-seed run]) and reduced balanced dead-node fraction by the same amount. Holdout-only node utilization was positive but did not pass correction (q=[TBD after 15-seed run]), so we report the split-specific and balanced diagnostics separately and do not present node utilization as the primary topology-preservation statistic.
 
 ### Manuscript Amendment
 
