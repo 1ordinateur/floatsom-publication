@@ -16,7 +16,7 @@
     },
     "rng": {
       "initial_radius": 1.414751123359819,
-      "initialization_method": "pca",
+      "initialization_method": "random",
       "momentum_init": 0.612705387604851,
       "radius_decay_type": "asymptotic",
       "use_momentum": true
@@ -32,14 +32,14 @@
     },
     "mst": {
       "initial_radius": 1.8177068157674101,
-      "initialization_method": "pca",
+      "initialization_method": "random",
       "momentum_init": 0.5932963157239808,
       "radius_decay_type": "asymptotic",
       "use_momentum": true
     },
     "rng": {
       "initial_radius": 1.770450368802572,
-      "initialization_method": "pca",
+      "initialization_method": "random",
       "momentum_init": 0.5272565822346229,
       "radius_decay_type": "asymptotic",
       "use_momentum": true
