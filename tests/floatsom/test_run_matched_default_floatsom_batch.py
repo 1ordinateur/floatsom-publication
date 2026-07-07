@@ -197,6 +197,29 @@ def test_resolve_manual_fixed_params_by_sampling_topology_parses_json(tmp_path, 
     assert resolved["random"]["mst"]["use_momentum"] is False
 
 
+def test_parse_additional_fixed_profile_specs_selects_variant_topologies(matched_runner_module):
+    profiles = matched_runner_module._parse_additional_fixed_profile_specs(
+        ["tuned_rng_random,floatsom_min1000_tuned_defaults_rng_random.json,rng"],
+        default_topologies=["hexagonal", "mst", "rng"],
+    )
+
+    assert profiles == [
+        {
+            "label": "tuned_rng_random",
+            "json_path": "floatsom_min1000_tuned_defaults_rng_random.json",
+            "topologies": ["rng"],
+        }
+    ]
+
+
+def test_parse_additional_fixed_profile_specs_rejects_reserved_label(matched_runner_module):
+    with pytest.raises(ValueError, match="reserved"):
+        matched_runner_module._parse_additional_fixed_profile_specs(
+            ["tuned_fixed,floatsom_min1000_tuned_defaults_rng_random.json,rng"],
+            default_topologies=["hexagonal", "mst", "rng"],
+        )
+
+
 def test_xpysom_untuned_defaults_json_resolves_for_true_default_profile(matched_runner_module):
     defaults_path = Path(matched_runner_module.__file__).resolve().parents[2] / "xpysom_untuned_defaults.json"
 
@@ -606,3 +629,90 @@ def test_generate_matched_topology_diagnostic_report_from_manifest(tmp_path, mat
     assert row["comparator_wins"] == 2
     assert "raw_p" in paired_summary.columns
     assert "bh_q" not in paired_summary.columns
+
+
+def test_generate_matched_topology_report_includes_rng_variant_profile(tmp_path, matched_runner_module):
+    import json
+    import pandas as pd
+
+    def make_row(profile, dataset, seed, topology, qe, mtr, utilization, dead_fraction):
+        return {
+            "dataset": dataset,
+            "seed": seed,
+            "architecture": topology,
+            "sampling_method": "full",
+            "run_profile": profile,
+            "evaluation_split": "both",
+            "quantization_error_holdout": qe + 0.1,
+            "quantization_error_train": qe - 0.1,
+            "balanced_qe_raw": qe,
+            "mean_tied_rank_holdout": mtr + 0.1,
+            "mean_tied_rank_train": mtr - 0.1,
+            "balanced_mean_tied_rank_raw": mtr,
+            "node_utilization_holdout": utilization - 0.05,
+            "node_utilization_train": utilization + 0.05,
+            "balanced_node_utilization_raw": utilization,
+            "dead_node_fraction_holdout": dead_fraction + 0.05,
+            "dead_node_fraction_train": dead_fraction - 0.05,
+            "balanced_dead_node_fraction_raw": dead_fraction,
+        }
+
+    default_rows = []
+    tuned_rows = []
+    variant_rows = []
+    for seed in (1, 2):
+        default_rows.extend(
+            [
+                make_row("true_default", "iris", seed, "hexagonal", 10.0, 5.0, 0.50, 0.50),
+                make_row("true_default", "iris", seed, "mst", 9.0, 4.0, 0.60, 0.40),
+                make_row("true_default", "iris", seed, "rng", 8.0, 3.0, 0.70, 0.30),
+            ]
+        )
+        tuned_rows.extend(
+            [
+                make_row("tuned_fixed", "iris", seed, "hexagonal", 7.0, 4.5, 0.65, 0.35),
+                make_row("tuned_fixed", "iris", seed, "mst", 6.0, 3.5, 0.75, 0.25),
+                make_row("tuned_fixed", "iris", seed, "rng", 5.0, 2.5, 0.85, 0.15),
+            ]
+        )
+        variant_rows.append(make_row("tuned_rng_random", "iris", seed, "rng", 4.0, 2.0, 0.90, 0.10))
+
+    default_csv = tmp_path / "matched_default.csv"
+    tuned_csv = tmp_path / "matched_tuned.csv"
+    variant_csv = tmp_path / "matched_tuned_rng_random.csv"
+    pd.DataFrame(default_rows).to_csv(default_csv, index=False)
+    pd.DataFrame(tuned_rows).to_csv(tuned_csv, index=False)
+    pd.DataFrame(variant_rows).to_csv(variant_csv, index=False)
+
+    manifest_path = tmp_path / "MATCHED_TOPOLOGY_RNG_VARIANTS_MANIFEST.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "profile_runs": [
+                    {"profile": "true_default", "runs_csv": str(default_csv)},
+                    {"profile": "tuned_fixed", "runs_csv": str(tuned_csv)},
+                    {"profile": "tuned_rng_random", "runs_csv": str(variant_csv)},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    outputs = matched_runner_module._generate_matched_topology_diagnostic_report(
+        manifest_path=manifest_path,
+        output_dir=tmp_path,
+        markdown_name="RNG_VARIANTS.md",
+    )
+
+    dataset_summary = pd.read_csv(outputs["diagnostic_dataset_summary_tsv"], sep="\t")
+    paired_summary = pd.read_csv(outputs["diagnostic_paired_summary_tsv"], sep="\t")
+
+    assert "tuned_rng_random" in set(dataset_summary["profile"])
+    assert "tuned_mst_vs_tuned_rng" in set(paired_summary["comparison"])
+    row = paired_summary[
+        (paired_summary["comparison"] == "tuned_fixed_rng_vs_tuned_rng_random_rng")
+        & (paired_summary["metric"] == "balanced_qe_raw")
+    ].iloc[0]
+    assert row["n_pairs"] == 2
+    assert row["mean_signed_effect_favoring_comparator"] == pytest.approx(1.0)
+    assert row["comparator_wins"] == 2

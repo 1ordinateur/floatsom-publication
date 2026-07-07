@@ -283,6 +283,51 @@ def _resolve_sampling_methods(requested: Optional[Sequence[str]]) -> List[str]:
     return normalized
 
 
+def _validate_profile_label(raw_label: str) -> str:
+    label = str(raw_label).strip().lower()
+    if not label:
+        raise ValueError("Additional fixed profile label must be non-empty.")
+    allowed_chars = set("abcdefghijklmnopqrstuvwxyz0123456789_-")
+    if any(char not in allowed_chars for char in label):
+        raise ValueError(
+            "Additional fixed profile label may only contain lowercase letters, digits, underscores, and hyphens: "
+            f"{raw_label!r}"
+        )
+    if label in {"true_default", "tuned_fixed"}:
+        raise ValueError(f"Additional fixed profile label is reserved: {label!r}")
+    return label
+
+
+def _parse_additional_fixed_profile_specs(
+    raw_specs: Optional[Sequence[str]],
+    *,
+    default_topologies: Sequence[str],
+) -> List[Dict[str, Any]]:
+    profiles: List[Dict[str, Any]] = []
+    seen_labels: set[str] = set()
+    for raw_spec in raw_specs or []:
+        parts = [part.strip() for part in str(raw_spec).split(",") if part.strip()]
+        if len(parts) < 2:
+            raise ValueError(
+                "--additional-fixed-profile must use 'profile_label,json_path[,topology...]'. "
+                f"Received: {raw_spec!r}"
+            )
+        label = _validate_profile_label(parts[0])
+        if label in seen_labels:
+            raise ValueError(f"Duplicate additional fixed profile label: {label!r}")
+        seen_labels.add(label)
+        json_path = parts[1]
+        profile_topologies = _resolve_topologies(parts[2:]) if len(parts) > 2 else list(default_topologies)
+        profiles.append(
+            {
+                "label": label,
+                "json_path": json_path,
+                "topologies": profile_topologies,
+            }
+        )
+    return profiles
+
+
 def _parse_boolean_token(raw_value: object, *, param_name: str) -> bool:
     text = str(raw_value).strip().lower()
     if text in BOOLEAN_TRUE_TOKENS:
@@ -902,6 +947,26 @@ def _load_profile_runs_csv(path_value: object, profile: str) -> pd.DataFrame:
 
 def _load_manifest_profile_runs(manifest_path: Path) -> Tuple[Dict[str, Any], pd.DataFrame]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    profile_entries = manifest.get("profile_runs")
+    if isinstance(profile_entries, list) and profile_entries:
+        frames: List[pd.DataFrame] = []
+        seen_profiles: set[str] = set()
+        for index, entry in enumerate(profile_entries, start=1):
+            if not isinstance(entry, dict):
+                raise ValueError(f"Manifest profile_runs entry {index} is not an object: {entry!r}")
+            profile = str(entry.get("profile", "")).strip()
+            runs_csv = entry.get("runs_csv")
+            if not profile or not runs_csv:
+                raise ValueError(
+                    f"Manifest profile_runs entry {index} must contain non-empty 'profile' and 'runs_csv'."
+                )
+            profile_key = profile.lower()
+            if profile_key in seen_profiles:
+                raise ValueError(f"Manifest contains duplicate profile entry: {profile!r}")
+            seen_profiles.add(profile_key)
+            frames.append(_load_profile_runs_csv(runs_csv, profile_key))
+        return manifest, pd.concat(frames, axis=0, ignore_index=True)
+
     default_csv = manifest.get("default_runs_file") or manifest.get("true_default", {}).get("runs_csv")
     tuned_csv = manifest.get("default_aware_tuned_runs_file") or manifest.get("tuned_fixed", {}).get("runs_csv")
     if not default_csv or not tuned_csv:
@@ -975,65 +1040,110 @@ def _build_metric_pairs(
     return pairs
 
 
+def _condition_exists(combined_df: pd.DataFrame, *, profile: str, architecture: str) -> bool:
+    if combined_df.empty or "profile" not in combined_df.columns or "architecture" not in combined_df.columns:
+        return False
+    profile_key = str(profile).strip().lower()
+    architecture_key = str(architecture).strip().lower()
+    matches = (
+        (combined_df["profile"].astype(str).str.strip().str.lower() == profile_key)
+        & (combined_df["architecture"].astype(str).str.strip().str.lower() == architecture_key)
+    )
+    return bool(matches.any())
+
+
+def _comparison_key_columns(reference_architecture: str, comparator_architecture: str) -> Tuple[str, ...]:
+    if str(reference_architecture).strip().lower() == str(comparator_architecture).strip().lower():
+        return ("dataset", "seed", "sampling_method", "architecture")
+    return ("dataset", "seed", "sampling_method")
+
+
+def _append_condition_comparison(
+    comparisons: List[Dict[str, Any]],
+    *,
+    combined_df: pd.DataFrame,
+    comparison: str,
+    reference_profile: str,
+    reference_architecture: str,
+    comparator_profile: str,
+    comparator_architecture: str,
+    include_empty: bool = False,
+) -> None:
+    if not include_empty and (
+        not _condition_exists(combined_df, profile=reference_profile, architecture=reference_architecture)
+        or not _condition_exists(combined_df, profile=comparator_profile, architecture=comparator_architecture)
+    ):
+        return
+    comparisons.append(
+        {
+            "comparison": comparison,
+            "reference_label": f"{reference_profile}:{reference_architecture}",
+            "comparator_label": f"{comparator_profile}:{comparator_architecture}",
+            "reference_filter": {"profile": reference_profile, "architecture": reference_architecture},
+            "comparator_filter": {"profile": comparator_profile, "architecture": comparator_architecture},
+            "key_columns": _comparison_key_columns(reference_architecture, comparator_architecture),
+        }
+    )
+
+
 def _diagnostic_paired_summaries(combined_df: pd.DataFrame) -> pd.DataFrame:
-    comparisons = [
+    comparisons: List[Dict[str, Any]] = []
+    for comparison_name, reference_profile, reference_architecture, comparator_profile, comparator_architecture in [
+        ("default_hexagonal_vs_default_mst", "true_default", "hexagonal", "true_default", "mst"),
+        ("default_hexagonal_vs_default_rng", "true_default", "hexagonal", "true_default", "rng"),
+        ("default_mst_vs_default_rng", "true_default", "mst", "true_default", "rng"),
+        ("tuned_hexagonal_vs_tuned_mst", "tuned_fixed", "hexagonal", "tuned_fixed", "mst"),
+        ("tuned_hexagonal_vs_tuned_rng", "tuned_fixed", "hexagonal", "tuned_fixed", "rng"),
+        ("tuned_mst_vs_tuned_rng", "tuned_fixed", "mst", "tuned_fixed", "rng"),
+        ("tuned_vs_default_hexagonal", "true_default", "hexagonal", "tuned_fixed", "hexagonal"),
+        ("tuned_vs_default_mst", "true_default", "mst", "tuned_fixed", "mst"),
+        ("tuned_vs_default_rng", "true_default", "rng", "tuned_fixed", "rng"),
+    ]:
+        _append_condition_comparison(
+            comparisons,
+            combined_df=combined_df,
+            comparison=comparison_name,
+            reference_profile=reference_profile,
+            reference_architecture=reference_architecture,
+            comparator_profile=comparator_profile,
+            comparator_architecture=comparator_architecture,
+            include_empty=True,
+        )
+
+    profile_keys = sorted(
         {
-            "comparison": "default_hexagonal_vs_default_mst",
-            "reference_label": "true_default:hexagonal",
-            "comparator_label": "true_default:mst",
-            "reference_filter": {"profile": "true_default", "architecture": "hexagonal"},
-            "comparator_filter": {"profile": "true_default", "architecture": "mst"},
-            "key_columns": ("dataset", "seed", "sampling_method"),
-        },
-        {
-            "comparison": "default_hexagonal_vs_default_rng",
-            "reference_label": "true_default:hexagonal",
-            "comparator_label": "true_default:rng",
-            "reference_filter": {"profile": "true_default", "architecture": "hexagonal"},
-            "comparator_filter": {"profile": "true_default", "architecture": "rng"},
-            "key_columns": ("dataset", "seed", "sampling_method"),
-        },
-        {
-            "comparison": "tuned_hexagonal_vs_tuned_mst",
-            "reference_label": "tuned_fixed:hexagonal",
-            "comparator_label": "tuned_fixed:mst",
-            "reference_filter": {"profile": "tuned_fixed", "architecture": "hexagonal"},
-            "comparator_filter": {"profile": "tuned_fixed", "architecture": "mst"},
-            "key_columns": ("dataset", "seed", "sampling_method"),
-        },
-        {
-            "comparison": "tuned_hexagonal_vs_tuned_rng",
-            "reference_label": "tuned_fixed:hexagonal",
-            "comparator_label": "tuned_fixed:rng",
-            "reference_filter": {"profile": "tuned_fixed", "architecture": "hexagonal"},
-            "comparator_filter": {"profile": "tuned_fixed", "architecture": "rng"},
-            "key_columns": ("dataset", "seed", "sampling_method"),
-        },
-        {
-            "comparison": "tuned_vs_default_hexagonal",
-            "reference_label": "true_default:hexagonal",
-            "comparator_label": "tuned_fixed:hexagonal",
-            "reference_filter": {"profile": "true_default", "architecture": "hexagonal"},
-            "comparator_filter": {"profile": "tuned_fixed", "architecture": "hexagonal"},
-            "key_columns": ("dataset", "seed", "sampling_method", "architecture"),
-        },
-        {
-            "comparison": "tuned_vs_default_mst",
-            "reference_label": "true_default:mst",
-            "comparator_label": "tuned_fixed:mst",
-            "reference_filter": {"profile": "true_default", "architecture": "mst"},
-            "comparator_filter": {"profile": "tuned_fixed", "architecture": "mst"},
-            "key_columns": ("dataset", "seed", "sampling_method", "architecture"),
-        },
-        {
-            "comparison": "tuned_vs_default_rng",
-            "reference_label": "true_default:rng",
-            "comparator_label": "tuned_fixed:rng",
-            "reference_filter": {"profile": "true_default", "architecture": "rng"},
-            "comparator_filter": {"profile": "tuned_fixed", "architecture": "rng"},
-            "key_columns": ("dataset", "seed", "sampling_method", "architecture"),
-        },
+            str(profile).strip().lower()
+            for profile in combined_df.get("profile", pd.Series(dtype=str)).dropna().tolist()
+        }
+    )
+    additional_rng_profiles = [
+        profile
+        for profile in profile_keys
+        if profile not in {"true_default", "tuned_fixed"}
+        and _condition_exists(combined_df, profile=profile, architecture="rng")
     ]
+    for profile in additional_rng_profiles:
+        for reference_architecture in ("hexagonal", "mst", "rng"):
+            _append_condition_comparison(
+                comparisons,
+                combined_df=combined_df,
+                comparison=f"tuned_fixed_{reference_architecture}_vs_{profile}_rng",
+                reference_profile="tuned_fixed",
+                reference_architecture=reference_architecture,
+                comparator_profile=profile,
+                comparator_architecture="rng",
+            )
+    for left_index, reference_profile in enumerate(additional_rng_profiles):
+        for comparator_profile in additional_rng_profiles[left_index + 1 :]:
+            _append_condition_comparison(
+                comparisons,
+                combined_df=combined_df,
+                comparison=f"{reference_profile}_rng_vs_{comparator_profile}_rng",
+                reference_profile=reference_profile,
+                reference_architecture="rng",
+                comparator_profile=comparator_profile,
+                comparator_architecture="rng",
+            )
 
     metric_columns = [column for column in DIAGNOSTIC_REPORT_METRICS if column in combined_df.columns]
     rows: List[Dict[str, Any]] = []
@@ -1797,6 +1907,16 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--additional-fixed-profile",
+        action="append",
+        default=None,
+        help=(
+            "Additional fixed profile to run with --run-both-profiles, formatted as "
+            "'profile_label,json_path[,topology...]'. If topology is omitted, the profile uses --topologies. "
+            "Example: --additional-fixed-profile tuned_rng_random,floatsom_rng_random.json,rng"
+        ),
+    )
+    parser.add_argument(
         "--true-default-output-subdir",
         type=str,
         default="true_default",
@@ -1939,6 +2059,12 @@ def main() -> int:
     )
     topologies = _resolve_topologies(args.topologies)
     sampling_methods = _resolve_sampling_methods(args.sampling_methods)
+    additional_fixed_profiles = _parse_additional_fixed_profile_specs(
+        args.additional_fixed_profile,
+        default_topologies=topologies,
+    )
+    if additional_fixed_profiles and not bool(args.run_both_profiles):
+        raise ValueError("--additional-fixed-profile is only supported with --run-both-profiles.")
     manual_fixed_params = _resolve_manual_fixed_params(args.fixed_param, args.fixed_params_json)
     manual_fixed_params_by_topology = _resolve_manual_fixed_params_by_topology(
         topologies=topologies,
@@ -1962,6 +2088,13 @@ def main() -> int:
             json_path=args.true_default_fixed_params_by_sampling_topology_json,
             allow_unselected_keys=True,
         )
+    for profile_spec in additional_fixed_profiles:
+        profile_spec["fixed_params_by_sampling_topology"] = _resolve_manual_fixed_params_by_sampling_topology(
+            sampling_methods=sampling_methods,
+            topologies=profile_spec["topologies"],
+            json_path=profile_spec["json_path"],
+            allow_unselected_keys=True,
+        )
     _validate_manual_fixed_params_for_scope(
         manual_fixed_params,
         processing_method="batch",
@@ -1980,6 +2113,14 @@ def main() -> int:
                 processing_method="batch",
                 topologies=[topology],
             )
+    for profile_spec in additional_fixed_profiles:
+        for sampling, topology_map in profile_spec["fixed_params_by_sampling_topology"].items():
+            for topology, topology_params in topology_map.items():
+                _validate_manual_fixed_params_for_scope(
+                    topology_params,
+                    processing_method="batch",
+                    topologies=[topology],
+                )
     for sampling, topology_map in true_default_fixed_params_by_sampling_topology.items():
         for topology, topology_params in topology_map.items():
             _validate_manual_fixed_params_for_scope(
@@ -2014,6 +2155,14 @@ def main() -> int:
             topologies=topologies,
             profile_label="true-default",
         )
+    if bool(args.run_both_profiles) and bool(args.require_complete_sampling_topology_overrides):
+        for profile_spec in additional_fixed_profiles:
+            _validate_sampling_topology_override_coverage(
+                fixed_params_by_sampling_topology=profile_spec["fixed_params_by_sampling_topology"],
+                sampling_methods=sampling_methods,
+                topologies=profile_spec["topologies"],
+                profile_label=str(profile_spec["label"]),
+            )
 
     dataset_config = _resolve_dataset_config()
     dataset_config["difficulty"] = str(args.difficulty)
@@ -2057,7 +2206,8 @@ def main() -> int:
         true_default_output_dir = output_dir / true_default_output_subdir
         tuned_fixed_output_dir = output_dir / tuned_fixed_output_subdir
 
-        print("=== Profile 1/2: true_default ===")
+        total_profiles = 2 + len(additional_fixed_profiles)
+        print(f"=== Profile 1/{total_profiles}: true_default ===")
         true_default_result = _execute_profile_runs(
             output_dir=true_default_output_dir,
             datasets=datasets,
@@ -2083,7 +2233,7 @@ def main() -> int:
             resume_enabled=bool(args.resume),
         )
 
-        print("=== Profile 2/2: tuned_fixed ===")
+        print(f"=== Profile 2/{total_profiles}: tuned_fixed ===")
         tuned_fixed_result = _execute_profile_runs(
             output_dir=tuned_fixed_output_dir,
             datasets=datasets,
@@ -2109,6 +2259,73 @@ def main() -> int:
             resume_enabled=bool(args.resume),
         )
 
+        additional_profile_results: List[Dict[str, Any]] = []
+        for offset, profile_spec in enumerate(additional_fixed_profiles, start=3):
+            profile_label = str(profile_spec["label"])
+            profile_topologies = list(profile_spec["topologies"])
+            profile_output_dir = output_dir / _validate_subdir_name(
+                profile_label,
+                arg_name="additional fixed profile output subdir",
+            )
+            profile_runs_csv_name = _validate_csv_name(
+                f"matched_{profile_label}_topology_diagnostics_runs.csv",
+                arg_name="additional fixed profile runs csv name",
+            )
+            print(f"=== Profile {offset}/{total_profiles}: {profile_label} ===")
+            profile_result = _execute_profile_runs(
+                output_dir=profile_output_dir,
+                datasets=datasets,
+                seeds=seeds,
+                topologies=profile_topologies,
+                sampling_methods=sampling_methods,
+                dataset_config=dict(dataset_config),
+                base_objectives=base_objectives,
+                expanded_objectives=expanded_objectives,
+                timeout=args.timeout,
+                evaluation_split=str(args.evaluation_split),
+                save_study_json_enabled=bool(args.save_study_json),
+                run_profile=profile_label,
+                run_label=profile_label,
+                runs_csv_name=profile_runs_csv_name,
+                manual_fixed_params={},
+                manual_fixed_params_by_topology={},
+                manual_fixed_params_by_sampling_topology=profile_spec["fixed_params_by_sampling_topology"],
+                compare_against_csv=None,
+                compare_output_subdir=str(args.compare_output_subdir),
+                compare_markdown_name=str(args.compare_markdown_name),
+                compare_split_policy=str(args.compare_split_policy),
+                resume_enabled=bool(args.resume),
+            )
+            additional_profile_results.append(
+                {
+                    "profile": profile_label,
+                    "params_by_sampling_topology_json": str(_resolve_json_path(profile_spec["json_path"])),
+                    "topologies": profile_topologies,
+                    "result": profile_result,
+                }
+            )
+
+        profile_runs = [
+            {
+                "profile": "true_default",
+                "runs_csv": str(true_default_result["runs_csv"]),
+                "topologies": list(topologies),
+            },
+            {
+                "profile": "tuned_fixed",
+                "runs_csv": str(tuned_fixed_result["runs_csv"]),
+                "topologies": list(topologies),
+            },
+        ]
+        profile_runs.extend(
+            {
+                "profile": str(item["profile"]),
+                "runs_csv": str(item["result"]["runs_csv"]),
+                "topologies": list(item["topologies"]),
+            }
+            for item in additional_profile_results
+        )
+
         manifest = {
             "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "output_dir": str(output_dir.resolve()),
@@ -2131,6 +2348,8 @@ def main() -> int:
             "default_aware_tuned_runs_file": str(tuned_fixed_result["runs_csv"]),
             "true_default": true_default_result,
             "tuned_fixed": tuned_fixed_result,
+            "additional_fixed_profiles": additional_profile_results,
+            "profile_runs": profile_runs,
         }
         manifest_path = output_dir / manifest_name
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
