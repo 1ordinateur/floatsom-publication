@@ -48,9 +48,9 @@ Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] a
 
 ### 2.4 Hyperparameter Optimization and Fair Comparison
 
-SOM performance depends strongly on parameters such as map size, initialization, learning-rate schedule, and neighborhood schedule. Prior work shows that these choices can substantially affect observed performance [@akindukoSOMStochasticInitialization2016; @forestSurveyImplementationPerformance2020]. Because recent SOM system comparisons often emphasize implementation-level performance against existing tools or reference configurations [@manciniXPySomHighPerformanceSelfOrganizing2020; @kratochvilGigaSOMjlHighperformanceClustering2020], comparisons based only on untuned defaults can be difficult to interpret.
+SOM performance depends strongly on parameters such as map size, initialization, learning-rate schedule, and neighborhood schedule. Prior work shows that these choices can substantially affect observed performance [@akindukoSOMStochasticInitialization2016; @forestSurveyImplementationPerformance2020]. Because recent SOM system comparisons often emphasize implementation-level performance against existing tools or reference configurations [@manciniXPySomHighPerformanceSelfOrganizing2020; @kratochvilGigaSOMjlHighperformanceClustering2020], comparisons based only on untuned settings can be difficult to interpret.
 
-More generally, modern machine-learning workflows increasingly rely on automated hyperparameter optimization rather than manual tuning alone. Tools such as Optuna provide bounded search over large hyperparameter spaces and can support multi-objective optimization, allowing parameter settings to be selected with respect to several benchmark criteria simultaneously rather than collapsed into a single score [@akibaOptunaNextgenerationHyperparameter2019]. Accordingly, we test both tuned and untuned reference and FloatSOM implementations to distinguish performance under untuned defaults from performance obtained under more suitable hyperparameters.
+More generally, modern machine-learning workflows increasingly rely on automated hyperparameter optimization rather than manual tuning alone. Tools such as Optuna provide bounded search over large hyperparameter spaces and can support multi-objective optimization, allowing parameter settings to be selected with respect to several benchmark criteria simultaneously rather than collapsed into a single score [@akibaOptunaNextgenerationHyperparameter2019]. Accordingly, we test both tuned and untuned reference and FloatSOM implementations to distinguish performance under untuned settings from performance obtained under more suitable hyperparameters.
 
 ## 3. Methods
 
@@ -214,7 +214,7 @@ Our primary quality metric is Quantization Error ($QE$) [@kohonenSelfOrganizingM
 
 Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_B$ is therefore a composite endpoint that weights data representation fidelity (train) and generalisability (holdout) equally. Note that in the Optuna runs, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector, with $QE_B$ only calculated *post hoc*.
 
-For cross-topology preservation diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. MTR is therefore reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. We do not use raw topographic error as the primary cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010].
+For cross-topology preservation diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. MTR is therefore reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. Raw topographic error is not used as the cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010].
 
 We also report node utilization diagnostics for the same fitted maps. Node utilization is the fraction of SOM nodes selected as a best-matching unit by at least one sample in the evaluated split, and dead-node fraction is its complement. MTR, node utilization, and dead-node fraction are computed for both training and holdout splits and summarized with the same balanced train-holdout convention used for $QE$; these diagnostics are not optimized by Optuna.
 
@@ -234,15 +234,17 @@ Additional CPU and RAM resources attached to each GPU are scaled linearly with G
 
 ### 4.3 Hyperparameter Tuning and Stability
 
-To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into deployable default configurations by taking the mean of numeric parameters and the mode of categorical parameters. These deployable tuned defaults were derived from the winning groups among datasets with at least 1000 samples, matching the sample-size regime expected for most practical applications.
+To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned reference. For each sampling mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into deployable configurations by taking the mean of numeric parameters and the mode of categorical parameters. These deployable tuned configurations were derived from the winning groups among datasets with at least 1000 samples, matching the sample-size regime expected for most practical applications.
 
 The stability analysis focuses on four tuned hyperparameters that govern SOM training dynamics. These settings determine how the map is initialized and how updates evolve over training: the initial radius sets the early neighborhood scale around each BMU, the initialization method sets the starting node weights, the radius decay type controls the shift from broad global organization toward local refinement, and the momentum-use parameter determines whether each update retains part of the previous update direction.
 
 #### 4.3.1 Tuned Configuration versus Untuned Reference Analysis
 
-This fixed derived configuration was then rerun and paired against the untuned default XPySOM (hexagonal) reference within matched dataset, seed, and dataset-split units.
+This fixed tuned configuration was then rerun and paired against the untuned XPySOM hexagonal reference within matched dataset, seed, and dataset-split units.
 
 Dataset-wise tuned configuration versus untuned reference summaries use the same forest-plot convention. The global overall summary pools all matched tuned configuration versus untuned reference pairs across datasets and applies the same paired $t$-test and confidence-interval construction to that pooled paired set.
+
+To be clear, these fixed-configuration reruns are distinct from the top-$k$ Optuna summaries used for search-budget comparisons. The Optuna top-$k$ summaries represent the maximal observed performance of each algorithmic setting within the tuning campaign, whereas the fixed tuned reruns represent likely general usage. The fixed tuned configurations use the average numeric hyperparameters and modal categorical hyperparameters selected from the tuned runs, then rerun that single deployable configuration under matched dataset, seed, topology, and split keys.
 
 #### 4.3.2 Hyperparameter stability and dataset-type stratification
 
@@ -280,12 +282,12 @@ Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ 
 
 ### 5.3 Topology Results
 
-Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. To test whether graph-topology $QE$ gains reflect useful topology behavior rather than only looser vector quantization, the same final maps are also evaluated post hoc for MTR as the primary cross-topology preservation diagnostic. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned/default profiles.
+Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. The same final maps are also evaluated post hoc for MTR as the primary cross-topology preservation diagnostic. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles.
 
-Because `initial_radius` was tuned for every topology family, the topology comparison is a best-observed-versus-best-observed comparison under the same Optuna budget rather than a comparison against an untuned hexagonal radius. The distilled deployable defaults selected tighter hexagonal radii than the graph topologies: under full sampling the selected `initial_radius` values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG, while under random sampling they were 1.17, 1.82, and 1.77, respectively. These values show that the reported MST/RNG $QE$ gains are not explained by evaluating hexagonal only at a broader default neighborhood radius.
+Because `initial_radius` was tuned for every topology family, the topology comparison is a best-observed-versus-best-observed comparison under the same Optuna budget rather than a comparison against an untuned hexagonal radius. The distilled deployable configurations selected tighter hexagonal radii than the graph topologies: under full sampling the selected `initial_radius` values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG, while under random sampling they were 1.17, 1.82, and 1.77, respectively. These values show that the reported MST/RNG $QE$ gains are not explained by evaluating hexagonal only at a broader default neighborhood radius.
 
 ![Figure 5](assets_manual/figures/fig_5.svg)
-*Figure 5. Representative neighborhood node and connection overlays for default XPySOM hexagonal, MST, and RNG runs on a 30,000 data-point synthetic sklearn circles dataset.*
+*Figure 5. Representative neighborhood node and connection overlays for untuned XPySOM hexagonal, MST, and RNG runs on a 30,000 data-point synthetic sklearn circles dataset.*
 
 #### 5.3.1 MST
 
@@ -311,9 +313,9 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 ![Figure 7](assets_manual/figures/fig_7.svg)
 *Figure 7. Hexagonal versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Figure significance markers use dataset-level Benjamini-Hochberg adjusted q-values, which are reported in Supplementary Table S7 alongside raw p-values retained for audit.*
 
-Fig. 7 and the matched fixed diagnostic benchmark address complementary questions. Fig. 7 is the Optuna-budget topology comparison and asks whether tuned RNG can achieve lower $QE$ than tuned hexagonal maps under the same optimization protocol. The matched fixed diagnostic benchmark is used for the preservation question, because it reruns deployable fixed tuned and untuned/default profiles under matched dataset, seed, topology, and split keys, then evaluates the resulting final maps for MTR and node use. We therefore use the matched fixed diagnostics, rather than an additional $QE$-only tuned-hexagonal-versus-tuned-RNG figure, as the primary evidence for whether the graph-topology $QE$ gains preserve local topology.
+Fig. 7 and the matched fixed diagnostic benchmark address complementary questions. Fig. 7 is the Optuna-budget topology comparison and asks whether tuned RNG can achieve lower $QE$ than tuned hexagonal maps under the same optimization protocol. The matched fixed diagnostic benchmark reruns deployable fixed tuned and untuned profiles under matched dataset, seed, topology, and split keys, then evaluates the resulting final maps for MTR and node use.
 
-The matched diagnostic benchmark indicates that the graph-topology advantage is not strictly a tuning artifact (Table \ref{tab:matched_topology_diagnostics_summary}). Under the untuned/default profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but the MTR result distinguished the two graph topologies: MST did not clearly improve balanced MTR relative to hexagonal maps, whereas RNG lowered balanced MTR by 2.44 tied-rank positions. Under the tuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps. RNG was statistically comparable with MST for balanced $QE$, while lowering balanced MTR by 2.96 tied-rank positions relative to MST. Thus, MST remains a strong $QE$ topology, whereas RNG provides the clearest combined $QE$ and topology-preservation result.
+The matched diagnostic benchmark indicates that the graph-topology advantage is not strictly a tuning artifact (Table \ref{tab:matched_topology_diagnostics_summary}). Under the untuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but the MTR result distinguished the two graph topologies: MST did not clearly improve balanced MTR relative to hexagonal maps, whereas RNG lowered balanced MTR by 2.44 tied-rank positions. Under the tuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps. RNG was statistically comparable with MST for balanced $QE$, while lowering balanced MTR by 2.96 tied-rank positions relative to MST. Thus, MST remains a strong $QE$ topology, whereas RNG has the strongest paired $QE$/MTR profile.
 
 \begin{table}[t]
 \centering
@@ -325,7 +327,7 @@ The matched diagnostic benchmark indicates that the graph-topology advantage is 
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 Profile & MST vs hex & RNG vs hex & RNG vs MST & MST vs hex & RNG vs hex & RNG vs MST \\
 \midrule
-Untuned/default & +0.269 & +0.249 & -0.020 & -0.20 & +2.44 & +2.64 \\
+Untuned & +0.269 & +0.249 & -0.020 & -0.20 & +2.44 & +2.64 \\
 Tuned & +0.064 & +0.052 & -0.012 & +22.71 & +25.67 & +2.96 \\
 \bottomrule
 \end{tabular}
@@ -337,14 +339,14 @@ Node utilization and dead-node fraction are interpreted as confirmatory diagnost
 
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
-To quantify the practical benefit of deploying tuned settings, we compare tuned and untuned configurations in Fig. 8 using pooled topology-level $QE$ summaries. Topology-stratified versions of the same comparison are provided in Figs. S8-S10. The tuned configurations are the Section 4.3 derived settings, and the untuned reference is the default XPySOM configuration. Broadly, tuning yields substantial and significant $QE$ improvement.
+To quantify the practical benefit of deploying tuned settings, we compare tuned and untuned configurations in Fig. 8 using pooled topology-level $QE$ summaries. Topology-stratified versions of the same comparison are provided in Figs. S8-S10. The tuned configurations are the fixed deployable settings defined in Section 4.3. Broadly, tuning yields substantial and significant $QE$ improvement.
 
 ![Figure 8](assets_manual/figures/fig_8.svg)
 *Figure 8. Tuned configuration versus untuned reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned configuration/untuned reference pairs across datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 At the pooled overall level, the paired summaries across all matched tuned configuration/untuned reference pairs also favor tuning for all three metrics, consistent with the per-dataset pattern in Fig. 8.
 
-The matched diagnostics show that this $QE$ gain has different topology-preservation costs across topology families. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each case. The MTR increase was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11), indicating that the fixed hexagonal lattice pays a substantially larger local BMU-neighborhood ordering cost to achieve lower $QE$. Node-utilization and dead-node diagnostics support this interpretation as confirmatory checks: tuned RNG and tuned MST slightly increased balanced node utilization rather than improving $QE$ by leaving more map units unused.
+The matched diagnostics show that this $QE$ gain has different topology-preservation costs across topology families. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each case. The MTR increase was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11), indicating that the fixed hexagonal lattice pays a substantially larger local BMU-neighborhood ordering cost to achieve lower $QE$. Node-utilization and dead-node diagnostics support this interpretation as confirmatory checks, with balanced node utilization slightly higher for tuned RNG and tuned MST.
 <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:START -->
 The same tuning pattern is observed across topologies, indicating that tuning affects all topology families rather than a single-architecture artifact.
 <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:END -->
@@ -411,16 +413,16 @@ However, when the grid itself is enlarged in Fig. 12C, topology-dependent runtim
 
 ## 7. Final FloatSOM RNG Comparison with XPySOM
 
-Fig. 13 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned default hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice [@manciniXPySomHighPerformanceSelfOrganizing2020]. The components are separated in the preceding analyses: Section 5.1 calibrates FloatSOM and XPySOM under matched hexagonal settings, Section 5.3 compares hexagonal, MST, and RNG inside FloatSOM under the same Optuna budget, and Section 5.4 evaluates tuned configurations against the untuned reference. Supplementary Figures S12-S13 provide the corresponding tuned hexagonal and tuned MST deployment comparisons against default hexagonal XPySOM.
+Fig. 13 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice [@manciniXPySomHighPerformanceSelfOrganizing2020]. The components are separated in the preceding analyses: Section 5.1 calibrates FloatSOM and XPySOM under matched hexagonal settings, Section 5.3 compares hexagonal, MST, and RNG inside FloatSOM under the same Optuna budget, and Section 5.4 evaluates tuned configurations against the untuned reference. Supplementary Figures S12-S13 provide the corresponding tuned hexagonal and tuned MST deployment comparisons against untuned hexagonal XPySOM.
 
 ![Figure 13](assets_manual/figures/fig_13.svg)
 
-*Figure 13. Integrated deployment comparison of default hexagonal XPySOM versus tuned FloatSOM RNG. The comparison intentionally combines implementation, hyperparameter tuning, and topology choice and should not be interpreted as attributing the full difference to topology alone. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full sampling runs. Panel D provides the scaling/runtime context for the same comparison.*
+*Figure 13. Integrated deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM RNG. The comparison intentionally combines implementation, hyperparameter tuning, and topology choice and should not be interpreted as attributing the full difference to topology alone. Panels A-C compare $QE_B$, $QE_H$, and $QE_T$ using the untuned hexagonal XPySOM baseline against matched tuned FloatSOM RNG full sampling runs. Panel D provides the scaling/runtime context for the same comparison.*
 <!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:START -->
-At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to default hexagonal XPySOM, capturing the combined deployment effect of implementation, topology choice, and tuning on $QE$.
+At the overall level, Fig. 13 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to untuned hexagonal XPySOM, capturing the combined deployment effect of implementation, topology choice, and tuning on $QE$.
 <!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:END -->
 
-For the default hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. Taken together, Fig. 13 shows the point at which the workload size is large enough to warrant the extra startup overhead incurred by tuned FloatSOM RNG: tuned FloatSOM RNG delivers better $QE$ than the default hexagonal XPySOM baseline, while also running faster and scaling to larger workloads.
+For the untuned hexagonal XPySOM reference in Fig. 13, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. Taken together, Fig. 13 shows the point at which the workload size is large enough to warrant the extra startup overhead incurred by tuned FloatSOM RNG: tuned FloatSOM RNG delivers better $QE$ than the untuned hexagonal XPySOM baseline, while also running faster and scaling to larger workloads.
 
 ## 8. Discussion
 
@@ -432,15 +434,15 @@ The sampling trade-off is strongly scale dependent. In smaller datasets, random 
 
 ### 8.2 Topology Comparisons (MST and RNG)
 
-Globally, both MST and RNG outperform the fixed hexagonal topology in these comparisons. The matched diagnostics refine the interpretation: MST remains a strong $QE$ topology and is a close $QE$ competitor to RNG, whereas RNG provides the strongest topology-preservation result. One interpretation is that graph-based neighborhoods can conform more effectively to the underlying data distribution than the fixed lattice baseline [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980]. The denser connected structure available under RNG may also provide additional regularization, because nodes can receive information from more neighbors during updating rather than being limited to a single tree path. This could support more precise local updates, although the present benchmark does not isolate that mechanism directly.
+Globally, both MST and RNG outperform the fixed hexagonal topology in these comparisons. The matched diagnostics refine the interpretation: MST remains a strong $QE$ topology and is a close $QE$ competitor to RNG, whereas RNG provides the strongest MTR result. One interpretation is that graph-based neighborhoods can conform more effectively to the underlying data distribution than the fixed lattice baseline [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980]. The denser connected structure available under RNG may also provide additional regularization, because nodes can receive information from more neighbors during updating rather than being limited to a single tree path. This could support more precise local updates, although the present benchmark does not isolate that mechanism directly.
 
-$QE$ and MTR are interpreted as complementary quantities: $QE$ measures vector-quantization fidelity, whereas MTR evaluates whether the two closest prototypes for a sample remain close under the topology-induced graph distance. We therefore avoid treating a lower $QE$ alone as evidence of improved topology preservation, and use MTR as the primary post hoc topology-preservation diagnostic.
+$QE$ and MTR summarize complementary aspects of the fitted maps: $QE$ reports vector-quantization fidelity, while MTR reports the graph-rank separation between first and second BMUs. We therefore interpret the topology comparisons using both quantities.
 
-In the matched diagnostics, RNG showed lower MTR than hexagonal under both untuned/default and tuned profiles, and lower MTR than MST under both profiles. The same direction under the untuned/default profile indicates that the MTR improvement is not solely introduced by the tuned fixed defaults. Node utilization and dead-node fraction support this interpretation by showing no evidence that the RNG MTR advantage is achieved by leaving more map units unused.
+In the matched diagnostics, RNG showed lower MTR than hexagonal under both untuned and tuned profiles.
 
-The tuned-versus-default comparisons also suggest a topology-specific trade-off between the $QE$ objective and MTR. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but the MTR penalty was much larger for hexagonal: tuned hexagonal maps worsened balanced MTR by 24.34 tied-rank positions relative to untuned/default hexagonal maps, whereas tuned MST and tuned RNG worsened balanced MTR by 1.43 and 1.11 tied-rank positions, respectively. This pattern suggests that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to the local BMU-neighborhood ordering measured by MTR, while the graph topologies absorb the same $QE$-oriented tuning with a much smaller MTR cost.
+The tuned-versus-untuned comparisons also suggest a topology-specific trade-off between the $QE$ objective and MTR. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but the MTR penalty was much larger for hexagonal: tuned hexagonal maps worsened balanced MTR by 24.34 tied-rank positions relative to untuned hexagonal maps, whereas tuned MST and tuned RNG worsened balanced MTR by 1.43 and 1.11 tied-rank positions, respectively. This pattern suggests that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to the local BMU-neighborhood ordering measured by MTR, while the graph topologies absorb the same $QE$-oriented tuning with a much smaller MTR cost.
 
-### 8.3 Tuning benefit under matched defaults
+### 8.3 Tuning benefit under matched untuned reference
 
 Across the matched Fig. 8 comparisons, tuned configurations consistently outperform untuned reference settings. Hyperparameter tuning should therefore be treated as part of the method configuration rather than as optional post-processing.
 
@@ -454,7 +456,7 @@ The stability results suggest that graph topologies are recovered more consisten
 
 Distributed execution should therefore be interpreted as workload-dependent rather than as a uniform multiplicative speedup. At small problem sizes, Ray startup, communication, and staging overheads appear to dominate, consistent with the lower efficiencies observed at the low end of the scaling curves. At larger workloads, the sharp rise in efficiency likely reflects both increased parallel throughput and a change in memory regime, where some multi-GPU configurations remain in RAM while the 1-GPU baseline has already entered disk-backed execution. Apparent efficiencies above 100\% should therefore be interpreted as reflecting this systems transition rather than literal super-linear compute scaling.
 
-Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned defaults when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default, and MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high. For optimal speed, consider using the largest number of GPUs available, especially if this enables data to be kept in RAM. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where optimal $QE$ is not essential.
+Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default, and MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high. For optimal speed, consider using the largest number of GPUs available, especially if this enables data to be kept in RAM. Sampling should be chosen by scale: full for smaller datasets when stability is critical, and random as a throughput-oriented option in the larger-dataset regime where optimal $QE$ is not essential.
 
 This manuscript presents FloatSOM as a unified large-scale SOM framework that combines scalable graph-based topology support with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution. This integrated design supports practical SOM deployment at scale, where topology choice, sampling, quantization performance, and systems constraints can be managed together rather than in isolation.
 
@@ -770,7 +772,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END -->
 
 
-**Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
+**Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
 
 
 | metric | dataset | median % change | 95% CI |
@@ -822,7 +824,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | QE_T | GLOBAL_OVERALL | 22.4609 | [19.4613, 25.4605] |
 
 
-**Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
+**Supplementary Table S9. Supplementary Figure S12 deployment comparison percent summary for tuned FloatSOM hexagonal versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
 
 
 | metric | dataset | median % change | 95% CI |
@@ -874,7 +876,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | QE_T | GLOBAL_OVERALL | 20.1214 | [17.5722, 22.6707] |
 
 
-**Supplementary Table S10. Supplementary Figure S13 deployment comparison percent summary for tuned FloatSOM MST versus default hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
+**Supplementary Table S10. Supplementary Figure S13 deployment comparison percent summary for tuned FloatSOM MST versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.** Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval.
 
 
 | metric | dataset | median % change | 95% CI |
@@ -935,46 +937,46 @@ We thank Prof. Hanna Suominen for her input and advice.
 | Sample Scaling | 1e+09 | 363.58 | 375.44 | 369.41 | hexagonal | mst | 3.26 |
 | Grid-Size Scaling | 64 | 32.54 | 266.45 | 880.83 | hexagonal | rng | 2606.61 |
 
-**Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned/default profiles.** Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries. The tuned profile uses the deployable tuned defaults reported in the main text.
+**Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.** Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.
 
 | Comparison | Metric | Better | n | Effect favoring comparator | 95% CI | dz | raw p | comp/ref/tie |
 | --- | --- | --- | ---: | ---: | --- | ---: | ---: | --- |
-| Default hex vs default MST | QE_H | lower | 280 | 0.1523 | [0.1110, 0.1937] | 0.4330 | 4.22e-12 | 185/95/0 |
-| Default hex vs default MST | QE_T | lower | 280 | 0.3862 | [0.2780, 0.4944] | 0.4199 | 1.63e-11 | 226/54/0 |
-| Default hex vs default MST | QE_B | lower | 280 | 0.2693 | [0.1975, 0.3410] | 0.4415 | 1.73e-12 | 222/58/0 |
-| Default hex vs default MST | MTR_H | lower | 280 | -0.6164 | [-0.9036, -0.3292] | -0.2525 | 3.24e-05 | 125/155/0 |
-| Default hex vs default MST | MTR_T | lower | 280 | 0.2075 | [-0.0155, 0.4304] | 0.1095 | 0.068 | 167/113/0 |
-| Default hex vs default MST | MTR_B | lower | 280 | -0.2045 | [-0.4382, 0.0293] | -0.1029 | 0.086 | 139/141/0 |
-| Default hex vs default MST | Util_H | higher | 280 | 0.0187 | [0.0115, 0.0260] | 0.3056 | 5.88e-07 | 110/73/97 |
-| Default hex vs default MST | Util_T | higher | 280 | 0.0414 | [0.0345, 0.0483] | 0.7049 | 2.55e-26 | 147/17/116 |
-| Default hex vs default MST | Util_B | higher | 280 | 0.0301 | [0.0237, 0.0364] | 0.5534 | 5.62e-18 | 144/46/90 |
-| Default hex vs default MST | Dead_H | lower | 280 | 0.0188 | [0.0115, 0.0260] | 0.3056 | 5.88e-07 | 110/73/97 |
-| Default hex vs default MST | Dead_T | lower | 280 | 0.0414 | [0.0345, 0.0483] | 0.7049 | 2.55e-26 | 147/17/116 |
-| Default hex vs default MST | Dead_B | lower | 280 | 0.0301 | [0.0237, 0.0364] | 0.5534 | 5.62e-18 | 144/46/90 |
-| Default hex vs default RNG | QE_H | lower | 280 | 0.1523 | [0.1094, 0.1953] | 0.4174 | 2.10e-11 | 206/74/0 |
-| Default hex vs default RNG | QE_T | lower | 280 | 0.3464 | [0.2480, 0.4447] | 0.4143 | 2.88e-11 | 246/34/0 |
-| Default hex vs default RNG | QE_B | lower | 280 | 0.2494 | [0.1808, 0.3179] | 0.4281 | 6.99e-12 | 241/39/0 |
-| Default hex vs default RNG | MTR_H | lower | 280 | 2.3952 | [2.1221, 2.6683] | 1.0316 | 6.30e-46 | 256/24/0 |
-| Default hex vs default RNG | MTR_T | lower | 280 | 2.4838 | [2.2596, 2.7080] | 1.3032 | 3.18e-62 | 272/8/0 |
-| Default hex vs default RNG | MTR_B | lower | 280 | 2.4395 | [2.2033, 2.6757] | 1.2152 | 5.16e-57 | 269/11/0 |
-| Default hex vs default RNG | Util_H | higher | 280 | 0.0225 | [0.0157, 0.0294] | 0.3886 | 3.65e-10 | 125/55/100 |
-| Default hex vs default RNG | Util_T | higher | 280 | 0.0432 | [0.0361, 0.0504] | 0.7162 | 5.62e-27 | 157/10/113 |
-| Default hex vs default RNG | Util_B | higher | 280 | 0.0329 | [0.0266, 0.0392] | 0.6130 | 3.69e-21 | 157/30/93 |
-| Default hex vs default RNG | Dead_H | lower | 280 | 0.0225 | [0.0157, 0.0294] | 0.3886 | 3.65e-10 | 125/55/100 |
-| Default hex vs default RNG | Dead_T | lower | 280 | 0.0432 | [0.0361, 0.0504] | 0.7162 | 5.62e-27 | 157/10/113 |
-| Default hex vs default RNG | Dead_B | lower | 280 | 0.0329 | [0.0266, 0.0392] | 0.6130 | 3.69e-21 | 157/30/93 |
-| Default MST vs default RNG | QE_H | lower | 280 | -5.54e-06 | [-0.0198, 0.0198] | -3.29e-05 | 1.000 | 138/142/0 |
-| Default MST vs default RNG | QE_T | lower | 280 | -0.0398 | [-0.0616, -0.0181] | -0.2159 | 3.59e-04 | 107/173/0 |
-| Default MST vs default RNG | QE_B | lower | 280 | -0.0199 | [-0.0385, -0.0013] | -0.1261 | 0.036 | 120/160/0 |
-| Default MST vs default RNG | MTR_H | lower | 280 | 3.0116 | [2.6987, 3.3245] | 1.1324 | 4.89e-52 | 238/42/0 |
-| Default MST vs default RNG | MTR_T | lower | 280 | 2.2763 | [2.0287, 2.5240] | 1.0815 | 5.90e-49 | 233/47/0 |
-| Default MST vs default RNG | MTR_B | lower | 280 | 2.6440 | [2.3810, 2.9070] | 1.1826 | 4.64e-55 | 240/40/0 |
-| Default MST vs default RNG | Util_H | higher | 280 | 0.0038 | [7.90e-05, 0.0075] | 0.1201 | 0.045 | 93/64/123 |
-| Default MST vs default RNG | Util_T | higher | 280 | 0.0019 | [-0.0012, 0.0050] | 0.0712 | 0.235 | 82/58/140 |
-| Default MST vs default RNG | Util_B | higher | 280 | 0.0028 | [-9.28e-05, 0.0058] | 0.1139 | 0.058 | 101/69/110 |
-| Default MST vs default RNG | Dead_H | lower | 280 | 0.0038 | [7.90e-05, 0.0075] | 0.1201 | 0.045 | 93/64/123 |
-| Default MST vs default RNG | Dead_T | lower | 280 | 0.0019 | [-0.0012, 0.0050] | 0.0712 | 0.235 | 82/58/140 |
-| Default MST vs default RNG | Dead_B | lower | 280 | 0.0028 | [-9.28e-05, 0.0058] | 0.1139 | 0.058 | 101/69/110 |
+| Untuned hex vs untuned MST | QE_H | lower | 280 | 0.1523 | [0.1110, 0.1937] | 0.4330 | 4.22e-12 | 185/95/0 |
+| Untuned hex vs untuned MST | QE_T | lower | 280 | 0.3862 | [0.2780, 0.4944] | 0.4199 | 1.63e-11 | 226/54/0 |
+| Untuned hex vs untuned MST | QE_B | lower | 280 | 0.2693 | [0.1975, 0.3410] | 0.4415 | 1.73e-12 | 222/58/0 |
+| Untuned hex vs untuned MST | MTR_H | lower | 280 | -0.6164 | [-0.9036, -0.3292] | -0.2525 | 3.24e-05 | 125/155/0 |
+| Untuned hex vs untuned MST | MTR_T | lower | 280 | 0.2075 | [-0.0155, 0.4304] | 0.1095 | 0.068 | 167/113/0 |
+| Untuned hex vs untuned MST | MTR_B | lower | 280 | -0.2045 | [-0.4382, 0.0293] | -0.1029 | 0.086 | 139/141/0 |
+| Untuned hex vs untuned MST | Util_H | higher | 280 | 0.0187 | [0.0115, 0.0260] | 0.3056 | 5.88e-07 | 110/73/97 |
+| Untuned hex vs untuned MST | Util_T | higher | 280 | 0.0414 | [0.0345, 0.0483] | 0.7049 | 2.55e-26 | 147/17/116 |
+| Untuned hex vs untuned MST | Util_B | higher | 280 | 0.0301 | [0.0237, 0.0364] | 0.5534 | 5.62e-18 | 144/46/90 |
+| Untuned hex vs untuned MST | Dead_H | lower | 280 | 0.0188 | [0.0115, 0.0260] | 0.3056 | 5.88e-07 | 110/73/97 |
+| Untuned hex vs untuned MST | Dead_T | lower | 280 | 0.0414 | [0.0345, 0.0483] | 0.7049 | 2.55e-26 | 147/17/116 |
+| Untuned hex vs untuned MST | Dead_B | lower | 280 | 0.0301 | [0.0237, 0.0364] | 0.5534 | 5.62e-18 | 144/46/90 |
+| Untuned hex vs untuned RNG | QE_H | lower | 280 | 0.1523 | [0.1094, 0.1953] | 0.4174 | 2.10e-11 | 206/74/0 |
+| Untuned hex vs untuned RNG | QE_T | lower | 280 | 0.3464 | [0.2480, 0.4447] | 0.4143 | 2.88e-11 | 246/34/0 |
+| Untuned hex vs untuned RNG | QE_B | lower | 280 | 0.2494 | [0.1808, 0.3179] | 0.4281 | 6.99e-12 | 241/39/0 |
+| Untuned hex vs untuned RNG | MTR_H | lower | 280 | 2.3952 | [2.1221, 2.6683] | 1.0316 | 6.30e-46 | 256/24/0 |
+| Untuned hex vs untuned RNG | MTR_T | lower | 280 | 2.4838 | [2.2596, 2.7080] | 1.3032 | 3.18e-62 | 272/8/0 |
+| Untuned hex vs untuned RNG | MTR_B | lower | 280 | 2.4395 | [2.2033, 2.6757] | 1.2152 | 5.16e-57 | 269/11/0 |
+| Untuned hex vs untuned RNG | Util_H | higher | 280 | 0.0225 | [0.0157, 0.0294] | 0.3886 | 3.65e-10 | 125/55/100 |
+| Untuned hex vs untuned RNG | Util_T | higher | 280 | 0.0432 | [0.0361, 0.0504] | 0.7162 | 5.62e-27 | 157/10/113 |
+| Untuned hex vs untuned RNG | Util_B | higher | 280 | 0.0329 | [0.0266, 0.0392] | 0.6130 | 3.69e-21 | 157/30/93 |
+| Untuned hex vs untuned RNG | Dead_H | lower | 280 | 0.0225 | [0.0157, 0.0294] | 0.3886 | 3.65e-10 | 125/55/100 |
+| Untuned hex vs untuned RNG | Dead_T | lower | 280 | 0.0432 | [0.0361, 0.0504] | 0.7162 | 5.62e-27 | 157/10/113 |
+| Untuned hex vs untuned RNG | Dead_B | lower | 280 | 0.0329 | [0.0266, 0.0392] | 0.6130 | 3.69e-21 | 157/30/93 |
+| Untuned MST vs untuned RNG | QE_H | lower | 280 | -5.54e-06 | [-0.0198, 0.0198] | -3.29e-05 | 1.000 | 138/142/0 |
+| Untuned MST vs untuned RNG | QE_T | lower | 280 | -0.0398 | [-0.0616, -0.0181] | -0.2159 | 3.59e-04 | 107/173/0 |
+| Untuned MST vs untuned RNG | QE_B | lower | 280 | -0.0199 | [-0.0385, -0.0013] | -0.1261 | 0.036 | 120/160/0 |
+| Untuned MST vs untuned RNG | MTR_H | lower | 280 | 3.0116 | [2.6987, 3.3245] | 1.1324 | 4.89e-52 | 238/42/0 |
+| Untuned MST vs untuned RNG | MTR_T | lower | 280 | 2.2763 | [2.0287, 2.5240] | 1.0815 | 5.90e-49 | 233/47/0 |
+| Untuned MST vs untuned RNG | MTR_B | lower | 280 | 2.6440 | [2.3810, 2.9070] | 1.1826 | 4.64e-55 | 240/40/0 |
+| Untuned MST vs untuned RNG | Util_H | higher | 280 | 0.0038 | [7.90e-05, 0.0075] | 0.1201 | 0.045 | 93/64/123 |
+| Untuned MST vs untuned RNG | Util_T | higher | 280 | 0.0019 | [-0.0012, 0.0050] | 0.0712 | 0.235 | 82/58/140 |
+| Untuned MST vs untuned RNG | Util_B | higher | 280 | 0.0028 | [-9.28e-05, 0.0058] | 0.1139 | 0.058 | 101/69/110 |
+| Untuned MST vs untuned RNG | Dead_H | lower | 280 | 0.0038 | [7.90e-05, 0.0075] | 0.1201 | 0.045 | 93/64/123 |
+| Untuned MST vs untuned RNG | Dead_T | lower | 280 | 0.0019 | [-0.0012, 0.0050] | 0.0712 | 0.235 | 82/58/140 |
+| Untuned MST vs untuned RNG | Dead_B | lower | 280 | 0.0028 | [-9.28e-05, 0.0058] | 0.1139 | 0.058 | 101/69/110 |
 | Tuned hex vs tuned MST | QE_H | lower | 280 | 0.0404 | [0.0199, 0.0608] | 0.2323 | 1.27e-04 | 199/81/0 |
 | Tuned hex vs tuned MST | QE_T | lower | 280 | 0.0872 | [0.0537, 0.1207] | 0.3063 | 5.54e-07 | 246/34/0 |
 | Tuned hex vs tuned MST | QE_B | lower | 280 | 0.0638 | [0.0379, 0.0897] | 0.2897 | 2.07e-06 | 226/54/0 |
@@ -1011,89 +1013,89 @@ We thank Prof. Hanna Suominen for her input and advice.
 | Tuned MST vs tuned RNG | Dead_H | lower | 280 | 0.0025 | [-3.62e-04, 0.0054] | 0.1029 | 0.086 | 75/79/126 |
 | Tuned MST vs tuned RNG | Dead_T | lower | 280 | 0.0054 | [0.0027, 0.0081] | 0.2361 | 9.90e-05 | 69/51/160 |
 | Tuned MST vs tuned RNG | Dead_B | lower | 280 | 0.0040 | [0.0017, 0.0062] | 0.2073 | 6.07e-04 | 87/80/113 |
-| Tuned vs default hex | QE_H | lower | 280 | 0.1651 | [0.1227, 0.2075] | 0.4580 | 2.99e-13 | 230/50/0 |
-| Tuned vs default hex | QE_T | lower | 280 | 0.6969 | [0.4891, 0.9047] | 0.3945 | 2.04e-10 | 280/0/0 |
-| Tuned vs default hex | QE_B | lower | 280 | 0.4310 | [0.3117, 0.5503] | 0.4249 | 9.78e-12 | 280/0/0 |
-| Tuned vs default hex | MTR_H | lower | 280 | -24.2851 | [-25.2036, -23.3666] | -3.1103 | 1.12e-145 | 0/280/0 |
-| Tuned vs default hex | MTR_T | lower | 280 | -24.3956 | [-25.3383, -23.4529] | -3.0444 | 2.51e-143 | 0/280/0 |
-| Tuned vs default hex | MTR_B | lower | 280 | -24.3403 | [-25.2543, -23.4263] | -3.1328 | 1.82e-146 | 0/280/0 |
-| Tuned vs default hex | Util_H | higher | 280 | 0.0087 | [0.0023, 0.0150] | 0.1610 | 0.007 | 98/93/89 |
-| Tuned vs default hex | Util_T | higher | 280 | 0.0380 | [0.0321, 0.0439] | 0.7533 | 3.85e-29 | 150/17/113 |
-| Tuned vs default hex | Util_B | higher | 280 | 0.0233 | [0.0180, 0.0287] | 0.5149 | 5.24e-16 | 139/53/88 |
-| Tuned vs default hex | Dead_H | lower | 280 | 0.0087 | [0.0023, 0.0150] | 0.1610 | 0.007 | 98/93/89 |
-| Tuned vs default hex | Dead_T | lower | 280 | 0.0380 | [0.0321, 0.0439] | 0.7533 | 3.85e-29 | 150/17/113 |
-| Tuned vs default hex | Dead_B | lower | 280 | 0.0233 | [0.0180, 0.0287] | 0.5149 | 5.24e-16 | 139/53/88 |
-| Tuned vs default MST | QE_H | lower | 280 | 0.0531 | [0.0319, 0.0744] | 0.2939 | 1.49e-06 | 224/56/0 |
-| Tuned vs default MST | QE_T | lower | 280 | 0.3979 | [0.2681, 0.5276] | 0.3607 | 5.03e-09 | 280/0/0 |
-| Tuned vs default MST | QE_B | lower | 280 | 0.2255 | [0.1546, 0.2963] | 0.3744 | 1.41e-09 | 276/4/0 |
-| Tuned vs default MST | MTR_H | lower | 280 | -1.3820 | [-1.6350, -1.1290] | -0.6427 | 8.56e-23 | 55/225/0 |
-| Tuned vs default MST | MTR_T | lower | 280 | -1.4791 | [-1.6529, -1.3052] | -1.0006 | 4.89e-44 | 27/253/0 |
-| Tuned vs default MST | MTR_B | lower | 280 | -1.4305 | [-1.6184, -1.2427] | -0.8959 | 1.14e-37 | 39/241/0 |
-| Tuned vs default MST | Util_H | higher | 280 | -8.93e-04 | [-0.0052, 0.0034] | -0.0247 | 0.680 | 75/100/105 |
-| Tuned vs default MST | Util_T | higher | 280 | 0.0189 | [0.0145, 0.0232] | 0.5097 | 9.49e-16 | 121/37/122 |
-| Tuned vs default MST | Util_B | higher | 280 | 0.0090 | [0.0054, 0.0126] | 0.2935 | 1.55e-06 | 103/79/98 |
-| Tuned vs default MST | Dead_H | lower | 280 | -8.93e-04 | [-0.0052, 0.0034] | -0.0247 | 0.680 | 75/100/105 |
-| Tuned vs default MST | Dead_T | lower | 280 | 0.0189 | [0.0145, 0.0232] | 0.5097 | 9.49e-16 | 121/37/122 |
-| Tuned vs default MST | Dead_B | lower | 280 | 0.0090 | [0.0054, 0.0126] | 0.2935 | 1.55e-06 | 103/79/98 |
-| Tuned vs default RNG | QE_H | lower | 280 | 0.0487 | [0.0261, 0.0713] | 0.2532 | 3.07e-05 | 223/57/0 |
-| Tuned vs default RNG | QE_T | lower | 280 | 0.4176 | [0.2918, 0.5434] | 0.3905 | 3.02e-10 | 280/0/0 |
-| Tuned vs default RNG | QE_B | lower | 280 | 0.2331 | [0.1681, 0.2982] | 0.4215 | 1.39e-11 | 280/0/0 |
-| Tuned vs default RNG | MTR_H | lower | 280 | -1.2768 | [-1.4669, -1.0867] | -0.7902 | 2.56e-31 | 35/245/0 |
-| Tuned vs default RNG | MTR_T | lower | 280 | -0.9498 | [-1.0619, -0.8378] | -0.9973 | 7.77e-44 | 21/259/0 |
-| Tuned vs default RNG | MTR_B | lower | 280 | -1.1133 | [-1.2485, -0.9781] | -0.9686 | 4.33e-42 | 28/252/0 |
-| Tuned vs default RNG | Util_H | higher | 280 | -0.0021 | [-0.0064, 0.0021] | -0.0599 | 0.317 | 83/92/105 |
-| Tuned vs default RNG | Util_T | higher | 280 | 0.0224 | [0.0180, 0.0268] | 0.6043 | 1.10e-20 | 134/19/127 |
-| Tuned vs default RNG | Util_B | higher | 280 | 0.0101 | [0.0067, 0.0136] | 0.3465 | 1.82e-08 | 116/68/96 |
-| Tuned vs default RNG | Dead_H | lower | 280 | -0.0021 | [-0.0064, 0.0021] | -0.0599 | 0.317 | 83/92/105 |
-| Tuned vs default RNG | Dead_T | lower | 280 | 0.0224 | [0.0180, 0.0268] | 0.6043 | 1.10e-20 | 134/19/127 |
-| Tuned vs default RNG | Dead_B | lower | 280 | 0.0101 | [0.0067, 0.0136] | 0.3465 | 1.82e-08 | 117/68/95 |
+| Tuned vs untuned hex | QE_H | lower | 280 | 0.1651 | [0.1227, 0.2075] | 0.4580 | 2.99e-13 | 230/50/0 |
+| Tuned vs untuned hex | QE_T | lower | 280 | 0.6969 | [0.4891, 0.9047] | 0.3945 | 2.04e-10 | 280/0/0 |
+| Tuned vs untuned hex | QE_B | lower | 280 | 0.4310 | [0.3117, 0.5503] | 0.4249 | 9.78e-12 | 280/0/0 |
+| Tuned vs untuned hex | MTR_H | lower | 280 | -24.2851 | [-25.2036, -23.3666] | -3.1103 | 1.12e-145 | 0/280/0 |
+| Tuned vs untuned hex | MTR_T | lower | 280 | -24.3956 | [-25.3383, -23.4529] | -3.0444 | 2.51e-143 | 0/280/0 |
+| Tuned vs untuned hex | MTR_B | lower | 280 | -24.3403 | [-25.2543, -23.4263] | -3.1328 | 1.82e-146 | 0/280/0 |
+| Tuned vs untuned hex | Util_H | higher | 280 | 0.0087 | [0.0023, 0.0150] | 0.1610 | 0.007 | 98/93/89 |
+| Tuned vs untuned hex | Util_T | higher | 280 | 0.0380 | [0.0321, 0.0439] | 0.7533 | 3.85e-29 | 150/17/113 |
+| Tuned vs untuned hex | Util_B | higher | 280 | 0.0233 | [0.0180, 0.0287] | 0.5149 | 5.24e-16 | 139/53/88 |
+| Tuned vs untuned hex | Dead_H | lower | 280 | 0.0087 | [0.0023, 0.0150] | 0.1610 | 0.007 | 98/93/89 |
+| Tuned vs untuned hex | Dead_T | lower | 280 | 0.0380 | [0.0321, 0.0439] | 0.7533 | 3.85e-29 | 150/17/113 |
+| Tuned vs untuned hex | Dead_B | lower | 280 | 0.0233 | [0.0180, 0.0287] | 0.5149 | 5.24e-16 | 139/53/88 |
+| Tuned vs untuned MST | QE_H | lower | 280 | 0.0531 | [0.0319, 0.0744] | 0.2939 | 1.49e-06 | 224/56/0 |
+| Tuned vs untuned MST | QE_T | lower | 280 | 0.3979 | [0.2681, 0.5276] | 0.3607 | 5.03e-09 | 280/0/0 |
+| Tuned vs untuned MST | QE_B | lower | 280 | 0.2255 | [0.1546, 0.2963] | 0.3744 | 1.41e-09 | 276/4/0 |
+| Tuned vs untuned MST | MTR_H | lower | 280 | -1.3820 | [-1.6350, -1.1290] | -0.6427 | 8.56e-23 | 55/225/0 |
+| Tuned vs untuned MST | MTR_T | lower | 280 | -1.4791 | [-1.6529, -1.3052] | -1.0006 | 4.89e-44 | 27/253/0 |
+| Tuned vs untuned MST | MTR_B | lower | 280 | -1.4305 | [-1.6184, -1.2427] | -0.8959 | 1.14e-37 | 39/241/0 |
+| Tuned vs untuned MST | Util_H | higher | 280 | -8.93e-04 | [-0.0052, 0.0034] | -0.0247 | 0.680 | 75/100/105 |
+| Tuned vs untuned MST | Util_T | higher | 280 | 0.0189 | [0.0145, 0.0232] | 0.5097 | 9.49e-16 | 121/37/122 |
+| Tuned vs untuned MST | Util_B | higher | 280 | 0.0090 | [0.0054, 0.0126] | 0.2935 | 1.55e-06 | 103/79/98 |
+| Tuned vs untuned MST | Dead_H | lower | 280 | -8.93e-04 | [-0.0052, 0.0034] | -0.0247 | 0.680 | 75/100/105 |
+| Tuned vs untuned MST | Dead_T | lower | 280 | 0.0189 | [0.0145, 0.0232] | 0.5097 | 9.49e-16 | 121/37/122 |
+| Tuned vs untuned MST | Dead_B | lower | 280 | 0.0090 | [0.0054, 0.0126] | 0.2935 | 1.55e-06 | 103/79/98 |
+| Tuned vs untuned RNG | QE_H | lower | 280 | 0.0487 | [0.0261, 0.0713] | 0.2532 | 3.07e-05 | 223/57/0 |
+| Tuned vs untuned RNG | QE_T | lower | 280 | 0.4176 | [0.2918, 0.5434] | 0.3905 | 3.02e-10 | 280/0/0 |
+| Tuned vs untuned RNG | QE_B | lower | 280 | 0.2331 | [0.1681, 0.2982] | 0.4215 | 1.39e-11 | 280/0/0 |
+| Tuned vs untuned RNG | MTR_H | lower | 280 | -1.2768 | [-1.4669, -1.0867] | -0.7902 | 2.56e-31 | 35/245/0 |
+| Tuned vs untuned RNG | MTR_T | lower | 280 | -0.9498 | [-1.0619, -0.8378] | -0.9973 | 7.77e-44 | 21/259/0 |
+| Tuned vs untuned RNG | MTR_B | lower | 280 | -1.1133 | [-1.2485, -0.9781] | -0.9686 | 4.33e-42 | 28/252/0 |
+| Tuned vs untuned RNG | Util_H | higher | 280 | -0.0021 | [-0.0064, 0.0021] | -0.0599 | 0.317 | 83/92/105 |
+| Tuned vs untuned RNG | Util_T | higher | 280 | 0.0224 | [0.0180, 0.0268] | 0.6043 | 1.10e-20 | 134/19/127 |
+| Tuned vs untuned RNG | Util_B | higher | 280 | 0.0101 | [0.0067, 0.0136] | 0.3465 | 1.82e-08 | 116/68/96 |
+| Tuned vs untuned RNG | Dead_H | lower | 280 | -0.0021 | [-0.0064, 0.0021] | -0.0599 | 0.317 | 83/92/105 |
+| Tuned vs untuned RNG | Dead_T | lower | 280 | 0.0224 | [0.0180, 0.0268] | 0.6043 | 1.10e-20 | 134/19/127 |
+| Tuned vs untuned RNG | Dead_B | lower | 280 | 0.0101 | [0.0067, 0.0136] | 0.3465 | 1.82e-08 | 117/68/95 |
 
-**Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.** Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. `default` denotes the untuned XPySOM-default profile and `tuned` denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.
+**Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.** Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. `untuned` denotes the untuned XPySOM profile and `tuned` denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.
 
 | Profile | Dataset | Topology | n | QE_H | QE_T | QE_B | MTR_H | MTR_T | MTR_B | Util_H | Util_T | Util_B | Dead_H | Dead_T | Dead_B |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| default | blobs | hexagonal | 20 | 0.1321 | 0.1313 | 0.1317 | 3.5132 | 3.5212 | 3.5172 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | blobs | mst | 20 | 0.1341 | 0.1324 | 0.1332 | 5.2326 | 5.1119 | 5.1723 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | blobs | rng | 20 | 0.1325 | 0.1307 | 0.1316 | 2.7535 | 2.7181 | 2.7358 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | breast_cancer | hexagonal | 20 | 2.6474 | 2.2132 | 2.4303 | 9.9298 | 6.7921 | 8.3610 | 0.7930 | 0.9930 | 0.8930 | 0.2070 | 0.0070 | 0.1070 |
-| default | breast_cancer | mst | 20 | 2.6624 | 2.0732 | 2.3678 | 13.4902 | 7.3257 | 10.4079 | 0.7445 | 0.9935 | 0.8690 | 0.2555 | 0.0065 | 0.1310 |
-| default | breast_cancer | rng | 20 | 2.6515 | 2.0799 | 2.3657 | 7.7404 | 4.1496 | 5.9450 | 0.7660 | 0.9940 | 0.8800 | 0.2340 | 0.0060 | 0.1200 |
-| default | california_housing | hexagonal | 20 | 0.7910 | 0.7856 | 0.7883 | 8.4626 | 8.3360 | 8.3993 | 0.9995 | 1.0000 | 0.9998 | 5.00e-04 | 0.0000 | 2.50e-04 |
-| default | california_housing | mst | 20 | 0.7600 | 0.7451 | 0.7526 | 7.8776 | 7.6936 | 7.7856 | 0.9930 | 1.0000 | 0.9965 | 0.0070 | 0.0000 | 0.0035 |
-| default | california_housing | rng | 20 | 0.7646 | 0.7522 | 0.7584 | 4.5736 | 4.4653 | 4.5195 | 0.9935 | 1.0000 | 0.9967 | 0.0065 | 0.0000 | 0.0033 |
-| default | circles | hexagonal | 20 | 0.1611 | 0.1590 | 0.1601 | 3.5646 | 3.5441 | 3.5543 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | circles | mst | 20 | 0.1653 | 0.1620 | 0.1636 | 7.2056 | 6.9061 | 7.0558 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | circles | rng | 20 | 0.1627 | 0.1599 | 0.1613 | 2.8684 | 2.8279 | 2.8481 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | covertype | hexagonal | 20 | 3.2499 | 3.2515 | 3.2507 | 3.6170 | 3.6102 | 3.6136 | 0.6585 | 0.6635 | 0.6610 | 0.3415 | 0.3365 | 0.3390 |
-| default | covertype | mst | 20 | 2.4536 | 2.4535 | 2.4536 | 2.3593 | 2.3616 | 2.3604 | 0.8460 | 0.8470 | 0.8465 | 0.1540 | 0.1530 | 0.1535 |
-| default | covertype | rng | 20 | 2.6068 | 2.6067 | 2.6068 | 2.4747 | 2.4737 | 2.4742 | 0.8545 | 0.8550 | 0.8547 | 0.1455 | 0.1450 | 0.1453 |
-| default | diabetes | hexagonal | 20 | 1.6952 | 1.3289 | 1.5121 | 13.1182 | 7.7649 | 10.4416 | 0.6970 | 0.9295 | 0.8133 | 0.3030 | 0.0705 | 0.1867 |
-| default | diabetes | mst | 20 | 1.6718 | 1.2181 | 1.4450 | 14.5970 | 7.9549 | 11.2760 | 0.7015 | 0.9725 | 0.8370 | 0.2985 | 0.0275 | 0.1630 |
-| default | diabetes | rng | 20 | 1.6803 | 1.2362 | 1.4583 | 9.7368 | 4.1324 | 6.9346 | 0.7065 | 0.9815 | 0.8440 | 0.2935 | 0.0185 | 0.1560 |
-| default | digits | hexagonal | 20 | 4.5856 | 4.2735 | 4.4296 | 7.6155 | 6.3931 | 7.0043 | 0.9205 | 0.9665 | 0.9435 | 0.0795 | 0.0335 | 0.0565 |
-| default | digits | mst | 20 | 4.4317 | 3.9977 | 4.2147 | 7.2430 | 5.5079 | 6.3754 | 0.9515 | 0.9950 | 0.9732 | 0.0485 | 0.0050 | 0.0268 |
-| default | digits | rng | 20 | 4.4481 | 4.0470 | 4.2475 | 5.0653 | 3.8881 | 4.4767 | 0.9625 | 0.9980 | 0.9803 | 0.0375 | 0.0020 | 0.0198 |
-| default | iris | hexagonal | 20 | 0.3657 | 0.1823 | 0.2740 | 7.8578 | 5.3890 | 6.6234 | 0.3315 | 0.6690 | 0.5003 | 0.6685 | 0.3310 | 0.4997 |
-| default | iris | mst | 20 | 0.3609 | 0.1138 | 0.2374 | 5.7900 | 1.8655 | 3.8277 | 0.3330 | 0.7785 | 0.5557 | 0.6670 | 0.2215 | 0.4442 |
-| default | iris | rng | 20 | 0.3563 | 0.1149 | 0.2356 | 3.4344 | 1.7062 | 2.5703 | 0.3385 | 0.7910 | 0.5647 | 0.6615 | 0.2090 | 0.4353 |
-| default | kddcup99 | hexagonal | 20 | 0.4678 | 0.4662 | 0.4670 | 3.1121 | 3.1058 | 3.1089 | 0.8850 | 0.9140 | 0.8995 | 0.1150 | 0.0860 | 0.1005 |
-| default | kddcup99 | mst | 20 | 0.3386 | 0.3365 | 0.3376 | 1.7243 | 1.7225 | 1.7234 | 0.9760 | 0.9770 | 0.9765 | 0.0240 | 0.0230 | 0.0235 |
-| default | kddcup99 | rng | 20 | 0.3730 | 0.3712 | 0.3721 | 2.9179 | 2.9130 | 2.9155 | 0.9270 | 0.9310 | 0.9290 | 0.0730 | 0.0690 | 0.0710 |
-| default | moons | hexagonal | 20 | 0.1355 | 0.1346 | 0.1351 | 3.1842 | 3.1787 | 3.1815 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | moons | mst | 20 | 0.1376 | 0.1356 | 0.1366 | 4.8419 | 4.7384 | 4.7902 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | moons | rng | 20 | 0.1357 | 0.1342 | 0.1349 | 2.6343 | 2.6125 | 2.6234 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | olivetti_faces | hexagonal | 20 | 42.6773 | 34.2471 | 38.4622 | 8.9338 | 5.0171 | 6.9754 | 0.6115 | 0.8175 | 0.7145 | 0.3885 | 0.1825 | 0.2855 |
-| default | olivetti_faces | mst | 20 | 41.6810 | 30.7001 | 36.1905 | 10.5162 | 4.4246 | 7.4704 | 0.6285 | 0.8775 | 0.7530 | 0.3715 | 0.1225 | 0.2470 |
-| default | olivetti_faces | rng | 20 | 41.5030 | 30.9796 | 36.2413 | 6.9887 | 2.7613 | 4.8750 | 0.6325 | 0.8845 | 0.7585 | 0.3675 | 0.1155 | 0.2415 |
-| default | s_curve | hexagonal | 20 | 0.3334 | 0.3319 | 0.3327 | 7.8608 | 7.8535 | 7.8571 | 0.9990 | 1.0000 | 0.9995 | 0.0010 | 0.0000 | 5.00e-04 |
-| default | s_curve | mst | 20 | 0.3193 | 0.3155 | 0.3174 | 7.0170 | 6.7520 | 6.8845 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | s_curve | rng | 20 | 0.3211 | 0.3180 | 0.3195 | 2.9213 | 2.8719 | 2.8966 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
-| default | swiss_roll | hexagonal | 20 | 0.2902 | 0.2889 | 0.2896 | 8.7591 | 8.7911 | 8.7751 | 0.9325 | 0.9385 | 0.9355 | 0.0675 | 0.0615 | 0.0645 |
-| default | swiss_roll | mst | 20 | 0.2725 | 0.2695 | 0.2710 | 9.4331 | 9.1974 | 9.3152 | 0.9240 | 0.9265 | 0.9252 | 0.0760 | 0.0735 | 0.0747 |
-| default | swiss_roll | rng | 20 | 0.2721 | 0.2695 | 0.2708 | 2.8013 | 2.7562 | 2.7788 | 0.9645 | 0.9655 | 0.9650 | 0.0355 | 0.0345 | 0.0350 |
-| default | wine | hexagonal | 20 | 1.9354 | 1.1334 | 1.5344 | 7.9569 | 3.7968 | 5.8769 | 0.3885 | 0.7155 | 0.5520 | 0.6115 | 0.2845 | 0.4480 |
-| default | wine | mst | 20 | 1.9459 | 0.8674 | 1.4066 | 8.7875 | 2.6270 | 5.7073 | 0.3810 | 0.8185 | 0.5998 | 0.6190 | 0.1815 | 0.4003 |
-| default | wine | rng | 20 | 1.9270 | 0.8784 | 1.4027 | 7.0421 | 2.0440 | 4.5430 | 0.3865 | 0.8120 | 0.5992 | 0.6135 | 0.1880 | 0.4008 |
+| untuned | blobs | hexagonal | 20 | 0.1321 | 0.1313 | 0.1317 | 3.5132 | 3.5212 | 3.5172 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | blobs | mst | 20 | 0.1341 | 0.1324 | 0.1332 | 5.2326 | 5.1119 | 5.1723 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | blobs | rng | 20 | 0.1325 | 0.1307 | 0.1316 | 2.7535 | 2.7181 | 2.7358 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | breast_cancer | hexagonal | 20 | 2.6474 | 2.2132 | 2.4303 | 9.9298 | 6.7921 | 8.3610 | 0.7930 | 0.9930 | 0.8930 | 0.2070 | 0.0070 | 0.1070 |
+| untuned | breast_cancer | mst | 20 | 2.6624 | 2.0732 | 2.3678 | 13.4902 | 7.3257 | 10.4079 | 0.7445 | 0.9935 | 0.8690 | 0.2555 | 0.0065 | 0.1310 |
+| untuned | breast_cancer | rng | 20 | 2.6515 | 2.0799 | 2.3657 | 7.7404 | 4.1496 | 5.9450 | 0.7660 | 0.9940 | 0.8800 | 0.2340 | 0.0060 | 0.1200 |
+| untuned | california_housing | hexagonal | 20 | 0.7910 | 0.7856 | 0.7883 | 8.4626 | 8.3360 | 8.3993 | 0.9995 | 1.0000 | 0.9998 | 5.00e-04 | 0.0000 | 2.50e-04 |
+| untuned | california_housing | mst | 20 | 0.7600 | 0.7451 | 0.7526 | 7.8776 | 7.6936 | 7.7856 | 0.9930 | 1.0000 | 0.9965 | 0.0070 | 0.0000 | 0.0035 |
+| untuned | california_housing | rng | 20 | 0.7646 | 0.7522 | 0.7584 | 4.5736 | 4.4653 | 4.5195 | 0.9935 | 1.0000 | 0.9967 | 0.0065 | 0.0000 | 0.0033 |
+| untuned | circles | hexagonal | 20 | 0.1611 | 0.1590 | 0.1601 | 3.5646 | 3.5441 | 3.5543 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | circles | mst | 20 | 0.1653 | 0.1620 | 0.1636 | 7.2056 | 6.9061 | 7.0558 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | circles | rng | 20 | 0.1627 | 0.1599 | 0.1613 | 2.8684 | 2.8279 | 2.8481 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | covertype | hexagonal | 20 | 3.2499 | 3.2515 | 3.2507 | 3.6170 | 3.6102 | 3.6136 | 0.6585 | 0.6635 | 0.6610 | 0.3415 | 0.3365 | 0.3390 |
+| untuned | covertype | mst | 20 | 2.4536 | 2.4535 | 2.4536 | 2.3593 | 2.3616 | 2.3604 | 0.8460 | 0.8470 | 0.8465 | 0.1540 | 0.1530 | 0.1535 |
+| untuned | covertype | rng | 20 | 2.6068 | 2.6067 | 2.6068 | 2.4747 | 2.4737 | 2.4742 | 0.8545 | 0.8550 | 0.8547 | 0.1455 | 0.1450 | 0.1453 |
+| untuned | diabetes | hexagonal | 20 | 1.6952 | 1.3289 | 1.5121 | 13.1182 | 7.7649 | 10.4416 | 0.6970 | 0.9295 | 0.8133 | 0.3030 | 0.0705 | 0.1867 |
+| untuned | diabetes | mst | 20 | 1.6718 | 1.2181 | 1.4450 | 14.5970 | 7.9549 | 11.2760 | 0.7015 | 0.9725 | 0.8370 | 0.2985 | 0.0275 | 0.1630 |
+| untuned | diabetes | rng | 20 | 1.6803 | 1.2362 | 1.4583 | 9.7368 | 4.1324 | 6.9346 | 0.7065 | 0.9815 | 0.8440 | 0.2935 | 0.0185 | 0.1560 |
+| untuned | digits | hexagonal | 20 | 4.5856 | 4.2735 | 4.4296 | 7.6155 | 6.3931 | 7.0043 | 0.9205 | 0.9665 | 0.9435 | 0.0795 | 0.0335 | 0.0565 |
+| untuned | digits | mst | 20 | 4.4317 | 3.9977 | 4.2147 | 7.2430 | 5.5079 | 6.3754 | 0.9515 | 0.9950 | 0.9732 | 0.0485 | 0.0050 | 0.0268 |
+| untuned | digits | rng | 20 | 4.4481 | 4.0470 | 4.2475 | 5.0653 | 3.8881 | 4.4767 | 0.9625 | 0.9980 | 0.9803 | 0.0375 | 0.0020 | 0.0198 |
+| untuned | iris | hexagonal | 20 | 0.3657 | 0.1823 | 0.2740 | 7.8578 | 5.3890 | 6.6234 | 0.3315 | 0.6690 | 0.5003 | 0.6685 | 0.3310 | 0.4997 |
+| untuned | iris | mst | 20 | 0.3609 | 0.1138 | 0.2374 | 5.7900 | 1.8655 | 3.8277 | 0.3330 | 0.7785 | 0.5557 | 0.6670 | 0.2215 | 0.4442 |
+| untuned | iris | rng | 20 | 0.3563 | 0.1149 | 0.2356 | 3.4344 | 1.7062 | 2.5703 | 0.3385 | 0.7910 | 0.5647 | 0.6615 | 0.2090 | 0.4353 |
+| untuned | kddcup99 | hexagonal | 20 | 0.4678 | 0.4662 | 0.4670 | 3.1121 | 3.1058 | 3.1089 | 0.8850 | 0.9140 | 0.8995 | 0.1150 | 0.0860 | 0.1005 |
+| untuned | kddcup99 | mst | 20 | 0.3386 | 0.3365 | 0.3376 | 1.7243 | 1.7225 | 1.7234 | 0.9760 | 0.9770 | 0.9765 | 0.0240 | 0.0230 | 0.0235 |
+| untuned | kddcup99 | rng | 20 | 0.3730 | 0.3712 | 0.3721 | 2.9179 | 2.9130 | 2.9155 | 0.9270 | 0.9310 | 0.9290 | 0.0730 | 0.0690 | 0.0710 |
+| untuned | moons | hexagonal | 20 | 0.1355 | 0.1346 | 0.1351 | 3.1842 | 3.1787 | 3.1815 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | moons | mst | 20 | 0.1376 | 0.1356 | 0.1366 | 4.8419 | 4.7384 | 4.7902 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | moons | rng | 20 | 0.1357 | 0.1342 | 0.1349 | 2.6343 | 2.6125 | 2.6234 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | olivetti_faces | hexagonal | 20 | 42.6773 | 34.2471 | 38.4622 | 8.9338 | 5.0171 | 6.9754 | 0.6115 | 0.8175 | 0.7145 | 0.3885 | 0.1825 | 0.2855 |
+| untuned | olivetti_faces | mst | 20 | 41.6810 | 30.7001 | 36.1905 | 10.5162 | 4.4246 | 7.4704 | 0.6285 | 0.8775 | 0.7530 | 0.3715 | 0.1225 | 0.2470 |
+| untuned | olivetti_faces | rng | 20 | 41.5030 | 30.9796 | 36.2413 | 6.9887 | 2.7613 | 4.8750 | 0.6325 | 0.8845 | 0.7585 | 0.3675 | 0.1155 | 0.2415 |
+| untuned | s_curve | hexagonal | 20 | 0.3334 | 0.3319 | 0.3327 | 7.8608 | 7.8535 | 7.8571 | 0.9990 | 1.0000 | 0.9995 | 0.0010 | 0.0000 | 5.00e-04 |
+| untuned | s_curve | mst | 20 | 0.3193 | 0.3155 | 0.3174 | 7.0170 | 6.7520 | 6.8845 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | s_curve | rng | 20 | 0.3211 | 0.3180 | 0.3195 | 2.9213 | 2.8719 | 2.8966 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
+| untuned | swiss_roll | hexagonal | 20 | 0.2902 | 0.2889 | 0.2896 | 8.7591 | 8.7911 | 8.7751 | 0.9325 | 0.9385 | 0.9355 | 0.0675 | 0.0615 | 0.0645 |
+| untuned | swiss_roll | mst | 20 | 0.2725 | 0.2695 | 0.2710 | 9.4331 | 9.1974 | 9.3152 | 0.9240 | 0.9265 | 0.9252 | 0.0760 | 0.0735 | 0.0747 |
+| untuned | swiss_roll | rng | 20 | 0.2721 | 0.2695 | 0.2708 | 2.8013 | 2.7562 | 2.7788 | 0.9645 | 0.9655 | 0.9650 | 0.0355 | 0.0345 | 0.0350 |
+| untuned | wine | hexagonal | 20 | 1.9354 | 1.1334 | 1.5344 | 7.9569 | 3.7968 | 5.8769 | 0.3885 | 0.7155 | 0.5520 | 0.6115 | 0.2845 | 0.4480 |
+| untuned | wine | mst | 20 | 1.9459 | 0.8674 | 1.4066 | 8.7875 | 2.6270 | 5.7073 | 0.3810 | 0.8185 | 0.5998 | 0.6190 | 0.1815 | 0.4003 |
+| untuned | wine | rng | 20 | 1.9270 | 0.8784 | 1.4027 | 7.0421 | 2.0440 | 4.5430 | 0.3865 | 0.8120 | 0.5992 | 0.6135 | 0.1880 | 0.4008 |
 | tuned | blobs | hexagonal | 20 | 0.1284 | 0.1258 | 0.1271 | 27.4818 | 27.5131 | 27.4974 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
 | tuned | blobs | mst | 20 | 0.1285 | 0.1255 | 0.1270 | 6.7794 | 6.6317 | 6.7055 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
 | tuned | blobs | rng | 20 | 0.1283 | 0.1254 | 0.1269 | 3.6686 | 3.6021 | 3.6353 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0.0000 | 0.0000 |
@@ -1140,13 +1142,13 @@ We thank Prof. Hanna Suominen for her input and advice.
 ## 12. Supplementary Figures (End Matter)
 
 ![Supplementary Figure S1](assets_manual/figures/supp_fig_s1.svg)
-*Supplementary Figure S1. FloatSOM versus XPySOM calibration under default settings for the MST topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S4. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
+*Supplementary Figure S1. FloatSOM versus XPySOM calibration under untuned settings for the MST topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S4. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 ![Supplementary Figure S2](assets_manual/figures/supp_fig_s2.svg)
-*Supplementary Figure S2. FloatSOM versus XPySOM calibration under default settings for the RNG topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S5. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
+*Supplementary Figure S2. FloatSOM versus XPySOM calibration under untuned settings for the RNG topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S5. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 ![Supplementary Figure S3](assets_manual/figures/supp_fig_s3.svg)
-*Supplementary Figure S3. FloatSOM versus XPySOM calibration under default settings for the hexagonal topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S6. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
+*Supplementary Figure S3. FloatSOM versus XPySOM calibration under untuned settings for the hexagonal topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S6. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
 
 ![Supplementary Figure S4](assets_manual/figures/supp_fig_s4.svg)
 *Supplementary Figure S4. MST versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect.*
@@ -1173,7 +1175,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 *Supplementary Figure S11. Full GPU-count scaling context for MST and hexagonal under matched full sampling settings. Panels A-C show MST runtime across dimension, sample, and grid size scaling workloads; panels D-F show the corresponding hexagonal runs. Within each panel, curves correspond to $G\in\{1,2,4,8\}$ GPUs and report mean wall-clock runtime (s) with $\pm 1$ standard-deviation error bars across $n=3$ repeated runs per configuration.*
 
 ![Supplementary Figure S12](assets_manual/figures/supp_fig_s12.svg)
-*Supplementary Figure S12. Deployment comparison of default hexagonal XPySOM versus tuned FloatSOM hexagonal. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ under the matched dataset/seed comparison keys. Positive values indicate tuned FloatSOM hexagonal outperforms default hexagonal XPySOM. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S9.*
+*Supplementary Figure S12. Deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM hexagonal. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ under the matched dataset/seed comparison keys. Positive values indicate tuned FloatSOM hexagonal outperforms untuned hexagonal XPySOM. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S9.*
 
 ![Supplementary Figure S13](assets_manual/figures/supp_fig_s13.svg)
-*Supplementary Figure S13. Deployment comparison of default hexagonal XPySOM versus tuned FloatSOM MST. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ under the matched dataset/seed comparison keys. Positive values indicate tuned FloatSOM MST outperforms default hexagonal XPySOM. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S10.*
+*Supplementary Figure S13. Deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM MST. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ under the matched dataset/seed comparison keys. Positive values indicate tuned FloatSOM MST outperforms untuned hexagonal XPySOM. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Per-dataset and `GLOBAL_OVERALL` panel summaries are listed in Supplementary Table S10.*
