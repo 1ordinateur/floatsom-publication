@@ -24,7 +24,7 @@ We distinguish this matched fixed diagnostic benchmark from the existing Optuna-
 
 The matched diagnostics show that the graph-topology improvement is not strictly a tuning artifact. Under the untuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but RNG gave the clearer local BMU-neighborhood ordering result: RNG improved balanced MTR by 2.44 tied-rank positions relative to hexagonal maps (95% CI 2.20 to 2.68; p=5.16e-57; 269/11 matched pairs favoring RNG), whereas MST did not clearly improve MTR relative to hexagonal maps. Under the tuned profile, RNG improved balanced $QE$ relative to tuned hexagonal maps by 0.0515 (95% CI 0.0318 to 0.0712; p=4.94e-07) and improved balanced MTR by 25.67 tied-rank positions (95% CI 24.77 to 26.56; p=2.17e-154; 280/0 matched pairs favoring RNG).
 
-We also added the tuned-versus-untuned MTR comparison because it directly addresses whether $QE$ optimization itself changes topology preservation. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each topology. The MTR penalty was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). We interpret this as evidence that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to local BMU-neighborhood ordering than the graph topologies do.
+We also added the tuned-versus-untuned MTR comparison because it directly addresses whether $QE$ optimization itself changes local BMU-neighborhood ordering. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each topology. The MTR penalty was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). We interpret this as evidence that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to local BMU-neighborhood ordering than the graph topologies do.
 
 Node utilization results support this interpretation, as the reviewer kindly pointed out. Considering this, we calculated node utilization and dead-node fraction for the same matched maps. For example, tuned RNG increased balanced node utilization by 0.0197 relative to tuned hexagonal maps (95% CI 0.0158 to 0.0235; p=1.38e-20) and reduced balanced dead-node fraction by the same amount. These node-use diagnostics indicate that the MTR result is not accompanied by reduced map utilization. We embedded the compact diagnostic summary in the main text and the full paired diagnostic and by-dataset diagnostic tables in the manuscript supplement rather than leaving them as external TSV-only outputs.
 
@@ -250,11 +250,7 @@ In the Fig. 4 caption, we added:
 
 In the Fig. 6 and Fig. 7 result text, we added:
 
-> "Dataset-level Benjamini-Hochberg adjusted q-values for the same Fig. 6 comparisons are reported in Supplementary Table S7; q<0.05 in 5/14 balanced QE rows, 7/14 holdout QE rows, and 5/14 train QE rows."
-
-and:
-
-> "Dataset-level Benjamini-Hochberg adjusted q-values for the same Fig. 7 comparisons are reported in Supplementary Table S7; q<0.05 in 8/14 balanced QE rows, 7/14 holdout QE rows, and 8/14 train QE rows."
+> "Supplementary Table S7 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST and RNG."
 
 In the Fig. 6 and Fig. 7 captions, we added:
 
