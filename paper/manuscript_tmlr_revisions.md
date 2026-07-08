@@ -374,7 +374,7 @@ For the 1-GPU random sampling runs, the last successful 1-GPU run was at 100M sa
 
 ### 6.2 Multi-GPU topology scaling and Larger-Than-Memory context
 
-To examine parallel scaling, we benchmarked FloatSOM under full sampling across $G\in\{1,2,4,8\}$ GPUs using workload-scaling benchmarks that extend from standard in-memory settings to larger workloads that exceed available memory. Across these increasingly demanding loads, runtime and efficiency show a broadly consistent scaling pattern, with stable behaviour regardless of topology (Figs. 11 and S11).
+To examine parallel scaling, we benchmarked FloatSOM under full sampling across $G\in\{1,2,4,8\}$ GPUs using workload-scaling benchmarks that extend from standard in-memory settings to larger workloads that exceed available memory. Across these increasingly demanding loads, the GPU-count response and efficiency curves show a broadly consistent shape across topologies (Figs. 11 and S11). This statement concerns scaling behavior within each topology as GPU count increases, not equality of absolute wall-clock runtime: Section 6.3 shows that topology costs diverge sharply when the grid itself is enlarged.
 
 ![Figure 11](assets_manual/figures/fig_11.svg)
 
@@ -391,7 +391,7 @@ The grid size scaling panel proves to be the main exception: at the largest test
 
 #### 6.2.2 GPU Scaling Efficiency
 
-We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Efficiencies above 100\% should also be interpreted as a combined consequence of parallelism and a changed memory/data-staging regime, not as evidence of superlinear compute scaling. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs, which follow the same overall pattern.
+We next consider GPU efficiency under strong scaling, relative to ideal linear scaling. At smaller dataset sizes, efficiency is lower. As workload size increases, efficiency rises sharply and in some regions exceeds 100\%. When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range. Efficiencies above 100\% should also be interpreted as a combined consequence of parallelism and a changed memory/data-staging regime, not as evidence of superlinear compute scaling. Fig. 11 shows the scaling for the RNG topology, while Fig. S11 shows the corresponding supplementary hexagonal and MST outputs. Those supplementary panels support the same qualitative GPU-efficiency trend, but they should not be read as indicating equal absolute runtime across topologies; the fixed-8-GPU comparison in Section 6.3 quantifies those differences.
 
 ### 6.3 Topology Runtime Comparisons
 
