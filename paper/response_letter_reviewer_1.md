@@ -10,29 +10,29 @@ We thank the reviewer for the careful reading and for separating the systems con
 
 ### Response
 
-The submitted manuscript used $QE$ as the principal deployment metric because the benchmark was designed around large-scale vector quantization and because $QE$ is the metric used in our XPySOM calibration. We have expanded the topology comparison by adding a graph-rank preservation diagnostic alongside $QE$.
+The submitted manuscript used $QE$ as the principal deployment metric because the benchmark was designed around large-scale vector quantization and because $QE$ is the metric used in our XPySOM calibration. We have expanded the topology comparison by adding a local BMU-neighborhood ordering diagnostic alongside $QE$.
 
 Raw topographic error is not the primary cross-topology statistic because it defines an error by whether the first and second best-matching units are immediate neighbors on the map. That adjacency relation is itself topology-dependent. Even when map size and output dimensionality are fixed, hexagonal, MST, and RNG maps have different connectivity and degree structure, so raw topographic error would partly measure the graph's one-hop neighbor convention.
 
 This is not only a concern raised by Ramos et al. [@ramosROLELATTICEDIMENSIONALITY2018]. Neme and Miramontes further showed that topographic error is affected by statistical properties of the neuron lattice, including path length, clustering, and connectivity length [@nemeStatisticalPropertiesLattices2005]. Other SOM comparisons, including Machon-Gonzalez and Lopez-Garcia, also caution that topographic-error comparisons require the same map size because the errors depend on map design [@machon-gonzalezFLSOMIndividualKernel2010]. These results support the narrower point relevant here: holding map size fixed is necessary, but holding map size or output dimensionality fixed is not sufficient when the adjacency graph itself changes.
 
-Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018]. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We report MTR next to $QE$ in the cross-topology diagnostics.
+Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018]. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We report MTR next to $QE$ in the cross-topology local BMU-neighborhood ordering diagnostics.
 
 We also added matched post hoc topology diagnostics for the final trained FloatSOM maps. These diagnostics evaluate the same dataset, seed, sampling, and topology units, and report both MTR and node-use summaries.
 
 We distinguish this matched fixed diagnostic benchmark from the existing Optuna-budget topology figure. Fig. 7 remains the tuned topology $QE$ comparison, asking whether tuned RNG can achieve lower $QE$ than tuned hexagonal maps under the same optimization protocol. The matched fixed diagnostic benchmark reruns deployable fixed tuned and untuned profiles under matched dataset, seed, topology, and split keys, then evaluates the resulting final maps for MTR and node use.
 
-The matched diagnostics show that the graph-topology improvement is not strictly a tuning artifact. Under the untuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but RNG gave the clearer topology-preservation result: RNG improved balanced MTR by 2.44 tied-rank positions relative to hexagonal maps (95% CI 2.20 to 2.68; p=5.16e-57; 269/11 matched pairs favoring RNG), whereas MST did not clearly improve MTR relative to hexagonal maps. Under the tuned profile, RNG improved balanced $QE$ relative to tuned hexagonal maps by 0.0515 (95% CI 0.0318 to 0.0712; p=4.94e-07) and improved balanced MTR by 25.67 tied-rank positions (95% CI 24.77 to 26.56; p=2.17e-154; 280/0 matched pairs favoring RNG).
+The matched diagnostics show that the graph-topology improvement is not strictly a tuning artifact. Under the untuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but RNG gave the clearer local BMU-neighborhood ordering result: RNG improved balanced MTR by 2.44 tied-rank positions relative to hexagonal maps (95% CI 2.20 to 2.68; p=5.16e-57; 269/11 matched pairs favoring RNG), whereas MST did not clearly improve MTR relative to hexagonal maps. Under the tuned profile, RNG improved balanced $QE$ relative to tuned hexagonal maps by 0.0515 (95% CI 0.0318 to 0.0712; p=4.94e-07) and improved balanced MTR by 25.67 tied-rank positions (95% CI 24.77 to 26.56; p=2.17e-154; 280/0 matched pairs favoring RNG).
 
 We also added the tuned-versus-untuned MTR comparison because it directly addresses whether $QE$ optimization itself changes topology preservation. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each topology. The MTR penalty was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). We interpret this as evidence that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to local BMU-neighborhood ordering than the graph topologies do.
 
-Node utilization results support this interpretation, as the reviewer kindly pointed out. Considering this, we calculated node utilization and dead-node fraction for the same matched maps. For example, tuned RNG increased balanced node utilization by 0.0197 relative to tuned hexagonal maps (95% CI 0.0158 to 0.0235; p=1.38e-20) and reduced balanced dead-node fraction by the same amount. We embedded the compact diagnostic summary in the main text and the full paired diagnostic and by-dataset diagnostic tables in the manuscript supplement rather than leaving them as external TSV-only outputs.
+Node utilization results support this interpretation, as the reviewer kindly pointed out. Considering this, we calculated node utilization and dead-node fraction for the same matched maps. For example, tuned RNG increased balanced node utilization by 0.0197 relative to tuned hexagonal maps (95% CI 0.0158 to 0.0235; p=1.38e-20) and reduced balanced dead-node fraction by the same amount. These node-use diagnostics indicate that the MTR result is not accompanied by reduced map utilization. We embedded the compact diagnostic summary in the main text and the full paired diagnostic and by-dataset diagnostic tables in the manuscript supplement rather than leaving them as external TSV-only outputs.
 
 ### Manuscript Amendment
 
 In Section 4.1, we added:
 
-> "For cross-topology preservation diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. MTR is therefore reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. Raw topographic error is not used as the cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
+> "For cross-topology local BMU-neighborhood ordering diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. MTR is therefore reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. Raw topographic error is not used as the cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
 
 In Section 4.3, we clarified the fixed tuned rerun design:
 
@@ -40,7 +40,7 @@ In Section 4.3, we clarified the fixed tuned rerun design:
 
 In Section 5.3, we revised the opening sentence to:
 
-> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. The same final maps are also evaluated post hoc for MTR as the primary cross-topology preservation diagnostic. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles."
+> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. Separately, fixed tuned and untuned deployable reruns are evaluated post hoc for MTR and node use. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles."
 
 We also added the tuned and untuned RNG diagnostic result:
 
@@ -50,7 +50,7 @@ We also added the tuned and untuned RNG diagnostic result:
 
 In Section 5.4, we added:
 
-> "The matched diagnostics show that this $QE$ gain has different topology-preservation costs across topology families. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each case. The MTR increase was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11), indicating that the fixed hexagonal lattice pays a substantially larger local BMU-neighborhood ordering cost to achieve lower $QE$. Node-utilization and dead-node diagnostics support this interpretation as confirmatory checks, with balanced node utilization slightly higher for tuned RNG and tuned MST."
+> "The matched diagnostics show that this $QE$ gain has different local BMU-neighborhood ordering costs across topology families. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each case. The MTR increase was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11), indicating that the fixed hexagonal lattice pays a substantially larger local BMU-neighborhood ordering cost to achieve lower $QE$. Node-use diagnostics indicate that the MTR result is not accompanied by reduced map utilization."
 
 In the Discussion, we added:
 
@@ -72,7 +72,7 @@ We agree that neighborhood radius is an important potential confound. However, t
 
 To make this clear, we revised the Optuna benchmark protocol and topology-results sections. We now state explicitly that `initial_radius` was included in the Optuna search space for hexagonal, MST, and RNG runs. We also report the distilled selected radii, which show that tuning selected substantially tighter neighborhood settings than the untuned radius of 5.0 for all topology families. The tuned hexagonal comparator used the tightest radius among the topology families: 1.03 for hexagonal under full sampling, compared with 1.46 for MST and 1.41 for RNG; and 1.17 for hexagonal under random sampling, compared with 1.82 for MST and 1.77 for RNG.
 
-This means the control proposed by the reviewer is already present in the Optuna design: the hexagonal map is allowed to shrink its neighborhood radius, and it in fact does so. The revised MTR diagnostics show that this tighter optimized setting still leaves a topology-specific MTR penalty. Tuning tightens the effective neighborhood settings for hexagonal, MST, and RNG, but the MTR cost is disproportionate for the fixed hexagonal lattice: the tuned-versus-untuned diagnostics show a much larger MTR penalty for hexagonal than for MST or RNG, whereas the graph topologies absorb the same QE-oriented tuning with a smaller local BMU-neighborhood ordering cost.
+This means the control proposed by the reviewer is already present in the Optuna design: the hexagonal map is allowed to shrink its neighborhood radius, and it in fact does so. The revised MTR diagnostics show that this tighter optimized setting still leaves a topology-specific MTR penalty. Tuning tightens the effective neighborhood settings for hexagonal, MST, and RNG, but the MTR cost is disproportionate for the fixed hexagonal lattice: the tuned-versus-untuned diagnostics show a much larger MTR penalty for hexagonal than for MST or RNG, whereas the graph topologies absorb the same QE-oriented tuning with a smaller local BMU-neighborhood ordering cost. This rules out comparison against an untuned broad-radius hexagonal baseline, although it does not isolate radius from the other tuned hyperparameters.
 
 This addresses the radius-control concern: the observed MST/RNG $QE$ gains are not obtained by comparing graph topologies against an untuned or artificially broad hexagonal neighborhood radius. Instead, the results are best-observed-versus-best-observed comparisons under a matched Optuna budget.
 
@@ -84,7 +84,7 @@ In Section 4.1, we added:
 
 In Section 5.3, we added:
 
-> "Because `initial_radius` was tuned for every topology family, the topology comparison is a best-observed-versus-best-observed comparison under the same Optuna budget rather than a comparison against an untuned hexagonal radius. The distilled deployable configurations selected tighter hexagonal radii than the graph topologies: under full sampling the selected `initial_radius` values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG, while under random sampling they were 1.17, 1.82, and 1.77, respectively. These values show that the reported MST/RNG $QE$ gains are not explained by evaluating hexagonal only at a broader default neighborhood radius."
+> "Because `initial_radius` was tuned for every topology family, the topology comparison is a best-observed-versus-best-observed comparison under the same Optuna budget rather than a comparison against an untuned hexagonal radius. The distilled deployable configurations selected tighter hexagonal radii than the graph topologies: under full sampling the selected `initial_radius` values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG, while under random sampling they were 1.17, 1.82, and 1.77, respectively. These values show that the reported MST/RNG $QE$ gains are not explained by evaluating hexagonal only at a broader default neighborhood radius, although they do not isolate radius from the other tuned hyperparameters."
 
 ## 3. Related work and external baselines
 
@@ -176,9 +176,9 @@ We revised the Fig. 13 caption to:
 
 ### Response
 
-We agree that MST itself should not be described as a novel SOM topology because prior work, including Jang et al., used MSTs in SOMs. We revised the manuscript to remove broad novelty language for MSTs and instead frame the contribution as a scalable GPU implementation and large-scale evaluation of dynamic graph-based SOM topologies.
+We agree that the novelty claim needed to distinguish MST-on-SOM analyses from MST-as-training-topology SOMs. Jang et al. used MSTs on SOMs, but that use is not equivalent to the FloatSOM topology path: in our implementation, the MST is the operative neighborhood graph during training, is recalculated from the evolving node-weight geometry, and directly changes the SOM update influence matrix. This differs from superimposing or embedding an MST on an already trained map for interpretation, map-shape assessment, or related post hoc analysis.
 
-For RNG, we retain a narrower and qualified novelty claim. We have not identified prior work applying dynamically refreshed Relative Neighborhood Graphs as the neighborhood topology in SOM training. To avoid overclaiming, we now phrase this as "to our knowledge" and distinguish it from the non-novel MST component.
+We also avoid overclaiming. Earlier SOM variants discussed MST-defined neighborhoods during learning, so we do not claim that the graph object alone is new. The contribution is the scalable GPU-compatible refreshed MST training topology and its large-scale quantitative evaluation. For RNG, we retain a narrower and qualified novelty claim: we have not identified prior work applying dynamically refreshed Relative Neighborhood Graphs as the neighborhood topology in SOM training.
 
 ### Manuscript Amendment
 
@@ -188,19 +188,27 @@ In the Abstract, we replaced:
 
 with:
 
-> "scalable graph-based topologies beyond regular lattices"
+> "scalable training-time graph topologies beyond regular lattices"
 
 In Section 2.3, we added:
 
-> "The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. In particular, prior work has used MST-based neighborhoods in SOMs [@jangUseMinimalSpanning2009], so we do not claim MST itself as a novel SOM topology. Our MST contribution is a scalable GPU-compatible dynamic implementation and large-scale evaluation."
+> "The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. MSTs have previously appeared in SOM analyses, including as structures superimposed on an already trained map for interpretation, subnode embedding, or map-shape assessment [@jangUseMinimalSpanning2009]. This is distinct from the training-time role used here: in FloatSOM, the MST is the operative neighborhood graph during SOM updates, is recalculated from the evolving node-weight geometry, and directly changes the update influence matrix used during learning. Earlier SOM variants also discussed MST-defined neighborhoods during learning [@kangasVariantsSelforganizingMaps1990], but these alternatives have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. FloatSOM's MST contribution is therefore a scalable GPU-compatible implementation of refreshed MST-based SOM training and a large-scale quantification of its effect, rather than a post hoc MST overlay on a conventional trained SOM."
 
 We also added:
 
 > "Relative Neighborhood Graphs (RNGs) [@toussaintRelativeNeighbourhoodGraph1980] are of particular interest here. To our knowledge, dynamically refreshed RNG neighborhoods have not previously been used as a SOM training topology; we return to the full rationale and implementation for RNG in Section 3.2.2."
 
+In Section 3.2.1, we clarified that the MST topology changes training rather than only visualization:
+
+> "The MST topology replaces fixed lattice neighborhood distance with graph hop distance on a minimum spanning tree built from current SOM nodes. The MST is therefore part of the SOM training rule: it determines which nodes receive neighborhood influence during each topology-refresh interval, rather than serving as a visualization or analysis layer after training."
+
 In the Discussion, we replaced broad "novel graph-based topology" wording with:
 
-> "This manuscript presents FloatSOM as a unified large-scale SOM framework that combines scalable graph-based topology support with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution."
+> "Because MST and RNG are used as training-time neighborhoods, these differences reflect changes to the SOM update dynamics rather than post hoc graph summaries placed over an unchanged trained map."
+
+and:
+
+> "This manuscript presents FloatSOM as a unified large-scale SOM framework that combines scalable training-time graph topology support with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution."
 
 ## 7. Runtime cost of RNG recommendation
 
@@ -276,7 +284,7 @@ In Section 4.1, we added:
 
 In Section 5.3, we added:
 
-> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. The same final maps are also evaluated post hoc for MTR as the primary cross-topology preservation diagnostic. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles."
+> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. Separately, fixed tuned and untuned deployable reruns are evaluated post hoc for MTR and node use. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles."
 
 We also embedded the paired diagnostic table:
 
