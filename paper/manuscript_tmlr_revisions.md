@@ -294,24 +294,24 @@ Because `initial_radius` was tuned for every topology family, the topology compa
 We report dataset-wise paired improvement summaries (hexagonal over MST) with the same reporting logic as Section 5.1 in Fig. 6.
 
 <!-- AUTO-TOPOLOGY-MST-PVALUES:START -->
-Overall, MST outperforms matched hexagonal on balanced QE (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by train QE (Fig. 6C), while holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The pooled overall paired $t$-test p-values are balanced QE (p=1.12e-05), holdout QE (p=0.15), and train QE (p=0.0064). Dataset-level Benjamini-Hochberg adjusted q-values for the same Fig. 6 comparisons are reported in Supplementary Table S7; q<0.05 in 5/14 balanced QE rows, 7/14 holdout QE rows, and 5/14 train QE rows.
+Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by Train QE (Fig. 6C), while Holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The overall paired t-test p-values are Balanced QE (p=1.12e-05); Holdout QE (p=0.15); and Train QE (p=0.0064). Supplementary Table S7 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST and RNG.
 <!-- AUTO-TOPOLOGY-MST-PVALUES:END -->
 
 ![Figure 6](assets_manual/figures/fig_6.svg)
-*Figure 6. Hexagonal versus MST topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Figure significance markers use dataset-level Benjamini-Hochberg adjusted q-values, which are reported in Supplementary Table S7 alongside raw p-values retained for audit.*
+*Figure 6. Hexagonal versus MST topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Supplementary Table S7 reports the per-dataset effect estimates, 95% confidence intervals, raw p-values, and dataset-level Benjamini-Hochberg adjusted q-values.*
 
 #### 5.3.2 RNG
 
 To evaluate RNG topology performance, we reuse the paired reporting logic on hexagonal versus RNG, again centered on $QE_B$ with $QE_H$ and $QE_T$ in Fig. 7.
 
 <!-- AUTO-TOPOLOGY-RNG-PVALUES:START -->
-RNG has lower QE than matched hexagonal on the reported QE metrics (Fig. 7A-C), with pooled overall paired $t$-test p-values of balanced QE (p=7.4e-10), holdout QE (p=0.0232), and train QE (p=4.69e-06). Dataset-level Benjamini-Hochberg adjusted q-values for the same Fig. 7 comparisons are reported in Supplementary Table S7; q<0.05 in 8/14 balanced QE rows, 7/14 holdout QE rows, and 8/14 train QE rows.
+RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 7A-7C), with overall paired t-test p-values of Balanced QE (p=7.4e-10); Holdout QE (p=0.0232); and Train QE (p=4.69e-06). Supplementary Table S7 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST and RNG.
 <!-- AUTO-TOPOLOGY-RNG-PVALUES:END -->
 
 The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced QE and especially in train QE, with the separation most apparent in the real and larger datasets where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice.
 
 ![Figure 7](assets_manual/figures/fig_7.svg)
-*Figure 7. Hexagonal versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Figure significance markers use dataset-level Benjamini-Hochberg adjusted q-values, which are reported in Supplementary Table S7 alongside raw p-values retained for audit.*
+*Figure 7. Hexagonal versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95% paired $t$-test confidence intervals around the mean paired effect. Supplementary Table S7 reports the per-dataset effect estimates, 95% confidence intervals, raw p-values, and dataset-level Benjamini-Hochberg adjusted q-values.*
 
 Fig. 7 and the matched fixed diagnostic benchmark address complementary questions. Fig. 7 is the Optuna-budget topology comparison and asks whether tuned RNG can achieve lower $QE$ than tuned hexagonal maps under the same optimization protocol. The matched fixed diagnostic benchmark reruns deployable fixed tuned and untuned profiles under matched dataset, seed, topology, and split keys, then evaluates the resulting final maps for MTR and node use.
 
@@ -718,55 +718,55 @@ We thank Prof. Hanna Suominen for her input and advice.
 
 
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:START -->
-**Supplementary Table S7. Paired topology comparison q-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE.** Rows list metric/dataset entries, including the OVERALL row. The MST_q and RNG_q columns report Benjamini-Hochberg q-values for the corresponding dataset-level comparison family; raw p-values are retained in the MST_p and RNG_p columns for audit. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`.
+**Supplementary Table S7. Paired topology-comparison effects for hexagonal versus MST and hexagonal versus RNG across Balanced QE, Holdout QE, and Train QE.** Rows list metric/dataset entries, including the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal and negative values favor MST or RNG. The CI columns give the corresponding 95% paired $t$-test confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg adjustment over dataset-level rows; OVERALL rows are pooled summaries and retain q=NA. The embedded table is reproduced from `assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`.
 
-| metric | dataset | MST_p | MST_q | RNG_p | RNG_q |
-| --- | --- | --- | --- | --- | --- |
-| Balanced QE | blobs | p=0.0163 | q=0.0456 | p=0.00134 | q=0.00313 |
-| Balanced QE | circles | p=0.868 | q=0.868 | p=0.027 | q=0.0473 |
-| Balanced QE | moons | p=0.494 | q=0.629 | p=0.0132 | q=0.0264 |
-| Balanced QE | s_curve | p=0.000559 | q=0.0024 | p=8.08e-05 | q=0.000377 |
-| Balanced QE | swiss_roll | p=0.247 | q=0.384 | p=0.0661 | q=0.0925 |
-| Balanced QE | breast_cancer | p=0.208 | q=0.364 | p=0.364 | q=0.392 |
-| Balanced QE | wine | p=0.000686 | q=0.0024 | p=0.000229 | q=0.000802 |
-| Balanced QE | iris | p=0.58 | q=0.677 | p=0.000924 | q=0.00259 |
-| Balanced QE | digits | p=0.165 | q=0.33 | p=0.266 | q=0.312 |
-| Balanced QE | olivetti_faces | p=0.0663 | q=0.155 | p=0.0549 | q=0.0854 |
-| Balanced QE | diabetes | p=0.633 | q=0.682 | p=0.267 | q=0.312 |
-| Balanced QE | california_housing | p=0.000356 | q=0.0024 | p=5.65e-05 | q=0.000377 |
-| Balanced QE | covertype | p=0.477 | q=0.629 | p=0.748 | q=0.748 |
-| Balanced QE | kddcup99 | p=3.14e-08 | q=4.4e-07 | p=2.81e-05 | q=0.000377 |
-| Balanced QE | OVERALL | p=1.12e-05 | q=NA | p=7.4e-10 | q=NA |
-| Holdout QE | blobs | p=0.401 | q=0.468 | p=0.0358 | q=0.0626 |
-| Holdout QE | circles | p=0.105 | q=0.147 | p=0.828 | q=0.828 |
-| Holdout QE | moons | p=0.216 | q=0.275 | p=0.00122 | q=0.00427 |
-| Holdout QE | s_curve | p=0.00226 | q=0.00791 | p=0.000724 | q=0.00338 |
-| Holdout QE | swiss_roll | p=0.0913 | q=0.142 | p=0.0221 | q=0.0442 |
-| Holdout QE | breast_cancer | p=0.0068 | q=0.0159 | p=0.0925 | q=0.13 |
-| Holdout QE | wine | p=0.000275 | q=0.00128 | p=0.00244 | q=0.00683 |
-| Holdout QE | iris | p=0.0125 | q=0.025 | p=0.0444 | q=0.0691 |
-| Holdout QE | digits | p=0.0609 | q=0.107 | p=0.232 | q=0.295 |
-| Holdout QE | olivetti_faces | p=3.93e-05 | q=0.000275 | p=9.96e-06 | q=0.000111 |
-| Holdout QE | diabetes | p=0.984 | q=0.984 | p=0.351 | q=0.409 |
-| Holdout QE | california_housing | p=0.00344 | q=0.00963 | p=0.0154 | q=0.0359 |
-| Holdout QE | covertype | p=0.472 | q=0.508 | p=0.804 | q=0.828 |
-| Holdout QE | kddcup99 | p=4.8e-08 | q=6.72e-07 | p=1.58e-05 | q=0.000111 |
-| Holdout QE | OVERALL | p=0.15 | q=NA | p=0.0232 | q=NA |
-| Train QE | blobs | p=0.0162 | q=0.0454 | p=0.00083 | q=0.00244 |
-| Train QE | circles | p=0.119 | q=0.278 | p=0.000309 | q=0.00144 |
-| Train QE | moons | p=0.445 | q=0.558 | p=0.0117 | q=0.0205 |
-| Train QE | s_curve | p=0.000219 | q=0.00102 | p=0.000132 | q=0.000924 |
-| Train QE | swiss_roll | p=0.362 | q=0.507 | p=0.0774 | q=0.108 |
-| Train QE | breast_cancer | p=0.17 | q=0.34 | p=0.653 | q=0.691 |
-| Train QE | wine | p=0.000156 | q=0.00102 | p=0.00114 | q=0.00266 |
-| Train QE | iris | p=0.565 | q=0.608 | p=0.000872 | q=0.00244 |
-| Train QE | digits | p=0.234 | q=0.364 | p=0.0623 | q=0.0969 |
-| Train QE | olivetti_faces | p=0.211 | q=0.364 | p=0.191 | q=0.243 |
-| Train QE | diabetes | p=0.75 | q=0.75 | p=0.24 | q=0.28 |
-| Train QE | california_housing | p=0.00137 | q=0.00479 | p=0.00144 | q=0.00288 |
-| Train QE | covertype | p=0.478 | q=0.558 | p=0.691 | q=0.691 |
-| Train QE | kddcup99 | p=1.09e-08 | q=1.53e-07 | p=7.18e-05 | q=0.000924 |
-| Train QE | OVERALL | p=0.0064 | q=NA | p=4.69e-06 | q=NA |
+| metric | dataset | MST_effect_pct | MST_95pct_CI | MST_p | MST_q | RNG_effect_pct | RNG_95pct_CI | RNG_p | RNG_q |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Balanced QE | blobs | -0.234 | [-0.4136, -0.0543] | p=0.0163 | q=0.0457 | -0.4278 | [-0.6395, -0.2161] | p=0.00134 | q=0.00313 |
+| Balanced QE | circles | -0.0117 | [-0.1666, 0.1432] | p=0.868 | q=0.868 | -0.1507 | [-0.28, -0.02145] | p=0.027 | q=0.0473 |
+| Balanced QE | moons | 0.04526 | [-0.09841, 0.1889] | p=0.494 | q=0.629 | -0.1834 | [-0.3183, -0.04856] | p=0.0132 | q=0.0264 |
+| Balanced QE | s_curve | -0.2258 | [-0.324, -0.1277] | p=0.000559 | q=0.0024 | -0.2554 | [-0.3406, -0.1702] | p=8.08e-05 | q=0.000377 |
+| Balanced QE | swiss_roll | -0.2335 | [-0.6601, 0.1931] | p=0.247 | q=0.384 | -0.3258 | [-0.6783, 0.02675] | p=0.0661 | q=0.0926 |
+| Balanced QE | breast_cancer | 0.2996 | [-0.1996, 0.7987] | p=0.208 | q=0.363 | -0.1832 | [-0.6168, 0.2505] | p=0.364 | q=0.392 |
+| Balanced QE | wine | -3.999 | [-5.789, -2.209] | p=0.000686 | q=0.0024 | -5.319 | [-7.359, -3.28] | p=0.000229 | q=0.000802 |
+| Balanced QE | iris | -1.004 | [-4.964, 2.955] | p=0.58 | q=0.677 | -4.83 | [-7.089, -2.572] | p=0.000924 | q=0.00259 |
+| Balanced QE | digits | -0.1745 | [-0.4361, 0.08697] | p=0.165 | q=0.331 | -0.1445 | [-0.4203, 0.1314] | p=0.266 | q=0.311 |
+| Balanced QE | olivetti_faces | -1.265 | [-2.634, 0.1046] | p=0.0663 | q=0.155 | -1.23 | [-2.492, 0.03187] | p=0.0549 | q=0.0854 |
+| Balanced QE | diabetes | 0.1492 | [-0.5331, 0.8315] | p=0.633 | q=0.681 | -0.3543 | [-1.031, 0.3227] | p=0.267 | q=0.311 |
+| Balanced QE | california_housing | -0.28 | [-0.3942, -0.1659] | p=0.000356 | q=0.0024 | -0.184 | [-0.2426, -0.1254] | p=5.65e-05 | q=0.000377 |
+| Balanced QE | covertype | -0.3486 | [-1.411, 0.7143] | p=0.477 | q=0.629 | -0.1093 | [-0.857, 0.6383] | p=0.748 | q=0.748 |
+| Balanced QE | kddcup99 | -5.859 | [-6.623, -5.096] | p=3.14e-08 | q=4.4e-07 | -4.466 | [-5.768, -3.165] | p=2.81e-05 | q=0.000377 |
+| Balanced QE | OVERALL | -0.9387 | [-1.346, -0.5316] | p=1.12e-05 | q=NA | -1.297 | [-1.685, -0.9097] | p=7.4e-10 | q=NA |
+| Holdout QE | blobs | -0.1188 | [-0.4239, 0.1864] | p=0.401 | q=0.468 | -0.4212 | [-0.8076, -0.03478] | p=0.0358 | q=0.0627 |
+| Holdout QE | circles | 0.2031 | [-0.05154, 0.4578] | p=0.105 | q=0.147 | -0.02455 | [-0.2726, 0.2235] | p=0.828 | q=0.828 |
+| Holdout QE | moons | 0.1236 | [-0.08663, 0.3339] | p=0.216 | q=0.275 | -0.2158 | [-0.3211, -0.1106] | p=0.00122 | q=0.00427 |
+| Holdout QE | s_curve | -0.1582 | [-0.2432, -0.07327] | p=0.00226 | q=0.00792 | -0.1842 | [-0.2673, -0.1011] | p=0.000724 | q=0.00338 |
+| Holdout QE | swiss_roll | -0.303 | [-0.6657, 0.05966] | p=0.0913 | q=0.142 | -0.3654 | [-0.6648, -0.06609] | p=0.0221 | q=0.0441 |
+| Holdout QE | breast_cancer | 0.4924 | [0.1735, 0.8113] | p=0.0068 | q=0.0159 | 0.2997 | [-0.0605, 0.6599] | p=0.0925 | q=0.129 |
+| Holdout QE | wine | 1.582 | [0.9599, 2.203] | p=0.000275 | q=0.00128 | 1.148 | [0.524, 1.772] | p=0.00244 | q=0.00684 |
+| Holdout QE | iris | 2.725 | [0.7442, 4.705] | p=0.0125 | q=0.025 | 2.032 | [0.06363, 4.001] | p=0.0444 | q=0.069 |
+| Holdout QE | digits | -0.2882 | [-0.5927, 0.01621] | p=0.0609 | q=0.106 | -0.1447 | [-0.4001, 0.1107] | p=0.232 | q=0.295 |
+| Holdout QE | olivetti_faces | -1.322 | [-1.723, -0.9199] | p=3.93e-05 | q=0.000275 | -1.713 | [-2.152, -1.275] | p=9.96e-06 | q=0.000111 |
+| Holdout QE | diabetes | 0.003896 | [-0.4209, 0.4287] | p=0.984 | q=0.984 | -0.273 | [-0.901, 0.355] | p=0.351 | q=0.41 |
+| Holdout QE | california_housing | -0.2211 | [-0.3483, -0.09394] | p=0.00344 | q=0.00964 | -0.1404 | [-0.247, -0.03388] | p=0.0154 | q=0.036 |
+| Holdout QE | covertype | -0.3532 | [-1.419, 0.7122] | p=0.472 | q=0.509 | -0.08568 | [-0.8426, 0.6712] | p=0.804 | q=0.828 |
+| Holdout QE | kddcup99 | -5.871 | [-6.673, -5.068] | p=4.8e-08 | q=6.72e-07 | -4.643 | [-5.902, -3.383] | p=1.58e-05 | q=0.000111 |
+| Holdout QE | OVERALL | -0.2504 | [-0.5924, 0.09159] | p=0.15 | q=NA | -0.3379 | [-0.6291, -0.0468] | p=0.0232 | q=NA |
+| Train QE | blobs | -0.2851 | [-0.5038, -0.06639] | p=0.0162 | q=0.0455 | -0.4429 | [-0.6468, -0.2391] | p=0.00083 | q=0.00244 |
+| Train QE | circles | -0.1236 | [-0.2862, 0.03895] | p=0.119 | q=0.279 | -0.1656 | [-0.2318, -0.09945] | p=0.000309 | q=0.00144 |
+| Train QE | moons | -0.04045 | [-0.1551, 0.07423] | p=0.445 | q=0.558 | -0.157 | [-0.2696, -0.04434] | p=0.0117 | q=0.0204 |
+| Train QE | s_curve | -0.2144 | [-0.2961, -0.1327] | p=0.000219 | q=0.00102 | -0.2643 | [-0.3584, -0.1702] | p=0.000132 | q=0.000926 |
+| Train QE | swiss_roll | -0.2022 | [-0.6787, 0.2742] | p=0.362 | q=0.507 | -0.3216 | [-0.6867, 0.04341] | p=0.0774 | q=0.108 |
+| Train QE | breast_cancer | 0.9588 | [-0.4954, 2.413] | p=0.17 | q=0.34 | -0.263 | [-1.543, 1.016] | p=0.653 | q=0.691 |
+| Train QE | wine | -17.32 | [-23.63, -11.02] | p=0.000156 | q=0.00102 | -22.4 | [-33.21, -11.6] | p=0.00114 | q=0.00265 |
+| Train QE | iris | -5.888 | [-28.17, 16.4] | p=0.565 | q=0.608 | -25.13 | [-36.77, -13.48] | p=0.000872 | q=0.00244 |
+| Train QE | digits | -0.2587 | [-0.7176, 0.2002] | p=0.234 | q=0.364 | -0.3143 | [-0.6485, 0.01992] | p=0.0623 | q=0.0969 |
+| Train QE | olivetti_faces | -1.791 | [-4.796, 1.215] | p=0.211 | q=0.364 | -1.553 | [-4.04, 0.9338] | p=0.191 | q=0.244 |
+| Train QE | diabetes | 0.2611 | [-1.533, 2.055] | p=0.75 | q=0.75 | -0.8799 | [-2.463, 0.7033] | p=0.24 | q=0.28 |
+| Train QE | california_housing | -0.3185 | [-0.4766, -0.1604] | p=0.00137 | q=0.00479 | -0.2556 | [-0.3834, -0.1278] | p=0.00144 | q=0.00287 |
+| Train QE | covertype | -0.3468 | [-1.407, 0.7137] | p=0.478 | q=0.558 | -0.1341 | [-0.8722, 0.6039] | p=0.691 | q=0.691 |
+| Train QE | kddcup99 | -5.804 | [-6.474, -5.134] | p=1.09e-08 | q=1.52e-07 | -4.183 | [-5.557, -2.809] | p=7.18e-05 | q=0.000926 |
+| Train QE | OVERALL | -2.241 | [-3.842, -0.6405] | p=0.0064 | q=NA | -4.033 | [-5.707, -2.36] | p=4.69e-06 | q=NA |
 <!-- AUTO-TOPOLOGY-PVALUE-SUPP-TABLE:END -->
 
 

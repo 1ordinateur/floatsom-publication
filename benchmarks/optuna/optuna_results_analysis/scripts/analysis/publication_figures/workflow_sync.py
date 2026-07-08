@@ -61,6 +61,15 @@ def _resolve_paper_assets_dir() -> Optional[Path]:
     return None
 
 
+def _resolve_paper_manuscript_path(assets_dir: Path) -> Path:
+    paper_dir = assets_dir.parent
+    for filename in ("manuscript.md", "manuscript_tmlr_revisions.md", "manuscript_tmlr.md"):
+        candidate = (paper_dir / filename).resolve()
+        if candidate.exists():
+            return candidate
+    return (paper_dir / "manuscript.md").resolve()
+
+
 def _resolve_paper_manual_assets_dir() -> Optional[Path]:
     script_path = Path(__file__).resolve()
     for parent in script_path.parents:
@@ -757,7 +766,7 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             "reason": "Could not locate paper/assets from checkout or legacy floatsom/paper/assets from script path.",
         }
 
-    manuscript_path = (assets_dir.parent / "manuscript.md").resolve()
+    manuscript_path = _resolve_paper_manuscript_path(assets_dir)
     if not manuscript_path.exists():
         return {
             "generated": False,
@@ -810,6 +819,19 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
         numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
         return f"{float(numeric):.3g}" if np.isfinite(numeric) else "NA"
 
+    def _format_effect_value(value: object) -> str:
+        numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
+        return f"{float(numeric):.4g}" if np.isfinite(numeric) else "NA"
+
+    def _format_ci_text(low: object, high: object) -> str:
+        low_numeric = pd.to_numeric(pd.Series([low]), errors="coerce").iloc[0]
+        high_numeric = pd.to_numeric(pd.Series([high]), errors="coerce").iloc[0]
+        if not (np.isfinite(low_numeric) and np.isfinite(high_numeric)):
+            return "NA"
+        low_value = min(float(low_numeric), float(high_numeric))
+        high_value = max(float(low_numeric), float(high_numeric))
+        return f"[{_format_effect_value(low_value)}, {_format_effect_value(high_value)}]"
+
     def _format_test_value_text(value: object, label: str) -> str:
         return f"{label}={_format_p_value(value)}"
 
@@ -843,7 +865,10 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             summary_df = pd.read_csv(summary_path)
             if summary_df.empty or not {"dataset", "p_value"}.issubset(set(summary_df.columns)):
                 continue
-            columns = ["dataset", "p_value"]
+            for optional_col in ("median_pct", "ci_low_pct", "ci_high_pct"):
+                if optional_col not in summary_df.columns:
+                    summary_df[optional_col] = np.nan
+            columns = ["dataset", "median_pct", "ci_low_pct", "ci_high_pct", "p_value"]
             if "q_value" in summary_df.columns:
                 columns.append("q_value")
             working = summary_df[columns].copy()
@@ -866,11 +891,20 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
                     {
                         "metric": metric_label,
                         "dataset": dataset_display,
+                        "MST_effect_pct": "NA",
+                        "MST_95pct_CI": "NA",
                         "MST_p": "p=NA",
                         "MST_q": "q=NA",
+                        "RNG_effect_pct": "NA",
+                        "RNG_95pct_CI": "NA",
                         "RNG_p": "p=NA",
                         "RNG_q": "q=NA",
                     },
+                )
+                table_rows[row_key][f"{comparison_label}_effect_pct"] = _format_effect_value(row["median_pct"])
+                table_rows[row_key][f"{comparison_label}_95pct_CI"] = _format_ci_text(
+                    row["ci_low_pct"],
+                    row["ci_high_pct"],
                 )
                 table_rows[row_key][f"{comparison_label}_p"] = _format_p_value_text(row["p_value"])
                 table_rows[row_key][f"{comparison_label}_q"] = _format_q_value_text(row.get("q_value", np.nan))
@@ -893,7 +927,18 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
                 ordered_rows.append(row)
     supp_table_df = pd.DataFrame(
         ordered_rows,
-        columns=["metric", "dataset", "MST_p", "MST_q", "RNG_p", "RNG_q"],
+        columns=[
+            "metric",
+            "dataset",
+            "MST_effect_pct",
+            "MST_95pct_CI",
+            "MST_p",
+            "MST_q",
+            "RNG_effect_pct",
+            "RNG_95pct_CI",
+            "RNG_p",
+            "RNG_q",
+        ],
     )
 
     run_table_path = publication_tables_dir / "supp_table_topology_hex_vs_mst_rng_pvalues.tsv"
@@ -942,8 +987,9 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             "(Fig. 6C), while Holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall "
             "holdout advantage. The overall paired t-test p-values are "
             + _join_metric_phrases(mst_phrases)
-            + ". Supplementary Table S7 lists the per-dataset and overall hexagonal-comparison raw p-values and "
-            "Benjamini-Hochberg q-values for MST and RNG."
+            + ". Supplementary Table S7 lists the corresponding per-dataset and overall hexagonal-comparison "
+            "effect estimates, 95% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST "
+            "and RNG."
         )
 
     rng_sentence = (
@@ -955,15 +1001,20 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             "RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 7A-7C), with overall paired "
             "t-test p-values of "
             + _join_metric_phrases(rng_phrases)
-            + ". Supplementary Table S7 lists the per-dataset and overall hexagonal-comparison raw p-values and "
-            "Benjamini-Hochberg q-values for MST and RNG."
+            + ". Supplementary Table S7 lists the corresponding per-dataset and overall hexagonal-comparison "
+            "effect estimates, 95% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST "
+            "and RNG."
         )
 
     supp_table_caption = (
-        "**Supplementary Table S7. Paired topology-comparison p-values for hexagonal versus MST and hexagonal "
+        "**Supplementary Table S7. Paired topology-comparison effects for hexagonal versus MST and hexagonal "
         "versus RNG across Balanced QE, Holdout QE, and Train QE.** Rows list metric/dataset entries, including "
-        "the OVERALL row. The MST and RNG columns report raw p-values and Benjamini-Hochberg q-values using the "
-        "manuscript reporting convention. The embedded table is reproduced from "
+        "the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the "
+        "comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal "
+        "and negative values favor MST or RNG. The CI columns give the corresponding 95% paired $t$-test "
+        "confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg "
+        "adjustment over dataset-level rows; OVERALL rows are pooled summaries and retain q=NA. The embedded "
+        "table is reproduced from "
         "`assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
     )
 

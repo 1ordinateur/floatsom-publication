@@ -132,13 +132,13 @@ We also added:
 
 ### Response
 
-We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology q-value summary, deployment effect summaries, and topology runtime summary. The manuscript now contains the numerical values needed to evaluate the corresponding figures.
+We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology effect and q-value summary, deployment effect summaries, and topology runtime summary. The manuscript now contains the numerical values needed to evaluate the corresponding figures.
 
 ### Manuscript Amendment
 
 In the Supplementary Tables section, we replaced the path-only captions with embedded tables. For example, the revised captions now read:
 
-> "Supplementary Table S7. Paired topology comparison q-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST_q and RNG_q columns report Benjamini-Hochberg q-values for the corresponding dataset-level comparison family; raw p-values are retained in the MST_p and RNG_p columns for audit. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`."
+> "Supplementary Table S7. Paired topology-comparison effects for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal and negative values favor MST or RNG. The CI columns give the corresponding 95% paired $t$-test confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg adjustment over dataset-level rows; OVERALL rows are pooled summaries and retain q=NA."
 
 For the deployment comparison, the revised caption now reads:
 
@@ -258,11 +258,11 @@ and:
 
 In the Fig. 6 and Fig. 7 captions, we added:
 
-> "Figure significance markers use dataset-level Benjamini-Hochberg adjusted q-values, which are reported in Supplementary Table S7 alongside raw p-values retained for audit."
+> "Supplementary Table S7 reports the per-dataset effect estimates, 95% confidence intervals, raw p-values, and dataset-level Benjamini-Hochberg adjusted q-values."
 
 In the supplementary topology table caption, we revised:
 
-> "Supplementary Table S7. Paired topology comparison q-values for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. The MST_q and RNG_q columns report Benjamini-Hochberg q-values for the corresponding dataset-level comparison family; raw p-values are retained in the MST_p and RNG_p columns for audit. OVERALL rows are pooled summaries and are shown separately from the dataset-level adjustment, so their q-values are reported as `NA`."
+> "Supplementary Table S7. Paired topology-comparison effects for hexagonal versus MST and hexagonal versus RNG across balanced QE, holdout QE, and train QE. Rows list metric/dataset entries, including the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal and negative values favor MST or RNG. The CI columns give the corresponding 95% paired $t$-test confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg adjustment over dataset-level rows; OVERALL rows are pooled summaries and retain q=NA."
 
 ## 9. Dead-node and node-utilization reporting
 
