@@ -874,12 +874,49 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
             working = summary_df[columns].copy()
             working["dataset"] = working["dataset"].astype(str).str.strip()
             working = working[working["dataset"] != "GLOBAL_REAL"].copy()
-            if "q_value" not in working.columns:
-                working = _apply_q_values(working, dataset_col="dataset")
+            working["q_value"] = np.nan
             if working.empty:
                 continue
             summary_frames[(comparison_slug, metric_slug)] = working
             stats_sources[f"{comparison_slug}:{metric_slug}"] = str(summary_path.resolve())
+
+    for comparison_slug, _comparison_label in comparison_specs:
+        frame_entries: List[Tuple[Tuple[str, str], pd.DataFrame]] = []
+        for metric_slug, _metric_label in metric_specs:
+            frame = summary_frames.get((comparison_slug, metric_slug))
+            if frame is not None and not frame.empty:
+                frame_entries.append(((comparison_slug, metric_slug), frame.reset_index(drop=True)))
+        if not frame_entries:
+            continue
+
+        combined_parts: List[pd.DataFrame] = []
+        for entry_idx, (_key, frame) in enumerate(frame_entries):
+            part = frame.copy()
+            part["__entry_idx__"] = entry_idx
+            part["__row_idx__"] = np.arange(len(part))
+            combined_parts.append(part)
+        combined = pd.concat(combined_parts, ignore_index=True)
+        combined["q_value"] = np.nan
+        dataset_mask = ~combined["dataset"].map(_is_global_dataset_label)
+        combined.loc[dataset_mask, "q_value"] = _benjamini_hochberg(
+            pd.to_numeric(combined.loc[dataset_mask, "p_value"], errors="coerce")
+        )
+
+        for entry_idx, (key, frame) in enumerate(frame_entries):
+            q_values = (
+                combined[combined["__entry_idx__"] == entry_idx]
+                .sort_values("__row_idx__")["q_value"]
+                .to_numpy()
+            )
+            updated = frame.copy()
+            updated["q_value"] = q_values
+            summary_frames[key] = updated
+
+    for metric_slug, metric_label in metric_specs:
+        for comparison_slug, comparison_label in comparison_specs:
+            working = summary_frames.get((comparison_slug, metric_slug))
+            if working is None or working.empty:
+                continue
             for _, row in working.iterrows():
                 dataset_key = str(row["dataset"]).strip()
                 dataset_display = "OVERALL" if dataset_key == "GLOBAL_OVERALL" else dataset_key
@@ -1013,7 +1050,8 @@ def _sync_topology_pvalue_summary_to_paper_and_manuscript(
         "comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal "
         "and negative values favor MST or RNG. The CI columns give the corresponding 95% paired $t$-test "
         "confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg "
-        "adjustment over dataset-level rows; OVERALL rows are pooled summaries and retain q=NA. The embedded "
+        "adjustment across the 42 dataset-level tests in each topology-comparison family (14 datasets by three "
+        "QE endpoints, separately for MST and RNG); OVERALL rows are pooled summaries and retain q=NA. The embedded "
         "table is reproduced from "
         "`assets/tables/supp_table_topology_hex_vs_mst_rng_pvalues.tsv`."
     )

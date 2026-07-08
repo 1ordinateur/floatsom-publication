@@ -68,13 +68,13 @@ We also added the GigaSOM context:
 
 ### Response
 
-We agree that the statistical reporting should state the correction policy. The revised manuscript now reports Benjamini-Hochberg adjusted q-values for dataset-level families of related paired tests, while retaining raw p-values for audit. Dataset-level figure significance markers and dataset-level significance counts use the adjusted q-values. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family.
+We agree that the statistical reporting should state the correction policy. The revised manuscript now reports Benjamini-Hochberg adjusted q-values for dataset-level families of related paired tests, while retaining raw p-values for audit. For the topology comparisons, the q-values are computed over exactly the family raised by the reviewer: 42 non-global dataset-level tests per topology comparison, corresponding to 14 datasets across $QE_B$, $QE_H$, and $QE_T$, separately for hexagonal-versus-MST and hexagonal-versus-RNG. Dataset-level figure significance markers and dataset-level significance counts use the adjusted q-values. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family.
 
 ### Manuscript Amendment
 
 In Section 4.4, we added:
 
-> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and dataset-level significance counts use these adjusted q-values. The adjustment is applied across non-global dataset rows within each comparison family. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
+> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and dataset-level significance counts use these adjusted q-values. For the topology comparisons in Figs. 6-7, the adjustment family is defined exactly as the reviewer-specified topology family: 42 non-global dataset-level tests per comparator, corresponding to 14 datasets across $QE_B$, $QE_H$, and $QE_T$, computed separately for hexagonal-versus-MST and hexagonal-versus-RNG. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
 
 Figure captions and Supplementary Table S7 were updated to use q-value language for dataset-level significance markers.
 
@@ -132,7 +132,7 @@ We agree that the RNG recommendation must be explicitly conditional on runtime b
 
 In Section 8.5, we revised the recommendation to:
 
-> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) showed that MST was 8.19x and RNG was 27.07x slower than hexagonal. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default. However, MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
+> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default. However, MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
 
 ## 8. Discussion structure
 
