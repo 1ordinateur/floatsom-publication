@@ -26,7 +26,7 @@ In Section 5.3, add a direct MST-versus-RNG paragraph after the separate hexagon
 
 ### Response
 
-We agree and have chosen the first remedy suggested by the reviewer: we qualified Section 6.2 so that the statement refers to the shape of the GPU-count response and scaling-efficiency trend within each topology, not absolute runtime parity among topologies. We also added a cross-reference to Section 6.3, where the fixed-8-GPU topology-runtime differences are reported. This makes explicit that the broad scaling-efficiency pattern and the large grid-size runtime penalties are compatible findings.
+We agree and have chosen the first remedy suggested by the reviewer: we qualified Section 6.2 so that the statement refers specifically to the sample-scaling workload, where the GPU-count response and scaling-efficiency trend have similar qualitative shapes across topologies. We also added a cross-reference to Section 6.3, where the fixed-8-GPU grid-size topology-runtime differences are reported. This makes explicit that the sample-scaling efficiency pattern and the large grid-size runtime penalties are compatible findings.
 
 ### Manuscript Amendment
 
@@ -36,9 +36,9 @@ In Section 6.2, we revised:
 
 to:
 
-> "Across these increasingly demanding loads, the GPU-count response and efficiency curves show a broadly consistent shape across topologies (Figs. 11 and S11). This statement concerns scaling behavior within each topology as GPU count increases, not equality of absolute wall-clock runtime: Section 6.3 shows that topology costs diverge sharply when the grid itself is enlarged."
+> "The cross-topology consistency statement in this section refers specifically to the sample-scaling workload: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 11B,E) and for the corresponding hexagonal and MST outputs (Fig. S11). It should not be read as a claim about grid-size scaling or absolute runtime parity. Grid-size-dominated behavior is treated separately in Section 6.3, where topology costs diverge sharply when the grid itself is enlarged."
 
-In Section 6.2.2, we also revised the Fig. S11 sentence to state that the supplementary panels support the same qualitative GPU-efficiency trend but should not be read as evidence of equal absolute runtime across topologies.
+In Section 6.2.2, we also revised the Fig. S11 sentence to state that the supplementary panels support the same qualitative sample-scaling efficiency trend but should not be read as evidence of equal absolute runtime or grid-size-scaling behavior across topologies.
 
 ## 3. Somoclu and GigaSOM comparison
 
