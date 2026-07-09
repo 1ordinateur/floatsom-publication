@@ -10,13 +10,13 @@ We thank the reviewer for the careful and constructive assessment. We agree with
 
 ### Response
 
-We agree that the direct MST-versus-RNG comparison is load-bearing for any topology-ordering claim. The submitted version established that MST and RNG both outperform the hexagonal baseline, but the direct MST-versus-RNG comparison was left in the supplement. In the revision, we will bring the direct MST-versus-RNG result into the main topology-results text and narrow the conclusion so that RNG is described as strongest only under the paired evidence actually shown, while MST remains a strong and often close competitor.
+We agree that the direct MST-versus-RNG comparison is load-bearing for any topology-ordering claim. The submitted version established that MST and RNG both outperform the hexagonal baseline, but the direct MST-versus-RNG comparison was left in the supplement. In the revision, we have promoted that direct comparison to the main topology-results text as Fig. 8 and narrowed the conclusion so that RNG is described as strongest only when the paired $QE$ evidence is interpreted together with the matched MTR diagnostics, while MST remains a strong and often close competitor.
 
 ### Manuscript Amendment
 
-In Section 5.3, add a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
+In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
 
-> "Because both graph topologies improve on the hexagonal baseline, we also directly compare MST and RNG under the same matched full-sampling protocol. This direct comparison is now summarized in the main text rather than only in the supplement. MST remains a strong topology for $QE$, but RNG provides the stronger overall topology profile when the paired $QE$ comparisons are interpreted together with the matched MTR diagnostics. We therefore treat RNG as the preferred topology when quality is the primary objective and topology-construction overhead is acceptable, while preserving MST as a practical graph-topology alternative."
+> "We also directly compare MST and RNG in Fig. 8, rather than inferring their ordering only through separate hexagonal-baseline contrasts. The direct full-sampling Optuna comparison shows that the two graph topologies are close on $QE$: neither topology uniformly dominates across balanced, holdout, and train endpoints. This direct result supports a qualified topology interpretation. MST remains a strong $QE$ topology, while RNG is preferred when the paired $QE$ evidence is interpreted together with the matched MTR diagnostics below."
 
 ## 2. Section 6.2 versus Section 6.3 scaling language
 
@@ -36,9 +36,9 @@ In Section 6.2, we revised:
 
 to:
 
-> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 11B,E) and for the corresponding hexagonal and MST outputs (Fig. S11). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
+> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 12B,E) and for the corresponding hexagonal and MST outputs (Fig. S10). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
 
-In Section 6.2.2, we also revised the Fig. S11 sentence to state that Fig. 11 and Fig. S11 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
+In Section 6.2.2, we also revised the Fig. S10 sentence to state that Fig. 12 and Fig. S10 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
 
 ## 3. Somoclu and GigaSOM comparison
 
@@ -86,7 +86,7 @@ Figure captions and Supplementary Table S7 were updated to use q-value language 
 
 ### Response
 
-We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 13 is described as an integrated deployment comparison rather than a pure topology-only attribution. The manuscript now treats the decoupling as a limitation: the quality, topology, and tuning claims are established on the in-memory Optuna path, while the scale-out claims are established on the distributed path.
+We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 14 is described as an integrated deployment comparison rather than a pure topology-only attribution. The manuscript now treats the decoupling as a limitation: the quality, topology, and tuning claims are established on the in-memory Optuna path, while the scale-out claims are established on the distributed path.
 
 ### Manuscript Amendment
 
@@ -100,7 +100,7 @@ In Section 4.2, we state:
 
 In Section 7, we revised the opening framing:
 
-> "Fig. 13 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice."
+> "Fig. 14 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice."
 
 ## 6. HDSSSOM pilot scope
 
@@ -130,9 +130,9 @@ We agree that the RNG recommendation must be explicitly conditional on runtime b
 
 ### Manuscript Amendment
 
-In Section 8.5, we revised the recommendation to:
+In Section 8, we revised the recommendation to:
 
-> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default. However, MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
+> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default. MST is a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
 
 ## 8. Discussion structure
 
@@ -142,11 +142,11 @@ In Section 8.5, we revised the recommendation to:
 
 ### Response
 
-We agree that the Discussion should read as a continuous argument rather than a list of short independent subsections. In revision, we will consolidate the Discussion into fewer, longer thematic paragraphs that preserve the logical sequence: sampling, topology, tuning, stability, and systems limits. The goal is to keep the same claims but make the transitions explicit and reduce fragmentation.
+We agree that the Discussion should read as a continuous argument rather than a list of short independent subsections. In revision, we consolidated the Discussion into longer thematic paragraphs that preserve the logical sequence: sampling, topology, tuning, stability, and systems limits. The revised Discussion keeps the same claims but makes the transitions explicit and reduces fragmentation.
 
 ### Manuscript Amendment
 
-Revise Section 8 to combine short subsections into a smaller number of topic-led paragraphs, retaining the key limitations on execution path, topology-runtime cost, and grid-size-dependent recommendations.
+Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key limitations on execution path, topology-runtime cost, and grid-size-dependent recommendations.
 
 ## 9. Appendix redundancy
 
