@@ -48,13 +48,13 @@ In Section 6.2.2, we also revised the Fig. S6 sentence to state that Fig. 12 and
 
 ### Response
 
-We agree that the manuscript should either benchmark these systems or explicitly justify why they are not directly benchmarked. In revision, we have expanded the related-work and baseline-selection discussion. We use XPySOM as the executable external baseline because it is the closest Python GPU batch-SOM comparator and because the original XPySOM study directly benchmarked against earlier open-source SOM implementations, including Somoclu. We discuss GigaSOM as related large-scale systems context, but not as a directly matched Python/CUDA/Ray baseline because its published large-scale result differs in language, hardware, feature dimensionality, epoch count, and included workflow stages.
+We agree that the manuscript should either benchmark these systems or explicitly justify why they are not directly benchmarked. In revision, we have expanded the related-work and baseline-selection discussion. We use XPySOM as the executable external baseline because it is the closest Python GPU batch-SOM comparator and because the original XPySOM study directly benchmarked against earlier open-source SOM implementations, including Somoclu, reporting order-of-magnitude speedups in the relevant batch-SOM comparison setting. We also attempted to benchmark aweSOM as a recent strong serial-online comparator, but it timed out on our standard speed workload even under a minimal one-update-per-sample configuration. We discuss GigaSOM as related large-scale systems context, but not as a directly matched Python/CUDA/Ray baseline because its published large-scale result differs in language, hardware, feature dimensionality, epoch count, and included workflow stages.
 
 ### Manuscript Amendment
 
 In Section 2.1, we added the baseline-selection rationale:
 
-> "For executable external benchmarking, this training-regime distinction determines which systems are directly comparable. We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations, including Somoclu."
+> "For executable external benchmarking, this training-regime distinction determines which systems are directly comparable. We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations, including Somoclu. We therefore did not rerun Somoclu here, since the directly relevant XPySOM benchmark already reports order-of-magnitude speedups over Somoclu in the batch-SOM comparison setting. We also attempted to benchmark aweSOM because it is the strongest serial-online comparator we are aware of. On our standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), using aweSOM's standard training configuration and only one online update step per sample ($N$ updates), the run consistently reached our 30-minute timeout across five attempts ($n=5$; 1800 s each), with all attempts timing out before 60% of the requested online updates had completed. A fully matched serial-online comparison would require $10N$ updates to mirror the 10 full batch iterations used in FloatSOM. Because serial-online training scales with the number of pointwise updates, this would require approximately 10 times as many updates as a setting that already timed out, so we proceeded with XPySOM as the executable external baseline."
 
 We also added the GigaSOM context:
 
@@ -88,7 +88,7 @@ Figure captions and Supplementary Table S7 were updated to use q-value language 
 
 We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 14 is described as an integrated deployment comparison rather than a pure topology-only attribution.
 
-To test whether the diagnostic conclusions depended on the execution path, we added a matched execution-path benchmark comparing the local CuPy pathway with the Ray streaming pathway under identical datasets, seeds, topologies, and fixed tuned configurations. The results were concordant: no comparison was significant either by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths.
+To test whether the diagnostic conclusions depended on the execution path, we added a matched execution-path benchmark comparing the local CuPy pathway with the Ray streaming pathway under identical datasets, seeds, topologies, and fixed tuned configurations. The Ray streaming and out-of-memory pathway behaves the same as local CuPy: no comparison was significant either by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths. We placed this diagnostic after the tuning and stability results, before the speed-scaling section, so the manuscript then transitions to Ray-pathway performance benchmarking.
 
 ### Manuscript Amendment
 
@@ -104,9 +104,9 @@ In Section 7, we revised the opening framing:
 
 > "Fig. 14 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice."
 
-In Section 8, we added:
+In Section 5.5, we added:
 
-> "To check whether this distinction affected the reported diagnostics, we repeated the matched tuned diagnostics through the Ray streaming pathway and compared them with the local CuPy pathway using identical datasets, seeds, topologies, and fixed tuned configurations. No comparison was significant either by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths."
+> "The Optuna quality, topology, and tuning analyses above were run through the in-memory pathway. To check whether those diagnostics changed under the Ray streaming and out-of-memory pathway, we repeated the matched tuned diagnostics with identical datasets, seeds, topologies, and fixed tuned configurations. The Ray streaming and out-of-memory pathway behaves the same as local CuPy: no comparison was significant by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths. For the next component of the evaluation, performance benchmarking, we therefore use the Ray pathway to test speed and scaling."
 
 We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
 
@@ -154,7 +154,7 @@ We agree that the Discussion should read as a continuous argument rather than a 
 
 ### Manuscript Amendment
 
-Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key systems interpretation points, the matched execution-path validation, topology-runtime cost, and grid-size-dependent recommendations.
+Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key systems interpretation points, topology-runtime cost, and grid-size-dependent recommendations. The matched execution-path validation is now reported in Section 5.5 immediately before the speed-scaling results.
 
 ## 9. Appendix redundancy
 
