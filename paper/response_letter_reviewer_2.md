@@ -36,9 +36,9 @@ In Section 6.2, we revised:
 
 to:
 
-> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 12B,E) and for the corresponding hexagonal and MST outputs (Fig. S10). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
+> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 12B,E) and for the corresponding hexagonal and MST outputs (Fig. S6). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
 
-In Section 6.2.2, we also revised the Fig. S10 sentence to state that Fig. 12 and Fig. S10 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
+In Section 6.2.2, we also revised the Fig. S6 sentence to state that Fig. 12 and Fig. S6 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
 
 ## 3. Somoclu and GigaSOM comparison
 
@@ -164,8 +164,8 @@ Section 8 now combines the previous short subsections into a continuous sequence
 
 ### Response
 
-We agree that the supplement should prioritize results that materially support the main claims. In revision, we will compress redundant top-k sensitivity and per-topology tuning-benefit robustness figures where they repeat the same conclusion, and use the freed space to bring the direct MST-versus-RNG comparison into the main text.
+We agree that the supplement should prioritize results that materially support the main claims. In revision, we compressed the redundant robustness material into two consolidated supplementary figures: Supplementary Fig. S4 for the topology top-$k$ sensitivity analyses and Supplementary Fig. S5 for the topology-stratified tuned-versus-untuned comparisons. We also moved the direct MST-versus-RNG comparison into the main text as Fig. 8, so the central topology-ordering evidence is no longer relegated to the appendix.
 
 ### Manuscript Amendment
 
-Compress the redundant robustness figures into consolidated supplementary summaries, and replace repeated text with a short statement that the sensitivity analyses preserve the main qualitative conclusions.
+Supplementary Fig. S4 now consolidates the topology sensitivity analyses, and Supplementary Fig. S5 now consolidates the topology-stratified tuned-versus-untuned comparisons. This retains the audit trail while reducing repeated figure-level interpretation.
