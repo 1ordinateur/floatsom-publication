@@ -2840,12 +2840,12 @@
   </defs>
   <g class="st97">
     <g class="st97">
-      <text class="st98" transform="translate(39.29 107.95)"><tspan x="0" y="0">Supplementary Figure S6: Per-Topology GPU Scaling Performance</tspan></text>
+      <text class="st98" transform="translate(39.29 107.95)"><tspan x="0" y="0">Supplementary Figure S6: GPU Scaling by Workload</tspan></text>
     </g>
   </g>
   <g class="st97">
     <g class="st97">
-      <text class="st98" transform="translate(39.29 176.65)"><tspan x="0" y="0">(MST and Hexagonal)</tspan></text>
+      <text class="st98" transform="translate(39.29 176.65)"><tspan x="0" y="0">(A-C: MST; D-F: Hexagonal)</tspan></text>
     </g>
   </g>
   <g>
