@@ -86,7 +86,9 @@ Figure captions and Supplementary Table S7 were updated to use q-value language 
 
 ### Response
 
-We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 14 is described as an integrated deployment comparison rather than a pure topology-only attribution. The manuscript now treats the decoupling as a limitation: the quality, topology, and tuning claims are established on the in-memory Optuna path, while the scale-out claims are established on the distributed path.
+We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 14 is described as an integrated deployment comparison rather than a pure topology-only attribution.
+
+To test whether the diagnostic conclusions depended on the execution path, we added a matched execution-path benchmark comparing the local CuPy pathway with the Ray streaming pathway under identical datasets, seeds, topologies, and fixed tuned configurations. The results were concordant: no comparison was significant either by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths.
 
 ### Manuscript Amendment
 
@@ -101,6 +103,12 @@ In Section 4.2, we state:
 In Section 7, we revised the opening framing:
 
 > "Fig. 14 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice."
+
+In Section 8, we added:
+
+> "To check whether this distinction affected the reported diagnostics, we repeated the matched tuned diagnostics through the Ray streaming pathway and compared them with the local CuPy pathway using identical datasets, seeds, topologies, and fixed tuned configurations. No comparison was significant either by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths."
+
+We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
 
 ## 6. HDSSSOM pilot scope
 
@@ -146,7 +154,7 @@ We agree that the Discussion should read as a continuous argument rather than a 
 
 ### Manuscript Amendment
 
-Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key limitations on execution path, topology-runtime cost, and grid-size-dependent recommendations.
+Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key systems interpretation points, the matched execution-path validation, topology-runtime cost, and grid-size-dependent recommendations.
 
 ## 9. Appendix redundancy
 
