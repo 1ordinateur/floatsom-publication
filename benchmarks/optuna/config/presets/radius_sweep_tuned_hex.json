@@ -1,0 +1,43 @@
+{
+  "profile_name": "tuned_hex_full_radius_sweep",
+  "source_manifest": "Results/topology_diagnostics_matched_profiles_20260706T064610Z_173140505.gadi-pbs/MATCHED_TOPOLOGY_DIAGNOSTICS_MANIFEST.json",
+  "anchor_initial_radius": 1.026640962470433,
+  "initial_radii": [
+    0.5,
+    0.75,
+    1.026640962470433,
+    1.5,
+    2.0,
+    3.0,
+    5.0
+  ],
+  "seeds": [
+    2078323143,
+    877859004,
+    2030247587,
+    1379665320,
+    728275364,
+    528869417,
+    373929610,
+    2130241779,
+    293453733,
+    1152961436,
+    695712191,
+    1147388228,
+    412855027,
+    431764357,
+    238653096,
+    2009030231,
+    312739678,
+    693553391,
+    291721023,
+    1445788105
+  ],
+  "fixed_params": {
+    "initialization_method": "random",
+    "momentum_init": 0.6068704314721264,
+    "normalization": "xpysom",
+    "radius_decay_type": "asymptotic",
+    "use_momentum": true
+  }
+}

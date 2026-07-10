@@ -107,4 +107,5 @@ floatsom = [
     "floatsom_min1000_tuned_defaults_rng_mst_config.json",
     "floatsom_min1000_tuned_defaults_rng_random.json",
     "xpysom_untuned_defaults.json",
+    "benchmarks/optuna/config/presets/*.json",
 ]
