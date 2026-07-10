@@ -10,55 +10,43 @@ We thank the reviewer for the careful reading and for separating the systems con
 
 ### Response
 
-The submitted manuscript used $QE$ as the principal deployment metric because the benchmark was designed around large-scale vector quantization and because $QE$ is the metric used in our XPySOM calibration. We have expanded the topology comparison by adding a local BMU-neighborhood ordering diagnostic alongside $QE$.
+The submitted manuscript used $QE$ as the principal deployment metric because the benchmark was designed around large-scale vector quantization and calibrated against XPySOM on that metric. We agree that $QE$ alone does not characterize SOM neighborhood ordering, and we have added Mean Tied Rank (MTR) and node-use diagnostics for the final trained maps.
 
-Raw topographic error is not the primary cross-topology statistic because it defines an error by whether the first and second best-matching units are immediate neighbors on the map. That adjacency relation is itself topology-dependent. Even when map size and output dimensionality are fixed, hexagonal, MST, and RNG maps have different connectivity and degree structure, so raw topographic error would partly measure the graph's one-hop neighbor convention.
+MTR follows the tied-rank approach proposed by Ramos et al. for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018]. It ranks the second BMU according to its graph-distance shell around the first BMU, with lower values indicating closer local BMU-neighborhood ordering. We use MTR instead of raw topographic error because one-hop adjacency varies with graph connectivity and degree; prior work has also shown that topographic error depends on lattice properties and map design [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010].
 
-This is not only a concern raised by Ramos et al. [@ramosROLELATTICEDIMENSIONALITY2018]. Neme and Miramontes further showed that topographic error is affected by statistical properties of the neuron lattice, including path length, clustering, and connectivity length [@nemeStatisticalPropertiesLattices2005]. Other SOM comparisons, including Machon-Gonzalez and Lopez-Garcia, also caution that topographic-error comparisons require the same map size because the errors depend on map design [@machon-gonzalezFLSOMIndividualKernel2010]. These results support the narrower point relevant here: holding map size fixed is necessary, but holding map size or output dimensionality fixed is not sufficient when the adjacency graph itself changes.
+The new fixed-configuration analysis evaluates $QE$, MTR, node utilization, and dead-node fraction under matched dataset, seed, topology, and split keys. Under untuned configurations, RNG lowered balanced MTR by 2.44 tied-rank positions relative to hexagonal maps (95% CI 2.20 to 2.68; p=5.16e-57; 269/11 matched pairs favoring RNG), while MST did not clearly improve MTR. Under tuned configurations, RNG improved balanced $QE$ by 0.0515 (95% CI 0.0318 to 0.0712; p=4.94e-07) and MTR by 25.67 tied-rank positions (95% CI 24.77 to 26.56; p=2.17e-154; 280/0 matched pairs favoring RNG) relative to hexagonal maps.
 
-Instead, we added Mean Tied Rank (MTR), following the tied-rank logic proposed by Ramos et al. for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018]. For each sample, we compute the first and second BMUs, rank all non-winning units by graph shortest-path distance from the first BMU, assign average ranks to tied graph-distance groups, and record the tied rank of the second BMU. Lower MTR indicates that the second-best prototype is topologically close to the winning prototype. Because all topology comparisons use the same map size, no map-size normalization is required. We report MTR next to $QE$ in the cross-topology local BMU-neighborhood ordering diagnostics.
-
-We also added matched post hoc topology diagnostics for the final trained FloatSOM maps. These diagnostics evaluate the same dataset, seed, sampling, and topology units, and report both MTR and node-use summaries.
-
-We distinguish this matched fixed diagnostic benchmark from the existing Optuna-budget topology figure. Fig. 7 remains the tuned topology $QE$ comparison, asking whether tuned RNG can achieve lower $QE$ than tuned hexagonal maps under the same optimization protocol. The matched fixed diagnostic benchmark reruns deployable fixed tuned and untuned profiles under matched dataset, seed, topology, and split keys, then evaluates the resulting final maps for MTR and node use.
-
-The matched diagnostics show that the graph-topology improvement is not strictly a tuning artifact. Under the untuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but RNG gave the clearer local BMU-neighborhood ordering result: RNG improved balanced MTR by 2.44 tied-rank positions relative to hexagonal maps (95% CI 2.20 to 2.68; p=5.16e-57; 269/11 matched pairs favoring RNG), whereas MST did not clearly improve MTR relative to hexagonal maps. Under the tuned profile, RNG improved balanced $QE$ relative to tuned hexagonal maps by 0.0515 (95% CI 0.0318 to 0.0712; p=4.94e-07) and improved balanced MTR by 25.67 tied-rank positions (95% CI 24.77 to 26.56; p=2.17e-154; 280/0 matched pairs favoring RNG).
-
-We also added the tuned-versus-untuned MTR comparison because it directly addresses whether $QE$ optimization itself changes local BMU-neighborhood ordering. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each topology. The MTR penalty was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). We interpret this as evidence that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to local BMU-neighborhood ordering than the graph topologies do.
-
-Node utilization results support this interpretation, as the reviewer kindly pointed out. Considering this, we calculated node utilization and dead-node fraction for the same matched maps. For example, tuned RNG increased balanced node utilization by 0.0197 relative to tuned hexagonal maps (95% CI 0.0158 to 0.0235; p=1.38e-20) and reduced balanced dead-node fraction by the same amount. These node-use diagnostics indicate that the MTR result is not accompanied by reduced map utilization. We embedded the compact diagnostic summary in the main text and the full paired diagnostic and by-dataset diagnostic tables in the manuscript supplement rather than leaving them as external TSV-only outputs.
+Tuning reduced balanced $QE$ but increased balanced MTR in every topology. The MTR increase was substantially larger for hexagonal maps (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). Node-use diagnostics did not indicate reduced map utilization; tuned RNG increased balanced node utilization by 0.0197 relative to tuned hexagonal maps (95% CI 0.0158 to 0.0235; p=1.38e-20). The main text now includes a compact diagnostic summary, with full paired and dataset-level results in the supplement.
 
 ### Manuscript Amendment
 
 In Section 4.1, we added:
 
-> "For cross-topology local BMU-neighborhood ordering diagnostics, we report Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018], rather than raw topographic error. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. We rank all non-winning units by graph shortest-path distance from $b_i^{(1)}$, assigning the average ordinal rank to units tied at the same graph-distance shell. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units are in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. MTR is therefore reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts. Lower MTR indicates that the second-best prototype remains topologically close to the winning prototype. Raw topographic error is not used as the cross-topology statistic because its one-hop adjacency criterion changes with the evaluated graph's connectivity and degree structure; prior work has shown that topographic error depends on map topology, lattice statistical properties, and map design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
+> "We assess cross-topology local BMU-neighborhood ordering using Mean Tied Rank (MTR), following the tied-rank approach proposed for comparing SOMs with different topologies [@ramosROLELATTICEDIMENSIONALITY2018]. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units. Non-winning units are ranked by their graph shortest-path distance from $b_i^{(1)}$, with units in the same graph-distance shell assigned their average ordinal rank. If $b_i^{(2)}$ lies in shell $S_d$ and $L_d$ non-winning units lie in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. Lower MTR indicates that the second-best prototype is topologically closer to the winning prototype."
+
+> "We use MTR instead of raw topographic error for cross-topology comparisons because the latter classifies the second BMU according to one-hop adjacency, which varies with graph connectivity and degree. Topographic error is therefore not directly comparable across the hexagonal, MST, and RNG graphs considered here; prior work has also shown that it depends on lattice properties and map-design choices such as size [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]. MTR is reported in tied-rank positions over SOM nodes rather than feature-space units or graph-edge counts."
 
 In Section 4.3, we clarified the fixed tuned rerun design:
 
-> "To be clear, these fixed-configuration reruns are distinct from the top-$k$ Optuna summaries used for search-budget comparisons. The Optuna top-$k$ summaries represent the maximal observed performance of each algorithmic setting within the tuning campaign, whereas the fixed tuned reruns represent likely general usage. The fixed tuned configurations use the average numeric hyperparameters and modal categorical hyperparameters selected from the tuned runs, then rerun that single deployable configuration under matched dataset, seed, topology, and split keys."
+> "The Optuna and fixed-configuration analyses address different evaluation targets. Top-$k$ Optuna summaries estimate attainable performance within the search budget, whereas fixed-configuration reruns estimate the performance of a single deployable setting. Fixed tuned configurations use the mean selected numeric parameters and modal categorical parameters and are evaluated under matched dataset, seed, topology, and split keys."
 
 In Section 5.3, we revised the opening sentence to:
 
-> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. Separately, fixed tuned and untuned deployable reruns are evaluated post hoc for MTR and node use. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles."
+> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the regular-topology baseline. Fig. 5 illustrates the neighborhood structures produced by hexagonal, MST, and RNG maps. MTR, node utilization, and dead-node fraction provide post hoc topology and capacity-use diagnostics for matched fixed tuned and untuned configurations."
 
 We also added the tuned and untuned RNG diagnostic result:
 
-> "Fig. 7 and the matched fixed diagnostic benchmark address complementary questions. Fig. 7 is the Optuna-budget topology comparison and asks whether tuned RNG can achieve lower $QE$ than tuned hexagonal maps under the same optimization protocol. The matched fixed diagnostic benchmark reruns deployable fixed tuned and untuned profiles under matched dataset, seed, topology, and split keys, then evaluates the resulting final maps for MTR and node use."
+> "Figs. 7-8 estimate attainable $QE$ under a matched Optuna budget. The fixed-configuration analysis in Table \ref{tab:matched_topology_diagnostics_summary} complements these comparisons by evaluating $QE$, MTR, and node use for deployable tuned and untuned configurations under matched dataset, seed, topology, and split keys."
 
-> "The matched diagnostic benchmark indicates that the graph-topology advantage is not strictly a tuning artifact (Table \ref{tab:matched_topology_diagnostics_summary}). Under the untuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps, but the MTR result distinguished the two graph topologies: MST did not clearly improve balanced MTR relative to hexagonal maps, whereas RNG lowered balanced MTR by 2.44 tied-rank positions. Under the tuned profile, both MST and RNG improved balanced $QE$ relative to hexagonal maps. RNG was statistically comparable with MST for balanced $QE$, while lowering balanced MTR by 2.96 tied-rank positions relative to MST. Thus, MST remains a strong $QE$ topology, whereas RNG has the strongest paired $QE$/MTR profile."
+> "Under untuned configurations, MST and RNG both improved balanced $QE$ relative to hexagonal maps, while only RNG clearly lowered balanced MTR (Table \ref{tab:matched_topology_diagnostics_summary}). Under tuned configurations, MST and RNG again improved balanced $QE$ relative to hexagonal maps. No significant balanced-$QE$ difference was detected between RNG and MST, while RNG lowered balanced MTR by 2.96 tied-rank positions relative to MST. RNG therefore provided the strongest joint $QE$/MTR result, while MST remained a close competitor on $QE$."
 
 In Section 5.4, we added:
 
-> "The matched diagnostics show that this $QE$ gain has different local BMU-neighborhood ordering costs across topology families. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but worsened balanced MTR in each case. The MTR increase was much larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11), indicating that the fixed hexagonal lattice pays a substantially larger local BMU-neighborhood ordering cost to achieve lower $QE$. Node-use diagnostics indicate that the MTR result is not accompanied by reduced map utilization."
+> "Tuning improved balanced $QE$ for hexagonal, MST, and RNG configurations but increased balanced MTR in each case. The increase was substantially larger for hexagonal (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11), indicating a stronger local BMU-neighborhood ordering trade-off for the fixed lattice. Node-use diagnostics show that these MTR differences were not accompanied by lower map utilization."
 
 In the Discussion, we added:
 
-> "$QE$ and MTR summarize complementary aspects of the fitted maps: $QE$ reports vector-quantization fidelity, while MTR reports the graph-rank separation between first and second BMUs. We therefore interpret the topology comparisons using both quantities."
-
-> "In the matched diagnostics, RNG showed lower MTR than hexagonal under both untuned and tuned profiles."
-
-> "The tuned-versus-untuned comparisons also suggest a topology-specific trade-off between the $QE$ objective and MTR. Tuning improved balanced $QE$ for hexagonal, MST, and RNG, but the MTR penalty was much larger for hexagonal: tuned hexagonal maps worsened balanced MTR by 24.34 tied-rank positions relative to untuned hexagonal maps, whereas tuned MST and tuned RNG worsened balanced MTR by 1.43 and 1.11 tied-rank positions, respectively. This pattern suggests that the fixed hexagonal lattice reaches lower optimized $QE$ at a much larger cost to the local BMU-neighborhood ordering measured by MTR, while the graph topologies absorb the same $QE$-oriented tuning with a much smaller MTR cost."
+> "$QE$ and MTR characterize complementary properties of the fitted maps: $QE$ measures vector-quantization fidelity, whereas MTR measures the graph-rank separation between the first and second BMUs. RNG produced lower MTR than hexagonal maps under both untuned and tuned configurations. Tuning reduced balanced $QE$ but increased balanced MTR in all three topology families, with a substantially larger MTR increase for hexagonal maps than for MST or RNG. The $QE$-oriented tuning procedure therefore entails a stronger local-ordering trade-off for the fixed lattice than for the graph-based topologies."
 
 ## 2. Hexagonal neighborhood-radius control
 
@@ -68,13 +56,9 @@ In the Discussion, we added:
 
 ### Response
 
-We agree that neighborhood radius is an important potential confound. However, the submitted topology comparison was not a tuned MST/RNG versus default-radius hexagonal comparison. The Optuna campaign optimized `initial_radius` for every topology family, including hexagonal, using the same search interval and the same tuning budget. Therefore, the hexagonal comparator was already free to adopt a tighter neighborhood radius if that improved quantization error.
+We agree that neighborhood radius is an important potential confound. The existing Optuna design partially addresses this concern because `initial_radius` was optimized independently for every topology over the same interval and search budget. The selected hexagonal radius was smaller than the selected MST and RNG radii: 1.03, 1.46, and 1.41 under full sampling, respectively, and 1.17, 1.82, and 1.77 under random sampling.
 
-To make this clear, we revised the Optuna benchmark protocol and topology-results sections. We now state explicitly that `initial_radius` was included in the Optuna search space for hexagonal, MST, and RNG runs. Although this is not a radius-only ablation with all other hyperparameters held fixed, each topology was tuned independently over the same `initial_radius` interval. The benchmark therefore includes, in effect, a topology-specific radius sweep: the best-observed hexagonal, MST, and RNG comparisons each use the radius found for that topology under the matched Optuna budget. We also report the distilled selected radii, which show that tuning selected substantially tighter neighborhood settings than the untuned radius of 5.0 for all topology families. The tuned hexagonal comparator used the tightest radius among the topology families: 1.03 for hexagonal under full sampling, compared with 1.46 for MST and 1.41 for RNG; and 1.17 for hexagonal under random sampling, compared with 1.82 for MST and 1.77 for RNG.
-
-This means the control proposed by the reviewer is already present in the Optuna design: the hexagonal map is allowed to shrink its neighborhood radius, and it in fact does so. The revised MTR diagnostics show that this tighter optimized setting still leaves a topology-specific MTR penalty. Tuning tightens the effective neighborhood settings for hexagonal, MST, and RNG, but the MTR cost is disproportionate for the fixed hexagonal lattice: the tuned-versus-untuned diagnostics show a much larger MTR penalty for hexagonal than for MST or RNG, whereas the graph topologies absorb the same QE-oriented tuning with a smaller local BMU-neighborhood ordering cost. This rules out comparison against an untuned broad-radius hexagonal baseline, although it does not isolate radius from the other tuned hyperparameters.
-
-This addresses the radius-control concern: the observed MST/RNG $QE$ gains are not obtained by comparing graph topologies against an untuned or artificially broad hexagonal neighborhood radius. Instead, the results are best-observed-versus-best-observed comparisons under a matched Optuna budget.
+The reported MST/RNG $QE$ gains therefore do not result from comparison with a broad default-radius hexagonal map. This is not a radius-only ablation, however, and it does not isolate radius from the other optimized parameters. We now state both points explicitly in Sections 4.1 and 5.3.
 
 ### Manuscript Amendment
 
@@ -84,7 +68,7 @@ In Section 4.1, we added:
 
 In Section 5.3, we added:
 
-> "Because `initial_radius` was tuned for every topology family, the topology comparison is a best-observed-versus-best-observed comparison under the same Optuna budget rather than a comparison against an untuned hexagonal radius. The distilled deployable configurations selected tighter hexagonal radii than the graph topologies: under full sampling the selected `initial_radius` values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG, while under random sampling they were 1.17, 1.82, and 1.77, respectively. These values show that the reported MST/RNG $QE$ gains are not explained by evaluating hexagonal only at a broader default neighborhood radius, although they do not isolate radius from the other tuned hyperparameters."
+> "Because `initial_radius` was optimized for every topology over the same interval, each Optuna comparison incorporates a topology-specific radius selected under the same search budget. The distilled deployable configurations selected full-sampling `initial_radius` values of 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG; under random sampling, the corresponding values were 1.17, 1.82, and 1.77. The MST/RNG $QE$ gains therefore do not arise from comparison with a broader default-radius hexagonal map, although the joint optimization does not isolate radius from the other tuned hyperparameters."
 
 ## 3. Related work and external baselines
 
@@ -96,31 +80,23 @@ In Section 5.3, we added:
 
 ### Response
 
-We agree that the related-work coverage should be expanded and that aweSOM should be discussed. We now introduce aweSOM in the Introduction and Section 2.1 as, to our knowledge, the strongest contemporary open-source serial-online SOM implementation. This makes clear why aweSOM is a relevant serial-online comparator while also distinguishing it from FloatSOM, which is a batch SOM algorithm.
+We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. All five aweSOM attempts reached the 1800-s timeout before completing 60% of $N$ online updates on the standard speed workload. Matching FloatSOM's 10 full batch iterations would require $10N$ pointwise updates.
 
-We attempted to benchmark aweSOM on our standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map). Using aweSOM's standard training configuration and only one online update step per sample ($N$ updates), the run consistently ($n = 5$) reached our 30-minute timeout ($1800 s$), with all attempts timing out before 60% of the requested online updates had completed. A fully matched serial-online comparison would require $10N$ updates to mirror the 10 full batch iterations used in FloatSOM. As aweSOM's serial-online algorithm scales linearly with additional updates, this would require approximately 10 times as many pointwise updates as a setting that already timed out. Therefore, we proceeded with XPySOM as the external baseline. We now include this additional aweSOM benchmark information in the manuscript.
-
-Additionally, we now discuss Somoclu and GigaSOM more explicitly. Somoclu is an important CUDA/MPI SOM system, but it is not the closest baseline for the Python GPU batch-SOM workflow evaluated here. XPySOM was directly benchmarked against Somoclu in its original evaluation and reported substantial speedups in that benchmark setting. Consequently, we do not believe that additional benchmarking against Somoclu is necessary. We have added this clarification into the body of the manuscript and thank the reviewer for their insights into this.
-
-We also added a short note on GigaSOM.jl. Its flow cytometry example trained a $32 \times 32$ SOM on 1,167,129,317 cells as part of a full Julia workflow completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. Because that result differs in language, hardware, feature dimensionality, epoch count, and included workflow stages, we treat it as related systems context rather than a directly benchmarked Python/CUDA/Ray baseline.
+We now discuss Somoclu and GigaSOM as important parallel-systems references. Differences in training regime, language, hardware, and published benchmark design prevent a controlled direct comparison in the present study, and the manuscript states this limitation explicitly.
 
 ### Manuscript Amendment
 
 In the Introduction, we added:
 
-> "Recent tools have improved single-node SOM execution. In particular, aweSOM is, to our knowledge, the strongest contemporary open-source serial-online SOM implementation, combining CPU/GPU acceleration with ensemble stacking for large single-node datasets [@haAweSOMCPUGPUaccelerated2025]. However, serial-online training remains algorithmically different from batch SOM training and requires pointwise updates, so it does not address the distributed batch and out-of-core training setting targeted here."
+> "Recent tools such as aweSOM have improved single-node serial-online SOM execution through CPU/GPU acceleration and ensemble stacking [@haAweSOMCPUGPUaccelerated2025]. However, many current implementations remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration."
 
 In Section 2.1, we revised the related-work discussion to:
 
-> "Open-source SOM libraries range from lightweight implementations to systems-oriented packages. One family follows the classical serial-online regime, where the map is updated immediately after each sampled point. MiniSom is a compact Python implementation of this regime [@vettigliJustGlowingMinisom2018]. aweSOM is, to our knowledge, the strongest contemporary open-source serial-online SOM implementation: it combines CPU/GPU acceleration with statistically combined ensemble stacking, targets large single-node workloads, and reports good performance up to approximately $10^8$ points [@haAweSOMCPUGPUaccelerated2025]. Because aweSOM is serial online, its training cost scales with the number of pointwise updates rather than with batch iterations over aggregated assignments."
+> "Open-source SOM libraries range from lightweight implementations to systems-oriented packages. MiniSom is a compact Python implementation of the classical serial-online regime, in which the map is updated after each sampled point [@vettigliJustGlowingMinisom2018]. aweSOM accelerates serial-online training on CPUs and GPUs, supports ensemble stacking, and reports performance on single-node workloads containing up to approximately $10^8$ points [@haAweSOMCPUGPUaccelerated2025]."
 
-> "A second family targets batch or parallel SOM execution. XPySOM is a Python-based batch SOM implementation designed for efficient GPU-backed execution [@manciniXPySomHighPerformanceSelfOrganizing2020]. Its original evaluation directly compared against MiniSom, Somoclu, and TensorFlow SOM, and reported substantial speedups over the strongest open-source multicore and GPU-accelerated comparators in that benchmark setting [@manciniXPySomHighPerformanceSelfOrganizing2020]."
+> "XPySOM instead implements GPU-accelerated batch SOM training and is the closest executable comparator to FloatSOM's Python/GPU batch-training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]. Its original evaluation compared XPySOM with MiniSom, Somoclu, and TensorFlow SOM and reported order-of-magnitude speedups in that benchmark setting [@manciniXPySomHighPerformanceSelfOrganizing2020]. Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020], although differences in execution model, language, hardware, and published benchmark design prevent a controlled comparison with the Python/CUDA/Ray workflow evaluated here."
 
-We also added:
-
-> "For executable external benchmarking, this training-regime distinction determines which systems are directly comparable. We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations, including Somoclu. We also attempted to benchmark aweSOM because it is the strongest serial-online comparator we are aware of. On our standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), using aweSOM's standard training configuration and only one online update step per sample ($N$ updates), the run consistently reached our 30-minute timeout across five attempts ($n=5$; 1800 s each), with all attempts timing out before 60% of the requested online updates had completed. A fully matched serial-online comparison would require $10N$ updates to mirror the 10 full batch iterations used in FloatSOM. Because serial-online training scales with the number of pointwise updates, this would require approximately 10 times as many updates as a setting that already timed out, so we proceeded with XPySOM as the executable external baseline."
-
-> "GigaSOM.jl reports a large-scale Julia workflow that trained a $32 \times 32$ SOM on 1,167,129,317 cells as part of a full analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. Because that result differs in language, hardware, feature dimensionality, epoch count, and included workflow stages, we treat it as related systems context rather than a directly benchmarked Python/CUDA/Ray baseline."
+> "The training regime also limits direct comparison with aweSOM: serial-online cost scales with the number of pointwise updates, whereas batch SOM training aggregates assignments over each iteration. We attempted to run aweSOM on the standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching the 10 full batch iterations used for FloatSOM would require $10N$ pointwise updates. We therefore retain XPySOM as the executable external baseline and treat aweSOM, Somoclu, and GigaSOM as related systems context."
 
 ## 4. Numbers should be embedded in the paper
 
@@ -142,7 +118,7 @@ In the Supplementary Tables section, we replaced the path-only captions with emb
 
 For the deployment comparison, the revised caption now reads:
 
-> "Supplementary Table S8. Figure 13 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$. Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval."
+> "Supplementary Table S8. Figure 14 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$. Rows list per-dataset and `GLOBAL_OVERALL` entries with the plotted median percent change and 95% confidence interval."
 
 ## 5. Deployment comparison separates topology, tuning, and implementation
 
@@ -154,19 +130,19 @@ For the deployment comparison, the revised caption now reads:
 
 ### Response
 
-We agree that Fig. 13 should not be read as attributing the full gain to topology alone. Our intent was to show the integrated deployment comparison between a practical untuned XPySOM run and the recommended tuned FloatSOM RNG configuration. The submitted manuscript already separates several components: Section 5.1 calibrates FloatSOM against XPySOM under matched hexagonal settings, Section 5.3 compares topologies inside FloatSOM under a matched Optuna budget, and Section 5.4 evaluates tuning relative to an untuned reference. However, Section 7 did not state this decomposition clearly enough.
+We agree that Fig. 14 should not be read as attributing the full gain to topology alone. It presents an integrated deployment comparison between an untuned XPySOM run and the recommended tuned FloatSOM RNG configuration. The component effects are evaluated separately in Sections 5.1, 5.3, and 5.4, but the submitted Section 7 did not make this decomposition sufficiently clear.
 
-We revised Section 7 and the Fig. 13 caption so that the 14.5%, 9.1%, and 22.5% improvements are described as an integrated deployment effect, not a topology-only effect. We also point readers to the tuned-hexagonal and tuned-MST deployment figures in the Supplementary material so that the effect of topology can be read separately from the effect of tuning and implementation.
+We revised Section 7 and the Fig. 14 caption so that the 14.5%, 9.1%, and 22.5% improvements are described as an integrated deployment effect rather than a topology-only effect. We also point readers to the tuned-hexagonal and tuned-MST deployment figures in the Supplementary material.
 
 ### Manuscript Amendment
 
 In Section 7, we revised the opening paragraph to:
 
-> "Fig. 13 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice [@manciniXPySomHighPerformanceSelfOrganizing2020]. The components are separated in the preceding analyses: Section 5.1 calibrates FloatSOM and XPySOM under matched hexagonal settings, Section 5.3 compares hexagonal, MST, and RNG inside FloatSOM under the same Optuna budget, and Section 5.4 evaluates tuned configurations against the untuned reference. Supplementary Figures S12-S13 provide the corresponding tuned hexagonal and tuned MST deployment comparisons against untuned hexagonal XPySOM."
+> "Fig. 14 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice [@manciniXPySomHighPerformanceSelfOrganizing2020]. The components are separated in the preceding analyses: Section 5.1 calibrates FloatSOM and XPySOM under matched hexagonal settings, Section 5.3 compares hexagonal, MST, and RNG inside FloatSOM under the same Optuna budget, and Section 5.4 evaluates tuned configurations against the untuned reference. Supplementary Figures S7-S8 provide the corresponding tuned hexagonal and tuned MST deployment comparisons against untuned hexagonal XPySOM."
 
-We revised the Fig. 13 caption to:
+We revised the Fig. 14 caption to:
 
-> "Figure 13. Integrated deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM RNG. The comparison intentionally combines implementation, hyperparameter tuning, and topology choice and should not be interpreted as attributing the full difference to topology alone."
+> "Figure 14. Integrated deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM RNG. The comparison intentionally combines implementation, hyperparameter tuning, and topology choice and should not be interpreted as attributing the full difference to topology alone."
 
 ## 6. MST and RNG novelty claims
 
@@ -208,7 +184,7 @@ In the Discussion, we replaced broad "novel graph-based topology" wording with:
 
 and:
 
-> "This manuscript presents FloatSOM as a unified large-scale SOM framework that combines scalable training-time graph topology support with sampling options, optimised hyperparameters, and distributed out-of-memory GPU execution."
+> "FloatSOM therefore provides a unified large-scale SOM framework that combines scalable training-time graph topology support with sampling options, optimized hyperparameters, and distributed out-of-memory GPU execution."
 
 ## 7. Runtime cost of RNG recommendation
 
@@ -218,13 +194,13 @@ and:
 
 ### Response
 
-We agree that any recommendation of RNG must be paired with its runtime cost. No additional end-to-end benchmarking is needed to answer this reviewer request because the manuscript already reports this cost in Fig. 12 and the topology-runtime discussion: at grid size 64, the 8-GPU mean runtime was 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG, corresponding to 8.19x and 27.07x the hexagonal runtime for MST and RNG, respectively. We revised the recommendation/discussion text so the cost is visible at the point where RNG is recommended, and specifically frame the caveat as most important for very large grids.
+We agree that any recommendation of RNG must be paired with its runtime cost. Fig. 13 reports this cost: at grid size 64, the 8-GPU mean runtime was 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG, corresponding to 8.19x and 27.07x the hexagonal runtime for MST and RNG, respectively. We now repeat these values at the point where RNG is recommended and make the grid-size limitation explicit.
 
 ### Manuscript Amendment
 
-In Section 8.5, we added:
+In Section 8, we added:
 
-> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default, and MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
+> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default. MST is a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
 
 ## 8. Multiple-comparison correction
 
@@ -242,7 +218,7 @@ We also audited the figure-level significance annotations against the corrected 
 
 In Section 4.4, we added:
 
-> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and dataset-level significance counts use these adjusted q-values. For the topology comparisons in Figs. 6-7, the adjustment family is defined exactly as the reviewer-specified topology family: 42 non-global dataset-level tests per comparator, corresponding to 14 datasets across $QE_B$, $QE_H$, and $QE_T$, computed separately for hexagonal-versus-MST and hexagonal-versus-RNG. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
+> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and significance counts use these adjusted q-values. For each topology contrast in Figs. 6-7, adjustment is applied across 42 dataset-level tests: 14 datasets evaluated on $QE_B$, $QE_H$, and $QE_T$. Hexagonal-versus-MST and hexagonal-versus-RNG constitute separate adjustment families. Global pooled tests are reported as overall summaries and are not included in these families; they therefore retain raw p-values only."
 
 In the Fig. 4 caption, we added:
 
@@ -280,7 +256,7 @@ In Section 4.1, we added:
 
 In Section 5.3, we added:
 
-> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the primary regular-topology baseline; Fig. 5 provides a qualitative illustration of the neighborhood structures produced by hexagonal, MST, and RNG. Separately, fixed tuned and untuned deployable reruns are evaluated post hoc for MTR and node use. Node utilization and dead-node fraction are reported as confirmatory capacity-use checks under matched tuned and untuned profiles."
+> "Topology comparisons retain $QE$ as the primary optimized endpoint, with the Optuna hexagonal batch setting as the regular-topology baseline. Fig. 5 illustrates the neighborhood structures produced by hexagonal, MST, and RNG maps. MTR, node utilization, and dead-node fraction provide post hoc topology and capacity-use diagnostics for matched fixed tuned and untuned configurations."
 
 We also embedded the paired diagnostic table:
 

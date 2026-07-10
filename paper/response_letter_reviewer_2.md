@@ -10,13 +10,13 @@ We thank the reviewer for the careful and constructive assessment. We agree with
 
 ### Response
 
-We agree that the direct MST-versus-RNG comparison is load-bearing for any topology-ordering claim. The submitted version established that MST and RNG both outperform the hexagonal baseline, but the direct MST-versus-RNG comparison was left in the supplement. In the revision, we have promoted that direct comparison to the main topology-results text as Fig. 8 and narrowed the conclusion so that RNG is described as strongest only when the paired $QE$ evidence is interpreted together with the matched MTR diagnostics, while MST remains a strong and often close competitor.
+We agree that the direct MST-versus-RNG comparison is necessary to support a topology-ordering claim. We have promoted that comparison from the supplement to the main topology results as Fig. 8. We also narrowed the conclusion: MST and RNG are close competitors on $QE$, while the matched MTR diagnostics provide the additional evidence favoring RNG.
 
 ### Manuscript Amendment
 
 In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
 
-> "We also directly compare MST and RNG in Fig. 8, rather than inferring their ordering only through separate hexagonal-baseline contrasts. The direct full-sampling Optuna comparison shows that the two graph topologies are close on $QE$: neither topology uniformly dominates across balanced, holdout, and train endpoints. This direct result supports a qualified topology interpretation. MST remains a strong $QE$ topology, while RNG is preferred when the paired $QE$ evidence is interpreted together with the matched MTR diagnostics below."
+> "Fig. 8 directly compares MST and RNG under the full-sampling Optuna protocol. The graph topologies are close on $QE$, and neither uniformly dominates across balanced, holdout, and train endpoints. MST therefore remains a strong $QE$ topology; the MTR diagnostics below provide additional evidence for distinguishing the two graph topologies."
 
 ## 2. Section 6.2 versus Section 6.3 scaling language
 
@@ -48,17 +48,19 @@ In Section 6.2.2, we also revised the Fig. S6 sentence to state that Fig. 12 and
 
 ### Response
 
-We agree that the manuscript should either benchmark these systems or explicitly justify why they are not directly benchmarked. In revision, we have expanded the related-work and baseline-selection discussion. We use XPySOM as the executable external baseline because it is the closest Python GPU batch-SOM comparator and because the original XPySOM study directly benchmarked against earlier open-source SOM implementations, including Somoclu, reporting order-of-magnitude speedups in the relevant batch-SOM comparison setting. We also attempted to benchmark aweSOM as a recent strong serial-online comparator, but it timed out on our standard speed workload even under a minimal one-update-per-sample configuration. We discuss GigaSOM as related large-scale systems context, but not as a directly matched Python/CUDA/Ray baseline because its published large-scale result differs in language, hardware, feature dimensionality, epoch count, and included workflow stages.
+We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. XPySOM most closely matches FloatSOM's Python/GPU batch-training pathway, while differences in execution model, language, hardware, and published benchmark design prevent controlled direct comparisons with Somoclu and GigaSOM in the present study. The manuscript now states this limitation explicitly.
 
 ### Manuscript Amendment
 
 In Section 2.1, we added the baseline-selection rationale:
 
-> "For executable external benchmarking, this training-regime distinction determines which systems are directly comparable. We use XPySOM as the direct executable external baseline because it is the closest Python GPU batch-SOM comparator and because the XPySOM study already benchmarks against earlier open-source SOM implementations, including Somoclu. We therefore did not rerun Somoclu here, since the directly relevant XPySOM benchmark already reports order-of-magnitude speedups over Somoclu in the batch-SOM comparison setting. We also attempted to benchmark aweSOM because it is the strongest serial-online comparator we are aware of. On our standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), using aweSOM's standard training configuration and only one online update step per sample ($N$ updates), the run consistently reached our 30-minute timeout across five attempts ($n=5$; 1800 s each), with all attempts timing out before 60% of the requested online updates had completed. A fully matched serial-online comparison would require $10N$ updates to mirror the 10 full batch iterations used in FloatSOM. Because serial-online training scales with the number of pointwise updates, this would require approximately 10 times as many updates as a setting that already timed out, so we proceeded with XPySOM as the executable external baseline."
+> "XPySOM instead implements GPU-accelerated batch SOM training and is the closest executable comparator to FloatSOM's Python/GPU batch-training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]. Its original evaluation compared XPySOM with MiniSom, Somoclu, and TensorFlow SOM and reported order-of-magnitude speedups in that benchmark setting [@manciniXPySomHighPerformanceSelfOrganizing2020]. Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020], although differences in execution model, language, hardware, and published benchmark design prevent a controlled comparison with the Python/CUDA/Ray workflow evaluated here."
+
+> "The training regime also limits direct comparison with aweSOM: serial-online cost scales with the number of pointwise updates, whereas batch SOM training aggregates assignments over each iteration. We attempted to run aweSOM on the standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching the 10 full batch iterations used for FloatSOM would require $10N$ pointwise updates. We therefore retain XPySOM as the executable external baseline and treat aweSOM, Somoclu, and GigaSOM as related systems context."
 
 We also added the GigaSOM context:
 
-> "GigaSOM.jl reports a large-scale Julia workflow that trained a $32 \times 32$ SOM on 1,167,129,317 cells as part of a full analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster. Because that result differs in language, hardware, feature dimensionality, epoch count, and included workflow stages, we treat it as related systems context rather than a directly benchmarked Python/CUDA/Ray baseline."
+> "For example, GigaSOM.jl reports training a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]."
 
 ## 4. Multiple-comparison correction
 
@@ -74,7 +76,7 @@ We agree that the statistical reporting should state the correction policy. The 
 
 In Section 4.4, we added:
 
-> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and dataset-level significance counts use these adjusted q-values. For the topology comparisons in Figs. 6-7, the adjustment family is defined exactly as the reviewer-specified topology family: 42 non-global dataset-level tests per comparator, corresponding to 14 datasets across $QE_B$, $QE_H$, and $QE_T$, computed separately for hexagonal-versus-MST and hexagonal-versus-RNG. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family; these pooled rows therefore retain raw p-values only."
+> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and significance counts use these adjusted q-values. For each topology contrast in Figs. 6-7, adjustment is applied across 42 dataset-level tests: 14 datasets evaluated on $QE_B$, $QE_H$, and $QE_T$. Hexagonal-versus-MST and hexagonal-versus-RNG constitute separate adjustment families. Global pooled tests are reported as overall summaries and are not included in these families; they therefore retain raw p-values only."
 
 Figure captions and Supplementary Table S7 were updated to use q-value language for dataset-level significance markers.
 
@@ -88,11 +90,11 @@ Figure captions and Supplementary Table S7 were updated to use q-value language 
 
 We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 14 is described as an integrated deployment comparison rather than a pure topology-only attribution.
 
-To test whether the diagnostic conclusions depended on the execution path, we added a matched execution-path benchmark comparing the local CuPy pathway with the Ray streaming pathway under identical datasets, seeds, topologies, and fixed tuned configurations. The Ray streaming and out-of-memory pathway behaves the same as local CuPy: no comparison was significant either by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths. We placed this diagnostic after the tuning and stability results, before the speed-scaling section, so the manuscript then transitions to Ray-pathway performance benchmarking.
+To test whether the diagnostic conclusions depended on the execution path, we added a matched benchmark comparing local CuPy with Ray streaming under identical datasets, seeds, topologies, and fixed tuned configurations. No comparison reached statistical significance before or after Benjamini-Hochberg correction, and the estimated differences were small (Supplementary Table S14). We report this diagnostic after the tuning and stability results and before the Ray-pathway performance benchmarks.
 
 ### Manuscript Amendment
 
-In Section 4.3, we state:
+In Section 4.1, we state:
 
 > "The reported runs used the standard in-memory batch path rather than the Ray-distributed execution stack."
 
@@ -106,7 +108,7 @@ In Section 7, we revised the opening framing:
 
 In Section 5.5, we added:
 
-> "The Optuna quality, topology, and tuning analyses above were run through the in-memory pathway. To check whether those diagnostics changed under the Ray streaming and out-of-memory pathway, we repeated the matched tuned diagnostics with identical datasets, seeds, topologies, and fixed tuned configurations. The Ray streaming and out-of-memory pathway behaves the same as local CuPy: no comparison was significant by raw p-value or after Benjamini-Hochberg correction (Supplementary Table S14). The small residual numerical differences are likely due to differences in floating-point handling and accumulation order between the two execution paths. For the next component of the evaluation, performance benchmarking, we therefore use the Ray pathway to test speed and scaling."
+> "The Optuna quality, topology, and tuning analyses above used the in-memory pathway. We repeated the matched tuned diagnostics through the Ray streaming and out-of-memory pathway using identical datasets, seeds, topologies, and fixed tuned configurations. No execution-path comparison reached statistical significance before or after Benjamini-Hochberg correction, and the estimated differences were small (Supplementary Table S14). The remaining numerical differences may reflect floating-point handling and accumulation order. The performance benchmarks below use the Ray pathway to evaluate speed and scaling."
 
 We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
 
