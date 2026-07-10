@@ -16,7 +16,7 @@ We agree that the direct MST-versus-RNG comparison is necessary to support a top
 
 In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
 
-> "Fig. 8 directly compares MST and RNG under the full-sampling Optuna protocol. The graph topologies are close on $QE$, and neither uniformly dominates across balanced, holdout, and train endpoints. MST therefore remains a strong $QE$ topology; the MTR diagnostics below provide additional evidence for distinguishing the two graph topologies."
+> "Fig. 8 directly compares MST and RNG under full sampling. The two graph topologies are close on $QE$, and neither dominates across all three endpoints."
 
 ## 2. Section 6.2 versus Section 6.3 scaling language
 
@@ -54,13 +54,17 @@ We agree that the baseline selection required clearer justification. We expanded
 
 In Section 2.1, we added the baseline-selection rationale:
 
-> "XPySOM instead implements GPU-accelerated batch SOM training and is the closest executable comparator to FloatSOM's Python/GPU batch-training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]. Its original evaluation compared XPySOM with MiniSom, Somoclu, and TensorFlow SOM and reported order-of-magnitude speedups in that benchmark setting [@manciniXPySomHighPerformanceSelfOrganizing2020]. Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020], although differences in execution model, language, hardware, and published benchmark design prevent a controlled comparison with the Python/CUDA/Ray workflow evaluated here."
+> "Open-source SOM libraries range from lightweight implementations to systems-oriented packages. MiniSom implements classical serial-online training [@vettigliJustGlowingMinisom2018], while aweSOM adds CPU/GPU acceleration and ensemble stacking for large single-node workloads [@haAweSOMCPUGPUaccelerated2025]. XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]."
 
-> "The training regime also limits direct comparison with aweSOM: serial-online cost scales with the number of pointwise updates, whereas batch SOM training aggregates assignments over each iteration. We attempted to run aweSOM on the standard speed workload ($10^7$ samples, 50 dimensions, and a $32 \times 32$ map), but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching the 10 full batch iterations used for FloatSOM would require $10N$ pointwise updates. We therefore retain XPySOM as the executable external baseline and treat aweSOM, Somoclu, and GigaSOM as related systems context."
+> "Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]. GigaSOM.jl, for example, trained a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. These systems differ from FloatSOM in training regime, execution model, language, or hardware, so we treat their published results as systems context rather than controlled benchmarks."
+
+In Section 4.2, we added the baseline selection and aweSOM attempt:
+
+> "XPySOM was selected as the executable external baseline because it most closely matches FloatSOM's Python/GPU batch-training regime. We also attempted aweSOM on the standard speed workload, but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching FloatSOM's 10 batch iterations would require $10N$ pointwise updates, so aweSOM was not included in the timed comparison."
 
 We also added the GigaSOM context:
 
-> "For example, GigaSOM.jl reports training a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]."
+> "GigaSOM.jl, for example, trained a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]."
 
 ## 4. Multiple-comparison correction
 
@@ -76,7 +80,7 @@ We agree that the statistical reporting should state the correction policy. The 
 
 In Section 4.4, we added:
 
-> "For dataset-level families of related paired tests, we compute Benjamini-Hochberg adjusted q-values in addition to raw paired $t$-test p-values. Dataset-level figure significance markers and significance counts use these adjusted q-values. For each topology contrast in Figs. 6-7, adjustment is applied across 42 dataset-level tests: 14 datasets evaluated on $QE_B$, $QE_H$, and $QE_T$. Hexagonal-versus-MST and hexagonal-versus-RNG constitute separate adjustment families. Global pooled tests are reported as overall summaries and are not included in these families; they therefore retain raw p-values only."
+> "We report Benjamini-Hochberg q-values alongside raw p-values for related dataset-level tests, and use q-values for figure markers and significance counts. Each topology contrast in Figs. 6-7 forms a separate family of 42 tests (14 datasets across $QE_B$, $QE_H$, and $QE_T$). Pooled overall tests are reported separately with raw p-values."
 
 Figure captions and Supplementary Table S7 were updated to use q-value language for dataset-level significance markers.
 
@@ -104,11 +108,11 @@ In Section 4.2, we state:
 
 In Section 7, we revised the opening framing:
 
-> "Fig. 14 is an integrated deployment comparison rather than a topology-only attribution. It compares the untuned hexagonal XPySOM workflow against the recommended tuned FloatSOM RNG workflow, so the reported difference includes implementation, hyperparameter tuning, and topology choice."
+> "Fig. 14 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects [@manciniXPySomHighPerformanceSelfOrganizing2020]."
 
 In Section 5.5, we added:
 
-> "The Optuna quality, topology, and tuning analyses above used the in-memory pathway. We repeated the matched tuned diagnostics through the Ray streaming and out-of-memory pathway using identical datasets, seeds, topologies, and fixed tuned configurations. No execution-path comparison reached statistical significance before or after Benjamini-Hochberg correction, and the estimated differences were small (Supplementary Table S14). The remaining numerical differences may reflect floating-point handling and accumulation order. The performance benchmarks below use the Ray pathway to evaluate speed and scaling."
+> "The quality analyses above used the in-memory pathway. Repeating the tuned diagnostics through Ray streaming with matched data and configurations produced small differences, none of which reached significance before or after Benjamini-Hochberg correction (Supplementary Table S14). The remaining differences may reflect floating-point accumulation order. The following speed benchmarks use the Ray pathway."
 
 We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
 
@@ -142,7 +146,7 @@ We agree that the RNG recommendation must be explicitly conditional on runtime b
 
 In Section 8, we revised the recommendation to:
 
-> "Overall, these results support a practical deployment strategy that uses RNG with topology-aware tuned configurations when $QE$ is the priority and topology-construction overhead is acceptable. That recommendation is conditional on grid size. In the grid-size scaling benchmark, the largest tested grid size (64) required 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG on 8 GPUs, making MST 8.19x and RNG 27.07x slower than hexagonal at that point. For workloads dominated by very large grids, hexagonal remains the appropriate throughput-oriented default. MST is a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high."
+> "RNG is the preferred topology when $QE$ is the priority and topology overhead is acceptable, but this recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively. Hexagonal is therefore the throughput-oriented choice for very large grids, while MST provides a compromise when a graph topology is desired."
 
 ## 8. Discussion structure
 
@@ -152,7 +156,7 @@ In Section 8, we revised the recommendation to:
 
 ### Response
 
-We agree that the Discussion should read as a continuous argument rather than a list of short independent subsections. In revision, we consolidated the Discussion into longer thematic paragraphs that preserve the logical sequence: sampling, topology, tuning, stability, and systems limits. The revised Discussion keeps the same claims but makes the transitions explicit and reduces fragmentation.
+We agree that the Discussion should read as a continuous argument rather than a list of short independent subsections. We consolidated it into a continuous sequence covering sampling, topology, tuning, stability, and systems limits, while removing repeated interpretation already given in the Results.
 
 ### Manuscript Amendment
 
