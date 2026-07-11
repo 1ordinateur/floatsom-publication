@@ -138,7 +138,7 @@
       }
     </style>
   </defs>
-  <text class="st44" transform="translate(39.3 107.95)"><tspan x="0" y="0">Figure 13: Topology Runtime Comparison (8 GPUs, Full Batch)</tspan></text>
+  <text class="st44" transform="translate(39.3 107.95)"><tspan x="0" y="0">Figure 14: Topology Runtime Comparison (8 GPUs, Full Batch)</tspan></text>
   <g>
     <g id="panel_r0_c0_figure_1">
       <g id="panel_r0_c0_axes_1">

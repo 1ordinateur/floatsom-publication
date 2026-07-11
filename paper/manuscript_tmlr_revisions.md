@@ -363,6 +363,8 @@ Tuned & +0.064 & +0.052 & -0.012 & +22.71 & +25.67 & +2.96 \\
 
 #### 5.4.1 Performance Gains from Hyperparameter Tuning
 
+Having shown that the graph-topology effects persist when radius is varied under a common tuned non-radius configuration, we next quantify the broader effect of complete topology-specific tuning relative to the untuned reference.
+
 Fig. 10 compares the fixed tuned and untuned configurations using pooled topology-level $QE$ summaries; topology-stratified results are provided in Supplementary Fig. S5.
 
 ![Figure 10](assets_manual/figures/fig_10.svg)

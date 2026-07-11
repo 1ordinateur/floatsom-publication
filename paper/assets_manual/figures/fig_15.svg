@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 3021.7 1916.43">
-  <!-- Generator: Adobe Illustrator 30.3.0, SVG Export Plug-In . SVG Version: 2.1.3 Build 182)  -->
+  <!-- Generator: Adobe Illustrator 30.4.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 226)  -->
   <defs>
     <style>
       .st0, .st1, .st2, .st3 {
@@ -124,60 +124,63 @@
       }
 
       .st54 {
-        font-family: ArialMT, Arial;
         font-size: 36.33px;
       }
 
-      .st54, .st55, .st56, .st57, .st58 {
+      .st54, .st55, .st56, .st57, .st58, .st59 {
         isolation: isolate;
       }
 
-      .st54, .st57 {
+      .st54, .st56 {
+        font-family: ArialMT, Arial;
+      }
+
+      .st54, .st58 {
         fill: #2f2f2f;
       }
 
-      .st59 {
+      .st60 {
         clip-path: url(#clippath-79);
       }
 
-      .st60 {
+      .st61 {
         clip-path: url(#clippath-138);
       }
 
-      .st61 {
+      .st62 {
         clip-path: url(#clippath-75);
       }
 
-      .st62 {
+      .st63 {
         clip-path: url(#clippath-172);
       }
 
-      .st63 {
+      .st64 {
         clip-path: url(#clippath-15);
       }
 
-      .st64 {
+      .st65 {
         clip-path: url(#clippath-33);
       }
 
-      .st65 {
+      .st66 {
         clip-path: url(#clippath-61);
       }
 
-      .st66 {
+      .st67 {
         clip-path: url(#clippath-116);
       }
 
-      .st55, .st67, .st57 {
+      .st55, .st56, .st58 {
         font-size: 40px;
       }
 
-      .st55, .st57, .st58 {
+      .st55, .st58, .st59 {
         font-family: Arial-BoldMT, Arial;
         font-weight: 700;
       }
 
-      .st55, .st58 {
+      .st55, .st59 {
         fill: #1f1f1f;
       }
 
@@ -377,10 +380,6 @@
 
       .st109 {
         clip-path: url(#clippath-27);
-      }
-
-      .st67 {
-        font-family: MyriadPro-Regular, 'Myriad Pro';
       }
 
       .st110 {
@@ -842,7 +841,7 @@
         clip-path: url(#clippath-178);
       }
 
-      .st58 {
+      .st59 {
         font-size: 50px;
       }
 
@@ -1633,29 +1632,35 @@
       <rect class="st21" x="346.38" y="183.78" width="737.04" height="668.1"/>
     </clipPath>
   </defs>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <text class="st58" transform="translate(9.71 61.43)"><tspan x="0" y="0">Figure 14: XPySOM (Default) v FloatSOM RNG</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <text class="st59" transform="translate(9.71 61.43)"><tspan x="0" y="0">Figure 15: XPySOM (Default) v FloatSOM RNG</tspan></text>
+          </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <text class="st55" transform="translate(355.1 132.43)"><tspan x="0" y="0">A</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <text class="st55" transform="translate(355.1 132.43)"><tspan x="0" y="0">A</tspan></text>
+          </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <text class="st57" transform="translate(495.54 132.43)"><tspan x="0" y="0">Balanced QE</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <text class="st58" transform="translate(495.54 132.43)"><tspan x="0" y="0">Balanced QE</tspan></text>
+          </g>
         </g>
       </g>
     </g>
@@ -1743,7 +1748,7 @@
       <g class="st176">
         <path class="st36" d="M1206.37,561.21h930.04"/>
       </g>
-      <g class="st63">
+      <g class="st64">
         <path class="st36" d="M1206.37,604.6h930.04"/>
       </g>
       <g class="st208">
@@ -1800,7 +1805,7 @@
       <g class="st190">
         <path id="panel_r0_c1_C0_0_8272f47ff19" class="st2" d="M1379.14,614.34c2.58,0,5.07-1.02,6.88-2.85,1.83-1.83,2.85-4.3,2.85-6.89s-1.02-5.07-2.85-6.89c-1.83-1.83-4.3-2.85-6.88-2.85s-5.07,1.02-6.88,2.85c-1.83,1.83-2.85,4.3-2.85,6.89s1.02,5.07,2.85,6.89c1.83,1.83,4.3,2.85,6.88,2.85Z"/>
       </g>
-      <g class="st64">
+      <g class="st65">
         <path id="panel_r0_c1_C0_0_8272f47ff110" class="st39" d="M1355.91,657.73c2.58,0,5.07-1.02,6.88-2.85,1.83-1.83,2.85-4.3,2.85-6.89s-1.02-5.07-2.85-6.89c-1.83-1.83-4.3-2.85-6.88-2.85s-5.07,1.02-6.88,2.85c-1.83,1.83-2.85,4.3-2.85,6.89s1.02,5.07,2.85,6.89c1.83,1.83,4.3,2.85,6.88,2.85Z"/>
       </g>
       <g class="st9">
@@ -1897,20 +1902,24 @@
       <path id="panel_r0_c1_Arial-BoldMT-2a30" class="st0" d="M1495.35,802.43l-2.3-1.79c.73-.82,1.48-1.61,2.28-2.36.31-.3.51-.5.59-.59-.26-.05-.98-.21-2.17-.5-.87-.21-1.42-.38-1.71-.48l.9-2.68c1.34.54,2.52,1.14,3.55,1.79-.24-1.65-.36-3-.36-4.05h2.72c0,.73-.13,2.1-.41,4.08.21-.07.65-.29,1.3-.6.91-.42,1.76-.77,2.53-1.07l.81,2.76c-1.12.25-2.43.5-3.91.75l1.83,2.05c.36.42.66.75.87,1.02l-2.33,1.55-2.05-3.39c-.62,1.09-1.32,2.27-2.13,3.51h-.01Z"/>
       <path id="panel_r0_c1_Arial-BoldMT-2a31" class="st0" d="M1503.44,802.43l-2.3-1.79c.73-.82,1.48-1.61,2.28-2.36.31-.3.51-.5.59-.59-.26-.05-.98-.21-2.17-.5-.87-.21-1.42-.38-1.71-.48l.9-2.68c1.34.54,2.52,1.14,3.55,1.79-.24-1.65-.36-3-.36-4.05h2.72c0,.73-.13,2.1-.41,4.08.21-.07.65-.29,1.3-.6.91-.42,1.76-.77,2.53-1.07l.81,2.76c-1.12.25-2.43.5-3.91.75l1.83,2.05c.36.42.66.75.87,1.02l-2.33,1.55-2.05-3.39c-.62,1.09-1.32,2.27-2.13,3.51h-.01Z"/>
     </g>
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <text class="st55" transform="translate(1191.37 129.51)"><tspan x="0" y="0">B</tspan></text>
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <text class="st55" transform="translate(1191.37 129.51)"><tspan x="0" y="0">B</tspan></text>
+            </g>
           </g>
         </g>
       </g>
     </g>
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <text class="st57" transform="translate(1324.65 129.51)"><tspan x="0" y="0">Holdout QE</tspan></text>
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <text class="st58" transform="translate(1324.65 129.51)"><tspan x="0" y="0">Holdout QE</tspan></text>
+            </g>
           </g>
         </g>
       </g>
@@ -1975,7 +1984,7 @@
           <path class="st36" d="M2887.04,853.39"/>
         </g>
       </g>
-      <g class="st65">
+      <g class="st66">
         <g>
           <path class="st36" d="M2988.42,182.27"/>
           <path class="st36" d="M2988.42,853.39"/>
@@ -2020,7 +2029,7 @@
       <g class="st165">
         <path class="st36" d="M2260.92,735.72h740.37"/>
       </g>
-      <g class="st61">
+      <g class="st62">
         <path class="st36" d="M2260.92,779.3h740.37"/>
       </g>
       <g class="st5">
@@ -2035,7 +2044,7 @@
           <path class="st16" d="M2261.51,796.23"/>
         </g>
       </g>
-      <g class="st59">
+      <g class="st60">
         <path id="panel_r1_c0_C0_0_2c3ce07ad5" class="st2" d="M2339.84,222.56c2.59,0,5.08-1.04,6.92-2.87,1.83-1.83,2.86-4.32,2.86-6.91s-1.03-5.09-2.86-6.91c-1.83-1.83-4.32-2.87-6.92-2.87s-5.08,1.04-6.92,2.87c-1.83,1.83-2.86,4.32-2.86,6.91s1.03,5.09,2.86,6.91c1.83,1.83,4.32,2.87,6.92,2.87Z"/>
       </g>
       <g class="st52">
@@ -2175,20 +2184,24 @@
       <path id="panel_r1_c0_Arial-BoldMT-2a43" class="st0" d="M2504.18,803.71l-2.31-1.79c.73-.82,1.5-1.62,2.3-2.37.31-.3.51-.5.58-.59-.25-.05-.97-.21-2.17-.51-.87-.21-1.44-.38-1.71-.48l.9-2.68c1.33.54,2.52,1.14,3.57,1.79-.24-1.66-.36-3.02-.36-4.07h2.72c0,.75-.14,2.11-.41,4.09.21-.07.64-.29,1.32-.6.92-.42,1.77-.78,2.53-1.07l.81,2.77c-1.12.25-2.44.51-3.93.75l1.83,2.07c.38.42.66.77.87,1.02l-2.34,1.55-2.07-3.41c-.61,1.11-1.33,2.28-2.14,3.52h.02-.01Z"/>
       <path id="panel_r1_c0_Arial-BoldMT-2a44" class="st0" d="M2512.3,803.71l-2.31-1.79c.73-.82,1.5-1.62,2.3-2.37.31-.3.51-.5.58-.59-.25-.05-.97-.21-2.17-.51-.87-.21-1.44-.38-1.71-.48l.9-2.68c1.33.54,2.52,1.14,3.57,1.79-.24-1.66-.36-3.02-.36-4.07h2.72c0,.75-.14,2.11-.41,4.09.21-.07.64-.29,1.32-.6.92-.42,1.77-.78,2.53-1.07l.81,2.77c-1.12.25-2.44.51-3.93.75l1.83,2.07c.38.42.66.77.87,1.02l-2.34,1.55-2.07-3.41c-.61,1.11-1.33,2.28-2.14,3.52h.02-.01Z"/>
     </g>
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <text class="st55" transform="translate(2260.07 129.51)"><tspan x="0" y="0">C</tspan></text>
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <text class="st55" transform="translate(2260.0701 129.51)"><tspan x="0" y="0">C</tspan></text>
+            </g>
           </g>
         </g>
       </g>
     </g>
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <text class="st57" transform="translate(2375.52 129.51)"><tspan x="0" y="0">Train QE</tspan></text>
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <text class="st58" transform="translate(2375.52 129.51)"><tspan x="0" y="0">Train QE</tspan></text>
+            </g>
           </g>
         </g>
       </g>
@@ -2271,7 +2284,7 @@
   <path id="panel_r1_c1_ArialMT-351" d="M1302.87,1425.15l3.25-.28c.24,1.58.8,2.77,1.68,3.57.88.8,1.93,1.19,3.17,1.19,1.49,0,2.75-.56,3.78-1.68,1.03-1.13,1.55-2.62,1.55-4.47s-.5-3.16-1.49-4.18-2.29-1.54-3.9-1.54c-1,0-1.9.23-2.7.68-.8.45-1.43,1.04-1.89,1.76l-2.9-.38,2.44-12.95h12.54v2.96h-10.06l-1.35,6.77c1.51-1.06,3.1-1.58,4.76-1.58,2.2,0,4.06.76,5.57,2.29,1.51,1.53,2.27,3.49,2.27,5.88s-.66,4.25-1.99,5.91c-1.62,2.04-3.82,3.06-6.62,3.06-2.29,0-4.16-.64-5.62-1.93-1.45-1.28-2.28-2.99-2.48-5.11v.03h-.01Z"/>
   <path id="panel_r1_c1_ArialMT-302" d="M1322.45,1419.32c0-2.98.31-5.38.92-7.2s1.52-3.22,2.73-4.2c1.21-.99,2.73-1.48,4.57-1.48,1.35,0,2.54.27,3.56.82,1.02.54,1.86,1.33,2.53,2.35s1.19,2.27,1.57,3.75c.38,1.47.57,3.46.57,5.96,0,2.96-.3,5.34-.91,7.16-.61,1.82-1.51,3.22-2.72,4.21s-2.73,1.49-4.58,1.49c-2.43,0-4.34-.87-5.72-2.61-1.66-2.1-2.49-5.51-2.49-10.24h-.03ZM1325.63,1419.32c0,4.14.48,6.89,1.45,8.26s2.16,2.05,3.58,2.05,2.62-.69,3.59-2.06,1.45-4.13,1.45-8.25-.48-6.91-1.45-8.27-2.18-2.05-3.62-2.05-2.55.6-3.41,1.8c-1.06,1.53-1.6,4.37-1.6,8.51h.01Z"/>
   <path id="panel_r1_c1_ArialMT-303" d="M1342.03,1419.32c0-2.98.31-5.38.92-7.2s1.52-3.22,2.73-4.2c1.21-.99,2.73-1.48,4.57-1.48,1.35,0,2.54.27,3.56.82,1.02.54,1.86,1.33,2.53,2.35s1.19,2.27,1.57,3.75c.38,1.47.57,3.46.57,5.96,0,2.96-.3,5.34-.91,7.16-.61,1.82-1.51,3.22-2.72,4.21s-2.73,1.49-4.58,1.49c-2.43,0-4.34-.87-5.72-2.61-1.66-2.1-2.49-5.51-2.49-10.24h-.03ZM1345.21,1419.32c0,4.14.48,6.89,1.45,8.26s2.16,2.05,3.58,2.05,2.62-.69,3.59-2.06,1.45-4.13,1.45-8.25-.48-6.91-1.45-8.27-2.18-2.05-3.62-2.05-2.55.6-3.41,1.8c-1.06,1.53-1.6,4.37-1.6,8.51h.01Z"/>
-  <g class="st66">
+  <g class="st67">
     <path class="st31" d="M1372.04,1320.16h734.72"/>
   </g>
   <path id="panel_r1_c1_ArialMT-37" d="M1303.07,1310.86v-2.98h16.32v2.41c-1.61,1.71-3.2,3.97-4.78,6.81-1.57,2.83-2.79,5.74-3.65,8.74-.62,2.11-1.02,4.42-1.19,6.93h-3.18c.03-1.98.42-4.38,1.17-7.19.74-2.81,1.81-5.52,3.21-8.13s2.88-4.8,4.45-6.59h-12.35,0Z"/>
@@ -2384,7 +2397,7 @@
   <g class="st171">
     <path class="st27" d="M1545.01,1611.82v-.09"/>
   </g>
-  <g class="st60">
+  <g class="st61">
     <path class="st27" d="M1617.2,1607.01v-.63"/>
   </g>
   <g class="st110">
@@ -2470,213 +2483,247 @@
     <path class="st17" d="M2032.2,1873.88h95.78"/>
     <path id="panel_r1_c1_mafcc11ea24" class="st43" d="M2080.09,1884.73c2.88,0,5.64-1.14,7.67-3.18,2.03-2.03,3.18-4.79,3.18-7.67s-1.14-5.64-3.18-7.67c-2.03-2.03-4.79-3.18-7.67-3.18s-5.64,1.14-7.67,3.18c-2.03,2.03-3.18,4.79-3.18,7.67s1.14,5.64,3.18,7.67c2.03,2.03,4.79,3.18,7.67,3.18Z"/>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <text class="st55" transform="translate(1132.37 1082.26)"><tspan x="0" y="0">D</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <text class="st55" transform="translate(1132.37 1082.26)"><tspan x="0" y="0">D</tspan></text>
+          </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <text class="st57" transform="translate(1259.49 1082.26)"><tspan x="0" y="0">Scaling Runtime (4 GPUs)</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <text class="st58" transform="translate(1259.49 1082.26)"><tspan x="0" y="0">Scaling Runtime (4 GPUs)</tspan></text>
+          </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(241.05 225.81)"><tspan x="0" y="0">blobs</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(241.05 225.81)"><tspan x="0" y="0">blobs</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(225.81 269.22)"><tspan x="0" y="0">circles</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(225.81 269.22)"><tspan x="0" y="0">circles</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(220.03 312.63)"><tspan x="0" y="0">moons</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(220.03 312.63)"><tspan x="0" y="0">moons</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(202.83 356.05)"><tspan x="0" y="0">s_curve</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(202.83 356.05)"><tspan x="0" y="0">s_curve</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(174.19 399.45)"><tspan x="0" y="0">swiss_roll</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(174.19 399.45)"><tspan x="0" y="0">swiss_roll</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(105.3 442.87)"><tspan x="0" y="0">breast_cancer</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(105.3 442.87)"><tspan x="0" y="0">breast_cancer</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(252.54 486.27)"><tspan x="0" y="0">wine</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(252.54 486.27)"><tspan x="0" y="0">wine</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(255.34 529.69)"><tspan x="0" y="0">iris</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(255.34 529.69)"><tspan x="0" y="0">iris</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(242.98 573.11)"><tspan x="0" y="0">digits</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(242.98 573.11)"><tspan x="0" y="0">digits</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(124.43 616.51)"><tspan x="0" y="0">olivetti_faces</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(124.43 616.51)"><tspan x="0" y="0">olivetti_faces</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(193.23 659.93)"><tspan x="0" y="0">diabetes</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(193.23 659.93)"><tspan x="0" y="0">diabetes</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(45.99 703.34)"><tspan x="0" y="0">california_housing</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(45.99 703.34)"><tspan x="0" y="0">california_housing</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(174.14 746.75)"><tspan x="0" y="0">covertype</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(174.14 746.75)"><tspan x="0" y="0">covertype</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(174.09 790.16)"><tspan x="0" y="0">kddcup99</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(174.09 790.16)"><tspan x="0" y="0">kddcup99</tspan></text>
+              </g>
             </g>
           </g>
         </g>
       </g>
     </g>
   </g>
-  <g class="st56">
-    <g class="st56">
-      <g class="st56">
-        <g class="st56">
-          <g class="st56">
-            <g class="st56">
-              <text class="st54" transform="translate(7.79 833.57)"><tspan x="0" y="0">GLOBAL_OVERALL</tspan></text>
+  <g class="st57">
+    <g class="st57">
+      <g class="st57">
+        <g class="st57">
+          <g class="st57">
+            <g class="st57">
+              <g class="st57">
+                <text class="st54" transform="translate(7.79 833.57)"><tspan x="0" y="0">GLOBAL_OVERALL</tspan></text>
+              </g>
             </g>
           </g>
         </g>
@@ -2782,7 +2829,7 @@
           <path class="st29" d="M346.38,799.82"/>
         </g>
       </g>
-      <g class="st62">
+      <g class="st63">
         <path id="panel_r0_c0_C0_0_6a60ce05b6" class="st2" d="M444.59,223.89c2.58,0,5.07-1.02,6.89-2.85,1.83-1.83,2.85-4.3,2.85-6.88s-1.02-5.07-2.85-6.88c-1.83-1.83-4.3-2.85-6.89-2.85s-5.07,1.02-6.89,2.85c-1.83,1.83-2.85,4.3-2.85,6.88s1.02,5.07,2.85,6.88c1.83,1.83,4.3,2.85,6.89,2.85Z"/>
       </g>
       <g class="st228">
@@ -2992,7 +3039,13 @@
       </g>
     </g>
   </g>
-  <text class="st67" transform="translate(1113.45 1886.54)"><tspan x="0" y="0">FloatSOM - Full</tspan></text>
-  <text class="st67" transform="translate(1582.3 1887.09)"><tspan x="0" y="0">FloatSOM - Random</tspan></text>
-  <text class="st67" transform="translate(2153 1886.54)"><tspan x="0" y="0">XPySOM - Default</tspan></text>
+  <g class="st57">
+    <text class="st56" transform="translate(1113.45 1886.54)"><tspan x="0" y="0">FloatSOM - Full</tspan></text>
+  </g>
+  <g class="st57">
+    <text class="st56" transform="translate(1582.3 1887.09)"><tspan x="0" y="0">FloatSOM - Random</tspan></text>
+  </g>
+  <g class="st57">
+    <text class="st56" transform="translate(2153 1886.54)"><tspan x="0" y="0">XPySOM - Default</tspan></text>
+  </g>
 </svg>
