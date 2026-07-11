@@ -52,7 +52,7 @@ In the Discussion, we added:
 
 We agree that neighborhood radius is an important potential confound. In addition to the existing Optuna design, in which `initial_radius` was optimized independently for every topology over the same interval and search budget, we added the requested radius-only control as Fig. 9. We evaluated seven identical radii for hexagonal, MST, and RNG maps using 20 matched seeds on all 14 datasets, while holding every non-radius training hyperparameter fixed.
 
-MST and RNG retained lower normalized $QE_B$ than hexagonal when compared at the same radii. Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. The sweep also shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range.
+MST and RNG retained lower normalized $QE_B$ than hexagonal when compared at the same radii (Fig. 9A). Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. Fig. 9B additionally shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range: RNG maintains lower MTR than MST while its $QE_B$ remains stable around $r=1.027$--1.5. Fig. 9C shows that MST and RNG also maintain high node utilization in this region, excluding reduced use of map capacity as the explanation for their lower $QE_B$.
 
 ### Manuscript Amendment
 
@@ -60,11 +60,13 @@ In Section 4.1, we added:
 
 > "The neighborhood-radius search space was shared across topology families. In particular, `initial_radius` was an Optuna-optimized parameter for hexagonal, MST, and RNG runs, with the same search interval of 0.5 to 10.0 in each case. Thus, the hexagonal topology comparisons below use a tuned hexagonal comparator rather than a default-radius hexagonal baseline."
 
-In Section 4.3.3, we added the matched initial-radius sensitivity protocol, including the seven tested radii, 14 datasets, 20 matched seeds, fixed non-radius configuration, normalized-$QE$ calculation, and multiplicity correction.
+In Section 4.3.3, we added the matched initial-radius sensitivity protocol, including the seven tested radii, 14 datasets, 20 matched seeds, fixed non-radius configuration, normalized-$QE$ calculation, observed-unit MTR and node-utilization summaries, and multiplicity correction.
 
 In Section 5.3, we added:
 
 > "Crucially, MST and RNG retain lower $QE_B$ than hexagonal when evaluated at the same radii with every other training hyperparameter fixed. Their quantization advantage therefore cannot arise from preferential radius treatment or from assigning graph topologies a broader initial neighborhood; if anything, their lowest observed $QE_B$ occurs at a larger radius than the hexagonal minimum."
+
+We also added Fig. 9 to the main manuscript. Panel A reports normalized $QE_B$, panel B reports observed balanced MTR and the topology-specific $QE$--MTR trade-off, and panel C reports balanced node utilization as a map-capacity check.
 
 ## 3. Related work and external baselines
 
