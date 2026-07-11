@@ -10,7 +10,7 @@ We thank the reviewer for the careful and constructive assessment. We agree with
 
 ### Response
 
-We agree that the direct MST-versus-RNG comparison is necessary to support a topology-ordering claim. We have promoted that comparison from the supplement to the main topology results as Fig. 8. We also narrowed the conclusion: MST and RNG are close competitors on $QE$, while the matched MTR diagnostics provide the additional evidence favoring RNG.
+We agree that the direct MST-versus-RNG comparison is necessary to support a topology-ordering claim. We have promoted that comparison from the supplement to the main topology results as Fig. 8. The separate Optuna contrasts consistently favor RNG over hexagonal across balanced, holdout, and train $QE$, but the direct MST--RNG evidence shows that the two graph topologies are close competitors on $QE$. The matched MTR diagnostics provide the additional evidence favoring RNG as the strongest joint $QE$/MTR option.
 
 ### Manuscript Amendment
 
@@ -62,6 +62,8 @@ In Section 4.2, we added the baseline selection and aweSOM attempt:
 
 > "XPySOM was selected as the executable external baseline because it most closely matches FloatSOM's Python/GPU batch-training regime. We also attempted aweSOM on the standard speed workload, but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching FloatSOM's 10 batch iterations would require $10N$ pointwise updates, so aweSOM was not included in the timed comparison."
 
+In Section 4.1.3, we added the reproducible XPySOM calibration protocol, including 14 datasets, 10 paired seeds, aligned initial prototypes, common splits and epochs, and paired Wilcoxon inference. We now describe the hexagonal result as no implementation-associated $QE$ difference detected rather than formal equivalence, because no equivalence margin was prespecified.
+
 We also added the GigaSOM context:
 
 > "GigaSOM.jl, for example, trained a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]."
@@ -75,6 +77,8 @@ We also added the GigaSOM context:
 ### Response
 
 We agree that the statistical reporting should state the correction policy. The revised manuscript now reports Benjamini-Hochberg adjusted q-values for dataset-level families of related paired tests, while retaining raw p-values for audit. For the topology comparisons, the q-values are computed over exactly the family raised by the reviewer: 42 non-global dataset-level tests per topology comparison, corresponding to 14 datasets across $QE_B$, $QE_H$, and $QE_T$, separately for hexagonal-versus-MST and hexagonal-versus-RNG. Dataset-level figure significance markers and dataset-level significance counts use the adjusted q-values. Global pooled rows are reported separately as overall summaries and are not included in the dataset-level adjustment family.
+
+The added radius-control analysis applies a separate prespecified correction across 54 within-topology radius--metric tests. Its post hoc cross-topology analysis applies Benjamini--Hochberg correction across all 21 topology-pair--radius $QE_B$ contrasts, reported with estimates and confidence intervals in Supplementary Table S15.
 
 ### Manuscript Amendment
 
@@ -142,13 +146,13 @@ In Section 5.2, we added:
 
 ### Response
 
-We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion now states that RNG is the preferred topology only when $QE$ is the priority and topology-construction overhead is acceptable. It also states that for workloads dominated by very large grids, hexagonal remains the throughput-oriented default and MST can be a practical compromise when graph-based topology is desired but RNG's blocker-test cost is too high.
+We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion now identifies RNG as the preferred joint $QE$/MTR topology when topology-construction overhead is acceptable, while recognizing that MST and RNG are close competitors for $QE$ alone and MST is the lower-cost graph option. It also states that for workloads dominated by very large grids, hexagonal remains the throughput-oriented default.
 
 ### Manuscript Amendment
 
 In Section 8, we revised the recommendation to:
 
-> "RNG is the preferred topology when $QE$ is the priority and topology overhead is acceptable, but this recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively. Hexagonal is therefore the throughput-oriented choice for very large grids, while MST provides a compromise when a graph topology is desired."
+> "RNG is the preferred joint $QE$/MTR topology when topology overhead is acceptable; for $QE$ alone, MST and RNG are close competitors and MST offers the lower-cost graph option. This recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively."
 
 ## 8. Discussion structure
 

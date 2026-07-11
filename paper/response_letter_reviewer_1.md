@@ -12,7 +12,7 @@ We thank the reviewer for the careful reading and for separating the systems con
 
 We agree that $QE$ alone does not characterize SOM neighborhood ordering. We added Mean Tied Rank (MTR), which ranks the second BMU by its graph-distance shell around the first, together with node-utilization and dead-node diagnostics. MTR is preferable to raw topographic error here because one-hop adjacency differs across hexagonal, MST, and RNG graphs [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010].
 
-The matched analysis found lower MTR for RNG than for hexagonal maps with and without tuning; MST did not clearly lower untuned MTR. Tuning improved $QE$ but increased MTR in every topology, with a much larger increase for hexagonal maps (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). Node-use results did not indicate reduced map utilization. The main text reports the principal effects, and Supplementary Tables S12-S13 provide the full results.
+The matched analysis found lower MTR for RNG than for hexagonal maps with and without tuning; MST did not clearly lower untuned MTR. The fixed QE-tuned profiles had lower $QE$ but higher MTR than the untuned profiles, with a much larger MTR difference for hexagonal maps (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). Node-use results did not indicate reduced map utilization. The main text reports the principal effects, and Supplementary Tables S12-S13 provide the full results.
 
 ### Manuscript Amendment
 
@@ -36,7 +36,7 @@ We also added the tuned and untuned RNG diagnostic result:
 
 In Section 5.4, we added:
 
-> "Tuning improved all three pooled $QE$ metrics. It also increased balanced MTR, by 24.34 tied-rank positions for hexagonal maps compared with 1.43 for MST and 1.11 for RNG. This local-ordering trade-off was therefore much stronger for the fixed lattice and was not accompanied by lower node utilization."
+> "The fixed tuned configurations had lower values for all three pooled $QE$ metrics than the untuned references, but also had higher balanced MTR: by 24.34 tied-rank positions for hexagonal maps compared with 1.43 for MST and 1.11 for RNG. This profile-associated local-ordering trade-off was therefore much stronger for the fixed lattice."
 
 In the Discussion, we added:
 
@@ -52,7 +52,7 @@ In the Discussion, we added:
 
 We agree that neighborhood radius is an important potential confound. In addition to the existing Optuna design, in which `initial_radius` was optimized independently for every topology over the same interval and search budget, we added the requested radius-only control as Fig. 9. We evaluated seven identical radii for hexagonal, MST, and RNG maps using 20 matched seeds on all 14 datasets, while holding every non-radius training hyperparameter fixed.
 
-MST and RNG retained lower normalized $QE_B$ than hexagonal when compared at the same radii (Fig. 9A). Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. Fig. 9B additionally shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range: RNG maintains lower MTR than MST while its $QE_B$ remains stable around $r=1.027$--1.5. Fig. 9C shows that MST and RNG also maintain high node utilization in this region, excluding reduced use of map capacity as the explanation for their lower $QE_B$.
+MST and RNG retained lower normalized $QE_B$ than hexagonal in the useful matched-radius region (Fig. 9A). Post hoc dataset-balanced paired contrasts confirm the separation at $r=1.027$ and $r=1.5$ after correction across all 21 topology-pair--radius tests (Supplementary Table S15), while no RNG--MST contrast is significant at any radius. Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. Fig. 9B additionally shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range: RNG maintains lower MTR than MST while its $QE_B$ remains stable around $r=1.027$--1.5. Fig. 9C shows that MST and RNG also maintain high node utilization in this region, which does not support reduced use of map capacity as the explanation for their lower $QE_B$.
 
 ### Manuscript Amendment
 
@@ -60,11 +60,11 @@ In Section 4.1, we added:
 
 > "The neighborhood-radius search space was shared across topology families. In particular, `initial_radius` was an Optuna-optimized parameter for hexagonal, MST, and RNG runs, with the same search interval of 0.5 to 10.0 in each case. Thus, the hexagonal topology comparisons below use a tuned hexagonal comparator rather than a default-radius hexagonal baseline."
 
-In Section 4.3.3, we added the matched initial-radius sensitivity protocol, including the seven tested radii, 14 datasets, 20 matched seeds, fixed non-radius configuration, normalized-$QE$ calculation, observed-unit MTR and node-utilization summaries, and multiplicity correction.
+In Section 4.3.3, we added the matched initial-radius sensitivity protocol, including the seven tested radii, 14 datasets, 20 matched seeds, fixed non-radius configuration, normalized-$QE$ calculation, observed-unit MTR and node-utilization summaries, the exact within-topology tests, and post hoc dataset-balanced cross-topology contrasts with multiplicity correction.
 
 In Section 5.3, we added:
 
-> "Crucially, MST and RNG retain lower $QE_B$ than hexagonal when evaluated at the same radii with every other training hyperparameter fixed. Their quantization advantage therefore cannot arise from preferential radius treatment or from assigning graph topologies a broader initial neighborhood; if anything, their lowest observed $QE_B$ occurs at a larger radius than the hexagonal minimum."
+> "At $r=1.027$, MST and RNG have 1.51% and 1.85% lower geometric-mean $QE_B$ than hexagonal (q=0.036 and q=0.035), increasing to 3.30% and 3.67% at $r=1.5$ (q=0.016 and q=0.014; Supplementary Table S15). No RNG--MST contrast is significant at any tested radius."
 
 We also added Fig. 9 to the main manuscript. Panel A reports normalized $QE_B$, panel B reports observed balanced MTR and the topology-specific $QE$--MTR trade-off, and panel C reports balanced node utilization as a map-capacity check.
 
@@ -98,6 +98,8 @@ In Section 4.2, we added the aweSOM benchmark attempt:
 
 > "XPySOM was selected as the executable external baseline because it most closely matches FloatSOM's Python/GPU batch-training regime. We also attempted aweSOM on the standard speed workload, but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching FloatSOM's 10 batch iterations would require $10N$ pointwise updates, so aweSOM was not included in the timed comparison."
 
+In Section 4.1.3, we also added the full XPySOM calibration protocol: 14 datasets, 10 matched seeds, common data splits and epochs, aligned initial prototypes, paired Wilcoxon inference, and the distinction between the hexagonal implementation calibration and the MST/RNG topology paths. Because no equivalence margin was prespecified, the revised manuscript reports that no hexagonal implementation-associated $QE$ difference was detected rather than claiming formal equivalence.
+
 ## 4. Numbers should be embedded in the paper
 
 ### Reviewer Comment
@@ -108,7 +110,7 @@ In Section 4.2, we added the aweSOM benchmark attempt:
 
 ### Response
 
-We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology effect and q-value summary, deployment effect summaries, and topology runtime summary. The manuscript now contains the numerical values needed to evaluate the corresponding figures.
+We agree. The submitted version included the tables as reproducibility artifacts but did not embed their numerical contents in the manuscript, which makes the paper harder to evaluate independently. We have replaced the path-only supplementary table captions with embedded tables for the XPySOM calibration summaries, topology effect and q-value summary, deployment effect summaries, topology runtime summary, and the new matched-radius cross-topology tests in Supplementary Table S15. The manuscript now contains the numerical values needed to evaluate the corresponding figures.
 
 ### Manuscript Amendment
 
@@ -200,7 +202,7 @@ We agree that any recommendation of RNG must be paired with its runtime cost. Fi
 
 In Section 8, we added:
 
-> "RNG is the preferred topology when $QE$ is the priority and topology overhead is acceptable, but this recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively. Hexagonal is therefore the throughput-oriented choice for very large grids, while MST provides a compromise when a graph topology is desired."
+> "RNG is the preferred joint $QE$/MTR topology when topology overhead is acceptable; for $QE$ alone, MST and RNG are close competitors and MST offers the lower-cost graph option. This recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively."
 
 ## 8. Multiple-comparison correction
 

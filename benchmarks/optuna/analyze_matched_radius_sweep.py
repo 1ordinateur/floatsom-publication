@@ -348,6 +348,61 @@ def build_summaries(pair_df: pd.DataFrame, *, anchor_radius: float) -> Tuple[pd.
     return dataset_summary, pooled_summary
 
 
+def build_cross_topology_qe_summary(
+    pair_df: pd.DataFrame,
+    *,
+    topologies: Sequence[str],
+) -> pd.DataFrame:
+    """Build dataset-balanced paired QE contrasts between topologies at each radius."""
+    qe = pair_df[pair_df["metric"] == "balanced_qe_raw"][
+        ["dataset", "seed", "sampling_method", "architecture", "initial_radius", "candidate_value"]
+    ].copy()
+    keys = ["dataset", "seed", "sampling_method", "initial_radius"]
+    wide = qe.pivot(index=keys, columns="architecture", values="candidate_value").reset_index()
+    missing = sorted(set(topologies) - set(wide.columns))
+    if missing:
+        raise ValueError(f"Cannot build cross-topology QE contrasts; missing topologies: {missing}")
+    if (wide[list(topologies)] <= 0).any().any():
+        raise ValueError("Cross-topology QE log ratios require strictly positive values.")
+
+    topology_order = [topology for topology in TOPOLOGY_ORDER if topology in set(topologies)]
+    contrasts = [
+        (topology_order[left], topology_order[right])
+        for left in range(len(topology_order))
+        for right in range(left + 1, len(topology_order))
+    ]
+    records: List[Dict[str, object]] = []
+    for radius, radius_df in wide.groupby("initial_radius", sort=True):
+        for reference, comparator in contrasts:
+            working = radius_df.assign(
+                _log_ratio=np.log(
+                    radius_df[comparator].to_numpy(dtype=float)
+                    / radius_df[reference].to_numpy(dtype=float)
+                )
+            )
+            dataset_effects = working.groupby("dataset", sort=True)["_log_ratio"].mean().to_numpy(dtype=float)
+            log_mean, _, log_ci_low, log_ci_high, p_value = _mean_ci(dataset_effects)
+            ratio = float(np.exp(log_mean))
+            records.append(
+                {
+                    "reference_topology": reference,
+                    "comparator_topology": comparator,
+                    "contrast": f"{comparator} vs {reference}",
+                    "initial_radius": float(radius),
+                    "n_datasets": int(working["dataset"].nunique()),
+                    "n_seed_pairs": int(len(working)),
+                    "geometric_mean_qe_ratio": ratio,
+                    "qe_ratio_ci_low": float(np.exp(log_ci_low)),
+                    "qe_ratio_ci_high": float(np.exp(log_ci_high)),
+                    "percent_qe_improvement_comparator": float((1.0 - ratio) * 100.0),
+                    "raw_p_value": p_value,
+                }
+            )
+    summary = pd.DataFrame(records)
+    summary["bh_q_value"] = benjamini_hochberg(summary["raw_p_value"].to_numpy(dtype=float))
+    return summary.sort_values(["initial_radius", "reference_topology", "comparator_topology"]).reset_index(drop=True)
+
+
 def benjamini_hochberg(p_values: np.ndarray) -> np.ndarray:
     values = np.asarray(p_values, dtype=float)
     if values.ndim != 1 or not np.isfinite(values).all() or np.any((values < 0) | (values > 1)):
@@ -514,6 +569,7 @@ def analyze(
         topologies=topologies,
     )
     dataset_summary, pooled_summary = build_summaries(pair_df, anchor_radius=anchor_radius)
+    cross_topology_qe_summary = build_cross_topology_qe_summary(pair_df, topologies=topologies)
 
     expected_tests = (len(radii) - 1) * len(topologies) * len(METRIC_SPECS)
     observed_tests = int(pooled_summary["bh_q_value"].notna().sum())
@@ -533,9 +589,11 @@ def analyze(
     pair_path = tables_dir / "radius_response_pairs.csv"
     dataset_path = tables_dir / "radius_response_by_dataset.csv"
     pooled_path = tables_dir / "radius_response_pooled_summary.csv"
+    cross_topology_qe_path = tables_dir / "radius_response_cross_topology_qe.tsv"
     pair_df.to_csv(pair_path, index=False)
     dataset_summary.to_csv(dataset_path, index=False)
     pooled_summary.to_csv(pooled_path, index=False)
+    cross_topology_qe_summary.to_csv(cross_topology_qe_path, sep="\t", index=False)
 
     figures: Dict[str, str] = {}
     for metric, label, slug, _ in METRIC_SPECS:
@@ -565,6 +623,11 @@ def analyze(
         "pair_table": str(pair_path),
         "dataset_summary": str(dataset_path),
         "pooled_summary": str(pooled_path),
+        "cross_topology_qe_summary": str(cross_topology_qe_path),
+        "cross_topology_qe_bh_family_size": int(len(cross_topology_qe_summary)),
+        "cross_topology_qe_bh_family_definition": (
+            "three paired topology contrasts x seven radii, tested on 14 dataset-level mean log-QE ratios"
+        ),
         "figures": figures,
     }
     metadata_path = destination / "RADIUS_RESPONSE_ANALYSIS_METADATA.json"

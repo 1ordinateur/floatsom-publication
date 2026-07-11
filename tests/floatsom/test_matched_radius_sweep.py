@@ -376,6 +376,16 @@ def test_full_analysis_emits_three_topology_response_plots_and_54_q_values(
     )
 
     assert outputs["bh_family_size"] == 54
+    cross_topology = pd.read_csv(outputs["cross_topology_qe_summary"], sep="\t")
+    assert len(cross_topology) == 3 * 7
+    assert cross_topology["bh_q_value"].notna().all()
+    assert set(cross_topology["n_datasets"]) == {2}
+    assert set(cross_topology["n_seed_pairs"]) == {6}
+    assert np.isfinite(
+        cross_topology[
+            ["geometric_mean_qe_ratio", "qe_ratio_ci_low", "qe_ratio_ci_high", "bh_q_value"]
+        ].to_numpy(dtype=float)
+    ).all()
     assert set(outputs["figures"]) == {"balanced_qe", "balanced_mtr", "balanced_node_utilisation"}
     for figure_path in outputs["figures"].values():
         path = Path(figure_path)
