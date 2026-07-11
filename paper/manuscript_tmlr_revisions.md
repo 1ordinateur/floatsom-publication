@@ -264,9 +264,7 @@ We additionally conducted post hoc cross-topology $QE_B$ contrasts at each radiu
 
 #### 4.3.4 Execution-path concordance analysis
 
-To determine whether the quality diagnostics depended on execution pathway, we compared local CuPy and Ray streaming using identical inputs and fixed tuned configurations. The analysis used all 14 datasets, the 10 shared seeds 42--51, full sampling, and all three topologies on one NVIDIA V100 GPU. For each dataset--seed--topology unit, both paths received the same standardized data, deterministic train--holdout split, topology-specific tuned parameters from Section 4.3.1, and evaluation metrics; execution profile was the only deliberately changed factor. Differences were defined as Ray streaming minus local CuPy.
-
-For each topology, Supplementary Table S14 reports paired differences for balanced $QE$, MTR, node utilization, and dead-node fraction across 140 matched dataset--seed units. Mean differences and 95% confidence intervals were calculated from two-sided one-sample paired $t$-tests against zero, and Benjamini--Hochberg correction was applied jointly across the 12 topology--metric tests. This analysis tests for detectable pathway-associated differences; because no equivalence margin was prespecified, a non-significant result is interpreted as no difference detected rather than proof of formal equivalence.
+To determine whether the quality diagnostics depended on execution pathway, we compared local CuPy and Ray streaming under matched inputs and fixed tuned configurations. The complete protocol is provided in Supplementary Methods S1, and the paired results are reported in Supplementary Table S14. Because no equivalence margin was prespecified, non-significant results are interpreted as no difference detected rather than proof of formal equivalence.
 
 ### 4.4 Statistical analysis
 
@@ -491,7 +489,15 @@ We thank Prof. Hanna Suominen for her input and advice.
 ::: {#refs}
 :::
 
-## 11. Supplementary Tables (End Matter)
+## 11. Supplementary Methods and Tables (End Matter)
+
+### Supplementary Methods S1. Execution-path concordance protocol
+
+The execution-path analysis used all 14 datasets, the 10 shared seeds 42--51, full sampling, and the hexagonal, MST, and RNG topologies on one NVIDIA V100 GPU. For each dataset--seed--topology unit, local CuPy and Ray streaming received the same standardized data, deterministic train--holdout split, topology-specific tuned parameters from Section 4.3.1, and evaluation metrics; execution profile was the only deliberately changed factor. Differences were defined as Ray streaming minus local CuPy.
+
+For each topology, Supplementary Table S14 reports paired differences for balanced $QE$, MTR, node utilization, and dead-node fraction across 140 matched dataset--seed units. Mean differences and 95% confidence intervals were calculated from two-sided one-sample paired $t$-tests against zero, with Benjamini--Hochberg correction applied jointly across the 12 topology--metric tests.
+
+### Supplementary Tables
 
 **Supplementary Table S1. Dataset metadata and numbered point key for the Figure 4 sampling mode analysis.**
 
@@ -536,7 +542,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | feature dimension | 50, 100, 200, 500, 1000, 2000, 5000 |
 | grid side length | 8, 16, 24, 32, 48, 64 |
 
-**Supplementary Table S4. FloatSOM versus XPySOM calibration summary for the MST topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
+**Supplementary Table S4. Untuned FloatSOM MST versus hexagonal XPySOM.** The `dataset_index` column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
 
 
 | idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
@@ -603,7 +609,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | - | GLOBAL | train time | train | 1/139/0 | -868.8976 | -771.5168 | [-875.2748, -760.3798] | 1.59e-24 | 140 | -0.9857 |
 
 
-**Supplementary Table S5. FloatSOM versus XPySOM calibration summary for the RNG topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
+**Supplementary Table S5. Untuned FloatSOM RNG versus hexagonal XPySOM.** The `dataset_index` column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
 
 
 | idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
@@ -670,7 +676,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 | - | GLOBAL | train time | train | 1/139/0 | -877.7086 | -775.3398 | [-884.2881, -753.573] | 1.59e-24 | 140 | -0.9857 |
 
 
-**Supplementary Table S6. FloatSOM versus XPySOM calibration summary for the hexagonal topology path.** The `dataset_index` column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
+**Supplementary Table S6. Hexagonal FloatSOM--XPySOM implementation calibration.** The `dataset_index` column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
 
 
 | idx | dataset | metric | split | wins F/X/tie | median % | mean % | 95% CI | p | n | signed effect |
@@ -1203,13 +1209,13 @@ We thank Prof. Hanna Suominen for her input and advice.
 ## 12. Supplementary Figures (End Matter)
 
 ![Supplementary Figure S1](assets_manual/figures/supp_fig_s1.svg)
-*Supplementary Figure S1. FloatSOM versus XPySOM calibration under untuned settings for the MST topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S4. Forest whiskers denote exact distribution-free 95% intervals for the paired Wilcoxon location estimate.*
+*Supplementary Figure S1. Untuned FloatSOM MST versus hexagonal XPySOM. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S4. Forest whiskers denote exact distribution-free 95% intervals for the paired Wilcoxon location estimate.*
 
 ![Supplementary Figure S2](assets_manual/figures/supp_fig_s2.svg)
-*Supplementary Figure S2. FloatSOM versus XPySOM calibration under untuned settings for the RNG topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S5. Forest whiskers denote exact distribution-free 95% intervals for the paired Wilcoxon location estimate.*
+*Supplementary Figure S2. Untuned FloatSOM RNG versus hexagonal XPySOM. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S5. Forest whiskers denote exact distribution-free 95% intervals for the paired Wilcoxon location estimate.*
 
 ![Supplementary Figure S3](assets_manual/figures/supp_fig_s3.svg)
-*Supplementary Figure S3. FloatSOM versus XPySOM calibration under untuned settings for the hexagonal topology path. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S6. Forest whiskers denote exact distribution-free 95% intervals for the paired Wilcoxon location estimate.*
+*Supplementary Figure S3. Hexagonal FloatSOM--XPySOM implementation calibration. Panels A-C report paired $QE$ effects for $QE_B$, $QE_H$, and $QE_T$. Panel D reports dataset-level median runtime deltas against dataset size, where each numbered dot is the median matched-seed value of `FloatSOM time - XPySOM time`; negative values favor FloatSOM and positive values favor XPySOM. The point numbers map to Supplementary Table S6. Forest whiskers denote exact distribution-free 95% intervals for the paired Wilcoxon location estimate.*
 
 ![Supplementary Figure S4](assets_manual/figures/supp_fig_s4.svg)
 *Supplementary Figure S4. Topology sensitivity analyses under full sampling. A: hexagonal versus MST; B: hexagonal versus RNG; C: MST versus RNG. Within each row, columns report matched top-$k$ paired sensitivity analyses for $QE_B$, $QE_H$, and $QE_T$ at $k\in\{1,3,5,10\}$; directional labels indicate which topology is favored.*
