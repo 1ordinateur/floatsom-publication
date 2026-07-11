@@ -83,7 +83,7 @@ def _resolve_paper_manual_assets_dir() -> Optional[Path]:
 
 
 def _mirror_figure_to_manual_assets(src_path: Path, dst_name: str, generated_files: List[str]) -> Optional[Path]:
-    if dst_name in {"fig_3.svg", "fig_11.svg"}:
+    if dst_name in {"fig_3.svg", "fig_12.svg"}:
         return None
     manual_assets_dir = _resolve_paper_manual_assets_dir()
     if manual_assets_dir is None:

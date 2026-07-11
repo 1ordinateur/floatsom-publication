@@ -36,9 +36,9 @@ In Section 6.2, we revised:
 
 to:
 
-> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 12B,E) and for the corresponding hexagonal and MST outputs (Fig. S6). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
+> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 13B,E) and for the corresponding hexagonal and MST outputs (Fig. S6). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
 
-In Section 6.2.2, we also revised the Fig. S6 sentence to state that Fig. 12 and Fig. S6 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
+In Section 6.2.2, we also revised the Fig. S6 sentence to state that Fig. 13 and Fig. S6 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
 
 ## 3. Somoclu and GigaSOM comparison
 
@@ -92,7 +92,7 @@ Figure captions and Supplementary Table S7 were updated to use q-value language 
 
 ### Response
 
-We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 14 is described as an integrated deployment comparison rather than a pure topology-only attribution.
+We agree that the submitted version did not make this execution-path distinction prominent enough. The revised Methods now explicitly state that the Optuna quality runs use the standard in-memory batch path, whereas the speed-scaling results use the Ray-orchestrated distributed execution layer. We also revised the deployment comparison language so that Fig. 15 is described as an integrated deployment comparison rather than a pure topology-only attribution.
 
 To test whether the diagnostic conclusions depended on the execution path, we added a matched benchmark comparing local CuPy with Ray streaming under identical datasets, seeds, topologies, and fixed tuned configurations. No comparison reached statistical significance before or after Benjamini-Hochberg correction, and the estimated differences were small (Supplementary Table S14). We report this diagnostic after the tuning and stability results and before the Ray-pathway performance benchmarks.
 
@@ -108,11 +108,13 @@ In Section 4.2, we state:
 
 In Section 7, we revised the opening framing:
 
-> "Fig. 14 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects [@manciniXPySomHighPerformanceSelfOrganizing2020]."
+> "Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects [@manciniXPySomHighPerformanceSelfOrganizing2020]."
 
 In Section 5.5, we added:
 
 > "The quality analyses above used the in-memory pathway. Repeating the tuned diagnostics through Ray streaming with matched data and configurations produced small differences, none of which reached significance before or after Benjamini-Hochberg correction (Supplementary Table S14). The remaining differences may reflect floating-point accumulation order. The following speed benchmarks use the Ray pathway."
+
+In Section 4.3.4, we added the complete concordance protocol: 14 datasets, seeds 42--51, three topologies, full sampling, one V100, identical fixed tuned configurations and data splits, Ray-minus-local paired differences, 95% paired confidence intervals, and Benjamini--Hochberg correction across the 12 topology--metric tests. We also clarify that failure to detect a difference is not a formal equivalence claim because no equivalence margin was prespecified.
 
 We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
 

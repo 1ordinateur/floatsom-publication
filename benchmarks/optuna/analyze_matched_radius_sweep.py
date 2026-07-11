@@ -27,6 +27,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FixedLocator, FuncFormatter
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -36,9 +37,9 @@ PAIR_KEY_COLUMNS: Tuple[str, ...] = ("dataset", "seed", "architecture", "samplin
 RUN_KEY_COLUMNS: Tuple[str, ...] = (*PAIR_KEY_COLUMNS, "initial_radius")
 TOPOLOGY_ORDER: Tuple[str, ...] = ("hexagonal", "mst", "rng")
 TOPOLOGY_STYLES: Dict[str, Dict[str, str]] = {
-    "hexagonal": {"label": "Hexagonal", "color": "#4C78A8", "marker": "o"},
-    "mst": {"label": "MST", "color": "#F58518", "marker": "s"},
-    "rng": {"label": "RNG", "color": "#54A24B", "marker": "^"},
+    "hexagonal": {"label": "Hexagonal", "color": "#FF4FA3", "marker": "o"},
+    "mst": {"label": "MST", "color": "#00E5FF", "marker": "s"},
+    "rng": {"label": "RNG", "color": "#8A2BE2", "marker": "^"},
 }
 METRIC_SPECS: Tuple[Tuple[str, str, str, bool], ...] = (
     ("balanced_qe_raw", "Balanced QE", "balanced_qe", False),
@@ -235,36 +236,80 @@ def _mean_ci(values: np.ndarray) -> Tuple[float, float, float, float, float]:
 
 
 def build_summaries(pair_df: pd.DataFrame, *, anchor_radius: float) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    working = pair_df.copy()
+    baseline_keys = ["dataset", "seed", "sampling_method"]
+    hex_qe_anchor = working[
+        (working["metric"] == "balanced_qe_raw")
+        & (working["architecture"] == "hexagonal")
+        & np.isclose(working["initial_radius"], float(anchor_radius), rtol=0.0, atol=1e-12)
+    ][baseline_keys + ["anchor_value"]].drop_duplicates()
+    if hex_qe_anchor.duplicated(baseline_keys).any():
+        raise ValueError("Hex-optimal QE baseline is not unique within matched dataset/seed units.")
+    hex_qe_anchor = hex_qe_anchor.rename(columns={"anchor_value": "hex_optimal_qe"})
+    working = working.merge(hex_qe_anchor, on=baseline_keys, how="left", validate="many_to_one")
+    qe_mask = working["metric"] == "balanced_qe_raw"
+    if working.loc[qe_mask, "hex_optimal_qe"].isna().any():
+        raise ValueError("One or more QE rows lack a matched Hex-optimal baseline.")
+    if (working.loc[qe_mask, ["candidate_value", "hex_optimal_qe"]] <= 0).any().any():
+        raise ValueError("Hex-normalized QE ratios require strictly positive QE values.")
+    working["hex_normalized_qe_ratio"] = np.nan
+    working.loc[qe_mask, "hex_normalized_qe_ratio"] = (
+        working.loc[qe_mask, "candidate_value"] / working.loc[qe_mask, "hex_optimal_qe"]
+    )
+
     dataset_records: List[Dict[str, object]] = []
-    for keys, subset in pair_df.groupby(["metric", "metric_label", "metric_slug", "architecture", "initial_radius", "dataset"]):
+    for keys, subset in working.groupby(["metric", "metric_label", "metric_slug", "architecture", "initial_radius", "dataset"]):
         metric, label, slug, topology, radius, dataset = keys
         effects = subset["pct_change_favoring_candidate"].to_numpy(dtype=float)
-        dataset_records.append(
-            {
-                "metric": metric,
-                "metric_label": label,
-                "metric_slug": slug,
-                "architecture": topology,
-                "initial_radius": float(radius),
-                "dataset": dataset,
-                "n_pairs": int(len(effects)),
-                "mean_pct_change": float(np.mean(effects)),
-                "median_pct_change": float(np.median(effects)),
-            }
-        )
+        candidate_values = subset["candidate_value"].to_numpy(dtype=float)
+        record = {
+            "metric": metric,
+            "metric_label": label,
+            "metric_slug": slug,
+            "architecture": topology,
+            "initial_radius": float(radius),
+            "dataset": dataset,
+            "n_pairs": int(len(effects)),
+            "mean_candidate_value": float(np.mean(candidate_values)),
+            "median_candidate_value": float(np.median(candidate_values)),
+            "mean_pct_change": float(np.mean(effects)),
+            "median_pct_change": float(np.median(effects)),
+            "geometric_mean_hex_normalized_qe": np.nan,
+        }
+        if metric == "balanced_qe_raw":
+            ratios = subset["hex_normalized_qe_ratio"].to_numpy(dtype=float)
+            record["geometric_mean_hex_normalized_qe"] = float(np.exp(np.mean(np.log(ratios))))
+        dataset_records.append(record)
     dataset_summary = pd.DataFrame(dataset_records)
 
     pooled_records: List[Dict[str, object]] = []
     group_columns = ["metric", "metric_label", "metric_slug", "architecture", "initial_radius"]
-    for keys, subset in pair_df.groupby(group_columns):
+    for keys, subset in working.groupby(group_columns):
         metric, label, slug, topology, radius = keys
         effects = subset["pct_change_favoring_candidate"].to_numpy(dtype=float)
+        candidate_values = subset["candidate_value"].to_numpy(dtype=float)
+        raw_mean, raw_median, raw_ci_low, raw_ci_high, _ = _mean_ci(candidate_values)
         is_anchor = math.isclose(float(radius), float(anchor_radius), rel_tol=0.0, abs_tol=1e-12)
         if is_anchor:
             mean, median, ci_low, ci_high, p_value = 0.0, 0.0, 0.0, 0.0, np.nan
         else:
             mean, median, ci_low, ci_high, p_value = _mean_ci(effects)
         tolerance = 1e-12
+        normalized_qe_mean = np.nan
+        normalized_qe_ci_low = np.nan
+        normalized_qe_ci_high = np.nan
+        n_datasets = int(subset["dataset"].nunique())
+        if metric == "balanced_qe_raw":
+            dataset_log_ratios = (
+                subset.assign(_log_qe_ratio=np.log(subset["hex_normalized_qe_ratio"]))
+                .groupby("dataset", sort=True)["_log_qe_ratio"]
+                .mean()
+                .to_numpy(dtype=float)
+            )
+            log_mean, _, log_ci_low, log_ci_high, _ = _mean_ci(dataset_log_ratios)
+            normalized_qe_mean = float(np.exp(log_mean))
+            normalized_qe_ci_low = float(np.exp(log_ci_low))
+            normalized_qe_ci_high = float(np.exp(log_ci_high))
         pooled_records.append(
             {
                 "metric": metric,
@@ -274,8 +319,15 @@ def build_summaries(pair_df: pd.DataFrame, *, anchor_radius: float) -> Tuple[pd.
                 "initial_radius": float(radius),
                 "anchor_initial_radius": float(anchor_radius),
                 "n_pairs": int(len(effects)),
+                "n_datasets": n_datasets,
                 "mean_anchor_value": float(subset["anchor_value"].mean()),
-                "mean_candidate_value": float(subset["candidate_value"].mean()),
+                "mean_candidate_value": raw_mean,
+                "median_candidate_value": raw_median,
+                "candidate_ci_low": raw_ci_low,
+                "candidate_ci_high": raw_ci_high,
+                "geometric_mean_hex_normalized_qe": normalized_qe_mean,
+                "hex_normalized_qe_ci_low": normalized_qe_ci_low,
+                "hex_normalized_qe_ci_high": normalized_qe_ci_high,
                 "mean_pct_change": mean,
                 "median_pct_change": median,
                 "ci_low_pct": ci_low,
@@ -340,18 +392,28 @@ def render_response_plot(
 
     plt.rcParams.update(
         {
-            "font.size": 14,
-            "axes.labelsize": 16,
-            "xtick.labelsize": 13,
-            "ytick.labelsize": 13,
-            "legend.fontsize": 13,
-            "legend.title_fontsize": 13,
+            "font.size": 21,
+            "axes.labelsize": 24,
+            "xtick.labelsize": 19.5,
+            "ytick.labelsize": 19.5,
+            "legend.fontsize": 19.5,
+            "legend.title_fontsize": 19.5,
         }
     )
-    fig, ax = plt.subplots(figsize=(9.4, 7.8))
+    is_normalized_qe = metric == "balanced_qe_raw"
+    fig, single_ax = plt.subplots(figsize=(9.4, 7.8))
+    plot_axes = (single_ax,)
     fig.patch.set_alpha(0.0)
-    ax.set_facecolor("white")
-    all_y = plot_df[["ci_low_pct", "ci_high_pct", "mean_pct_change"]].to_numpy(dtype=float).ravel()
+    for ax in plot_axes:
+        ax.set_facecolor("white")
+    required_raw_columns = {"mean_candidate_value", "candidate_ci_low", "candidate_ci_high"}
+    if is_normalized_qe:
+        required_raw_columns.add("geometric_mean_hex_normalized_qe")
+    missing_raw_columns = sorted(required_raw_columns - set(plot_df.columns))
+    if missing_raw_columns:
+        raise ValueError(f"Pooled summary is missing raw-value plot columns: {missing_raw_columns}")
+    y_column = "geometric_mean_hex_normalized_qe" if is_normalized_qe else "mean_candidate_value"
+    all_y = plot_df[[y_column]].to_numpy(dtype=float).ravel()
     finite_y = all_y[np.isfinite(all_y)]
     y_span = max(1.0, float(np.max(finite_y) - np.min(finite_y))) if finite_y.size else 1.0
 
@@ -360,59 +422,70 @@ def render_response_plot(
         topology_df = plot_df[plot_df["architecture"] == topology].sort_values("initial_radius")
         style = TOPOLOGY_STYLES[topology]
         x = topology_df["initial_radius"].to_numpy(dtype=float)
-        y = topology_df["mean_pct_change"].to_numpy(dtype=float)
-        lower = y - topology_df["ci_low_pct"].to_numpy(dtype=float)
-        upper = topology_df["ci_high_pct"].to_numpy(dtype=float) - y
-        ax.errorbar(
-            x,
-            y,
-            yerr=np.vstack([lower, upper]),
-            color=style["color"],
-            marker=style["marker"],
-            markersize=8.5,
-            linewidth=2.5,
-            capsize=4.0,
-            elinewidth=1.7,
-            label=style["label"],
-            zorder=2 + topology_index,
-        )
+        y = topology_df[y_column].to_numpy(dtype=float)
+        for ax in plot_axes:
+            ax.plot(
+                x,
+                y,
+                color=style["color"],
+                marker=style["marker"],
+                markersize=12.75,
+                linewidth=2.5,
+                label=style["label"],
+                zorder=2 + topology_index,
+            )
         for _, row in topology_df.iterrows():
             stars = _q_stars(float(row["bh_q_value"]))
             if not stars:
                 continue
-            offset = 7.0 + topology_index * 5.0
-            ax.annotate(
+            value = float(row[y_column])
+            offset = 10.5 + topology_index * 7.5
+            single_ax.annotate(
                 stars,
-                (float(row["initial_radius"]), float(row["mean_pct_change"])),
+                (float(row["initial_radius"]), value),
                 xytext=(0, offset),
                 textcoords="offset points",
                 ha="center",
                 va="bottom",
-                fontsize=13,
+                fontsize=19.5,
                 fontweight="bold",
                 color=style["color"],
                 clip_on=False,
             )
 
-    ax.axhline(0.0, color="black", linestyle="--", linewidth=1.2, alpha=0.8, zorder=0)
-    ax.axvline(float(anchor_radius), color="#555555", linestyle=":", linewidth=1.1, alpha=0.75, zorder=0)
+    for ax in plot_axes:
+        reference_value = 1.0 if is_normalized_qe else 0.0
+        ax.axhline(reference_value, color="black", linestyle="--", linewidth=1.2, alpha=0.8, zorder=0)
+        ax.axvline(float(anchor_radius), color="#555555", linestyle=":", linewidth=1.1, alpha=0.75, zorder=0)
     radii = sorted(plot_df["initial_radius"].unique().tolist())
-    ax.set_xticks(radii)
     tick_labels = [
-        f"{radius:g}" if not math.isclose(radius, anchor_radius, abs_tol=1e-12) else f"{radius:.3f}"
+        f"{radius:g}" if not math.isclose(radius, anchor_radius, abs_tol=1e-12) else "Hex optimal"
         for radius in radii
     ]
-    ax.set_xticklabels(tick_labels, rotation=25, ha="right")
-    ax.set_xlabel("Initial radius")
-    ax.set_ylabel(f"{metric_label} change vs r={anchor_radius:.3f} (%)\n(positive is better)")
-    ax.grid(axis="both", color="black", linewidth=0.7, alpha=0.55)
-    for spine in ax.spines.values():
-        spine.set_visible(True)
-        spine.set_color("black")
-        spine.set_linewidth(1.1)
-    ax.legend(title="Topology", loc="best", frameon=True)
-    ax.margins(x=0.035, y=max(0.10, 8.0 / (100.0 + y_span)))
-    fig.subplots_adjust(left=0.15, right=0.985, bottom=0.12, top=0.985)
+    bottom_ax = plot_axes[-1]
+    bottom_ax.set_xticks(radii)
+    bottom_ax.set_xticklabels(tick_labels, rotation=45, ha="right")
+    bottom_ax.set_xlabel("Initial radius")
+    if is_normalized_qe:
+        single_ax.set_ylabel("QE ratio relative to Hex optimal")
+        single_ax.set_ylim(0.95, 1.40)
+        single_ax.yaxis.set_major_locator(FixedLocator([1.0, 1.1, 1.2, 1.3, 1.4]))
+        single_ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value:.1f}"))
+    elif metric == "balanced_node_utilization_raw":
+        single_ax.set_ylabel(metric_label)
+        single_ax.set_ylim(0.83, 0.91)
+        single_ax.yaxis.set_major_locator(FixedLocator([0.84, 0.86, 0.88, 0.90]))
+        single_ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value:.2f}"))
+    else:
+        single_ax.set_ylabel(metric_label)
+    for ax in plot_axes:
+        ax.grid(axis="both", color="#8F8F8F", linewidth=0.25, alpha=0.85)
+        for spine in ax.spines.values():
+            if spine.get_visible():
+                spine.set_color("black")
+                spine.set_linewidth(1.1)
+        ax.margins(x=0.035, y=max(0.10, 8.0 / (100.0 + y_span)))
+    fig.subplots_adjust(left=0.18, right=0.985, bottom=0.16, top=0.985)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=dpi, bbox_inches="tight", pad_inches=0.16, transparent=True)
     plt.close(fig)

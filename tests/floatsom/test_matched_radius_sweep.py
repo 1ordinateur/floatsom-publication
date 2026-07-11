@@ -380,16 +380,47 @@ def test_full_analysis_emits_three_topology_response_plots_and_54_q_values(
     for figure_path in outputs["figures"].values():
         path = Path(figure_path)
         assert path.exists()
-        svg = path.read_text(encoding="utf-8")
-        assert "Hexagonal" in svg
-        assert "MST" in svg
-        assert "RNG" in svg
+        svg = path.read_text(encoding="utf-8").lower()
+        assert "#ff4fa3" in svg
+        assert "#8a2be2" in svg
+        assert "#00e5ff" in svg
+        assert 'id="legend_' not in svg
 
     pooled = pd.read_csv(outputs["pooled_summary"])
     assert len(pooled) == 3 * 3 * 7
     assert pooled["bh_q_value"].notna().sum() == 54
     assert set(pooled["n_pairs"]) == {6}
+    assert {
+        "mean_candidate_value",
+        "median_candidate_value",
+        "candidate_ci_low",
+        "candidate_ci_high",
+        "geometric_mean_hex_normalized_qe",
+        "hex_normalized_qe_ci_low",
+        "hex_normalized_qe_ci_high",
+        "n_datasets",
+    }.issubset(pooled.columns)
+    assert np.isfinite(
+        pooled[["mean_candidate_value", "candidate_ci_low", "candidate_ci_high"]].to_numpy(dtype=float)
+    ).all()
+    assert (pooled["candidate_ci_low"] <= pooled["mean_candidate_value"]).all()
+    assert (pooled["mean_candidate_value"] <= pooled["candidate_ci_high"]).all()
     anchor_rows = pooled[np.isclose(pooled["initial_radius"], anchor)]
     assert len(anchor_rows) == 9
     assert np.allclose(anchor_rows["mean_pct_change"], 0.0)
     assert anchor_rows["bh_q_value"].isna().all()
+
+    qe_rows = pooled[pooled["metric"] == "balanced_qe_raw"]
+    normalized_columns = [
+        "geometric_mean_hex_normalized_qe",
+        "hex_normalized_qe_ci_low",
+        "hex_normalized_qe_ci_high",
+    ]
+    assert np.isfinite(qe_rows[normalized_columns].to_numpy(dtype=float)).all()
+    assert set(qe_rows["n_datasets"]) == {2}
+    hex_anchor = qe_rows[
+        (qe_rows["architecture"] == "hexagonal")
+        & np.isclose(qe_rows["initial_radius"], anchor)
+    ]
+    assert len(hex_anchor) == 1
+    assert hex_anchor.iloc[0]["geometric_mean_hex_normalized_qe"] == pytest.approx(1.0)

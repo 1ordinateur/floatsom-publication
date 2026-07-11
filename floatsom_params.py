@@ -708,12 +708,17 @@ def calculate_radius(current_iteration: int, total_iterations: int, initial_radi
                     decay_type: str, min_radius: float = 0.01, use_minisom: bool = False,
                     radius_warmup_iters: int = 0, radius_decay_factor: float = 1.0, 
                     radius_decay_type: Optional[str] = None) -> float:
-    """Calculate the current radius based on iteration and decay type
-    
-    The radius always decays from initial_radius to min_radius over the training period.
-    The radius_decay_factor controls the shape/slope of the decay curve:
-    - Higher values (e.g., 3.0) make the decay slower/gentler
-    - Lower values (e.g., 0.5) make the decay faster/steeper
+    """Calculate the current neighbourhood radius for one training iteration.
+
+    Exponential and linear decay use ``min_radius`` as their requested endpoint.
+    The XPySOM-compatible asymptotic decay intentionally ignores ``min_radius``
+    and follows ``initial_radius / (1 + 2 * iteration / total_iterations)``;
+    consequently, its final scheduled value is approximately one third of the
+    initial radius. Fixed decay keeps ``initial_radius`` unchanged.
+
+    ``radius_decay_factor`` controls only the FloatSOM-specific sigmoid and
+    Gaussian curves. Higher values make those curves slower/gentler, while
+    lower values make them faster/steeper.
     """
     import inspect
     
@@ -732,7 +737,7 @@ def calculate_radius(current_iteration: int, total_iterations: int, initial_radi
     if radius_decay_type is not None:
         decay_type = radius_decay_type
     
-    # Special handling for 'fixed' learning rate mode
+    # A fixed radius does not decay.
     if decay_type == 'fixed':
         return initial_radius
     

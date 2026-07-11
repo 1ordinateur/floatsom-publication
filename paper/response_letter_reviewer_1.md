@@ -22,9 +22,9 @@ In Section 4.1, we added:
 
 > "MTR is used instead of topographic error because one-hop adjacency is not equivalent across hexagonal, MST, and RNG graphs; topographic error also depends on lattice properties and map design [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]. We additionally report node utilization, defined as the fraction of nodes selected as a BMU, and its complement, dead-node fraction. These post hoc diagnostics are computed on training and holdout splits and balanced as for $QE$."
 
-In Section 4.3, we clarified the fixed tuned rerun design:
+In Section 4.3.1, we clarified the fixed tuned rerun design, including the exact tuned and untuned profiles, 14 datasets, 20 matched seeds, pairing keys, and diagnostic summaries:
 
-> "Fixed configurations were rerun under matched dataset, seed, topology, and split keys. Deployment analyses compare tuned FloatSOM with untuned hexagonal XPySOM, while topology diagnostics compare tuned and untuned FloatSOM within each topology. These reruns estimate deployable performance; the top-$k$ Optuna summaries instead estimate attainable performance within the search budget."
+> "The final topology diagnostic comprised all 14 benchmark datasets, 20 shared random seeds, full sampling, and each of the hexagonal, MST, and RNG topologies, giving 280 dataset--seed units per paired contrast."
 
 In Section 5.3, we revised the opening sentence to:
 
@@ -50,9 +50,9 @@ In the Discussion, we added:
 
 ### Response
 
-We agree that neighborhood radius is an important potential confound. The existing Optuna design partially addresses this concern because `initial_radius` was optimized independently for every topology over the same interval and search budget. The selected hexagonal radius was smaller than the selected MST and RNG radii: 1.03, 1.46, and 1.41 under full sampling, respectively, and 1.17, 1.82, and 1.77 under random sampling.
+We agree that neighborhood radius is an important potential confound. In addition to the existing Optuna design, in which `initial_radius` was optimized independently for every topology over the same interval and search budget, we added the requested radius-only control as Fig. 9. We evaluated seven identical radii for hexagonal, MST, and RNG maps using 20 matched seeds on all 14 datasets, while holding every non-radius training hyperparameter fixed.
 
-The reported MST/RNG $QE$ gains therefore do not result from comparison with a broad default-radius hexagonal map. This is not a radius-only ablation, however, and it does not isolate radius from the other optimized parameters. We now state both points explicitly in Sections 4.1 and 5.3.
+MST and RNG retained lower normalized $QE_B$ than hexagonal when compared at the same radii. Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. The sweep also shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range.
 
 ### Manuscript Amendment
 
@@ -60,9 +60,11 @@ In Section 4.1, we added:
 
 > "The neighborhood-radius search space was shared across topology families. In particular, `initial_radius` was an Optuna-optimized parameter for hexagonal, MST, and RNG runs, with the same search interval of 0.5 to 10.0 in each case. Thus, the hexagonal topology comparisons below use a tuned hexagonal comparator rather than a default-radius hexagonal baseline."
 
+In Section 4.3.3, we added the matched initial-radius sensitivity protocol, including the seven tested radii, 14 datasets, 20 matched seeds, fixed non-radius configuration, normalized-$QE$ calculation, and multiplicity correction.
+
 In Section 5.3, we added:
 
-> "`initial_radius` was optimized over the same interval for every topology. The selected full-sampling values were 1.03 for hexagonal, 1.46 for MST, and 1.41 for RNG; under random sampling they were 1.17, 1.82, and 1.77. Thus, the graph-topology gains are not comparisons against a broader default-radius hexagonal map, although radius was not isolated from the other tuned parameters."
+> "Crucially, MST and RNG retain lower $QE_B$ than hexagonal when evaluated at the same radii with every other training hyperparameter fixed. Their quantization advantage therefore cannot arise from preferential radius treatment or from assigning graph topologies a broader initial neighborhood; if anything, their lowest observed $QE_B$ occurs at a larger radius than the hexagonal minimum."
 
 ## 3. Related work and external baselines
 
@@ -114,7 +116,7 @@ In the Supplementary Tables section, we replaced the path-only captions with emb
 
 For the deployment comparison, the revised caption now reads:
 
-> "Supplementary Table S8. Figure 14 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$."
+> "Supplementary Table S8. Figure 15 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$."
 
 ## 5. Deployment comparison separates topology, tuning, and implementation
 
@@ -126,19 +128,19 @@ For the deployment comparison, the revised caption now reads:
 
 ### Response
 
-We agree that Fig. 14 should not be read as attributing the full gain to topology alone. It presents an integrated deployment comparison between an untuned XPySOM run and the recommended tuned FloatSOM RNG configuration. The component effects are evaluated separately in Sections 5.1, 5.3, and 5.4, but the submitted Section 7 did not make this decomposition sufficiently clear.
+We agree that Fig. 15 should not be read as attributing the full gain to topology alone. It presents an integrated deployment comparison between an untuned XPySOM run and the recommended tuned FloatSOM RNG configuration. The component effects are evaluated separately in Sections 5.1, 5.3, and 5.4, but the submitted Section 7 did not make this decomposition sufficiently clear.
 
-We revised Section 7 and the Fig. 14 caption so that the 14.5%, 9.1%, and 22.5% improvements are described as an integrated deployment effect rather than a topology-only effect. We also point readers to the tuned-hexagonal and tuned-MST deployment figures in the Supplementary material.
+We revised Section 7 and the Fig. 15 caption so that the 14.5%, 9.1%, and 22.5% improvements are described as an integrated deployment effect rather than a topology-only effect. We also point readers to the tuned-hexagonal and tuned-MST deployment figures in the Supplementary material.
 
 ### Manuscript Amendment
 
 In Section 7, we revised the opening paragraph to:
 
-> "Fig. 14 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects [@manciniXPySomHighPerformanceSelfOrganizing2020]. Sections 5.1, 5.3, and 5.4 separate these components; Supplementary Figs. S7-S8 provide the corresponding tuned hexagonal and MST comparisons."
+> "Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects [@manciniXPySomHighPerformanceSelfOrganizing2020]. Sections 5.1, 5.3, and 5.4 separate these components; Supplementary Figs. S7-S8 provide the corresponding tuned hexagonal and MST comparisons."
 
-We revised the Fig. 14 caption to:
+We revised the Fig. 15 caption to:
 
-> "Figure 14. Integrated deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM RNG, combining implementation, tuning, and topology effects."
+> "Figure 15. Integrated deployment comparison of untuned hexagonal XPySOM versus tuned FloatSOM RNG, combining implementation, tuning, and topology effects."
 
 ## 6. MST and RNG novelty claims
 
@@ -190,7 +192,7 @@ and:
 
 ### Response
 
-We agree that any recommendation of RNG must be paired with its runtime cost. Fig. 13 reports this cost: at grid size 64, the 8-GPU mean runtime was 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG, corresponding to 8.19x and 27.07x the hexagonal runtime for MST and RNG, respectively. We now repeat these values at the point where RNG is recommended and make the grid-size limitation explicit.
+We agree that any recommendation of RNG must be paired with its runtime cost. Fig. 14 reports this cost: at grid size 64, the 8-GPU mean runtime was 32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG, corresponding to 8.19x and 27.07x the hexagonal runtime for MST and RNG, respectively. We now repeat these values at the point where RNG is recommended and make the grid-size limitation explicit.
 
 ### Manuscript Amendment
 
