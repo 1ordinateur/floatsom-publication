@@ -16,6 +16,8 @@ The matched analysis found lower MTR for RNG than for hexagonal maps with and wi
 
 We also expanded the geometric rationale. A fixed hexagonal lattice predetermines neighborhood coupling independently of the learned data-space geometry, so movement of one prototype can influence lattice neighbors that are not locally related in data space. MST minimizes this coupling and lets prototypes redistribute along irregular or elongated structures, but its tree constraint can omit additional useful local connections in dense regions. RNG is less free because nodes may influence several neighbors, yet those connections are supported by the evolving prototype geometry rather than imposed beforehand. It can therefore remain sparse where appropriate and become more mesh-like in concentrated regions. We present $QE$, MTR, node utilization, and dead-node fraction as evidence consistent with this interpretation, not as proof of a unique causal mechanism.
 
+To illustrate these neighborhood structures beyond a two-dimensional synthetic example, we expanded Fig. 5 to include matched hexagonal, MST, and RNG overlays for KDD Cup 99, trained in standardized 41-dimensional space and displayed using a shared two-dimensional PCA projection.
+
 ### Manuscript Amendment
 
 In Section 4.1, we added:

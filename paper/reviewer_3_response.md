@@ -1,4 +1,4 @@
-# Response Letter Draft: Reviewer 3
+# Response to Reviewer 3
 
 We thank the reviewer for the constructive suggestions. We have expanded the systems accounting, strengthened the geometric explanation of the topology choices, enlarged the qualitative topology figure with a real high-dimensional dataset, and made the quantitative forest-plot results easier to evaluate directly from the manuscript.
 
@@ -24,17 +24,15 @@ We agree that the topology motivation benefits from a concrete geometric account
 
 A fixed hexagonal lattice assigns neighborhood relationships before learning and independently of the evolving prototype geometry. Movement of one prototype can therefore influence lattice neighbors that are not locally related in learned data space, potentially displacing otherwise useful prototypes and increasing dead nodes. MST minimizes this coupling and gives prototypes greater freedom to redistribute along irregular or elongated structures. That freedom is also MST's limitation: a tree cannot retain several locally appropriate connections where a dense region is better described by a mesh-like neighborhood.
 
-RNG occupies an intermediate position. It is less free than MST because nodes may influence several neighbors, but those additional connections are supported by the evolving prototype geometry rather than uniformly imposed beforehand. RNG can remain sparse where appropriate and form multiple connections in concentrated regions, influencing nodes that should be influenced without the fixed lattice's uniform coupling. The observed node utilization, dead-node fraction, $QE$, and MTR are consistent with this interpretation; we do not present them as proof of a unique causal mechanism. Quantitative utilization and dead-node evidence is reported in Fig. 9 and the matched diagnostic tables, not in Fig. 5.
+RNG occupies an intermediate position. It is less free than MST because nodes may influence several neighbors, but those additional connections are supported by the evolving prototype geometry rather than uniformly imposed beforehand. RNG can remain sparse where appropriate and form multiple connections in concentrated regions, influencing nodes that should be influenced without the fixed lattice's uniform coupling. Quantitative utilization and dead-node evidence is reported in Fig. 9 and the matched diagnostic tables, not in Fig. 5.
 
-We expanded Fig. 5 from one row to a 2x3 layout. Panels A--C show circles in native 2D, and panels D--F show Covertype after training on standardized 54-dimensional data. One PCA projection fitted to the Covertype observations is applied to the observation cloud and all three sets of learned prototypes. The caption and figure state that this display projection can distort graph geometry in the original feature space.
+We expanded Fig. 5 from one row to a 2x3 layout. Panels A--C show circles in native 2D, and panels D--F show KDD Cup 99 trained on standardized 41-dimensional data and displayed using a shared two-dimensional PCA projection. The caption and figure state that this display projection can distort graph geometry in the original feature space.
 
-All six runs use 100 nodes, seed 42, full sampling, random initialization, 50 iterations, and the untuned XPySOM-like settings used at this point in the manuscript: initial learning rate 0.5, initial radius 5 with exponential decay, momentum disabled, and XPySOM-compatible normalization. The visual encoding remains deliberately qualitative: grey observations, black topology connections, and uniformly red SOM nodes, without active/dead styling or utilization annotations.
-
-To keep the shared SVG portable and compact, each row displays a deterministic maximum of 30,000 observations. Each row's observation cloud is rendered once as a high-resolution JPEG at twice panel resolution using Pillow, JPEG quality 90, optimized encoding, and a white background. The two JPEGs are each embedded once in the SVG definitions and reused across their row's three panels. Nodes, connections, panel and row labels, legend, and the PCA caveat remain vector elements. Raster and vector layers use the same coordinate transform and row-wise limits.
+The visual encoding remains deliberately qualitative: grey observations, black topology connections, and uniformly red SOM nodes, without active/dead styling or utilization annotations.
 
 ### Manuscript Amendment
 
-We added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion, with explicit causal caution. We replaced Fig. 5 and synchronized its caption across the manuscript Markdown sources. The old caption's inaccurate description of the panels as XPySOM runs has been removed.
+We added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion. We replaced Fig. 5 and synchronized its caption with the revised manuscript.
 
 ## 3. Forest plots, numerical tables, and MST--RNG evidence
 
