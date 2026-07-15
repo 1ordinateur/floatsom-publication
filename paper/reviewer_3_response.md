@@ -1,0 +1,51 @@
+# Response Letter Draft: Reviewer 3
+
+We thank the reviewer for the constructive suggestions. We have expanded the systems accounting, strengthened the geometric explanation of the topology choices, enlarged the qualitative topology figure with a real high-dimensional dataset, and made the quantitative forest-plot results easier to evaluate directly from the manuscript.
+
+## 1. Distributed memory, communication, and large-grid cost
+
+### Response
+
+We clarified that FloatSOM does not communicate observations between workers during an iteration. Each worker processes its own shard in bounded chunks and accumulates a node-by-feature update numerator and a node-wise normalization denominator. Those two arrays are synchronized once per iteration by NCCL all-reduce; the updated prototypes then remain resident and identical on every worker.
+
+For $P$ nodes and $d$ features stored as float32, the two accumulators contain $Pd+P$ values. Their logical all-reduce payload is therefore $4P(d+1)$ bytes per worker per iteration, plus a 4-byte sample-count reduction. For a ring all-reduce over $G$ workers, each worker sends and receives approximately $2(G-1)/G$ times that payload. The communication term is independent of the number of observations $N$: increasing $N$ increases local BMU/update work and data staging, whereas increasing $P$ increases both the synchronized update and the graph-topology work.
+
+The memory explanation now separates observation and topology terms. With chunks of at most $C$ rows, the dominant bounded worker arrays scale as $O(Cd+Pd)$ rather than requiring the full $O(Nd)$ observations in GPU memory. Graph distances and influence structures add $P^2$ terms; FloatSOM tiles or spills these structures when required. The measured grid-size results show the practical consequence. At grid size 64 on 8 GPUs, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s, respectively. Thus the distributed pathway scales much more favorably in sample count than in node count, especially for RNG.
+
+### Manuscript Amendment
+
+In Section 3.3.1, after the distributed-update equations, we added the explicit float32 payload and bounded-memory expressions. Sections 6.2--6.3 and the Discussion retain the grid-64 absolute runtimes and the 8.19x MST and 27.07x RNG penalties relative to hexagonal.
+
+## 2. Geometric intuition and expanded Figure 5
+
+### Response
+
+We agree that the topology motivation benefits from a concrete geometric account and from an example beyond a two-dimensional synthetic dataset.
+
+A fixed hexagonal lattice assigns neighborhood relationships before learning and independently of the evolving prototype geometry. Movement of one prototype can therefore influence lattice neighbors that are not locally related in learned data space, potentially displacing otherwise useful prototypes and increasing dead nodes. MST minimizes this coupling and gives prototypes greater freedom to redistribute along irregular or elongated structures. That freedom is also MST's limitation: a tree cannot retain several locally appropriate connections where a dense region is better described by a mesh-like neighborhood.
+
+RNG occupies an intermediate position. It is less free than MST because nodes may influence several neighbors, but those additional connections are supported by the evolving prototype geometry rather than uniformly imposed beforehand. RNG can remain sparse where appropriate and form multiple connections in concentrated regions, influencing nodes that should be influenced without the fixed lattice's uniform coupling. The observed node utilization, dead-node fraction, $QE$, and MTR are consistent with this interpretation; we do not present them as proof of a unique causal mechanism. Quantitative utilization and dead-node evidence is reported in Fig. 9 and the matched diagnostic tables, not in Fig. 5.
+
+We expanded Fig. 5 from one row to a 2x3 layout. Panels A--C show circles in native 2D, and panels D--F show Covertype after training on standardized 54-dimensional data. One PCA projection fitted to the Covertype observations is applied to the observation cloud and all three sets of learned prototypes. The caption and figure state that this display projection can distort graph geometry in the original feature space.
+
+All six runs use 100 nodes, seed 42, full sampling, random initialization, 50 iterations, and the untuned XPySOM-like settings used at this point in the manuscript: initial learning rate 0.5, initial radius 5 with exponential decay, momentum disabled, and XPySOM-compatible normalization. The visual encoding remains deliberately qualitative: grey observations, black topology connections, and uniformly red SOM nodes, without active/dead styling or utilization annotations.
+
+To keep the shared SVG portable and compact, each row displays a deterministic maximum of 30,000 observations. Each row's observation cloud is rendered once as a high-resolution JPEG at twice panel resolution using Pillow, JPEG quality 90, optimized encoding, and a white background. The two JPEGs are each embedded once in the SVG definitions and reused across their row's three panels. Nodes, connections, panel and row labels, legend, and the PCA caveat remain vector elements. Raster and vector layers use the same coordinate transform and row-wise limits.
+
+### Manuscript Amendment
+
+We added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion, with explicit causal caution. We replaced Fig. 5 and synchronized its caption across the manuscript Markdown sources. The old caption's inaccurate description of the panels as XPySOM runs has been removed.
+
+## 3. Forest plots, numerical tables, and MST--RNG evidence
+
+### Response
+
+We enlarged the forest-plot graphical elements so that dataset labels, confidence intervals, and significance annotations remain legible at manuscript scale. We also embedded the numerical supplementary tables that were previously referenced only by external paths. These tables report the effect estimates, confidence intervals, raw p-values, adjusted q-values where applicable, sample counts, and directional summaries needed to audit the plotted comparisons.
+
+The dataset-level figure annotations now use Benjamini--Hochberg adjusted q-values rather than raw p-values. The correction changed the significance threshold for two holdout-$QE$ hexagonal--RNG dataset points in Fig. 7B: `blobs` changed from p=0.0358 to q=0.0627, and `iris` from p=0.0444 to q=0.0745. Their annotations are now `ns`; other affected points retain the same substantive interpretation even where the displayed star level changed.
+
+Finally, we moved the direct MST--RNG comparison into the main text as Fig. 8 rather than asking the reader to infer that contrast from two separate hexagonal comparisons. The result is deliberately qualified: MST and RNG are close on $QE$, while the matched MTR evidence favors RNG as the stronger joint $QE$/MTR option. Fig. 9, rather than Fig. 5, supplies the quantitative node-utilization and dead-node context.
+
+### Manuscript Amendment
+
+The revised forest plots use larger typography and graphical elements, the supplementary numerical tables are embedded in the manuscript, q-value annotations are corrected, and the main topology-results sequence now includes the direct MST--RNG comparison before the radius sensitivity and utilization diagnostics.

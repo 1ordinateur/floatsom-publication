@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
-"""
-Generate a representative topology figure for Hexagonal, MST, and RNG.
+"""Generate the six-panel representative topology figure used as Figure 5.
 
-This script reuses benchmark defaults/training paths from
-`floatsom.benchmarks.run_sklearn_benchmarks` and mirrors its edge-collection
-logic for overlay rendering. It accepts any dataset supported by
-`run_sklearn_benchmarks` via `--data_type`. For non-2D datasets, a shared PCA
-projection is used for visualization while training stays in original space.
-SVG output is written directly so no plotting package dependency is required.
+The default figure compares hexagonal, MST, and RNG SOMs on sklearn circles
+(native 2D) and Covertype (trained on standardized 54D data and displayed with
+one PCA basis shared by the observations and all three sets of prototypes).
+Observation clouds are rasterized once per dataset row; topology connections,
+nodes, labels, and the legend remain SVG vectors.
 """
 
 from __future__ import annotations
 
 import argparse
+import base64
 import copy
+import io
 import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
 
 import numpy as np
+from PIL import Image, ImageDraw
 
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,11 +31,9 @@ if PARENT_DIR not in sys.path:
 if GRANDPARENT_DIR not in sys.path:
     sys.path.append(GRANDPARENT_DIR)
 
-from floatsom.benchmarks import run_sklearn_benchmarks as benchmark  # noqa: E402
-
 
 TOPOLOGIES: Sequence[str] = ("hexagonal", "mst", "rng")
-PANEL_LABELS: Sequence[str] = ("A", "B", "C")
+DEFAULT_DATA_TYPES: Sequence[str] = ("sklearn_circles", "sklearn_covertype")
 TOPOLOGY_DISPLAY_NAMES: Dict[str, str] = {
     "hexagonal": "Hexagonal",
     "mst": "MST",
@@ -42,114 +41,126 @@ TOPOLOGY_DISPLAY_NAMES: Dict[str, str] = {
 }
 
 
-def parse_args() -> argparse.Namespace:
-    """Parse script arguments."""
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+    """Parse command-line arguments while retaining the old single-dataset API."""
     parser = argparse.ArgumentParser(
-        description=(
-            "Run benchmark on Hexagonal/MST/RNG and export a 3-panel "
-            "representative overlay figure with a shared legend."
-        )
+        description="Train Hexagonal/MST/RNG SOMs and export representative topology overlays."
     )
     parser.add_argument(
         "--data_type",
-        type=str,
-        default="sklearn_circles",
-        help=(
-            "Dataset identifier accepted by run_sklearn_benchmarks "
-            "(e.g., sklearn_circles, sklearn_moons, sklearn_iris, clusters_nd, random)."
-        ),
-    )
-    parser.add_argument(
-        "--difficulty",
-        type=str,
-        default="hard",
-        choices=("easy", "medium", "hard"),
-        help="Difficulty level for supported synthetic/sklearn datasets.",
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        default=42,
-        help="Random seed for dataset generation and training.",
-    )
-    parser.add_argument(
-        "--grid_size",
-        type=int,
-        default=10,
-        help="Grid size (used for hexagonal; mst/rng default to grid_size**2 nodes).",
-    )
-    parser.add_argument(
-        "--mst_nodes",
-        type=int,
         default=None,
-        help="Optional explicit graph node count for MST/RNG.",
+        help="Backward-compatible single dataset identifier; overrides --data-types.",
     )
+    parser.add_argument(
+        "--data-types",
+        nargs="+",
+        default=None,
+        help="Dataset rows to render (default: sklearn_circles sklearn_covertype).",
+    )
+    parser.add_argument("--difficulty", default="hard", choices=("easy", "medium", "hard"))
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--grid_size", type=int, default=10)
+    parser.add_argument("--mst_nodes", type=int, default=None)
     parser.add_argument(
         "--iterations",
         type=int,
-        default=None,
-        help="Optional override for total training iterations.",
+        default=50,
+        help="Training iterations (Figure 5 uses 50; explicit overrides are honored).",
     )
     parser.add_argument(
-        "--output_svg",
+        "--learning-rate",
+        type=float,
+        default=0.5,
+        help="Initial learning rate (default: 0.5, matching XPySOM).",
+    )
+    parser.add_argument(
+        "--initial-radius",
+        type=float,
+        default=5.0,
+        help="Initial neighbourhood radius (default: 5, matching the untuned XPySOM-like profile).",
+    )
+    parser.add_argument(
+        "--radius-decay-type",
+        choices=("exponential", "linear", "asymptotic"),
+        default="exponential",
+        help="Neighbourhood-radius decay (default: exponential, matching the untuned profile).",
+    )
+    parser.add_argument(
+        "--momentum",
+        type=float,
+        default=0.5,
+        help="Initial momentum coefficient; ignored unless --use-momentum is supplied.",
+    )
+    parser.add_argument(
+        "--use-momentum",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Enable momentum (default: disabled, matching the untuned XPySOM-like profile).",
+    )
+    parser.add_argument(
+        "--display-limit",
+        type=int,
+        default=30_000,
+        help="Maximum observations displayed per dataset row; training still uses all observations.",
+    )
+    parser.add_argument("--jpeg-quality", type=int, default=90)
+    parser.add_argument("--raster-scale", type=float, default=2.0)
+    parser.add_argument("--output_svg", type=Path, default=None)
+    parser.add_argument("--summary_tsv", type=Path, default=None)
+    parser.add_argument(
+        "--background-dir",
         type=Path,
         default=None,
-        help=(
-            "Output SVG path for the combined representative figure. "
-            "Default: paper/assets/figures/fig_5.svg for sklearn_circles; "
-            "otherwise paper/assets/figures/fig_topology_<data_type>_representative.svg"
-        ),
+        help="Directory for the two source JPEG backgrounds (default: beside output SVG).",
     )
-    parser.add_argument(
-        "--summary_tsv",
-        type=Path,
-        default=None,
-        help=(
-            "Output TSV path for benchmark summary statistics. "
-            "Default: paper/assets/tables/table_topology_<data_type>_representative.tsv"
-        ),
-    )
-    parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Enable verbose benchmark logging.",
-    )
-    return parser.parse_args()
+    parser.add_argument("--verbose", action="store_true")
+    args = parser.parse_args(argv)
+    if args.display_limit < 1:
+        parser.error("--display-limit must be at least 1")
+    if not 1 <= args.jpeg_quality <= 100:
+        parser.error("--jpeg-quality must be between 1 and 100")
+    if args.raster_scale <= 0:
+        parser.error("--raster-scale must be positive")
+    args.data_types = [args.data_type] if args.data_type else (args.data_types or list(DEFAULT_DATA_TYPES))
+    return args
+
+
+def _load_benchmark_module() -> Any:
+    """Import the GPU benchmark only when training is requested."""
+    from floatsom.benchmarks import run_sklearn_benchmarks as benchmark
+
+    return benchmark
 
 
 def _dataset_tag(data_type: str) -> str:
     value = str(data_type).strip().lower()
     if value.startswith("sklearn_"):
-        value = value.replace("sklearn_", "", 1)
-    safe = "".join(ch if ch.isalnum() else "_" for ch in value).strip("_")
-    return safe or "dataset"
+        value = value[len("sklearn_") :]
+    return "".join(ch if ch.isalnum() else "_" for ch in value).strip("_") or "dataset"
 
 
 def _dataset_display_name(data_type: str) -> str:
-    value = str(data_type).strip()
-    if value.startswith("sklearn_"):
-        return f"sklearn {value.replace('sklearn_', '', 1)}"
-    return value.replace("_", " ")
+    tag = _dataset_tag(data_type)
+    return {"circles": "Circles", "covertype": "Covertype"}.get(tag, tag.replace("_", " ").title())
 
 
-def _resolve_output_paths(script_args: argparse.Namespace) -> Tuple[Path, Path]:
-    tag = _dataset_tag(script_args.data_type)
-    figures_dir = Path(__file__).resolve().parents[1] / "paper" / "assets" / "figures"
-    tables_dir = Path(__file__).resolve().parents[1] / "paper" / "assets" / "tables"
-    output_svg = script_args.output_svg
-    summary_tsv = script_args.summary_tsv
-    if output_svg is None:
-        if tag == "circles":
-            output_svg = figures_dir / "fig_5.svg"
-        else:
-            output_svg = figures_dir / f"fig_topology_{tag}_representative.svg"
-    if summary_tsv is None:
-        summary_tsv = tables_dir / f"table_topology_{tag}_representative.tsv"
-    return Path(output_svg), Path(summary_tsv)
+def _resolve_output_paths(args: argparse.Namespace) -> Tuple[Path, Path, Path]:
+    root = Path(__file__).resolve().parents[1]
+    figures_dir = root / "paper" / "assets" / "figures"
+    tables_dir = root / "paper" / "assets" / "tables"
+    if args.output_svg is None:
+        output_svg = figures_dir / "fig_5.svg" if list(args.data_types) == list(DEFAULT_DATA_TYPES) else figures_dir / f"fig_topology_{_dataset_tag(args.data_types[0])}_representative.svg"
+    else:
+        output_svg = Path(args.output_svg)
+    if args.summary_tsv is None:
+        summary_tsv = tables_dir / "table_topology_circles_representative.tsv" if list(args.data_types) == list(DEFAULT_DATA_TYPES) else tables_dir / f"table_topology_{_dataset_tag(args.data_types[0])}_representative.tsv"
+    else:
+        summary_tsv = Path(args.summary_tsv)
+    background_dir = Path(args.background_dir) if args.background_dir else output_svg.parent
+    return output_svg, summary_tsv, background_dir
 
 
-def _get_benchmark_default_args() -> argparse.Namespace:
-    """Build defaults from run_sklearn_benchmarks.parse_args."""
+def _get_benchmark_default_args(benchmark: Any) -> argparse.Namespace:
     original_argv = list(sys.argv)
     try:
         sys.argv = ["run_sklearn_benchmarks.py"]
@@ -161,437 +172,300 @@ def _get_benchmark_default_args() -> argparse.Namespace:
 def _configure_topology_args(
     base_args: argparse.Namespace,
     script_args: argparse.Namespace,
+    data_type: str,
     topology_type: str,
 ) -> argparse.Namespace:
-    """Create per-topology benchmark args from canonical defaults."""
+    """Create the matched Figure 5 configuration for one topology."""
     args = copy.deepcopy(base_args)
-    args.data_type = script_args.data_type
+    args.data_type = data_type
     args.difficulty = script_args.difficulty
     args.seed = script_args.seed
     args.grid_size = script_args.grid_size
     args.topology_type = topology_type
-    args.mst_nodes = script_args.mst_nodes
+    args.mst_nodes = script_args.mst_nodes or script_args.grid_size**2
+    args.iterations = script_args.iterations  # Do not replace an explicit override.
+    args.learning_rate = script_args.learning_rate
+    args.initial_radius = script_args.initial_radius
+    args.radius_decay_type = script_args.radius_decay_type
+    args.radius_decay_factor = 1.0
+    args.sampling_method = "full"
+    args.initialization_method = "random"
+    args.use_momentum = script_args.use_momentum
+    args.momentum_init = script_args.momentum
+    args.normalization = "xpysom"
     args.visualize = False
     args.verbose = script_args.verbose
     args.use_gpu = True
-    if topology_type != "hexagonal":
-        args.initial_radius = 1
-        args.radius_decay_type = "asymptotic"
-        args.radius_decay_factor = 1
-    if script_args.iterations is not None:
-        args.iterations = 50
     return args
+
+
+def _stable_pca_basis(data_np: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """Return a deterministic two-component PCA basis fitted to all observations."""
+    mean = np.mean(data_np, axis=0, dtype=np.float64, keepdims=True)
+    centered = np.asarray(data_np, dtype=np.float64) - mean
+    covariance = centered.T @ centered / max(1, centered.shape[0] - 1)
+    values, vectors = np.linalg.eigh(covariance)
+    basis = vectors[:, np.argsort(values)[::-1][:2]]
+    # Eigenvector signs are arbitrary. Fix them for byte-stable reruns.
+    for column in range(basis.shape[1]):
+        pivot = int(np.argmax(np.abs(basis[:, column])))
+        if basis[pivot, column] < 0:
+            basis[:, column] *= -1
+    return mean, basis
 
 
 def _project_to_2d(
     data_np: np.ndarray,
     weights_by_topology: Dict[str, np.ndarray],
 ) -> Tuple[np.ndarray, Dict[str, np.ndarray], str]:
-    """
-    Project data and topology weights into a shared 2D display space.
-
-    Returns:
-        data_2d: projected data coordinates
-        weights_2d: projected topology weights
-        axis_mode: "dimension" (native 2D/1D) or "pca" (projected)
-    """
     if data_np.ndim != 2:
-        raise ValueError(f"Expected 2D matrix data, got shape {data_np.shape}.")
-
+        raise ValueError(f"Expected a matrix, got shape {data_np.shape}")
     if data_np.shape[1] == 2:
-        return data_np[:, :2], {k: v[:, :2] for k, v in weights_by_topology.items()}, "dimension"
-
+        return data_np[:, :2], {key: value[:, :2] for key, value in weights_by_topology.items()}, "native"
     if data_np.shape[1] == 1:
-        data_2d = np.concatenate([data_np, np.zeros((data_np.shape[0], 1), dtype=data_np.dtype)], axis=1)
-        weights_2d: Dict[str, np.ndarray] = {}
-        for topology, weights in weights_by_topology.items():
-            weights_2d[topology] = np.concatenate(
-                [weights, np.zeros((weights.shape[0], 1), dtype=weights.dtype)],
-                axis=1,
-            )
-        return data_2d, weights_2d, "dimension"
-
-    mean_vec = np.mean(data_np, axis=0, keepdims=True)
-    centered_data = data_np - mean_vec
-    _, _, vh = np.linalg.svd(centered_data, full_matrices=False)
-    basis = vh[:2].T
-    data_2d = centered_data @ basis
-    weights_2d = {
-        topology: (weights - mean_vec) @ basis
-        for topology, weights in weights_by_topology.items()
-    }
-    return data_2d, weights_2d, "pca"
+        data_2d = np.column_stack((data_np[:, 0], np.zeros(data_np.shape[0])))
+        weights_2d = {key: np.column_stack((value[:, 0], np.zeros(value.shape[0]))) for key, value in weights_by_topology.items()}
+        return data_2d, weights_2d, "native"
+    mean, basis = _stable_pca_basis(data_np)
+    return (
+        (np.asarray(data_np, dtype=np.float64) - mean) @ basis,
+        {key: (np.asarray(value, dtype=np.float64) - mean) @ basis for key, value in weights_by_topology.items()},
+        "pca",
+    )
 
 
-def _collect_connection_edges(
-    som: Any,
-    args: argparse.Namespace,
-    weights: Any,
-    weights_np: np.ndarray,
-) -> Tuple[List[Tuple[int, int]], str]:
-    """Mirror run_sklearn_benchmarks.visualize_results connection logic."""
-    edge_color = "#111111"
-    if args.topology_type in ["grid", "hexagonal"]:
+def _deterministic_display_sample(data_np: np.ndarray, limit: int, seed: int) -> np.ndarray:
+    """Select a stable, order-preserving subset for raster display only."""
+    if data_np.shape[0] <= limit:
+        return np.asarray(data_np)
+    rng = np.random.default_rng(seed)
+    indices = np.sort(rng.choice(data_np.shape[0], size=limit, replace=False))
+    return np.asarray(data_np)[indices]
+
+
+def _collect_connection_edges(som: Any, args: argparse.Namespace, weights: Any, weights_np: np.ndarray) -> List[Tuple[int, int]]:
+    if args.topology_type in {"grid", "hexagonal"}:
         grid_size = som.topology.grid_size
-        total_nodes = weights_np.shape[0]
         edges: List[Tuple[int, int]] = []
         for i in range(grid_size):
             for j in range(grid_size):
                 idx = i * grid_size + j
-                if idx >= total_nodes:
-                    continue
-                if j < grid_size - 1:
-                    idx_right = i * grid_size + (j + 1)
-                    if idx_right < total_nodes:
-                        edges.append((idx, idx_right))
-                if i < grid_size - 1:
-                    idx_bottom = (i + 1) * grid_size + j
-                    if idx_bottom < total_nodes:
-                        edges.append((idx, idx_bottom))
-        return edges, edge_color
-
-    if args.topology_type in {"mst", "rng"}:
-        if hasattr(som.topology, "is_reformed") and som.topology.is_reformed:
-            adjacency = getattr(som, "adjacency_list", None)
-            if adjacency is None:
-                raise ValueError("Topology is reformed but adjacency_list not found.")
-            edge_set = set()
-            for node, neighbors in adjacency.items():
-                for neighbor in neighbors:
-                    if neighbor == node:
-                        continue
-                    edge_set.add(tuple(sorted((int(node), int(neighbor)))))
-            return sorted(edge_set), edge_color
-
+                if j < grid_size - 1 and idx + 1 < weights_np.shape[0]:
+                    edges.append((idx, idx + 1))
+                if i < grid_size - 1 and idx + grid_size < weights_np.shape[0]:
+                    edges.append((idx, idx + grid_size))
+        return edges
+    if hasattr(som.topology, "is_reformed") and som.topology.is_reformed:
+        adjacency = getattr(som, "adjacency_list", None)
+        if adjacency is None:
+            raise ValueError("Topology is reformed but adjacency_list is unavailable")
+        return sorted({tuple(sorted((int(node), int(neighbor)))) for node, neighbors in adjacency.items() for neighbor in neighbors if node != neighbor})
+    edges = getattr(som.topology, "mst_edges", None)
+    if edges is None or len(edges) == 0:
+        som.topology.update_topology(weights)
         edges = getattr(som.topology, "mst_edges", None)
-        if edges is None or len(edges) == 0:
-            if hasattr(som, "topology") and hasattr(som.topology, "update_topology"):
-                som.topology.update_topology(weights)
-            edges = getattr(som.topology, "mst_edges", None)
-        if edges is None:
-            return [], edge_color
-        return [(int(u), int(v)) for u, v in edges], edge_color
-
-    return [], edge_color
+    return [] if edges is None else [(int(u), int(v)) for u, v in edges]
 
 
 def _xml_escape(value: str) -> str:
-    """Escape XML text/attribute content."""
-    return (
-        value.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&quot;")
-    )
+    return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-def _build_panel_mapper(
-    x_min: float,
-    x_max: float,
-    y_min: float,
-    y_max: float,
-    plot_x: float,
-    plot_y: float,
-    plot_w: float,
-    plot_h: float,
-):
-    """Build equal-aspect coordinate mapper from data space into a panel plot box."""
-    x_span = max(1e-9, x_max - x_min)
-    y_span = max(1e-9, y_max - y_min)
-    data_aspect = x_span / y_span
-    plot_aspect = plot_w / plot_h
+def _limits(data: np.ndarray, records: Sequence[Dict[str, Any]]) -> Tuple[float, float, float, float]:
+    xs = [data[:, 0], *(record["weights_plot_np"][:, 0] for record in records)]
+    ys = [data[:, 1], *(record["weights_plot_np"][:, 1] for record in records)]
+    x_min, x_max = min(float(np.min(x)) for x in xs), max(float(np.max(x)) for x in xs)
+    y_min, y_max = min(float(np.min(y)) for y in ys), max(float(np.max(y)) for y in ys)
+    x_pad, y_pad = max(1e-6, 0.04 * (x_max - x_min)), max(1e-6, 0.04 * (y_max - y_min))
+    return x_min - x_pad, x_max + x_pad, y_min - y_pad, y_max + y_pad
 
-    if data_aspect >= plot_aspect:
-        draw_w = plot_w
-        draw_h = plot_w / data_aspect
-        offset_x = 0.0
-        offset_y = 0.5 * (plot_h - draw_h)
+
+def _build_panel_mapper(limits: Tuple[float, float, float, float], plot_x: float, plot_y: float, plot_w: float, plot_h: float):
+    x_min, x_max, y_min, y_max = limits
+    x_span, y_span = max(1e-9, x_max - x_min), max(1e-9, y_max - y_min)
+    if x_span / y_span >= plot_w / plot_h:
+        draw_w, draw_h = plot_w, plot_w / (x_span / y_span)
+        offset_x, offset_y = 0.0, 0.5 * (plot_h - draw_h)
     else:
-        draw_h = plot_h
-        draw_w = plot_h * data_aspect
-        offset_x = 0.5 * (plot_w - draw_w)
-        offset_y = 0.0
+        draw_h, draw_w = plot_h, plot_h * (x_span / y_span)
+        offset_x, offset_y = 0.5 * (plot_w - draw_w), 0.0
 
-    def map_point(x_val: float, y_val: float) -> Tuple[float, float]:
-        x_norm = (x_val - x_min) / x_span
-        y_norm = (y_val - y_min) / y_span
-        sx = plot_x + offset_x + (x_norm * draw_w)
-        sy = plot_y + offset_y + ((1.0 - y_norm) * draw_h)
-        return sx, sy
+    def map_point(x: float, y: float) -> Tuple[float, float]:
+        return (
+            plot_x + offset_x + ((x - x_min) / x_span) * draw_w,
+            plot_y + offset_y + (1.0 - ((y - y_min) / y_span)) * draw_h,
+        )
 
     return map_point
 
 
+def _make_background_jpeg(
+    points: np.ndarray,
+    limits: Tuple[float, float, float, float],
+    panel_width: float,
+    panel_height: float,
+    scale: float,
+    quality: int,
+) -> bytes:
+    width, height = max(1, round(panel_width * scale)), max(1, round(panel_height * scale))
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image, "RGBA")
+    mapper = _build_panel_mapper(limits, 0, 0, width, height)
+    radius = max(1.0, 1.35 * scale)
+    for x, y in points[:, :2]:
+        sx, sy = mapper(float(x), float(y))
+        draw.ellipse((sx - radius, sy - radius, sx + radius, sy + radius), fill=(128, 128, 128, 115))
+    buffer = io.BytesIO()
+    image.save(buffer, format="JPEG", quality=quality, optimize=True, subsampling=0)
+    return buffer.getvalue()
+
+
 def _write_combined_svg(
     output_svg: Path,
-    data_np: np.ndarray,
-    panel_records: Sequence[Dict[str, Any]],
+    dataset_records: Sequence[Dict[str, Any]],
     *,
-    dataset_label: str,
-    axis_label_mode: str,
-) -> None:
-    """Write combined representative figure as SVG."""
-    canvas_w = 1560
-    canvas_h = 560
-    margin_x = 36
-    panel_gap = 18
-    panel_y = 72
-    panel_h = 430
+    display_limit: int,
+    seed: int,
+    jpeg_quality: int,
+    raster_scale: float,
+    background_dir: Path,
+) -> List[Path]:
+    """Write the 2x3 SVG and its two reusable row-background JPEGs."""
+    if not dataset_records:
+        raise ValueError("At least one dataset row is required")
+    canvas_w, canvas_h = 1560, 132 + (464 * len(dataset_records))
+    margin_x, panel_gap = 82.0, 18.0
     panel_w = (canvas_w - (2 * margin_x) - (2 * panel_gap)) / 3.0
+    plot_inset_x, plot_w, plot_h = 14.0, panel_w - 28.0, 330.0
+    row_tops = tuple(76.0 + (464.0 * index) for index in range(len(dataset_records)))
+    background_dir.mkdir(parents=True, exist_ok=True)
+    background_paths: List[Path] = []
+    prepared: List[Dict[str, Any]] = []
+    for row_index, dataset in enumerate(dataset_records):
+        limits = _limits(dataset["data_plot_np"], dataset["panels"])
+        sampled = _deterministic_display_sample(dataset["data_plot_np"], display_limit, seed + row_index)
+        jpeg = _make_background_jpeg(sampled, limits, plot_w, plot_h, raster_scale, jpeg_quality)
+        path = background_dir / f"{output_svg.stem}_{_dataset_tag(dataset['data_type'])}_background.jpg"
+        path.write_bytes(jpeg)
+        background_paths.append(path)
+        prepared.append({**dataset, "limits": limits, "jpeg": jpeg, "display_count": sampled.shape[0]})
 
-    x_values = [data_np[:, 0]]
-    y_values = [data_np[:, 1]]
-    for record in panel_records:
-        weights_np = record["weights_plot_np"]
-        x_values.append(weights_np[:, 0])
-        y_values.append(weights_np[:, 1])
-
-    x_min = float(min(np.min(arr) for arr in x_values))
-    x_max = float(max(np.max(arr) for arr in x_values))
-    y_min = float(min(np.min(arr) for arr in y_values))
-    y_max = float(max(np.max(arr) for arr in y_values))
-    x_pad = max(1e-6, 0.04 * (x_max - x_min))
-    y_pad = max(1e-6, 0.04 * (y_max - y_min))
-    x_min -= x_pad
-    x_max += x_pad
-    y_min -= y_pad
-    y_max += y_pad
-
-    def fmt(value: float) -> str:
-        return f"{value:.2f}"
-
-    lines: List[str] = [
+    fmt = lambda value: f"{value:.2f}"
+    lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
-        (
-            f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_w}" '
-            f'height="{canvas_h}" viewBox="0 0 {canvas_w} {canvas_h}" role="img" '
-            f'aria-label="{_xml_escape(f"Representative topology overlays on {dataset_label}")}">'
-        ),
-        f'  <rect x="0" y="0" width="{canvas_w}" height="{canvas_h}" fill="#FFFFFF"/>',
-        (
-            f'  <text x="{margin_x}" y="36" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" '
-            'font-size="28" font-weight="700" fill="#1f1f1f">'
-            f"{_xml_escape(f'Figure 1: Representative Node-Connection Overlays on {dataset_label}')}"
-            "</text>"
-        ),
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_w}" height="{canvas_h}" viewBox="0 0 {canvas_w} {canvas_h}" role="img" aria-label="Representative topology overlays across {len(prepared)} dataset rows">',
+        f'  <rect width="{canvas_w}" height="{canvas_h}" fill="#FFFFFF"/>',
+        "  <defs>",
     ]
+    for row_index, dataset in enumerate(prepared):
+        uri = "data:image/jpeg;base64," + base64.b64encode(dataset["jpeg"]).decode("ascii")
+        lines.append(f'    <image id="cloud-row-{row_index}" width="{fmt(plot_w)}" height="{fmt(plot_h)}" preserveAspectRatio="none" href="{uri}"/>')
+    lines.append("  </defs>")
 
-    for idx, record in enumerate(panel_records):
-        panel_x = margin_x + idx * (panel_w + panel_gap)
-        topology = str(record["topology"])
-        topology_name = TOPOLOGY_DISPLAY_NAMES[topology]
-        panel_label = PANEL_LABELS[idx]
-        weights_np = record["weights_plot_np"]
-        edges = record["edges"]
-        edge_color = record["edge_color"]
-        edge_alpha = 0.72
-
-        plot_x = panel_x + 12.0
-        plot_y = panel_y + 52.0
-        plot_w = panel_w - 24.0
-        plot_h = panel_h - 82.0
-
-        map_point = _build_panel_mapper(
-            x_min=x_min,
-            x_max=x_max,
-            y_min=y_min,
-            y_max=y_max,
-            plot_x=plot_x,
-            plot_y=plot_y,
-            plot_w=plot_w,
-            plot_h=plot_h,
-        )
-
-        lines.append(
-            f'  <text x="{fmt(panel_x + 16)}" y="{fmt(panel_y + 28)}" '
-            'font-family="DejaVu Sans, Arial, sans-serif" font-size="30" font-weight="700" fill="#111111">'
-            f"{_xml_escape(panel_label)}"
-            "</text>"
-        )
-        lines.append(
-            f'  <text x="{fmt(panel_x + 56)}" y="{fmt(panel_y + 28)}" text-anchor="start" '
-            'font-family="DejaVu Sans, Arial, sans-serif" font-size="24" font-weight="600" fill="#222222">'
-            f"{_xml_escape(topology_name)}"
-            "</text>"
-        )
-
-        # Data points.
-        for x_val, y_val in data_np[:, :2]:
-            sx, sy = map_point(float(x_val), float(y_val))
-            lines.append(
-                f'  <circle cx="{fmt(sx)}" cy="{fmt(sy)}" r="1.35" fill="#808080" fill-opacity="0.45" />'
-            )
-
-        # Topology connections.
-        for u, v in edges:
-            if u < 0 or v < 0 or u >= weights_np.shape[0] or v >= weights_np.shape[0]:
-                continue
-            x1, y1 = map_point(float(weights_np[u, 0]), float(weights_np[u, 1]))
-            x2, y2 = map_point(float(weights_np[v, 0]), float(weights_np[v, 1]))
-            lines.append(
-                f'  <line x1="{fmt(x1)}" y1="{fmt(y1)}" x2="{fmt(x2)}" y2="{fmt(y2)}" '
-                f'stroke="{edge_color}" stroke-opacity="{edge_alpha:.2f}" stroke-width="1.35"/>'
-            )
-
-        # SOM nodes.
-        for x_val, y_val in weights_np[:, :2]:
-            sx, sy = map_point(float(x_val), float(y_val))
-            lines.append(
-                f'  <circle cx="{fmt(sx)}" cy="{fmt(sy)}" r="3.00" fill="#D62728" '
-                'stroke="#8B0000" stroke-width="0.7"/>'
-            )
-
-    # Shared legend.
-    legend_y = panel_y + panel_h + 24
-    legend_entries = [
-        ("point", "Data points"),
-        ("node", "SOM nodes"),
-        ("line", "Connections"),
-    ]
-    legend_gap = 340.0
-    legend_start_x = (canvas_w - (legend_gap * (len(legend_entries) - 1))) / 2.0
-    for idx, (kind, label) in enumerate(legend_entries):
-        x0 = legend_start_x + idx * legend_gap
-        if kind == "point":
-            lines.append(
-                f'  <circle cx="{fmt(x0)}" cy="{fmt(legend_y)}" r="4.0" fill="#808080" fill-opacity="0.65" />'
-            )
-        elif kind == "node":
-            lines.append(
-                f'  <circle cx="{fmt(x0)}" cy="{fmt(legend_y)}" r="4.4" fill="#D62728" stroke="#8B0000" stroke-width="0.8"/>'
-            )
+    for row_index, dataset in enumerate(prepared):
+        row_top = row_tops[row_index]
+        row_name = _dataset_display_name(dataset["data_type"])
+        if dataset["axis_mode"] == "pca":
+            dimensions = int(dataset.get("training_dimensions", 54))
+            subtitle = f"trained in {dimensions}D; displayed by shared 2D PCA projection"
         else:
-            lines.append(
-                f'  <line x1="{fmt(x0 - 10)}" y1="{fmt(legend_y)}" x2="{fmt(x0 + 10)}" y2="{fmt(legend_y)}" '
-                'stroke="#111111" stroke-width="2.2"/>'
-            )
-        lines.append(
-            f'  <text x="{fmt(x0 + 16)}" y="{fmt(legend_y + 5)}" font-family="DejaVu Sans, Arial, sans-serif" '
-            'font-size="22" fill="#242424">'
-            f"{_xml_escape(label)}"
-            "</text>"
-        )
+            subtitle = "native 2D display"
+        lines.append(f'  <text x="{fmt(margin_x)}" y="{fmt(row_top - 32)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="24" font-weight="700" fill="#111111">{_xml_escape(row_name)}</text>')
+        lines.append(f'  <text x="{fmt(margin_x + 150)}" y="{fmt(row_top - 32)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" fill="#333333">{_xml_escape(subtitle)}</text>')
+        for column, panel in enumerate(dataset["panels"]):
+            panel_x = margin_x + column * (panel_w + panel_gap)
+            plot_x, plot_y = panel_x + plot_inset_x, row_top + 47.0
+            label = chr(ord("A") + row_index * 3 + column)
+            lines.append(f'  <text x="{fmt(panel_x + 4)}" y="{fmt(row_top + 28)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="28" font-weight="700" fill="#111111">{label}</text>')
+            lines.append(f'  <text x="{fmt(panel_x + 46)}" y="{fmt(row_top + 28)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="600" fill="#222222">{TOPOLOGY_DISPLAY_NAMES[panel["topology"]]}</text>')
+            lines.append(f'  <use href="#cloud-row-{row_index}" x="{fmt(plot_x)}" y="{fmt(plot_y)}"/>')
+            mapper = _build_panel_mapper(dataset["limits"], plot_x, plot_y, plot_w, plot_h)
+            weights = panel["weights_plot_np"]
+            for u, v in panel["edges"]:
+                if min(u, v) < 0 or max(u, v) >= weights.shape[0]:
+                    continue
+                x1, y1 = mapper(float(weights[u, 0]), float(weights[u, 1]))
+                x2, y2 = mapper(float(weights[v, 0]), float(weights[v, 1]))
+                lines.append(f'  <line x1="{fmt(x1)}" y1="{fmt(y1)}" x2="{fmt(x2)}" y2="{fmt(y2)}" stroke="#111111" stroke-opacity="0.72" stroke-width="1.35"/>')
+            for x, y in weights[:, :2]:
+                sx, sy = mapper(float(x), float(y))
+                lines.append(f'  <circle cx="{fmt(sx)}" cy="{fmt(sy)}" r="3.00" fill="#D62728" stroke="#8B0000" stroke-width="0.70"/>')
 
+    legend_y = row_tops[-1] + 455.0
+    entries = (("point", "Observations"), ("node", "SOM nodes"), ("line", "Connections"))
+    for idx, (kind, label) in enumerate(entries):
+        x = 455.0 + idx * 300.0
+        if kind == "point":
+            lines.append(f'  <circle cx="{fmt(x)}" cy="{fmt(legend_y)}" r="4" fill="#808080" fill-opacity="0.65"/>')
+        elif kind == "node":
+            lines.append(f'  <circle cx="{fmt(x)}" cy="{fmt(legend_y)}" r="4.4" fill="#D62728" stroke="#8B0000" stroke-width="0.8"/>')
+        else:
+            lines.append(f'  <line x1="{fmt(x - 10)}" y1="{fmt(legend_y)}" x2="{fmt(x + 10)}" y2="{fmt(legend_y)}" stroke="#111111" stroke-width="2.2"/>')
+        lines.append(f'  <text x="{fmt(x + 16)}" y="{fmt(legend_y + 6)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" fill="#242424">{label}</text>')
+    caveat_y = legend_y + 43.0
+    lines.append(f'  <text x="780" y="{fmt(caveat_y)}" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="17" fill="#444444">PCA display may distort graph geometry in the original feature space.</text>')
     lines.append("</svg>")
-
     output_svg.parent.mkdir(parents=True, exist_ok=True)
     output_svg.write_text("\n".join(lines), encoding="utf-8")
+    return background_paths
 
 
-def _write_summary_tsv(summary_path: Path, rows: Sequence[Dict[str, Any]]) -> None:
-    """Write benchmark summary table."""
-    summary_path.parent.mkdir(parents=True, exist_ok=True)
-    header = [
-        "topology",
-        "train_time_s",
-        "iterations_completed",
-        "total_samples_processed",
-        "quantization_error",
-        "n_nodes",
-        "n_edges",
-    ]
-    with summary_path.open("w", encoding="utf-8") as handle:
-        handle.write("\t".join(header) + "\n")
+def _write_summary_tsv(path: Path, rows: Sequence[Dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    columns = (
+        "dataset", "training_dimensions", "display_mode", "generation_backend",
+        "topology", "seed", "iterations_requested", "initial_learning_rate",
+        "initial_radius", "radius_decay_type", "momentum_enabled",
+        "initial_momentum", "normalization", "iterations_completed",
+        "total_samples_processed", "train_time_s", "quantization_error",
+        "n_nodes", "n_edges",
+    )
+    with path.open("w", encoding="utf-8") as handle:
+        handle.write("\t".join(columns) + "\n")
         for row in rows:
-            handle.write(
-                "\t".join(
-                    [
-                        str(row["topology"]),
-                        f"{row['train_time_s']:.6f}",
-                        str(int(row["iterations_completed"])),
-                        str(int(row["total_samples_processed"])),
-                        f"{row['quantization_error']:.6f}",
-                        str(int(row["n_nodes"])),
-                        str(int(row["n_edges"])),
-                    ]
-                )
-                + "\n"
-            )
+            values = []
+            for column in columns:
+                value = row[column]
+                values.append(f"{value:.6f}" if column in {"train_time_s", "quantization_error"} else str(value))
+            handle.write("\t".join(values) + "\n")
 
 
-def main() -> None:
-    """Run representative topology benchmark and emit SVG + summary TSV."""
-    script_args = parse_args()
-    output_svg, summary_tsv = _resolve_output_paths(script_args)
-    base_defaults = _get_benchmark_default_args()
-
-    data_args = _configure_topology_args(
-        base_args=base_defaults,
-        script_args=script_args,
-        topology_type="hexagonal",
-    )
-    data, metadata = benchmark.generate_data(data_args)
-    data_np = data.get() if hasattr(data, "get") else data
-
-    panel_records: List[Dict[str, Any]] = []
+def main(argv: Sequence[str] | None = None) -> None:
+    args = parse_args(argv)
+    output_svg, summary_tsv, background_dir = _resolve_output_paths(args)
+    benchmark = _load_benchmark_module()
+    base_defaults = _get_benchmark_default_args(benchmark)
+    dataset_records: List[Dict[str, Any]] = []
     summary_rows: List[Dict[str, Any]] = []
-
-    for topology in TOPOLOGIES:
-        topology_args = _configure_topology_args(
-            base_args=base_defaults,
-            script_args=script_args,
-            topology_type=topology,
-        )
-        som, training_stats, train_time = benchmark.train_floatsom(data, topology_args, metadata)
-        weights = som.get_weights()
-        weights_np = weights.get() if hasattr(weights, "get") else weights
-
-        quant_error = benchmark.QuantizationError(
-            use_optimized=bool(topology_args.use_gpu)
-        ).compute(
-            benchmark.FloatSOMWrapper(som),
-            data,
-        )
-
-        edges, edge_color = _collect_connection_edges(
-            som=som,
-            args=topology_args,
-            weights=weights,
-            weights_np=weights_np,
-        )
-
-        panel_records.append(
-            {
-                "topology": topology,
-                "weights_np": weights_np,
-                "edges": edges,
-                "edge_color": edge_color,
-            }
-        )
-        summary_rows.append(
-            {
-                "topology": topology,
-                "train_time_s": float(train_time),
-                "iterations_completed": training_stats.get("iterations_completed", 0),
-                "total_samples_processed": training_stats.get("total_samples_processed", 0),
-                "quantization_error": float(quant_error),
-                "n_nodes": int(weights_np.shape[0]),
-                "n_edges": int(len(edges)),
-            }
-        )
-
-    weights_by_topology = {
-        str(record["topology"]): np.asarray(record["weights_np"])
-        for record in panel_records
-    }
-    data_plot_np, projected_weights, axis_label_mode = _project_to_2d(
-        data_np=np.asarray(data_np),
-        weights_by_topology=weights_by_topology,
-    )
-    for record in panel_records:
-        topology = str(record["topology"])
-        record["weights_plot_np"] = projected_weights[topology]
-
-    _write_combined_svg(
-        output_svg=output_svg,
-        data_np=data_plot_np,
-        panel_records=panel_records,
-        dataset_label=_dataset_display_name(script_args.data_type),
-        axis_label_mode=axis_label_mode,
-    )
+    for data_type in args.data_types:
+        data_args = _configure_topology_args(base_defaults, args, data_type, "hexagonal")
+        data, metadata = benchmark.generate_data(data_args)
+        data_np = np.asarray(data.get() if hasattr(data, "get") else data)
+        panels: List[Dict[str, Any]] = []
+        for topology in TOPOLOGIES:
+            topology_args = _configure_topology_args(base_defaults, args, data_type, topology)
+            som, stats, train_time = benchmark.train_floatsom(data, topology_args, metadata)
+            weights = som.get_weights()
+            weights_np = np.asarray(weights.get() if hasattr(weights, "get") else weights)
+            qe = benchmark.QuantizationError(use_optimized=True).compute(benchmark.FloatSOMWrapper(som), data)
+            edges = _collect_connection_edges(som, topology_args, weights, weights_np)
+            panels.append({"topology": topology, "weights_np": weights_np, "edges": edges})
+            summary_rows.append({
+                "dataset": _dataset_tag(data_type), "training_dimensions": data_np.shape[1], "display_mode": "native" if data_np.shape[1] <= 2 else "shared_pca", "generation_backend": "FloatSOM_CuPy", "topology": topology, "seed": args.seed,
+                "initial_learning_rate": topology_args.learning_rate, "initial_radius": topology_args.initial_radius,
+                "radius_decay_type": topology_args.radius_decay_type, "momentum_enabled": topology_args.use_momentum,
+                "initial_momentum": topology_args.momentum_init, "normalization": topology_args.normalization,
+                "iterations_requested": args.iterations, "iterations_completed": int(stats.get("iterations_completed", 0)), "total_samples_processed": int(stats.get("total_samples_processed", 0)),
+                "train_time_s": float(train_time), "quantization_error": float(qe), "n_nodes": weights_np.shape[0], "n_edges": len(edges),
+            })
+        data_plot, projected, axis_mode = _project_to_2d(data_np, {panel["topology"]: panel["weights_np"] for panel in panels})
+        for panel in panels:
+            panel["weights_plot_np"] = projected[panel["topology"]]
+        dataset_records.append({"data_type": data_type, "training_dimensions": data_np.shape[1], "data_plot_np": data_plot, "panels": panels, "axis_mode": axis_mode})
+    backgrounds = _write_combined_svg(output_svg, dataset_records, display_limit=args.display_limit, seed=args.seed, jpeg_quality=args.jpeg_quality, raster_scale=args.raster_scale, background_dir=background_dir)
     _write_summary_tsv(summary_tsv, summary_rows)
-
     print(f"Representative figure saved to: {output_svg}")
+    print(f"Background JPEGs saved to: {', '.join(map(str, backgrounds))}")
     print(f"Benchmark summary saved to: {summary_tsv}")
 
 

@@ -14,6 +14,8 @@ We agree that $QE$ alone does not characterize SOM neighborhood ordering. We add
 
 The matched analysis found lower MTR for RNG than for hexagonal maps with and without tuning; MST did not clearly lower untuned MTR. The fixed QE-tuned profiles had lower $QE$ but higher MTR than the untuned profiles, with a much larger MTR difference for hexagonal maps (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). Node-use results did not indicate reduced map utilization. The main text reports the principal effects, and Supplementary Tables S12-S13 provide the full results.
 
+We also expanded the geometric rationale. A fixed hexagonal lattice predetermines neighborhood coupling independently of the learned data-space geometry, so movement of one prototype can influence lattice neighbors that are not locally related in data space. MST minimizes this coupling and lets prototypes redistribute along irregular or elongated structures, but its tree constraint can omit additional useful local connections in dense regions. RNG is less free because nodes may influence several neighbors, yet those connections are supported by the evolving prototype geometry rather than imposed beforehand. It can therefore remain sparse where appropriate and become more mesh-like in concentrated regions. We present $QE$, MTR, node utilization, and dead-node fraction as evidence consistent with this interpretation, not as proof of a unique causal mechanism.
+
 ### Manuscript Amendment
 
 In Section 4.1, we added:
@@ -42,6 +44,8 @@ In the Discussion, we added:
 
 > "$QE$ and MTR capture different properties: $QE$ measures vector-quantization fidelity, while MTR measures local ordering between the first and second BMUs. Tuning improves $QE$ across all topologies but increases MTR, with a much larger increase for hexagonal maps than for MST or RNG. Topology and hyperparameter choice should therefore be considered together."
 
+We also added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion, and explicitly qualified the diagnostic evidence as consistent with, rather than uniquely establishing, that mechanism.
+
 ## 2. Hexagonal neighborhood-radius control
 
 ### Reviewer Comment
@@ -53,6 +57,8 @@ In the Discussion, we added:
 We agree that neighborhood radius is an important potential confound. In addition to the existing Optuna design, in which `initial_radius` was optimized independently for every topology over the same interval and search budget, we added the requested radius-only control as Fig. 9. We evaluated seven identical radii for hexagonal, MST, and RNG maps using 20 matched seeds on all 14 datasets, while holding every non-radius training hyperparameter fixed.
 
 MST and RNG retained lower normalized $QE_B$ than hexagonal in the useful matched-radius region (Fig. 9A). Post hoc dataset-balanced paired contrasts confirm the separation at $r=1.027$ and $r=1.5$ after correction across all 21 topology-pair--radius tests (Supplementary Table S15), while no RNG--MST contrast is significant at any radius. Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. Fig. 9B additionally shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range: RNG maintains lower MTR than MST while its $QE_B$ remains stable around $r=1.027$--1.5. Fig. 9C shows that MST and RNG also maintain high node utilization in this region, which does not support reduced use of map capacity as the explanation for their lower $QE_B$.
+
+This control also sharpens the geometric interpretation. Reducing radius changes the strength and reach of neighborhood influence, but it does not remove the fixed lattice's predetermined neighbor identities. The persistence of the graph-topology separation under identical radii is therefore consistent with adaptive connectivity contributing beyond neighborhood looseness, while not by itself proving that coupling is the only mechanism.
 
 ### Manuscript Amendment
 
@@ -249,6 +255,8 @@ In the supplementary topology table caption, we revised:
 We agree, and thank the reviewer for pointing this out. Node utilization is a useful confirmatory diagnostic for checking whether the MTR result is accompanied by broadly used map capacity rather than uneven allocation in which some nodes are effectively unused. Considering this, we added node-utilization and dead-node-fraction diagnostics to the matched topology benchmark outputs, using the same matched units as the topology comparison.
 
 The matched tuned-profile result favored RNG rather than indicating poorer map use. Relative to tuned hexagonal maps, tuned RNG increased balanced node utilization by 0.0197 (95% CI 0.0158 to 0.0235; p=1.38e-20) and reduced balanced dead-node fraction by the same amount. We report the split-specific and balanced diagnostics separately and present node utilization as a confirmatory diagnostic alongside MTR.
+
+Quantitative node-utilization and dead-node evidence is shown in Fig. 9 and Supplementary Tables S12-S13, not in the qualitative topology overlays of Fig. 5. These diagnostics are consistent with the interpretation that geometry-derived neighborhoods avoid some unnecessary fixed-lattice coupling while retaining map capacity; they do not establish that interpretation as a unique causal explanation.
 
 ### Manuscript Amendment
 

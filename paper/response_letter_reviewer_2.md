@@ -12,6 +12,8 @@ We thank the reviewer for the careful and constructive assessment. We agree with
 
 We agree that the direct MST-versus-RNG comparison is necessary to support a topology-ordering claim. We have promoted that comparison from the supplement to the main topology results as Fig. 8. The separate Optuna contrasts consistently favor RNG over hexagonal across balanced, holdout, and train $QE$, but the direct MST--RNG evidence shows that the two graph topologies are close competitors on $QE$. The matched MTR diagnostics provide the additional evidence favoring RNG as the strongest joint $QE$/MTR option.
 
+We also revised the geometric explanation so that the RNG preference is not reduced to graph density alone. MST minimizes neighborhood coupling and permits substantial redistribution along irregular structures, but a tree cannot represent multiple locally appropriate connections in a dense region. RNG permits such connections only when supported by the evolving prototype geometry, whereas the hexagonal lattice imposes a uniform neighbor pattern before learning. The observed $QE$, MTR, utilization, and dead-node results are presented as consistent with this account rather than as identifying a unique causal mechanism.
+
 ### Manuscript Amendment
 
 In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
@@ -148,6 +150,8 @@ In Section 5.2, we added:
 
 We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion now identifies RNG as the preferred joint $QE$/MTR topology when topology-construction overhead is acceptable, while recognizing that MST and RNG are close competitors for $QE$ alone and MST is the lower-cost graph option. It also states that for workloads dominated by very large grids, hexagonal remains the throughput-oriented default.
 
+The geometric rationale makes that conditional recommendation more precise: RNG retains more geometry-supported local connections than MST, which may benefit concentrated regions, but the same additional topology work contributes to its higher grid-size cost. Thus MST's greater freedom and lower graph cost make it the practical compromise when RNG's mesh-like local connectivity is not worth the runtime penalty.
+
 ### Manuscript Amendment
 
 In Section 8, we revised the recommendation to:
@@ -167,6 +171,8 @@ We agree that the Discussion should read as a continuous argument rather than a 
 ### Manuscript Amendment
 
 Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key systems interpretation points, topology-runtime cost, and grid-size-dependent recommendations. The matched execution-path validation is now reported in Section 5.5 immediately before the speed-scaling results.
+
+Within that continuous Discussion, we added a single geometric progression from fixed-lattice coupling, through MST's freedom and tree limitation, to RNG's geometry-supported additional connections. We then connect that interpretation cautiously to Fig. 9 node utilization and dead-node fraction, $QE$, and MTR, before turning to the measured runtime limits.
 
 ## 9. Appendix redundancy
 
