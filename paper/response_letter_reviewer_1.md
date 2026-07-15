@@ -16,7 +16,7 @@ The matched analysis found lower MTR for RNG than for hexagonal maps with and wi
 
 We also expanded the geometric rationale. A fixed hexagonal lattice predetermines neighborhood coupling independently of the learned data-space geometry, so movement of one prototype can influence lattice neighbors that are not locally related in data space. MST minimizes this coupling and lets prototypes redistribute along irregular or elongated structures, but its tree constraint can omit additional useful local connections in dense regions. RNG is less free because nodes may influence several neighbors, yet those connections are supported by the evolving prototype geometry rather than imposed beforehand. It can therefore remain sparse where appropriate and become more mesh-like in concentrated regions. We present $QE$, MTR, node utilization, and dead-node fraction as evidence consistent with this interpretation, not as proof of a unique causal mechanism.
 
-To illustrate these neighborhood structures beyond a two-dimensional synthetic example, we expanded Fig. 5 to include matched hexagonal, MST, and RNG overlays for KDD Cup 99, trained in standardized 41-dimensional space and displayed using a shared two-dimensional PCA projection.
+To illustrate these neighborhood structures beyond a two-dimensional synthetic example, we expanded Fig. 5 to include matched hexagonal, MST, and RNG overlays for KDD Cup 99, trained in standardized 41-dimensional space and displayed using a shared two-dimensional PCA projection. The representative overlays also provide qualitative confirmation that the prototypes are deployed across the observed data structure. In the KDD Cup 99 panels, the hexagonal topology shows several apparently nonlocal connections across separated regions of the projected prototype distribution, whereas the MST and RNG connections more closely follow its local geometry. We interpret this cautiously because the two-dimensional PCA display can distort relationships in the original 41-dimensional space.
 
 ### Manuscript Amendment
 
@@ -47,6 +47,8 @@ In the Discussion, we added:
 > "$QE$ and MTR capture different properties: $QE$ measures vector-quantization fidelity, while MTR measures local ordering between the first and second BMUs. Tuning improves $QE$ across all topologies but increases MTR, with a much larger increase for hexagonal maps than for MST or RNG. Topology and hyperparameter choice should therefore be considered together."
 
 We also added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion, and explicitly qualified the diagnostic evidence as consistent with, rather than uniquely establishing, that mechanism.
+
+In Section 5.3, we also added a qualitative interpretation of the representative KDD Cup 99 overlays. This identifies the apparently nonlocal hexagonal connections as a visual illustration of predetermined lattice coupling and restricted independent prototype redistribution, while explicitly noting that the PCA projection prevents treating the display as direct evidence of nonlocality in the original space.
 
 ## 2. Hexagonal neighborhood-radius control
 
@@ -258,7 +260,7 @@ We agree, and thank the reviewer for pointing this out. Node utilization is a us
 
 The matched tuned-profile result favored RNG rather than indicating poorer map use. Relative to tuned hexagonal maps, tuned RNG increased balanced node utilization by 0.0197 (95% CI 0.0158 to 0.0235; p=1.38e-20) and reduced balanced dead-node fraction by the same amount. We report the split-specific and balanced diagnostics separately and present node utilization as a confirmatory diagnostic alongside MTR.
 
-Quantitative node-utilization and dead-node evidence is shown in Fig. 9 and Supplementary Tables S12-S13, not in the qualitative topology overlays of Fig. 5. These diagnostics are consistent with the interpretation that geometry-derived neighborhoods avoid some unnecessary fixed-lattice coupling while retaining map capacity; they do not establish that interpretation as a unique causal explanation.
+Quantitative node-utilization and dead-node evidence is shown in Fig. 9 and Supplementary Tables S12-S13. The representative overlays in Fig. 5 additionally provide qualitative confirmation that prototypes are deployed across the observed data structures, although they do not classify individual nodes as active or dead. Together, these results are consistent with the interpretation that geometry-derived neighborhoods avoid some unnecessary fixed-lattice coupling while retaining map capacity; they do not establish that interpretation as a unique causal explanation.
 
 ### Manuscript Amendment
 
