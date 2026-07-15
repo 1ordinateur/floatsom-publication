@@ -32,7 +32,6 @@ STAGED_SVG="${WORK_DIR}/fig_5.svg"
 STAGED_TABLE="${WORK_DIR}/table_topology_circles_representative.tsv"
 STAGED_CIRCLES_JPEG="${WORK_DIR}/fig_5_circles_background.jpg"
 STAGED_COVERTYPE_JPEG="${WORK_DIR}/fig_5_covertype_background.jpg"
-STAGED_PDF="${WORK_DIR}/fig_5.pdf"
 
 mkdir -p "$OUTPUT_DIR" "$WORK_DIR" "$SKLEARN_DATA_HOME" "$IMPORT_SHIM_PACKAGE"
 export SCIKIT_LEARN_DATA="$SKLEARN_DATA_HOME"
@@ -82,7 +81,6 @@ export PYTHONPATH="${IMPORT_SHIM_ROOT}:${PYTHONPATH:-}"
 
 echo "Checking GPU and Python dependencies..."
 "$PYTHON_BIN" - <<'PY'
-import cairosvg
 import cupy as cp
 import numpy
 import PIL
@@ -194,30 +192,12 @@ if {row["normalization"] for row in rows} != {"xpysom"}:
 print("Staged Figure 5 GPU outputs passed validation")
 PY
 
-echo "Rendering staged manuscript PDF asset..."
-export STAGED_PDF
-"$PYTHON_BIN" - <<'PY'
-from pathlib import Path
-import os
-import cairosvg
-
-cairosvg.svg2pdf(
-    url=os.environ["STAGED_SVG"],
-    write_to=os.environ["STAGED_PDF"],
-)
-pdf = Path(os.environ["STAGED_PDF"])
-if not pdf.is_file() or pdf.stat().st_size == 0:
-    raise SystemExit("CairoSVG did not produce the staged Figure 5 PDF")
-print(f"Staged PDF: {pdf} ({pdf.stat().st_size} bytes)")
-PY
-
 echo "Publishing validated Figure 5 assets..."
 install -m 0644 "$STAGED_SVG" "$REPO_ROOT/paper/assets/figures/fig_5.svg"
 install -m 0644 "$STAGED_CIRCLES_JPEG" "$REPO_ROOT/paper/assets/figures/fig_5_circles_background.jpg"
 install -m 0644 "$STAGED_COVERTYPE_JPEG" "$REPO_ROOT/paper/assets/figures/fig_5_covertype_background.jpg"
 install -m 0644 "$STAGED_TABLE" "$REPO_ROOT/paper/assets/tables/table_topology_circles_representative.tsv"
 install -m 0644 "$STAGED_SVG" "$REPO_ROOT/paper/assets_manual/figures/fig_5.svg"
-install -m 0644 "$STAGED_PDF" "$REPO_ROOT/paper/assets_manual/figures/fig_5.pdf"
 install -m 0644 "$STAGED_TABLE" "$REPO_ROOT/paper/assets_manual/tables/table_topology_circles_representative.tsv"
 
 cmp "$REPO_ROOT/paper/assets/figures/fig_5.svg" "$REPO_ROOT/paper/assets_manual/figures/fig_5.svg"
