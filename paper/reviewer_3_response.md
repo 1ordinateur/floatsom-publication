@@ -1,8 +1,12 @@
-# Response to Reviewer 3
+# Response Letter Draft: Reviewer 3
 
 We thank the reviewer for the constructive suggestions. We have expanded the systems accounting, strengthened the geometric explanation of the topology choices, enlarged the qualitative topology figure with a real high-dimensional dataset, and made the quantitative forest-plot results easier to evaluate directly from the manuscript.
 
 ## 1. Distributed memory, communication, and large-grid cost
+
+### Reviewer Comment
+
+> **Paraphrased:** The reviewer requested a quantitative account of the data communicated between workers, the memory scaling of the distributed implementation, and the practical cost of graph topologies as the SOM grid becomes large.
 
 ### Response
 
@@ -17,6 +21,10 @@ The memory explanation now separates observation and topology terms. With chunks
 In Section 3.3.1, after the distributed-update equations, we added the explicit float32 payload and bounded-memory expressions. Sections 6.2--6.3 and the Discussion retain the grid-64 absolute runtimes and the 8.19x MST and 27.07x RNG penalties relative to hexagonal.
 
 ## 2. Geometric intuition and expanded Figure 5
+
+### Reviewer Comment
+
+> **Paraphrased:** The reviewer requested clearer geometric intuition for the hexagonal, MST, and RNG training topologies and a larger representative-topology figure that includes a real, high-dimensional dataset rather than only a two-dimensional synthetic example.
 
 ### Response
 
@@ -36,9 +44,13 @@ We added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the D
 
 ## 3. Forest plots, numerical tables, and MST--RNG evidence
 
+### Reviewer Comment
+
+> **Paraphrased:** The reviewer requested larger and more legible forest-plot elements, numerical results that can be inspected directly in the manuscript, corrected significance reporting, and a direct main-text comparison of MST and RNG.
+
 ### Response
 
-We enlarged the forest-plot graphical elements so that dataset labels, confidence intervals, and significance annotations remain legible at manuscript scale. We also embedded the numerical supplementary tables that were previously referenced only by external paths. These tables report the effect estimates, confidence intervals, raw p-values, adjusted q-values where applicable, sample counts, and directional summaries needed to audit the plotted comparisons.
+We increased the confidence-interval line widths and point-marker sizes by 200% across all forest plots to improve legibility at manuscript scale. We also embedded the numerical supplementary tables that were previously referenced only by external paths. These tables report the effect estimates, confidence intervals, raw p-values, adjusted q-values where applicable, sample counts, and directional summaries needed to audit the plotted comparisons.
 
 The dataset-level figure annotations now use Benjamini--Hochberg adjusted q-values rather than raw p-values. The correction changed the significance threshold for two holdout-$QE$ hexagonal--RNG dataset points in Fig. 7B: `blobs` changed from p=0.0358 to q=0.0627, and `iris` from p=0.0444 to q=0.0745. Their annotations are now `ns`; other affected points retain the same substantive interpretation even where the displayed star level changed.
 
