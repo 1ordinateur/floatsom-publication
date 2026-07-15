@@ -141,7 +141,11 @@ def _dataset_tag(data_type: str) -> str:
 
 def _dataset_display_name(data_type: str) -> str:
     tag = _dataset_tag(data_type)
-    return {"circles": "Circles", "covertype": "Covertype"}.get(tag, tag.replace("_", " ").title())
+    return {
+        "circles": "Circles",
+        "covertype": "Covertype",
+        "kddcup99": "KDD Cup 99",
+    }.get(tag, tag.replace("_", " ").title())
 
 
 def _resolve_output_paths(args: argparse.Namespace) -> Tuple[Path, Path, Path]:
