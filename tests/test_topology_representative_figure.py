@@ -95,9 +95,14 @@ def test_svg_has_two_embedded_jpegs_reused_across_six_panels(tmp_path: Path):
     assert len(backgrounds) == 2 and all(path.exists() for path in backgrounds)
     assert svg.count("data:image/jpeg;base64,") == 2
     assert svg.count('<image id="cloud-row-') == 2
-    assert svg.count('<use href="#cloud-row-') == 6
+    assert 'xmlns:xlink="http://www.w3.org/1999/xlink"' in svg
+    assert svg.count('<use xlink:href="#cloud-row-') == 6
     assert all(f">{label}</text>" in svg for label in "ABCDEF")
-    assert "shared 2D PCA projection" in svg
-    assert "may distort graph geometry" in svg
+    assert "Circles" not in svg
+    assert "Covertype" not in svg
+    assert "KDD Cup 99" not in svg
+    assert "native 2D display" not in svg
+    assert "shared 2D PCA projection" not in svg
+    assert "may distort graph geometry" not in svg
     # Only nodes and the single legend marker are vector circles, never observations.
     assert svg.count("<circle") == (6 * 100) + 2

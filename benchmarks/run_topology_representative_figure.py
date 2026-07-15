@@ -357,32 +357,24 @@ def _write_combined_svg(
     fmt = lambda value: f"{value:.2f}"
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_w}" height="{canvas_h}" viewBox="0 0 {canvas_w} {canvas_h}" role="img" aria-label="Representative topology overlays across {len(prepared)} dataset rows">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{canvas_w}" height="{canvas_h}" viewBox="0 0 {canvas_w} {canvas_h}" role="img" aria-label="Representative topology overlays across {len(prepared)} dataset rows">',
         f'  <rect width="{canvas_w}" height="{canvas_h}" fill="#FFFFFF"/>',
         "  <defs>",
     ]
     for row_index, dataset in enumerate(prepared):
         uri = "data:image/jpeg;base64," + base64.b64encode(dataset["jpeg"]).decode("ascii")
-        lines.append(f'    <image id="cloud-row-{row_index}" width="{fmt(plot_w)}" height="{fmt(plot_h)}" preserveAspectRatio="none" href="{uri}"/>')
+        lines.append(f'    <image id="cloud-row-{row_index}" width="{fmt(plot_w)}" height="{fmt(plot_h)}" preserveAspectRatio="none" xlink:href="{uri}"/>')
     lines.append("  </defs>")
 
     for row_index, dataset in enumerate(prepared):
         row_top = row_tops[row_index]
-        row_name = _dataset_display_name(dataset["data_type"])
-        if dataset["axis_mode"] == "pca":
-            dimensions = int(dataset.get("training_dimensions", 54))
-            subtitle = f"trained in {dimensions}D; displayed by shared 2D PCA projection"
-        else:
-            subtitle = "native 2D display"
-        lines.append(f'  <text x="{fmt(margin_x)}" y="{fmt(row_top - 32)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="24" font-weight="700" fill="#111111">{_xml_escape(row_name)}</text>')
-        lines.append(f'  <text x="{fmt(margin_x + 150)}" y="{fmt(row_top - 32)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" fill="#333333">{_xml_escape(subtitle)}</text>')
         for column, panel in enumerate(dataset["panels"]):
             panel_x = margin_x + column * (panel_w + panel_gap)
             plot_x, plot_y = panel_x + plot_inset_x, row_top + 47.0
             label = chr(ord("A") + row_index * 3 + column)
             lines.append(f'  <text x="{fmt(panel_x + 4)}" y="{fmt(row_top + 28)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="28" font-weight="700" fill="#111111">{label}</text>')
             lines.append(f'  <text x="{fmt(panel_x + 46)}" y="{fmt(row_top + 28)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="23" font-weight="600" fill="#222222">{TOPOLOGY_DISPLAY_NAMES[panel["topology"]]}</text>')
-            lines.append(f'  <use href="#cloud-row-{row_index}" x="{fmt(plot_x)}" y="{fmt(plot_y)}"/>')
+            lines.append(f'  <use xlink:href="#cloud-row-{row_index}" x="{fmt(plot_x)}" y="{fmt(plot_y)}"/>')
             mapper = _build_panel_mapper(dataset["limits"], plot_x, plot_y, plot_w, plot_h)
             weights = panel["weights_plot_np"]
             for u, v in panel["edges"]:
@@ -400,14 +392,12 @@ def _write_combined_svg(
     for idx, (kind, label) in enumerate(entries):
         x = 455.0 + idx * 300.0
         if kind == "point":
-            lines.append(f'  <circle cx="{fmt(x)}" cy="{fmt(legend_y)}" r="4" fill="#808080" fill-opacity="0.65"/>')
+            lines.append(f'  <circle cx="{fmt(x)}" cy="{fmt(legend_y)}" r="5.5" fill="#808080" fill-opacity="0.65"/>')
         elif kind == "node":
-            lines.append(f'  <circle cx="{fmt(x)}" cy="{fmt(legend_y)}" r="4.4" fill="#D62728" stroke="#8B0000" stroke-width="0.8"/>')
+            lines.append(f'  <circle cx="{fmt(x)}" cy="{fmt(legend_y)}" r="6" fill="#D62728" stroke="#8B0000" stroke-width="1"/>')
         else:
-            lines.append(f'  <line x1="{fmt(x - 10)}" y1="{fmt(legend_y)}" x2="{fmt(x + 10)}" y2="{fmt(legend_y)}" stroke="#111111" stroke-width="2.2"/>')
-        lines.append(f'  <text x="{fmt(x + 16)}" y="{fmt(legend_y + 6)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" fill="#242424">{label}</text>')
-    caveat_y = legend_y + 43.0
-    lines.append(f'  <text x="780" y="{fmt(caveat_y)}" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="17" fill="#444444">PCA display may distort graph geometry in the original feature space.</text>')
+            lines.append(f'  <line x1="{fmt(x - 13)}" y1="{fmt(legend_y)}" x2="{fmt(x + 13)}" y2="{fmt(legend_y)}" stroke="#111111" stroke-width="3"/>')
+        lines.append(f'  <text x="{fmt(x + 20)}" y="{fmt(legend_y + 8)}" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" fill="#242424">{label}</text>')
     lines.append("</svg>")
     output_svg.parent.mkdir(parents=True, exist_ok=True)
     output_svg.write_text("\n".join(lines), encoding="utf-8")
