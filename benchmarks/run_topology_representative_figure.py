@@ -365,6 +365,7 @@ def _write_combined_svg(
         uri = "data:image/jpeg;base64," + base64.b64encode(dataset["jpeg"]).decode("ascii")
         lines.append(f'    <image id="cloud-row-{row_index}" width="{fmt(plot_w)}" height="{fmt(plot_h)}" preserveAspectRatio="none" xlink:href="{uri}"/>')
     lines.append("  </defs>")
+    lines.append('  <text x="780" y="38" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="30" font-weight="700" fill="#111111">Figure 5: Representative Topologies</text>')
 
     for row_index, dataset in enumerate(prepared):
         row_top = row_tops[row_index]

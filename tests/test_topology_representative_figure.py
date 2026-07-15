@@ -97,6 +97,7 @@ def test_svg_has_two_embedded_jpegs_reused_across_six_panels(tmp_path: Path):
     assert svg.count('<image id="cloud-row-') == 2
     assert 'xmlns:xlink="http://www.w3.org/1999/xlink"' in svg
     assert svg.count('<use xlink:href="#cloud-row-') == 6
+    assert "Figure 5: Representative Topologies" in svg
     assert all(f">{label}</text>" in svg for label in "ABCDEF")
     assert "Circles" not in svg
     assert "Covertype" not in svg

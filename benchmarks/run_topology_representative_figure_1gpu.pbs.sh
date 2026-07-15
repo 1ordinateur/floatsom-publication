@@ -149,6 +149,7 @@ checks = {
     "row background definitions": len(re.findall(r'<image id="cloud-row-', svg)) == 2,
     "Illustrator-compatible image namespace": 'xmlns:xlink="http://www.w3.org/1999/xlink"' in svg,
     "six row-background uses": len(re.findall(r'<use xlink:href="#cloud-row-', svg)) == 6,
+    "figure title": "Figure 5: Representative Topologies" in svg,
     "six panel labels": all(f">{label}</text>" in svg for label in "ABCDEF"),
     "no row subtitles": "native 2D display" not in svg and "shared 2D PCA projection" not in svg,
     "no PCA caveat": "may distort graph geometry" not in svg,
