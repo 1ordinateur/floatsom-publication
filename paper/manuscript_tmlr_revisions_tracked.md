@@ -507,7 +507,7 @@ The fixed-configuration diagnostics provide the corresponding MTR and node-use c
 
 \begin{table}[t]
 \centering
-\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
+\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Asterisks mark prespecified pooled paired effects with raw $p<0.05$; these are distinct from the dataset-level multiplicity-adjusted test families. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
 \label{tab:matched_topology_diagnostics_summary}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -515,8 +515,8 @@ The fixed-configuration diagnostics provide the corresponding MTR and node-use c
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 Profile & MST vs hex & RNG vs hex & RNG vs MST & MST vs hex & RNG vs hex & RNG vs MST \\
 \midrule
-Untuned & +0.269 & +0.249 & -0.020 & -0.20 & +2.44 & +2.64 \\
-Tuned & +0.064 & +0.052 & -0.012 & +22.71 & +25.67 & +2.96 \\
+Untuned & +0.269\textsuperscript{*} & +0.249\textsuperscript{*} & -0.020\textsuperscript{*} & -0.20 & +2.44\textsuperscript{*} & +2.64\textsuperscript{*} \\
+Tuned & +0.064\textsuperscript{*} & +0.052\textsuperscript{*} & -0.012 & +22.71\textsuperscript{*} & +25.67\textsuperscript{*} & +2.96\textsuperscript{*} \\
 \bottomrule
 \end{tabular}
 \end{table}
