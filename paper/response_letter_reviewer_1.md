@@ -53,7 +53,7 @@ In the Discussion, we added:
 
 > "$QE$ and MTR capture different properties: $QE$ measures vector-quantization fidelity, while MTR measures local ordering between the first and second BMUs. Tuning improves $QE$ across all topologies but increases MTR, with a much larger increase for hexagonal maps than for MST or RNG. Topology and hyperparameter choice should therefore be considered together."
 
-We also added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion, and explicitly qualified the diagnostic evidence as consistent with, rather than uniquely establishing, that mechanism.
+In Section 3.2, we added a concise implementation distinction between fixed regular-lattice neighborhoods and graph neighborhoods recalculated from evolving node weights. We reserved the fuller fixed-lattice/MST/RNG coupling interpretation for the Discussion, where it is connected to the observed diagnostics.
 
 In Section 5.3, we also added a qualitative interpretation of the representative KDD Cup 99 overlays. This identifies the apparently nonlocal hexagonal connections as a visual illustration of predetermined lattice coupling and restricted independent prototype redistribution.
 
@@ -79,7 +79,7 @@ In Section 4.3.3, we added the matched initial-radius sensitivity protocol, incl
 
 In Section 5.3, we added:
 
-> "At $r=1.027$, MST and RNG have 1.51% and 1.85% lower geometric-mean $QE_B$ than hexagonal (q=0.036 and q=0.035), increasing to 3.30% and 3.67% at $r=1.5$ (q=0.016 and q=0.014; Supplementary Table S15). No RNG--MST contrast is significant at any tested radius."
+> "Across the seven tested radii, MST and RNG maintained lower observed $QE_B$ than hexagonal, with adjusted differences evident from $r=1.027$ onward."
 
 We also added Fig. 9 to the main manuscript. Panel A reports normalized $QE_B$, panel B reports observed balanced MTR and the topology-specific $QE$--MTR trade-off, and panel C reports balanced node utilization as a map-capacity check.
 

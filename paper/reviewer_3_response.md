@@ -20,9 +20,9 @@ We expanded Fig. 5 from one row to a 2x3 layout. Panels A--C show circles in nat
 
 ### Manuscript Amendment
 
-In Section 3.2, we added:
+In Section 3.2, we added a concise implementation distinction while reserving the geometric interpretation for the Discussion:
 
-> "These alternatives change which prototypes are coupled during learning. A fixed hexagonal lattice assigns the same predetermined neighborhood pattern independently of the learned data-space geometry. Moving one prototype can therefore influence lattice neighbors that are not locally related in data space, potentially displacing otherwise useful prototypes. An MST minimizes this coupling and gives prototypes greater freedom to redistribute along irregular or elongated structures, but its tree constraint can omit additional locally appropriate connections in dense regions. RNG is less free than MST because a node can influence several neighbors; unlike the fixed lattice, however, those additional connections are supported by the evolving prototype geometry. It can therefore remain sparse where appropriate and form a more mesh-like neighborhood in concentrated regions."
+> "Thus, regular-lattice neighborhoods are fixed before training, whereas MST and RNG neighborhoods are recalculated from the evolving node weights during training."
 
 In the topology Results, we expanded Fig. 5 and added:
 
