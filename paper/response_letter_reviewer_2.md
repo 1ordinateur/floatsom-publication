@@ -150,7 +150,7 @@ In Section 5.2, we added:
 
 ### Response
 
-We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion now identifies RNG as the quality-first default, supported by its stronger attainable $QE$ result and more stable tuned hyperparameters. It also identifies MST as the lower-cost graph alternative and states that for workloads dominated by very large grids, hexagonal remains the throughput-oriented default.
+We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion identifies RNG as the default topology for most datasets, while qualifying this recommendation for very large grids. It identifies MST as the preferable graph alternative when RNG's topology overhead is prohibitive and reports the measured hexagonal, MST, and RNG runtimes at the largest tested grid size.
 
 The geometric rationale makes that conditional recommendation more precise: RNG retains more geometry-supported local connections than MST, which may benefit concentrated regions, but the same additional topology work contributes to its higher grid-size cost. Thus MST's greater freedom and lower graph cost make it the practical compromise when RNG's mesh-like local connectivity is not worth the runtime penalty.
 
@@ -158,7 +158,7 @@ The geometric rationale makes that conditional recommendation more precise: RNG 
 
 In Section 8, we revised the recommendation to:
 
-> "RNG is the quality-first default: it provides the strongest attainable $QE$ performance and the most stable tuned hyperparameters in our comparisons. MST remains the lower-cost graph alternative, and this recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively."
+> "Taken together, the topology results support RNG as the default topology for most datasets. This recommendation is caveated for workloads requiring very large grid sizes, and hence very large numbers of nodes. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively. RNG's graph-construction and all-pairs path calculations therefore scale much more sharply with grid size, so MST is preferable when a large graph is required and this topology overhead is prohibitive."
 
 ## 8. Discussion structure
 
