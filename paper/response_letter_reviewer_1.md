@@ -6,13 +6,16 @@ We thank the reviewer for the careful reading and for separating the systems con
 
 ### Reviewer Comment
 
-> The quality claim runs on QE alone. QE measures distance to the best-matching unit, not neighborhood preservation, which is the point of a SOM. No topographic error or trustworthiness, even though Forest et al., 2020 is cited and implements them.
+> The quality claim runs on QE alone. QE measures distance to the best-matching unit, not neighborhood preservation, which is the point of a SOM. No topographic error or trustworthiness, even though Forest et al., 2020 is cited and implements them 
+
+> Report a preservation metric next to QE in every topology comparison. Forest et al., 2020 is already cited and has topographic error and trustworthiness.
+
 
 ### Response
 
-We agree that $QE$ alone does not characterize SOM neighborhood ordering. We added Mean Tied Rank (MTR), which ranks the second BMU by its graph-distance shell around the first, together with node-utilization and dead-node diagnostics. MTR is preferable to raw topographic error here because one-hop adjacency differs across hexagonal, MST, and RNG graphs [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010].
+We agree that $QE$ alone does not characterize SOM neighborhood ordering. We therefore added Mean Tied Rank (MTR), which groups non-winning units by their shortest-path hop distance from the first BMU and assigns units at the same hop distance their average ordinal rank. This construction accommodates the different adjacency rules of the three topologies: hexagonal adjacency is fixed by the lattice, MST adjacency is a sparse tree derived from the node weights, and RNG adjacency is weight-derived with variable node degree. In every case, MTR uses the map's own graph, counts the units fewer hops away, and accounts for the number of units tied at the second BMU's hop distance. It therefore provides a graded measure of local ordering, whereas topographic error records only whether the two BMUs are one-hop neighbors [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010].
 
-The matched analysis found lower MTR for RNG than for hexagonal maps with and without tuning; MST did not clearly lower untuned MTR. The fixed QE-tuned profiles had lower $QE$ but higher MTR than the untuned profiles, with a much larger MTR difference for hexagonal maps (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). Node-use results did not indicate reduced map utilization. The main text reports the principal effects, and Supplementary Tables S12-S13 provide the full results.
+The matched analysis in Table 1. found lower MTR for RNG than for hexagonal maps both with and without tuning. The fixed QE-tuned profiles had lower $QE$ but higher MTR than the untuned profiles, with a much larger MTR difference for hexagonal maps (24.34 tied-rank positions) than for MST (1.43) or RNG (1.11). The main text reports the principal effects, and Supplementary Tables S12-S13 provide the full results.
 
 We also expanded the geometric rationale. A fixed hexagonal lattice predetermines neighborhood coupling independently of the learned data-space geometry, so movement of one prototype can influence lattice neighbors that are not locally related in data space. MST minimizes this coupling and lets prototypes redistribute along irregular or elongated structures, but its tree constraint can omit additional useful local connections in dense regions. RNG is less free because nodes may influence several neighbors, yet those connections are supported by the evolving prototype geometry rather than imposed beforehand. It can therefore remain sparse where appropriate and become more mesh-like in concentrated regions. We present $QE$, MTR, node utilization, and dead-node fraction as evidence consistent with this interpretation, not as proof of a unique causal mechanism.
 
@@ -20,15 +23,19 @@ To illustrate these neighborhood structures beyond a two-dimensional synthetic e
 
 ### Manuscript Amendment
 
-In Section 4.1, we added:
+We have added the MTR results in Table 1 and a supporting paragraph describing our observations. We have also added the MTR definition and interpretation in Section 4.1.2 and clarified its application to each topology in Section 4.3.1. In Section 5.3, we added a paragraph describing our findings in this analysis.
 
-> "We quantify local BMU-neighborhood ordering using Mean Tied Rank (MTR) [@ramosROLELATTICEDIMENSIONALITY2018]. For each sample $x_i$, non-winning units are ranked by graph distance from the first BMU, $b_i^{(1)}$, with tied distance shells assigned their average ordinal rank. If the second BMU, $b_i^{(2)}$, lies in shell $S_d$ and $L_d$ units lie in closer shells, its tied rank is $\tau_i=L_d+(|S_d|+1)/2$, and $MTR=N^{-1}\sum_i \tau_i$. Lower MTR indicates closer local ordering between the first and second BMUs."
+In Section 4.1.2, after the annotated MTR equation, we added:
 
-> "MTR is used instead of topographic error because one-hop adjacency is not equivalent across hexagonal, MST, and RNG graphs; topographic error also depends on lattice properties and map design [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]. We additionally report node utilization, defined as the fraction of nodes selected as a BMU, and its complement, dead-node fraction. These post hoc diagnostics are computed on training and holdout splits and balanced as for $QE$."
+> "Hexagonal, MST, and RNG maps define adjacency differently: hexagonal connections are fixed by the lattice, MST connections form a sparse tree derived from the node weights, and RNG connections are also weight-derived but can give nodes different numbers of neighbors. MTR accommodates these differences by applying the same ranking procedure to the graph supplied by each trained map. The $L_{i,d_i}$ term counts all units fewer hops away, while the second term assigns the average rank across the $|S_{i,d_i}|$ units at the same hop distance as the second BMU. Differences in node degree and in the number of units at each hop distance are therefore incorporated directly into the rank rather than ignored. Lower MTR indicates that first and second BMUs tend to occur earlier in this graph-specific ordering and therefore reflects better local neighborhood ordering."
+
+> "We use this graded ranking instead of topographic error, which records only whether the first and second BMUs are one-hop neighbors and therefore depends more directly on each topology's adjacency rule [@ramosROLELATTICEDIMENSIONALITY2018; @nemeStatisticalPropertiesLattices2005; @machon-gonzalezFLSOMIndividualKernel2010]."
 
 In Section 4.3.1, we clarified the fixed tuned rerun design, including the exact tuned and untuned profiles, 14 datasets, 20 matched seeds, pairing keys, and diagnostic summaries:
 
 > "The final topology diagnostic comprised all 14 benchmark datasets, 20 shared random seeds, full sampling, and each of the hexagonal, MST, and RNG topologies, giving 280 dataset--seed units per paired contrast."
+
+> "MTR was calculated from each trained map's evaluation-time topology: fixed hexagonal adjacency for hexagonal maps and the retained shortest-path graph for MST and RNG maps, using the common hop-based ranking procedure defined in Section 4.1.2."
 
 In Section 5.3, we revised the opening sentence to:
 
@@ -36,7 +43,7 @@ In Section 5.3, we revised the opening sentence to:
 
 We also added the tuned and untuned RNG diagnostic result:
 
-> "The fixed-configuration diagnostics provide the corresponding MTR and node-use comparison (Table \ref{tab:matched_topology_diagnostics_summary}). MST and RNG both improved balanced $QE$ relative to hexagonal maps with and without tuning, but only RNG clearly lowered untuned balanced MTR. Under tuning, no balanced-$QE$ difference was detected between MST and RNG, while RNG lowered balanced MTR by 2.96 tied-rank positions. RNG therefore gave the strongest joint $QE$/MTR result, while MST remained a close competitor on $QE$."
+> "The fixed-configuration diagnostics provide the corresponding MTR and node-use comparison (Table 1). MST and RNG both improved balanced $QE$ relative to hexagonal maps with and without tuning, but only RNG clearly lowered untuned balanced MTR. Under tuning, no balanced-$QE$ difference was detected between MST and RNG, while RNG lowered balanced MTR by 2.96 tied-rank positions. RNG therefore gave the strongest joint $QE$/MTR result, while MST remained a close competitor on $QE$."
 
 In Section 5.4, we added:
 
@@ -58,11 +65,9 @@ In Section 5.3, we also added a qualitative interpretation of the representative
 
 ### Response
 
-We agree that neighborhood radius is an important potential confound. In addition to the existing Optuna design, in which `initial_radius` was optimized independently for every topology over the same interval and search budget, we added the requested radius-only control as Fig. 9. We evaluated seven identical radii for hexagonal, MST, and RNG maps using 20 matched seeds on all 14 datasets, while holding every non-radius training hyperparameter fixed.
+We agree that neighborhood radius is an important potential confound. In addition to the existing Optuna design, in which `initial_radius` was optimized independently for every topology over the same interval and search budget, we performed additional experiment where we iteratively increase the radius while keeping other settings fixed at their optimal value based on the optuna results. The results are illustrated in Figure 9.
 
-MST and RNG retained lower normalized $QE_B$ than hexagonal in the useful matched-radius region (Fig. 9A). Post hoc dataset-balanced paired contrasts confirm the separation at $r=1.027$ and $r=1.5$ after correction across all 21 topology-pair--radius tests (Supplementary Table S15), while no RNG--MST contrast is significant at any radius. Their lowest observed $QE_B$ occurred at $r=1.5$, which is larger rather than smaller than the hexagonal minimum at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. Fig. 9B additionally shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG around their useful radius range: RNG maintains lower MTR than MST while its $QE_B$ remains stable around $r=1.027$--1.5. Fig. 9C shows that MST and RNG also maintain high node utilization in this region, which does not support reduced use of map capacity as the explanation for their lower $QE_B$.
-
-This control also sharpens the geometric interpretation. Reducing radius changes the strength and reach of neighborhood influence, but it does not remove the fixed lattice's predetermined neighbor identities. The persistence of the graph-topology separation under identical radii is therefore consistent with adaptive connectivity contributing beyond neighborhood looseness, while not by itself proving that coupling is the only mechanism.
+Across the entire radius range investigated, MST and RNG consistently attained lower normalised QE than hexagonal, with this being most obvious after $r=1.5$ (Fig. 9A). Regarding each topology's optimal $QE_B$ radius, RNG and MST's optimal occurred at $r=1.5$, which is larger than hexagonal at $r=0.75$. The graph-topology gains therefore cannot be explained by preferential radius treatment or by comparison with a broad default-radius hexagonal map. Even at this optimal point, hexagonal still demonstrated inferior $QE_B$ to both graph topologies, implying that decreased radius alone is not responsible for the observed $QE$ differential. Fig. 9B additionally shows that the sharp hexagonal $QE$--MTR trade-off is substantially attenuated for MST and RNG : RNG maintains lower MTR than MST while its $QE_B$ remains stable. Fig. 9C shows that MST and RNG also maintain high node utilization in this region, which does not support reduced use of map capacity as the explanation for their lower $QE_B$. In both the MTR and Node utilisation, MST and RNG perform consistently better than hexagonal. 
 
 ### Manuscript Amendment
 
@@ -88,9 +93,9 @@ We also added Fig. 9 to the main manuscript. Panel A reports normalized $QE_B$, 
 
 ### Response
 
-We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. All five aweSOM attempts reached the 1800-s timeout before completing 60% of $N$ online updates on the standard speed workload. Matching FloatSOM's 10 full batch iterations would require $10N$ pointwise updates.
+We agree that the baseline selection required clearer justification. We expanded the related-work discussion and attempted an aweSOM benchmark. All five aweSOM attempts reached the 1800-s timeout before completing 60% of $N$ online updates on the standard speed workload, as referenced in Section 4.2. Matching FloatSOM's 10 full batch iterations would require $10N$ pointwise updates.
 
-We now discuss Somoclu and GigaSOM as important parallel-systems references. Differences in training regime, language, hardware, and published benchmark design prevent a controlled direct comparison in the present study, and the manuscript states this limitation explicitly.
+We now discuss Somoclu and GigaSOM as important parallel-systems references. We did not benchmark Somoclu as it is already benchmarked against XPySOM in the XPySOM paper, where a >100 fold speed difference was found in favour of XPySOM. Considering that we conduct our own benchmarks against XPySOM, further benchmarking against Somoclu directly would likely not yield much performance information. This point is noted in the manuscript. Similarly, GigaSOM is a CPU algorithm coded in Julia. Due to the differences in hardware (with a large CPU cluster, as opposed to our present GPU based hardware) and coding language, a true head-to-head comparison is not possible. 
 
 ### Manuscript Amendment
 
@@ -164,9 +169,7 @@ We revised the Fig. 15 caption to:
 
 ### Response
 
-We agree that the submitted wording could imply that MSTs had not previously been associated with SOMs. Jang et al. and FlowSOM use MSTs as post hoc interpretive structures, and earlier SOM variants also discuss MST-defined training neighborhoods. We therefore no longer claim novelty for the graph object itself.
-
-The contribution is the scalable GPU implementation and large-scale evaluation of dynamically refreshed graph neighborhoods during SOM training. We retain only the narrower, qualified statement that we have not identified prior work using dynamically refreshed RNG neighborhoods for SOM training.
+We agree that the submitted wording could imply that MSTs had not previously been associated with SOMs. Weno longer claim novelty for the graph object itself. Instead, the contribution is the scalable GPU implementation and large-scale evaluation of dynamically refreshed graph neighborhoods during SOM training. We retain only the narrower, qualified statement that we have not identified prior work using dynamically refreshed RNG neighborhoods for SOM training.
 
 ### Manuscript Amendment
 
@@ -180,7 +183,7 @@ with:
 
 In Section 2.3, we added:
 
-> "The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. MSTs have previously appeared in SOM analyses, but prior uses generally treat the MST as an interpretive structure over an already trained map rather than as the neighborhood relation that drives SOM learning. For example, Jang et al. use MSTs for interpretation, subnode embedding, and map-shape assessment, while FlowSOM overlays an MST on trained SOM codes to visualize relationships among metaclusters [@jangUseMinimalSpanning2009; @vangassenFlowSOMUsingSelforganizing2015]. This is distinct from the training-time role used here: in FloatSOM, the MST is the operative neighborhood graph during SOM updates, is recalculated from the evolving node-weight geometry, and directly changes the update influence matrix used during learning. Thus, current deployed MST uses in SOM workflows generally configure post hoc connections on trained maps, whereas FloatSOM uses MST/RNG graphs as the training neighborhood itself. A post hoc MST overlay would also leave the quantization error of the underlying trained SOM unchanged, because $QE$ is determined by distances between samples and the fixed learned prototypes; the $QE$ improvements reported here therefore require graph-mediated training that changes those prototype locations. Earlier SOM variants also discussed MST-defined neighborhoods during learning [@kangasVariantsSelforganizingMaps1990], but these alternatives have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. We have not identified prior work implementing dynamically refreshed MST or RNG topologies as scalable GPU-compatible SOM training neighborhoods. FloatSOM's topology contribution is therefore a scalable GPU-compatible implementation and large-scale quantification of refreshed graph-based SOM training, rather than a post hoc MST overlay on a conventional trained SOM."
+> "The SOM literature has also explored alternatives to fixed lattices, including dynamic maps and graph-structured neighborhoods [@vasighiDirectedBatchGrowing2017; @spanakisAMSOMAdaptiveMoving2016; @kangasVariantsSelforganizingMaps1990; @jangUseMinimalSpanning2009]. MSTs have previously appeared in SOM analyses, but prior uses generally treat the MST as an interpretive structure over an already trained map rather than as the neighborhood relation that drives SOM learning. For example, Jang et al. use MSTs for interpretation, subnode embedding, and map-shape assessment, while FlowSOM overlays an MST on trained SOM codes to visualize relationships among metaclusters [@jangUseMinimalSpanning2009; @vangassenFlowSOMUsingSelforganizing2015]. This is distinct from the training-time role used here: in FloatSOM, the MST is the operative neighborhood graph during SOM updates, is recalculated from the evolving node-weight geometry, and directly changes the update influence matrix used during learning. Thus, current deployed MST uses in SOM workflows generally configure post hoc connections on trained regular lattice maps, whereas FloatSOM uses MST/RNG graphs as the training neighborhood itself. Earlier SOM variants also discussed MST-defined neighborhoods during learning [@kangasVariantsSelforganizingMaps1990], but these alternatives have not been assessed on large-scale datasets and do not have implementations that are either publicly available or suitable for distributed GPU computation. FloatSOM's topology contribution is therefore a scalable GPU-compatible implementation and large-scale quantification of refreshed graph-based SOM training, rather than a post hoc MST overlay on a conventional trained SOM."
 
 We also added:
 
@@ -222,9 +225,7 @@ In Section 8, we added:
 
 ### Response
 
-We agree that the statistical reporting should state whether the paired tests were multiplicity-corrected. We revised the manuscript-facing topology table generation so that the topology-comparison q-values are Benjamini-Hochberg adjusted over exactly the family identified by the reviewer: 42 non-global dataset-level tests per topology comparison, corresponding to 14 datasets across $QE_B$, $QE_H$, and $QE_T$. This correction is computed separately for hexagonal-versus-MST and hexagonal-versus-RNG. Supplementary Table S7 reports these q-values alongside raw `p_value` entries retained for audit, and all affected forest-plot significance legends now use q-value notation rather than p-value notation.
-
-We also audited the figure-level significance annotations against the corrected q-value convention. The correction did not change the substantive interpretation of the results: most affected annotations only changed star level while remaining significant. Only two dataset-level points crossed the significance threshold after correction, both in Fig. 7B for the holdout-QE hexagonal versus RNG comparison: `blobs` changed from p=0.0358 (`*`) to q=0.0627 (`ns`), and `iris` changed from p=0.0444 (`*`) to q=0.0745 (`ns`). We have corrected these figure annotations accordingly.
+We agree. The manuscript now reports the multiple-comparison correction method used for the topology comparisons, and the associated figure and table descriptions have been updated accordingly. Only two dataset-level annotations changed from significant to non-significant: `blobs` in Fig. 7B changed from p=0.0358 to q=0.0627, and `iris` changed from p=0.0444 to q=0.0745; the remaining changes affected star levels only.
 
 ### Manuscript Amendment
 
@@ -306,14 +307,16 @@ We added:
 
 ### Response
 
-We agree. The submitted manuscript already states that some efficiency denominators are locally extrapolated from the last available 1-GPU point when direct 1-GPU runs were unavailable. We retained this limitation and added explicit wording that above-100% efficiency should not be interpreted as pure superlinear compute scaling.
+We agree that extrapolated 1-GPU denominators limit the efficiency analysis. The affected 1-GPU jobs did not complete within the fixed benchmark timeout, particularly for workloads entering the disk-backed execution regime, so no measured $T_1$ was available at those points. Because scaling efficiency requires a 1-GPU denominator, we used local extrapolation from the last successful 1-GPU measurement to provide a provisional reference for plotting. These extrapolated values are not measured runtimes and should not be interpreted as validated estimates of single-GPU performance.
+
+We have therefore moderated the interpretation of the efficiency panels. Points with directly measured 1-GPU baselines provide the primary evidence for scaling efficiency. Points using extrapolated baselines are treated as descriptive estimates only, and are not used to support a general claim that efficiency improves across the full workload range. Absolute runtime and directly measured speedup remain the primary scaling results. Efficiencies above 100\% are interpreted as reflecting parallelism together with changes in memory and data-staging regime, rather than superlinear computation.
 
 ### Manuscript Amendment
 
-The current Section 6.2 text states:
+The revised Section 4.2 text now states:
 
-> "When a direct 1-GPU baseline was unavailable at a given axis value, the efficiency denominator was constructed by local linear extrapolation from the last available 1-GPU point on that curve (Section 4.2), so some values should be interpreted with care if the underlying 1-GPU runtime is nonlinear over that range."
+> "Some 1-GPU baselines were unavailable because the corresponding runs did not complete within the fixed benchmark timeout, particularly for workloads entering disk-backed execution. Because efficiency is defined relative to the 1-GPU runtime, we estimated these missing denominators by local extrapolation from the last successful 1-GPU point on the same curve. These extrapolated denominators are plotting references rather than measured runtimes and are interpreted only descriptively."
 
-In Section 6.2.2, we added:
+In Section 6.2.2, we now state:
 
-> "Efficiencies above 100\% should also be interpreted as a combined consequence of parallelism and a changed memory/data-staging regime, not as evidence of superlinear compute scaling."
+> "Efficiency values with directly measured 1-GPU baselines summarize observed strong scaling. Values using extrapolated denominators are shown as descriptive estimates and are not used to establish a general efficiency improvement across workload sizes. Efficiencies above 100\% may reflect both parallel throughput and a changed memory/data-staging regime, rather than superlinear computation. The absolute runtime curves and directly measured-baseline comparisons therefore provide the primary scaling evidence."
