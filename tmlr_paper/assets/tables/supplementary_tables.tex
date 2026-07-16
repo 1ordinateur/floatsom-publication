@@ -4,6 +4,14 @@
 % The data rows are embedded below so the TMLR folder remains self-contained.
 % Required packages supplied by main.tex: array, booktabs, longtable, and pdflscape.
 % All spacing, column widths, and 10-point font settings are scoped locally.
+% Tracking hooks are no-ops in the clean manuscript.  A tracked manuscript may
+% redefine them before inputting this file; this keeps one authoritative row
+% source without changing the clean table layout.
+\providecommand{\TrackSuppTable}[1]{#1}
+\providecommand{\TrackSuppTableUnchanged}[1]{#1}
+\providecommand{\TrackSuppTableBodyColor}{}
+\providecommand{\TrackSuppTableBodyOn}{}
+\providecommand{\TrackSuppTableBodyOff}{}
 
 \begingroup
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
@@ -60,8 +68,9 @@
 \setlength{\LTpost}{\baselineskip}
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
-\begin{longtable}{@{}L{0.28\linewidth}L{0.66\linewidth}@{}}
+\begin{longtable}{@{}>{\TrackSuppTableBodyColor}L{0.28\linewidth}>{\TrackSuppTableBodyColor}L{0.66\linewidth}@{}}
 \caption{HDSSSOM pilot configuration summary for Figure 3.}\label{tab:s2} \\
+\TrackSuppTableBodyOn
 \toprule
 \textbf{field} & \textbf{value} \\
 \midrule
@@ -88,6 +97,7 @@ optimization split setup & \texttt{evaluation-split=both}, yielding \texttt{QE\_
 trials per scenario & 200 \\
 main text figure slice & hexagonal / full vs HDSSSOM \\
 \end{longtable}
+\TrackSuppTableBodyOff
 \endgroup
 
 % GENERATED SOURCE: assets/tables/supp_table_s03.tsv (3 data rows x 2 columns).
@@ -123,6 +133,7 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 
 % GENERATED SOURCE: assets/tables/supp_table_s04.tsv (60 data rows x 11 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -132,8 +143,9 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}C{0.04\linewidth}L{0.12\linewidth}L{0.07\linewidth}L{0.08\linewidth}C{0.09\linewidth}C{0.10\linewidth}C{0.10\linewidth}C{0.14\linewidth}C{0.07\linewidth}C{0.05\linewidth}C{0.08\linewidth}@{}}
-\caption{Untuned FloatSOM MST versus hexagonal XPySOM.}\label{tab:s4} \\
-\multicolumn{11}{@{}L{0.94\linewidth}@{}}{The \texttt{dataset\_\allowbreak{}index} column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.} \\[\baselineskip]
+\caption{\TrackSuppTable{Untuned FloatSOM MST versus hexagonal XPySOM.}}\label{tab:s4} \\
+\multicolumn{11}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{The \texttt{dataset\_\allowbreak{}index} column matches the numbered points in Supplementary Figure S1 panel D.} \TrackSuppTable{Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{idx} & \textbf{dataset} & \textbf{metric} & \textbf{split} & \textbf{wins F/X/tie} & \textbf{median \%} & \textbf{mean \%} & \textbf{95\% CI} & \textbf{p} & \textbf{n} & \textbf{signed effect} \\
 \midrule
@@ -208,12 +220,14 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 12 & swiss\_\allowbreak{}roll & train time & train & 1/9/0 & -726.5489 & -649.8592 & [-732.2277, -336.7629] & 0.0039 & 10 & -0.8 \\
 2 & wine & train time & train & 0/10/0 & -1030.4764 & -1064.4839 & [-1204.4846, -1025.0949] & 0.002 & 10 & -1 \\
 - & GLOBAL & train time & train & 1/139/0 & -868.8976 & -771.5168 & [-875.2748, -760.3798] & 1.59e-24 & 140 & -0.9857 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s05.tsv (60 data rows x 11 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -223,8 +237,9 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}C{0.04\linewidth}L{0.12\linewidth}L{0.07\linewidth}L{0.08\linewidth}C{0.09\linewidth}C{0.10\linewidth}C{0.10\linewidth}C{0.14\linewidth}C{0.07\linewidth}C{0.05\linewidth}C{0.08\linewidth}@{}}
-\caption{Untuned FloatSOM RNG versus hexagonal XPySOM.}\label{tab:s5} \\
-\multicolumn{11}{@{}L{0.94\linewidth}@{}}{The \texttt{dataset\_\allowbreak{}index} column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.} \\[\baselineskip]
+\caption{\TrackSuppTable{Untuned FloatSOM RNG versus hexagonal XPySOM.}}\label{tab:s5} \\
+\multicolumn{11}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{The \texttt{dataset\_\allowbreak{}index} column matches the numbered points in Supplementary Figure S2 panel D.} \TrackSuppTable{Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{idx} & \textbf{dataset} & \textbf{metric} & \textbf{split} & \textbf{wins F/X/tie} & \textbf{median \%} & \textbf{mean \%} & \textbf{95\% CI} & \textbf{p} & \textbf{n} & \textbf{signed effect} \\
 \midrule
@@ -299,12 +314,14 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 12 & swiss\_\allowbreak{}roll & train time & train & 1/9/0 & -741.1606 & -661.2161 & [-745.7479, -339.5738] & 0.0039 & 10 & -0.8 \\
 2 & wine & train time & train & 0/10/0 & -1040.5015 & -1039.5076 & [-1043.8579, -1034.1717] & 0.002 & 10 & -1 \\
 - & GLOBAL & train time & train & 1/139/0 & -877.7086 & -775.3398 & [-884.2881, -753.573] & 1.59e-24 & 140 & -0.9857 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s06.tsv (60 data rows x 11 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -314,8 +331,9 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}C{0.04\linewidth}L{0.12\linewidth}L{0.07\linewidth}L{0.08\linewidth}C{0.09\linewidth}C{0.10\linewidth}C{0.10\linewidth}C{0.14\linewidth}C{0.07\linewidth}C{0.05\linewidth}C{0.08\linewidth}@{}}
-\caption{Hexagonal FloatSOM--XPySOM implementation calibration.}\label{tab:s6} \\
-\multicolumn{11}{@{}L{0.94\linewidth}@{}}{The \texttt{dataset\_\allowbreak{}index} column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.} \\[\baselineskip]
+\caption{\TrackSuppTable{Hexagonal FloatSOM--XPySOM implementation calibration.}}\label{tab:s6} \\
+\multicolumn{11}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{The \texttt{dataset\_\allowbreak{}index} column matches the numbered points in Supplementary Figure S3 panel D.} \TrackSuppTable{Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{idx} & \textbf{dataset} & \textbf{metric} & \textbf{split} & \textbf{wins F/X/tie} & \textbf{median \%} & \textbf{mean \%} & \textbf{95\% CI} & \textbf{p} & \textbf{n} & \textbf{signed effect} \\
 \midrule
@@ -390,12 +408,14 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 12 & swiss\_\allowbreak{}roll & train time & train & 1/9/0 & -81.642 & -65.9893 & [-82.6048, -3.0855] & 0.0039 & 10 & -0.8 \\
 2 & wine & train time & train & 0/10/0 & -126.5213 & -126.5147 & [-127.7591, -125.2633] & 0.002 & 10 & -1 \\
 - & GLOBAL & train time & train & 19/121/0 & -102.7688 & -94.7219 & [-103.9162, -95.6444] & 1.02e-22 & 140 & -0.7286 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s07.tsv (45 data rows x 10 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -405,8 +425,9 @@ grid side length & 8, 16, 24, 32, 48, 64 \\
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.08\linewidth}L{0.10\linewidth}C{0.07\linewidth}C{0.12\linewidth}C{0.095\linewidth}C{0.095\linewidth}C{0.07\linewidth}C{0.12\linewidth}C{0.095\linewidth}C{0.095\linewidth}@{}}
-\caption{Paired topology-comparison effects for hexagonal versus MST and hexagonal versus RNG across Balanced QE, Holdout QE, and Train QE.}\label{tab:s7} \\
-\multicolumn{10}{@{}L{0.94\linewidth}@{}}{Rows list metric/dataset entries, including the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal and negative values favor MST or RNG. The CI columns give the corresponding 95\% paired $t$-test confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg adjustment across the 42 dataset-level tests in each topology-comparison family (14 datasets by three QE endpoints, separately for MST and RNG); OVERALL rows are pooled summaries and retain q=NA. The embedded table is reproduced from \texttt{assets/tables/supp\_\allowbreak{}table\_\allowbreak{}topology\_\allowbreak{}hex\_\allowbreak{}vs\_\allowbreak{}mst\_\allowbreak{}rng\_\allowbreak{}pvalues.tsv}.} \\[\baselineskip]
+\caption{\TrackSuppTable{Paired topology-comparison effects for hexagonal versus MST and hexagonal versus RNG across Balanced QE, Holdout QE, and Train QE.}}\label{tab:s7} \\
+\multicolumn{10}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows list metric/dataset entries, including the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal and negative values favor MST or RNG. The CI columns give the corresponding 95\% paired $t$-test confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg adjustment across the 42 dataset-level tests in each topology-comparison family (14 datasets by three QE endpoints, separately for MST and RNG); OVERALL rows are pooled summaries and retain q=NA. The embedded table is reproduced from \texttt{assets/tables/supp\_\allowbreak{}table\_\allowbreak{}topology\_\allowbreak{}hex\_\allowbreak{}vs\_\allowbreak{}mst\_\allowbreak{}rng\_\allowbreak{}pvalues.tsv}.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{metric} & \textbf{dataset} & \textbf{MST\_\allowbreak{}effect\_\allowbreak{}pct} & \textbf{MST\_\allowbreak{}95pct\_\allowbreak{}CI} & \textbf{MST\_\allowbreak{}p} & \textbf{MST\_\allowbreak{}q} & \textbf{RNG\_\allowbreak{}effect\_\allowbreak{}pct} & \textbf{RNG\_\allowbreak{}95pct\_\allowbreak{}CI} & \textbf{RNG\_\allowbreak{}p} & \textbf{RNG\_\allowbreak{}q} \\
 \midrule
@@ -466,12 +487,14 @@ Train QE & california\_\allowbreak{}housing & -0.3185 & [-0.4766, -0.1604] & p=0
 Train QE & covertype & -0.3468 & [-1.407, 0.7137] & p=0.478 & q=0.574 & -0.1341 & [-0.8722, 0.6039] & p=0.691 & q=0.744 \\
 Train QE & kddcup99 & -5.804 & [-6.474, -5.134] & p=1.09e-08 & q=4.56e-07 & -4.183 & [-5.557, -2.809] & p=7.18e-05 & q=0.000565 \\
 Train QE & OVERALL & -2.241 & [-3.842, -0.6405] & p=0.0064 & q=NA & -4.033 & [-5.707, -2.36] & p=4.69e-06 & q=NA \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s08.tsv (45 data rows x 4 columns).
 \begingroup
+\TrackSuppTableBodyColor
 \normalsize
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{1.08}
@@ -480,8 +503,9 @@ Train QE & OVERALL & -2.241 & [-3.842, -0.6405] & p=0.0064 & q=NA & -4.033 & [-5
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.12\linewidth}L{0.30\linewidth}C{0.20\linewidth}C{0.32\linewidth}@{}}
-\caption{Figure 15 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}\label{tab:s8} \\
-\multicolumn{4}{@{}L{0.94\linewidth}@{}}{Rows list per-dataset and \texttt{GLOBAL\_\allowbreak{}OVERALL} entries with the plotted median percent change and 95\% confidence interval.} \\[\baselineskip]
+\caption{\TrackSuppTable{Figure 15 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}}\label{tab:s8} \\
+\multicolumn{4}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{Rows list per-dataset and \texttt{GLOBAL\_\allowbreak{}OVERALL} entries with the plotted median percent change and 95\% confidence interval.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{metric} & \textbf{dataset} & \textbf{median \% change} & \textbf{95\% CI} \\
 \midrule
@@ -541,11 +565,13 @@ QE\_\allowbreak{}T & california\_\allowbreak{}housing & 10.3513 & [9.7384, 10.96
 QE\_\allowbreak{}T & covertype & 30.3738 & [29.1225, 31.6251] \\
 QE\_\allowbreak{}T & kddcup99 & 38.5352 & [36.2102, 40.8602] \\
 QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 22.4609 & [19.4613, 25.4605] \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 
 % GENERATED SOURCE: assets/tables/supp_table_s09.tsv (45 data rows x 4 columns).
 \begingroup
+\TrackSuppTableBodyColor
 \normalsize
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{1.08}
@@ -554,8 +580,9 @@ QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 22.4609 & [19.4613, 25.4605]
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.12\linewidth}L{0.30\linewidth}C{0.20\linewidth}C{0.32\linewidth}@{}}
-\caption{Supplementary Figure S7 deployment comparison percent summary for tuned FloatSOM hexagonal versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}\label{tab:s9} \\
-\multicolumn{4}{@{}L{0.94\linewidth}@{}}{Rows list per-dataset and \texttt{GLOBAL\_\allowbreak{}OVERALL} entries with the plotted median percent change and 95\% confidence interval.} \\[\baselineskip]
+\caption{\TrackSuppTable{Supplementary Figure S7 deployment comparison percent summary for tuned FloatSOM hexagonal versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}}\label{tab:s9} \\
+\multicolumn{4}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{Rows list per-dataset and \texttt{GLOBAL\_\allowbreak{}OVERALL} entries with the plotted median percent change and 95\% confidence interval.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{metric} & \textbf{dataset} & \textbf{median \% change} & \textbf{95\% CI} \\
 \midrule
@@ -615,11 +642,13 @@ QE\_\allowbreak{}T & california\_\allowbreak{}housing & 9.8167 & [9.2321, 10.401
 QE\_\allowbreak{}T & covertype & 29.6576 & [28.3443, 30.9708] \\
 QE\_\allowbreak{}T & kddcup99 & 35.8819 & [34.3431, 37.4206] \\
 QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 20.1214 & [17.5722, 22.6707] \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 
 % GENERATED SOURCE: assets/tables/supp_table_s10.tsv (45 data rows x 4 columns).
 \begingroup
+\TrackSuppTableBodyColor
 \normalsize
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{1.08}
@@ -628,8 +657,9 @@ QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 20.1214 & [17.5722, 22.6707]
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.12\linewidth}L{0.30\linewidth}C{0.20\linewidth}C{0.32\linewidth}@{}}
-\caption{Supplementary Figure S8 deployment comparison percent summary for tuned FloatSOM MST versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}\label{tab:s10} \\
-\multicolumn{4}{@{}L{0.94\linewidth}@{}}{Rows list per-dataset and \texttt{GLOBAL\_\allowbreak{}OVERALL} entries with the plotted median percent change and 95\% confidence interval.} \\[\baselineskip]
+\caption{\TrackSuppTable{Supplementary Figure S8 deployment comparison percent summary for tuned FloatSOM MST versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}}\label{tab:s10} \\
+\multicolumn{4}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{Rows list per-dataset and \texttt{GLOBAL\_\allowbreak{}OVERALL} entries with the plotted median percent change and 95\% confidence interval.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{metric} & \textbf{dataset} & \textbf{median \% change} & \textbf{95\% CI} \\
 \midrule
@@ -689,11 +719,13 @@ QE\_\allowbreak{}T & california\_\allowbreak{}housing & 10.4893 & [9.9385, 11.04
 QE\_\allowbreak{}T & covertype & 32.3264 & [31.0143, 33.6385] \\
 QE\_\allowbreak{}T & kddcup99 & 41.3715 & [40.0794, 42.6636] \\
 QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 21.6605 & [19.0539, 24.2672] \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 
 % GENERATED SOURCE: assets/tables/supp_table_s11.tsv (3 data rows x 8 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -703,8 +735,9 @@ QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 21.6605 & [19.0539, 24.2672]
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.18\linewidth}C{0.10\linewidth}C{0.12\linewidth}C{0.10\linewidth}C{0.10\linewidth}L{0.12\linewidth}L{0.10\linewidth}C{0.12\linewidth}@{}}
-\caption{Figure 14 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.}\label{tab:s11} \\
-\multicolumn{8}{@{}L{0.94\linewidth}@{}}{Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread.} \\[\baselineskip]
+\caption{\TrackSuppTable{Figure 14 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.}}\label{tab:s11} \\
+\multicolumn{8}{@{}L{0.94\linewidth}@{}}{\TrackSuppTableUnchanged{Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{axis} & \textbf{axis value} & \textbf{hexagonal s} & \textbf{MST s} & \textbf{RNG s} & \textbf{fastest} & \textbf{slowest} & \textbf{spread \%} \\
 \midrule
@@ -722,12 +755,14 @@ QE\_\allowbreak{}T & GLOBAL\_\allowbreak{}OVERALL & 21.6605 & [19.0539, 24.2672]
 Dimension Scaling & 5000 & 404.17 & 423.15 & 409.94 & hexagonal & mst & 4.7 \\
 Sample Scaling & 1e+09 & 363.58 & 375.44 & 369.41 & hexagonal & mst & 3.26 \\
 Grid-Size Scaling & 64 & 32.54 & 266.45 & 880.83 & hexagonal & rng & 2606.61 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s12.tsv (108 data rows x 9 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -737,8 +772,9 @@ Grid-Size Scaling & 64 & 32.54 & 266.45 & 880.83 & hexagonal & rng & 2606.61 \\
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.17\linewidth}L{0.08\linewidth}L{0.08\linewidth}C{0.06\linewidth}C{0.11\linewidth}C{0.16\linewidth}C{0.08\linewidth}C{0.10\linewidth}C{0.10\linewidth}@{}}
-\caption{Matched topology diagnostic paired summaries across tuned and untuned profiles.}\label{tab:s12} \\
-\multicolumn{9}{@{}L{0.94\linewidth}@{}}{Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.} \\[\baselineskip]
+\caption{\TrackSuppTable{Matched topology diagnostic paired summaries across tuned and untuned profiles.}}\label{tab:s12} \\
+\multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{Comparison} & \textbf{Metric} & \textbf{Better} & \textbf{n} & \textbf{Effect favoring comparator} & \textbf{95\% CI} & \textbf{dz} & \textbf{raw p} & \textbf{comp/ref/tie} \\
 \midrule
@@ -861,12 +897,14 @@ Tuned vs untuned RNG & Util\_\allowbreak{}B & higher & 280 & 0.0101 & [0.0067, 0
 Tuned vs untuned RNG & Dead\_\allowbreak{}H & lower & 280 & -0.0021 & [-0.0064, 0.0021] & -0.0599 & 0.317 & 83/92/105 \\
 Tuned vs untuned RNG & Dead\_\allowbreak{}T & lower & 280 & 0.0224 & [0.0180, 0.0268] & 0.6043 & 1.10e-20 & 134/19/127 \\
 Tuned vs untuned RNG & Dead\_\allowbreak{}B & lower & 280 & 0.0101 & [0.0067, 0.0136] & 0.3465 & 1.82e-08 & 117/68/95 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s13.tsv (84 data rows x 16 columns; panel 1 of 2).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -876,8 +914,9 @@ Tuned vs untuned RNG & Dead\_\allowbreak{}B & lower & 280 & 0.0101 & [0.0067, 0.
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.08\linewidth}L{0.16\linewidth}L{0.10\linewidth}C{0.05\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}@{}}
-\caption{Full matched topology diagnostic means by profile, dataset, and topology.}\label{tab:s13} \\
-\multicolumn{10}{@{}L{0.94\linewidth}@{}}{Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries.} \\[\baselineskip]
+\caption{\TrackSuppTable{Full matched topology diagnostic means by profile, dataset, and topology.}}\label{tab:s13} \\
+\multicolumn{10}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{Profile} & \textbf{Dataset} & \textbf{Topology} & \textbf{n} & \textbf{QE\_\allowbreak{}H} & \textbf{QE\_\allowbreak{}T} & \textbf{QE\_\allowbreak{}B} & \textbf{MTR\_\allowbreak{}H} & \textbf{MTR\_\allowbreak{}T} & \textbf{MTR\_\allowbreak{}B} \\
 \midrule
@@ -976,12 +1015,14 @@ tuned & swiss\_\allowbreak{}roll & rng & 20 & 0.2427 & 0.2388 & 0.2407 & 3.6234 
 tuned & wine & hexagonal & 20 & 1.9856 & 0.6770 & 1.3313 & 32.2560 & 27.5770 & 29.9165 \\
 tuned & wine & mst & 20 & 1.9633 & 0.5493 & 1.2563 & 10.4343 & 3.0798 & 6.7570 \\
 tuned & wine & rng & 20 & 1.9598 & 0.4868 & 1.2233 & 9.8250 & 2.6490 & 6.2370 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % S13 continued panel: key columns are repeated; the table counter is intentionally not advanced.
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -993,6 +1034,7 @@ tuned & wine & rng & 20 & 1.9598 & 0.4868 & 1.2233 & 9.8250 & 2.6490 & 6.2370 \\
 \renewcommand{\theHtable}{supplementarytable.13.continued}
 \addtocounter{table}{-1}% Longtable advances the table counter even without a caption.
 \begin{longtable}{@{}L{0.08\linewidth}L{0.16\linewidth}L{0.10\linewidth}C{0.05\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}@{}}
+\TrackSuppTableBodyOn
 \multicolumn{10}{c}{\textbf{\tablename~\thetable\ (continued)}} \\[\baselineskip]
 \toprule
 \textbf{Profile} & \textbf{Dataset} & \textbf{Topology} & \textbf{n} & \textbf{Util\_\allowbreak{}H} & \textbf{Util\_\allowbreak{}T} & \textbf{Util\_\allowbreak{}B} & \textbf{Dead\_\allowbreak{}H} & \textbf{Dead\_\allowbreak{}T} & \textbf{Dead\_\allowbreak{}B} \\
@@ -1092,12 +1134,14 @@ tuned & swiss\_\allowbreak{}roll & rng & 20 & 0.9920 & 0.9920 & 0.9920 & 0.0080 
 tuned & wine & hexagonal & 20 & 0.3710 & 0.7955 & 0.5833 & 0.6290 & 0.2045 & 0.4168 \\
 tuned & wine & mst & 20 & 0.3760 & 0.8790 & 0.6275 & 0.6240 & 0.1210 & 0.3725 \\
 tuned & wine & rng & 20 & 0.3835 & 0.9160 & 0.6498 & 0.6165 & 0.0840 & 0.3502 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
 
 % GENERATED SOURCE: assets/tables/supp_table_s14.tsv (12 data rows x 6 columns).
 \begingroup
+\TrackSuppTableBodyColor
 \normalsize
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{1.08}
@@ -1106,8 +1150,9 @@ tuned & wine & rng & 20 & 0.3835 & 0.9160 & 0.6498 & 0.6165 & 0.0840 & 0.3502 \\
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.12\linewidth}L{0.28\linewidth}C{0.13\linewidth}C{0.13\linewidth}C{0.20\linewidth}C{0.08\linewidth}@{}}
-\caption{Matched local CuPy and Ray streaming execution-path diagnostics.}\label{tab:s14} \\
-\multicolumn{6}{@{}L{0.94\linewidth}@{}}{Values are paired differences computed as Ray streaming minus local CuPy for matched dataset, seed, topology, and tuned configuration. Each row summarizes the paired differences across 14 datasets and 10 seeds. The table reports the mean paired difference, standard deviation of the paired difference, 95\% confidence interval, and Benjamini-Hochberg adjusted q-value.} \\[\baselineskip]
+\caption{\TrackSuppTable{Matched local CuPy and Ray streaming execution-path diagnostics.}}\label{tab:s14} \\
+\multicolumn{6}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Values are paired differences computed as Ray streaming minus local CuPy for matched dataset, seed, topology, and tuned configuration. Each row summarizes the paired differences across 14 datasets and 10 seeds. The table reports the mean paired difference, standard deviation of the paired difference, 95\% confidence interval, and Benjamini-Hochberg adjusted q-value.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{Topology} & \textbf{Metric} & \textbf{Mean difference} & \textbf{SD difference} & \textbf{95\% CI} & \textbf{BH q} \\
 \midrule
@@ -1134,11 +1179,13 @@ RNG & Balanced QE & 0.0049 & 0.1260 & [-0.0160, 0.0258] & 0.8294 \\
 RNG & Balanced MTR & -0.0823 & 0.5164 & [-0.1679, 0.0032] & 0.7840 \\
 RNG & Balanced node utilization & -1.07e-04 & 0.0035 & [-6.90e-04, 4.76e-04] & 0.8317 \\
 RNG & Balanced dead-node fraction & 1.07e-04 & 0.0035 & [-4.76e-04, 6.90e-04] & 0.8317 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 
 % GENERATED SOURCE: assets/tables/supp_table_s15.tsv (21 data rows x 9 columns).
 \begin{landscape}
+\TrackSuppTableBodyColor
 \begingroup
 \normalsize
 \setlength{\tabcolsep}{1pt}
@@ -1148,8 +1195,9 @@ RNG & Balanced dead-node fraction & 1.07e-04 & 0.0035 & [-4.76e-04, 6.90e-04] & 
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.13\linewidth}C{0.08\linewidth}C{0.08\linewidth}C{0.08\linewidth}C{0.09\linewidth}C{0.15\linewidth}C{0.13\linewidth}C{0.09\linewidth}C{0.09\linewidth}@{}}
-\caption{Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.}\label{tab:s15} \\
-\multicolumn{9}{@{}L{0.94\linewidth}@{}}{For each topology pair and radius, seed-level log $QE_B$ ratios were averaged within each dataset and then tested across the 14 equally weighted dataset effects. \texttt{QE ratio} is the exponentiated mean log ratio (comparator/reference), so values below 1 and positive improvement values favor the comparator. Confidence intervals are exponentiated 95\% paired $t$ intervals. Benjamini--Hochberg q-values adjust across all 21 topology-pair--radius tests.} \\[\baselineskip]
+\caption{\TrackSuppTable{Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.}}\label{tab:s15} \\
+\multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{For each topology pair and radius, seed-level log $QE_B$ ratios were averaged within each dataset and then tested across the 14 equally weighted dataset effects. \texttt{QE ratio} is the exponentiated mean log ratio (comparator/reference), so values below 1 and positive improvement values favor the comparator. Confidence intervals are exponentiated 95\% paired $t$ intervals. Benjamini--Hochberg q-values adjust across all 21 topology-pair--radius tests.}} \\[\baselineskip]
+\TrackSuppTableBodyOn
 \toprule
 \textbf{Contrast} & \textbf{Radius} & \textbf{n datasets} & \textbf{n seed pairs} & \textbf{QE ratio} & \textbf{95\% CI} & \textbf{Improvement} & \textbf{raw p} & \textbf{BH q} \\
 \midrule
@@ -1185,6 +1233,7 @@ RNG vs MST & 3 & 14 & 280 & 1.0105 & [0.9943, 1.0269] & -1.05\% & 0.1873 & 0.280
 MST vs Hex & 5 & 14 & 280 & 0.8842 & [0.8224, 0.9506] & 11.58\% & 0.0028 & 0.0141 \\
 RNG vs Hex & 5 & 14 & 280 & 0.8919 & [0.8416, 0.9452] & 10.81\% & 0.0009 & 0.0141 \\
 RNG vs MST & 5 & 14 & 280 & 1.0088 & [0.9923, 1.0255] & -0.88\% & 0.2731 & 0.3824 \\
+\TrackSuppTableBodyOff
 \end{longtable}
 \endgroup
 \end{landscape}
