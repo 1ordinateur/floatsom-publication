@@ -1,6 +1,6 @@
 \documentclass[10pt]{article} % For LaTeX2e
-\usepackage[accepted]{tmlr}
-% For anonymous review, use \usepackage{tmlr} instead.
+\usepackage{tmlr}
+% For an accepted camera-ready paper, use \usepackage[accepted]{tmlr} instead.
 % For a de-anonymized preprint, use \usepackage[preprint]{tmlr} instead.
 
 % Optional math commands from https://github.com/goodfeli/dlbook_notation.
@@ -12,51 +12,27 @@
 \usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{pdflscape}
 \usepackage{hyperref}
 \usepackage{url}
 
-\title{FloatSOM: GPU Accelerated, Distributed, Topology-Flexible Self-Organizing Maps%
-\thanks{LLM disclosure}}
+\title{FloatSOM: GPU Accelerated, Distributed, Topology-Flexible Self-Organizing Maps}
 
-\author{
-  \name Tony Xu \email tony.xu@anu.edu.au \\
-  \addr John Curtin School of Medical Research, Australian National University
-  \AND
-  \name Sarah Klamt \\
-  \addr Department of Information Technology and Electrical Engineering, ETH Z\"urich
-  \AND
-  \name Katherine Turner \\
-  \addr Mathematical Data Science Centre, Australian National University
-  \AND
-  \name Anne Br\"ustle \\
-  \addr John Curtin School of Medical Research, Australian National University
-  \AND
-  \name Felix Marsh-Wakefield\textsuperscript{$\dagger$} \\
-  \addr Centenary Institute of Cancer Medicine and Cell Biology \\
-  \addr University of Sydney
-  \AND
-  \name Givanna Putri\textsuperscript{$\dagger$} \\
-  \addr Walter and Eliza Hall Institute
-}
+% Review-stage source: author names, affiliations, emails, and contribution
+% statements are deliberately omitted for double-blind review.
+\author{}
 
-% TODO(TMLR CAMERA-READY): Replace all three placeholders before submission.
+% TODO(TMLR CAMERA-READY): Replace all three placeholders only for the final
+% accepted version; they are unused in anonymous review mode.
 \def\month{MM}
 \def\year{YYYY}
 \def\openreview{\url{https://openreview.net/forum?id=XXXX}}
 
-% TODO(TMLR DISCLOSURE): Replace the first-page ``LLM disclosure'' placeholder
-% in the title's \thanks command with the authors' final disclosure text.
-
 \begin{document}
 
 \maketitle
-
-\begingroup
-\renewcommand\thefootnote{\ensuremath{\dagger}}
-\begin{NoHyper}
-\footnotetext{Givanna Putri and Felix Marsh-Wakefield contributed equally as co-last authors.}
-\end{NoHyper}
-\endgroup
 
 \begin{abstract}
 GPU-accelerated Self-Organizing Map (SOM) implementations are among the most competitive options for large-scale SOM analysis, but growing dataset sizes increasingly challenge their practical use because workloads no longer fit cleanly within device-memory limits. We introduce FloatSOM, a SOM framework for scalable training and deployment that supports multi-GPU execution, out-of-memory disk-backed streaming, and scalable training-time graph topologies beyond regular lattices. We evaluate FloatSOM on 14 synthetic and real benchmark datasets together with controlled speed scaling benchmarks, and show that these graph-based topologies, combined with topology-aware hyperparameter fine-tuning, yield lower quantization error than current state-of-the-art SOM baselines. FloatSOM also sustains this performance at large scale with high-throughput distributed execution; in the largest benchmark, it trains a 1024-node SOM network on 1,000,000,000 samples with 50 features in 6.16 minutes on 8 GPUs across two separate high-performance-computing nodes.
@@ -451,10 +427,9 @@ RNG also has lower observed MTR than MST throughout the sweep (Fig. 9B); for exa
 The fixed-configuration diagnostics provide the corresponding MTR and node-use comparison (Table \ref{tab:matched_topology_diagnostics_summary}). MST and RNG both improved balanced $QE$ relative to hexagonal maps with and without tuning, but only RNG clearly lowered untuned balanced MTR. Under tuning, no balanced-$QE$ difference was detected between MST and RNG, while RNG lowered balanced MTR by 2.96 tied-rank positions. RNG therefore gave the strongest joint $QE$/MTR result, while MST remained a close competitor on $QE$.
 
 \begin{table}[H]
-\centering
-\setlength{\belowcaptionskip}{6pt}
 \caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
 \label{tab:matched_topology_diagnostics_summary}
+\begin{center}
 \begin{tabular}{lrrrrrr}
 \toprule
 & \multicolumn{3}{c}{$QE_B$} & \multicolumn{3}{c}{$MTR_B$} \\
@@ -465,6 +440,7 @@ Untuned & +0.269 & +0.249 & -0.020 & -0.20 & +2.44 & +2.64 \\
 Tuned & +0.064 & +0.052 & -0.012 & +22.71 & +25.67 & +2.96 \\
 \bottomrule
 \end{tabular}
+\end{center}
 \end{table}
 
 \subsection{Hyperparameter Tuning and Stability}
@@ -595,13 +571,8 @@ RNG is the preferred joint $QE$/MTR topology when topology overhead is acceptabl
 
 FloatSOM brings these topology and systems choices together in a single large-scale SOM framework.
 
-\subsubsection*{Acknowledgments}
-
-This work was supported by computational resources provided by the Australian Government through the National Computational Infrastructure (NCI) under the ANU Merit Allocation Scheme.
-
-We also acknowledge the computational services provided by the University of Bern, the University of Sydney, and the Walter and Eliza Hall Institute.
-
-We thank Prof. Hanna Suominen for her input and advice.
+% Acknowledgments and funding information are omitted from the anonymous
+% review source and must be restored only after acceptance and deanonymization.
 
 \bibliography{main}
 \bibliographystyle{tmlr}
@@ -622,121 +593,7 @@ For each topology, Supplementary Table S14 reports paired differences for balanc
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\theHtable}{supplementarytable.\arabic{table}}
 
-\begin{table}[H]
-\caption{Dataset metadata and numbered point key for the Figure 4 sampling mode analysis.}
-\label{tab:s1}
-\centering
-\small
-\begin{tabular}{lllll}
-\hline
-dataset\_index & dataset & dimension\_count & sample\_size & dataset\_type \\
-\hline
-1 & iris & 4 & 150 & real \\
-2 & wine & 13 & 178 & real \\
-3 & olivetti\_faces & 4096 & 400 & real \\
-4 & diabetes & 10 & 442 & real \\
-5 & breast\_cancer & 30 & 569 & real \\
-6 & digits & 64 & 1797 & real \\
-7 & california\_housing & 8 & 20640 & real \\
-8 & blobs & 2 & 30000 & synthetic \\
-9 & circles & 2 & 30000 & synthetic \\
-10 & moons & 2 & 30000 & synthetic \\
-11 & s\_curve & 3 & 30000 & synthetic \\
-12 & swiss\_roll & 3 & 30000 & synthetic \\
-13 & kddcup99 & 41 & 494021 & real \\
-14 & covertype & 54 & 581012 & real \\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\caption{HDSSSOM pilot configuration summary for Figure 3.}
-\label{tab:s2}
-\centering
-\small
-\begin{tabular}{p{0.28\linewidth}p{0.64\linewidth}}
-\hline
-field & value \\
-\hline
-pilot purpose & Initial HDSSSOM screening before the broader sampling comparison \\
-configuration scope & Smaller hexagonal Optuna pilot \\
-datasets & \texttt{swiss\_roll}, \texttt{moons}, \texttt{circles}, \texttt{blobs}, \texttt{s\_curve}, \texttt{breast\_cancer}, \texttt{wine}, \texttt{iris}, \texttt{digits}, \texttt{olivetti\_faces} \\
-dataset count & 10 \\
-seed count & 5 \\
-sampling methods present & full, random, HDSSSOM \\
-topology & \texttt{hexagonal} \\
-algorithm family in campaign & \texttt{full\_batch} \\
-optimization split setup & \texttt{evaluation-split=both}, yielding \texttt{QE\_H} and \texttt{QE\_T}; Figure 3 reports paired \texttt{QE\_B} \\
-trials per scenario & 200 \\
-main text figure slice & hexagonal / full vs HDSSSOM \\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\caption{Exact axis values used for the sample count, feature dimension, and grid size scaling benchmarks in Section 4.2.1.}
-\label{tab:s3}
-\centering
-\small
-\begin{tabular}{p{0.25\linewidth}p{0.67\linewidth}}
-\hline
-scaling axis & exact values \\
-\hline
-sample count & $10^6$, $5 \times 10^6$, $10^7$, $5 \times 10^7$, $10^8$, $5 \times 10^8$, $10^9$ \\
-feature dimension & 50, 100, 200, 500, 1000, 2000, 5000 \\
-grid side length & 8, 16, 24, 32, 48, 64 \\
-\hline
-\end{tabular}
-\end{table}
-
-\paragraph*{Supplementary Table S4. Untuned FloatSOM MST versus hexagonal XPySOM.}
-The \texttt{dataset\_index} column matches the numbered points in Supplementary Figure S1 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s04.tsv}.
-
-\paragraph*{Supplementary Table S5. Untuned FloatSOM RNG versus hexagonal XPySOM.}
-The \texttt{dataset\_index} column matches the numbered points in Supplementary Figure S2 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s05.tsv}.
-
-\paragraph*{Supplementary Table S6. Hexagonal FloatSOM--XPySOM implementation calibration.}
-The \texttt{dataset\_index} column matches the numbered points in Supplementary Figure S3 panel D. Positive percentage values and positive signed effects favor FloatSOM; the compact embedded table lists wins as FloatSOM/XPySOM/ties.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s06.tsv}.
-
-\paragraph*{Supplementary Table S7. Paired topology-comparison effects for hexagonal versus MST and hexagonal versus RNG across Balanced QE, Holdout QE, and Train QE.}
-Rows list metric/dataset entries, including the OVERALL row. Effect columns report the paired mean percent improvement of hexagonal over the comparator topology, using hexagonal QE as the reference denominator; positive values favor hexagonal and negative values favor MST or RNG. The CI columns give the corresponding 95\% paired $t$-test confidence intervals. Raw p-values are retained for audit, and q-values report Benjamini-Hochberg adjustment across the 42 dataset-level tests in each topology-comparison family (14 datasets by three QE endpoints, separately for MST and RNG); OVERALL rows are pooled summaries and retain q=NA. The embedded table is reproduced from \texttt{assets/tables/supp\_table\_topology\_hex\_vs\_mst\_rng\_pvalues.tsv}.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s07.tsv}.
-
-\paragraph*{Supplementary Table S8. Figure 15 deployment comparison percent summary for tuned FloatSOM RNG versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}
-Rows list per-dataset and \texttt{GLOBAL\_OVERALL} entries with the plotted median percent change and 95\% confidence interval.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s08.tsv}.
-
-\paragraph*{Supplementary Table S9. Supplementary Figure S7 deployment comparison percent summary for tuned FloatSOM hexagonal versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}
-Rows list per-dataset and \texttt{GLOBAL\_OVERALL} entries with the plotted median percent change and 95\% confidence interval.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s09.tsv}.
-
-\paragraph*{Supplementary Table S10. Supplementary Figure S8 deployment comparison percent summary for tuned FloatSOM MST versus untuned hexagonal XPySOM across $QE_B$, $QE_H$, and $QE_T$.}
-Rows list per-dataset and \texttt{GLOBAL\_OVERALL} entries with the plotted median percent change and 95\% confidence interval.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s10.tsv}.
-
-\paragraph*{Supplementary Table S11. Figure 14 topology runtime summary at the largest common 8-GPU axis value for the dimension, sample, and grid size scaling workloads.}
-Rows report the plotted 8-GPU mean runtimes for hexagonal, MST, and RNG, together with the fastest and slowest topology at that axis value and the maximum pairwise runtime spread.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s11.tsv}.
-
-\paragraph*{Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.}
-Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_H}), train (\texttt{\_T}), and balanced train-holdout (\texttt{\_B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s12.tsv}.
-
-\paragraph*{Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.}
-Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Metric suffixes denote holdout (\texttt{\_H}), train (\texttt{\_T}), and balanced train-holdout (\texttt{\_B}) summaries.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s13.tsv}.
-
-\paragraph*{Supplementary Table S14. Matched local CuPy and Ray streaming execution-path diagnostics.}
-Values are paired differences computed as Ray streaming minus local CuPy for matched dataset, seed, topology, and tuned configuration. Each row summarizes the paired differences across 14 datasets and 10 seeds. The table reports the mean paired difference, standard deviation of the paired difference, 95\% confidence interval, and Benjamini-Hochberg adjusted q-value.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s14.tsv}.
-
-\paragraph*{Supplementary Table S15. Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.}
-For each topology pair and radius, seed-level log $QE_B$ ratios were averaged within each dataset and then tested across the 14 equally weighted dataset effects. \texttt{QE ratio} is the exponentiated mean log ratio (comparator/reference), so values below 1 and positive improvement values favor the comparator. Confidence intervals are exponentiated 95\% paired $t$ intervals. Benjamini--Hochberg q-values adjust across all 21 topology-pair--radius tests.
-Complete row data are provided in \texttt{assets/tables/supp\_table\_s15.tsv}.
-
+\input{assets/tables/supplementary_tables.tex}
 \section{Supplementary Figures (End Matter)}
 \setcounter{figure}{0}
 \renewcommand{\figurename}{Supplementary Figure}
