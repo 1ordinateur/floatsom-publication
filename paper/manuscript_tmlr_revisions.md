@@ -463,6 +463,8 @@ In Fig. 14A-B, the topologies scale similarly as input complexity and data volum
 
 <!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:START -->
 However, when the grid itself is enlarged in Fig. 14C, topology-dependent runtime differences become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively.
+
+To further examine the RNG runtime spike in grid-size scaling, we compared the topology-construction operations. For each of the $\binom{P}{2}$ candidate node pairs, RNG checks every possible third node in its relative-neighborhood blocker test, giving up to $\binom{P}{2}(P-2)=O(P^3)$ pair--blocker comparisons per topology refresh. At $P=4096$, this is approximately 34.3 billion unordered pair--blocker checks. MST instead constructs and sorts approximately $\binom{4096}{2}=8.39$ million candidate edges using Kruskal's algorithm, an $O(P^2\log P)$ edge-construction step after pairwise distances are calculated. Both topologies then perform the shared graph-distance and influence calculations. The additional $O(P^3)$ RNG blocker-test work therefore provides a quantitative algorithmic explanation for the sharp RNG cost increase at large grid sizes.
 <!-- AUTO-FIGURE12-GRID-SIZE-DISCUSSION:END -->
 
 ## 7. Final FloatSOM RNG Comparison with XPySOM

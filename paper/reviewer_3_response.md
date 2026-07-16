@@ -48,6 +48,8 @@ For $P$ nodes and $d$ features stored as float32, the two accumulators contain $
 
 The memory explanation now separates the source of the cost from the mechanism used to manage it. With chunks of at most $C$ rows, the dominant bounded worker arrays scale as $O(Cd+Pd)$ rather than requiring the full $O(Nd)$ observations in GPU memory. Graph-distance and influence structures add both computation and storage terms that scale with $P^2$; for MST and especially RNG, topology construction, all-pairs path calculation, and influence-cache updates therefore become more expensive as node count increases. FloatSOM tiles these structures and can spill them from VRAM to system RAM when necessary. Spilling is a memory-management response that can add transfer overhead, but it is not the sole explanation for the runtime increase. The measured grid-size results show the combined practical consequence. At grid size 64 on 8 GPUs, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s, respectively. Thus, the distributed pathway scales much more favorably in sample count than in node count, especially for RNG.
 
+To further examine the RNG runtime spike in grid-size scaling, we compared the topology-construction operations. For each of the $\binom{P}{2}$ candidate node pairs, RNG checks every possible third node in its relative-neighborhood blocker test, giving up to $\binom{P}{2}(P-2)=O(P^3)$ pair--blocker comparisons per topology refresh. At $P=4096$, this is approximately 34.3 billion unordered pair--blocker checks. MST instead constructs and sorts approximately $\binom{4096}{2}=8.39$ million candidate edges using Kruskal's algorithm, an $O(P^2\log P)$ edge-construction step after pairwise distances are calculated. Both topologies then perform the shared graph-distance and influence calculations. The additional $O(P^3)$ RNG blocker-test work therefore provides a quantitative algorithmic explanation for the sharp RNG cost increase at large grid sizes.
+
 ### Manuscript Amendment
 
 In Section 3.3.1, after the distributed-update equations, we added:
@@ -61,6 +63,10 @@ In Section 6.2, we clarified the distinction between sample and grid-size scalin
 In Section 6.3, we added the absolute grid-size runtimes:
 
 > "However, when the grid itself is enlarged in Fig. 14C, topology-dependent runtime differences become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively."
+
+We also added the operation-count explanation for the RNG grid-size spike:
+
+> "For each of the $\binom{P}{2}$ candidate node pairs, RNG checks every possible third node in its relative-neighborhood blocker test, giving up to $\binom{P}{2}(P-2)=O(P^3)$ pair--blocker comparisons per topology refresh. At $P=4096$, this is approximately 34.3 billion unordered pair--blocker checks. MST instead constructs and sorts approximately $\binom{4096}{2}=8.39$ million candidate edges using Kruskal's algorithm, an $O(P^2\log P)$ edge-construction step after pairwise distances are calculated. Both topologies then perform the shared graph-distance and influence calculations. The additional $O(P^3)$ RNG blocker-test work provides a quantitative algorithmic explanation for the sharp RNG cost increase at large grid sizes."
 
 In the Discussion (Section 8), we also clarified the scope of the external benchmark comparisons. Somoclu and GigaSOM are treated as published parallel-systems context rather than controlled head-to-head baselines, with the differences in hardware, language, training regime, and workload design explained explicitly. XPySOM remains the executable external comparator, while the large-grid runtime measurements are interpreted as controlled internal comparisons among FloatSOM topologies.
 
