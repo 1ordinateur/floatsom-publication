@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.11)  8 MAY 2026 12:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.11)  16 JUL 2026 16:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -236,6 +236,25 @@ Package graphics Info: Driver file: pdftex.def on input line 106.
 )
 \Gin@req@height=\dimen160
 \Gin@req@width=\dimen161
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen162
+\lightrulewidth=\dimen163
+\cmidrulewidth=\dimen164
+\belowrulesep=\dimen165
+\belowbottomsep=\dimen166
+\aboverulesep=\dimen167
+\abovetopsep=\dimen168
+\cmidrulesep=\dimen169
+\cmidrulekern=\dimen170
+\defaultaddspace=\dimen171
+\@cmidla=\count305
+\@cmidlb=\count306
+\@aboverulesep=\dimen172
+\@belowrulesep=\dimen173
+\@thisruleclass=\count307
+\@lastruleclass=\count308
+\@thisrulewidth=\dimen174
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
  (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
@@ -267,16 +286,16 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (/usr/local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count305
+\c@section@level=\count309
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count306
+\etb@tempcnta=\count310
 ) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
-\@linkdim=\dimen162
-\Hy@linkcounter=\count307
-\Hy@pagecounter=\count308
+\@linkdim=\dimen175
+\Hy@linkcounter=\count311
+\Hy@pagecounter=\count312
  (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -284,7 +303,7 @@ Now handling font encoding PD1 ...
 ) (/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count309
+\Hy@SavedSpaceFactor=\count313
  (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -297,21 +316,21 @@ Package hyperref Info: Plain pages OFF on input line 4216.
 Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
-\c@Hy@tempcnt=\count310
+\c@Hy@tempcnt=\count314
  (/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
-\XeTeXLinkMargin=\dimen163
+\XeTeXLinkMargin=\dimen176
  (/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
  (/usr/local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
-\Fld@menulength=\count311
-\Field@Width=\dimen164
-\Fld@charsize=\dimen165
+\Fld@menulength=\count315
+\Field@Width=\dimen177
+\Fld@charsize=\dimen178
 Package hyperref Info: Hyper figures OFF on input line 6084.
 Package hyperref Info: Link nesting OFF on input line 6089.
 Package hyperref Info: Hyper index ON on input line 6092.
@@ -319,15 +338,15 @@ Package hyperref Info: backreferencing OFF on input line 6099.
 Package hyperref Info: Link coloring OFF on input line 6104.
 Package hyperref Info: Link coloring with OCG OFF on input line 6109.
 Package hyperref Info: PDF/A mode OFF on input line 6114.
-\Hy@abspage=\count312
-\c@Item=\count313
-\c@Hfootnote=\count314
+\Hy@abspage=\count316
+\c@Item=\count317
+\c@Hfootnote=\count318
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2026-01-29 v7.01p Hyperref driver for pdfTeX
-\Fld@listcount=\count315
-\c@bookmark@seq@number=\count316
+\Fld@listcount=\count319
+\c@bookmark@seq@number=\count320
  (/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
  (/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
@@ -337,45 +356,45 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip72
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 37.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 50.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count317
+\l__color_backend_stack_int=\count321
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
  (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count318
-\scratchdimen=\dimen166
+\scratchcounter=\count322
+\scratchdimen=\dimen179
 \scratchbox=\box57
-\nofMPsegments=\count319
-\nofMParguments=\count320
+\nofMPsegments=\count323
+\nofMParguments=\count324
 \everyMPshowfont=\toks26
-\MPscratchCnt=\count321
-\MPscratchDim=\dimen167
-\MPnumerator=\count322
-\makeMPintoPDFobject=\count323
+\MPscratchCnt=\count325
+\MPscratchDim=\dimen180
+\MPnumerator=\count326
+\makeMPintoPDFobject=\count327
 \everyMPtoPDFconversion=\toks27
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -383,272 +402,257 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/local/texlive/2026/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 37.
+Package hyperref Info: Link coloring OFF on input line 50.
  (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for T1+lmss on input line 40.
+LaTeX Font Info:    Trying to load font information for T1+lmss on input line 53.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Underfull \hbox (badness 4266) in paragraph at lines 40--40
+Underfull \hbox (badness 4266) in paragraph at lines 53--53
 []\T1/lmss/bx/n/17.28 FloatSOM: GPU Ac-cel-er-ated, Dis-tributed, Topology-
  []
 
-
-Underfull \vbox (badness 2435) has occurred while \output is active []
-
- [1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}
-
-] [2]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 83.
- (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-<assets/figures/fig_1.pdf, id=294, 676.9762pt x 482.3129pt>
-File: assets/figures/fig_1.pdf Graphic file (type pdf)
-<use assets/figures/fig_1.pdf>
-Package pdftex.def Info: assets/figures/fig_1.pdf  used on input line 88.
-(pdftex.def)             Requested size: 234.87749pt x 167.34013pt.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 97.
- (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/ot1lmr.fd
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 53.
+(/usr/local/texlive/2026/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 97.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 53.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 97.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 53.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 97.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 53.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 97.
+(Font)              <10> on input line 53.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 97.
+(Font)              <7> on input line 53.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 97.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 97.
+(Font)              <5> on input line 53.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 53.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 97.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 53.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [3{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc} <./assets/figures/fig_1.pdf>]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 134.
- [4]
-<assets/figures/fig_2.pdf, id=381, 515.49988pt x 1086.35867pt>
-File: assets/figures/fig_2.pdf Graphic file (type pdf)
-<use assets/figures/fig_2.pdf>
-Package pdftex.def Info: assets/figures/fig_2.pdf  used on input line 182.
-(pdftex.def)             Requested size: 220.78542pt x 465.28514pt.
+)
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 53.
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 53.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 53.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
 
- [5] [6 <./assets/figures/fig_2.pdf>] [7] [8] [9]
-<assets/figures/fig_3.pdf, id=525, 3312.375pt x 1204.5pt>
-File: assets/figures/fig_3.pdf Graphic file (type pdf)
-<use assets/figures/fig_3.pdf>
-Package pdftex.def Info: assets/figures/fig_3.pdf  used on input line 298.
-(pdftex.def)             Requested size: 469.75499pt x 170.81596pt.
- [10 <./assets/figures/fig_3.pdf>]
-<assets/figures/fig_4.pdf, id=1046, 3193.9124pt x 2200.39056pt>
-File: assets/figures/fig_4.pdf Graphic file (type pdf)
-<use assets/figures/fig_4.pdf>
-Package pdftex.def Info: assets/figures/fig_4.pdf  used on input line 310.
-(pdftex.def)             Requested size: 469.75499pt x 323.63148pt.
-<assets/figures/fig_5.pdf, id=1047, 3164.50249pt x 1159.90334pt>
-File: assets/figures/fig_5.pdf Graphic file (type pdf)
-<use assets/figures/fig_5.pdf>
-Package pdftex.def Info: assets/figures/fig_5.pdf  used on input line 324.
-(pdftex.def)             Requested size: 469.75499pt x 172.17273pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [11 <./assets/figures/fig_4.pdf>]
-<assets/figures/fig_6.pdf, id=2130, 3203.70901pt x 1204.5pt>
-File: assets/figures/fig_6.pdf Graphic file (type pdf)
-<use assets/figures/fig_6.pdf>
-Package pdftex.def Info: assets/figures/fig_6.pdf  used on input line 338.
-(pdftex.def)             Requested size: 469.75499pt x 176.60541pt.
-<assets/figures/fig_7.pdf, id=2131, 3282.13213pt x 1204.5pt>
-File: assets/figures/fig_7.pdf Graphic file (type pdf)
-<use assets/figures/fig_7.pdf>
-Package pdftex.def Info: assets/figures/fig_7.pdf  used on input line 354.
-(pdftex.def)             Requested size: 469.75499pt x 172.3782pt.
- [12 <./assets/figures/fig_5.pdf> <./assets/figures/fig_6.pdf
-
-pdfTeX warning: pdflatex (file ./assets/figures/fig_6.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->]
-<assets/figures/fig_8.pdf, id=3070, 3345.49875pt x 1204.5pt>
-File: assets/figures/fig_8.pdf Graphic file (type pdf)
-<use assets/figures/fig_8.pdf>
-Package pdftex.def Info: assets/figures/fig_8.pdf  used on input line 368.
-(pdftex.def)             Requested size: 469.75499pt x 169.12509pt.
-
-Underfull \hbox (badness 1024) in paragraph at lines 369--369
-\T1/lmr/m/n/10 con-fig-u-ra-tion out-per-forms the un-tuned ref-er-ence; the global over-all row pools all matched tuned-
  []
 
-[13 <./assets/figures/fig_7.pdf> <./assets/figures/fig_8.pdf
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 57.
+[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}
+
+{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}]
+<assets/figures/fig_1.pdf, id=319, 676.9762pt x 482.3129pt>
+File: assets/figures/fig_1.pdf Graphic file (type pdf)
+<use assets/figures/fig_1.pdf>
+Package pdftex.def Info: assets/figures/fig_1.pdf  used on input line 110.
+(pdftex.def)             Requested size: 234.87749pt x 167.34013pt.
+
+Underfull \vbox (badness 2261) has occurred while \output is active []
+
+ [3{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}] [4{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc} <./assets/figures/fig_1.pdf>]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 160.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5]
+<assets/figures/fig_2.pdf, id=414, 515.49988pt x 1086.35867pt>
+File: assets/figures/fig_2.pdf Graphic file (type pdf)
+<use assets/figures/fig_2.pdf>
+Package pdftex.def Info: assets/figures/fig_2.pdf  used on input line 208.
+(pdftex.def)             Requested size: 220.78542pt x 465.28514pt.
+ [6] [7 <./assets/figures/fig_2.pdf>] [8] [9] [10] [11]
+Underfull \vbox (badness 1867) has occurred while \output is active []
+
+ [12]
+<assets/figures/fig_3.pdf, id=578, 3312.375pt x 1204.5pt>
+File: assets/figures/fig_3.pdf Graphic file (type pdf)
+<use assets/figures/fig_3.pdf>
+Package pdftex.def Info: assets/figures/fig_3.pdf  used on input line 356.
+(pdftex.def)             Requested size: 469.75499pt x 170.81596pt.
+ [13 <./assets/figures/fig_3.pdf>]
+<assets/figures/fig_4.pdf, id=1140, 3193.9124pt x 2200.39056pt>
+File: assets/figures/fig_4.pdf Graphic file (type pdf)
+<use assets/figures/fig_4.pdf>
+Package pdftex.def Info: assets/figures/fig_4.pdf  used on input line 368.
+(pdftex.def)             Requested size: 469.75499pt x 323.63148pt.
+ [14 <./assets/figures/fig_4.pdf>]
+<assets/figures/fig_5.pdf, id=2184, 1349.56197pt x 1019.50888pt>
+File: assets/figures/fig_5.pdf Graphic file (type pdf)
+<use assets/figures/fig_5.pdf>
+Package pdftex.def Info: assets/figures/fig_5.pdf  used on input line 382.
+(pdftex.def)             Requested size: 469.75499pt x 354.87334pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15 <./assets/figures/fig_5.pdf>]
+<assets/figures/fig_6.pdf, id=3945, 3203.70901pt x 1204.5pt>
+File: assets/figures/fig_6.pdf Graphic file (type pdf)
+<use assets/figures/fig_6.pdf>
+Package pdftex.def Info: assets/figures/fig_6.pdf  used on input line 398.
+(pdftex.def)             Requested size: 469.75499pt x 176.60541pt.
+<assets/figures/fig_7.pdf, id=3946, 3282.13213pt x 1204.5pt>
+File: assets/figures/fig_7.pdf Graphic file (type pdf)
+<use assets/figures/fig_7.pdf>
+Package pdftex.def Info: assets/figures/fig_7.pdf  used on input line 414.
+(pdftex.def)             Requested size: 469.75499pt x 172.3782pt.
+<assets/figures/fig_8.pdf, id=3947, 3533.2pt x 1365.3007pt>
+File: assets/figures/fig_8.pdf Graphic file (type pdf)
+<use assets/figures/fig_8.pdf>
+Package pdftex.def Info: assets/figures/fig_8.pdf  used on input line 426.
+(pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [16 <./assets/figures/fig_6.pdf>] [17 <./assets/figures/fig_7.pdf> <./assets/figures/fig_8.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/fig_8.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
-<assets/figures/fig_9.pdf, id=4533, 3327.92308pt x 1095.302pt>
+<assets/figures/fig_9.pdf, id=6011, 3345.49875pt x 1204.5pt>
 File: assets/figures/fig_9.pdf Graphic file (type pdf)
 <use assets/figures/fig_9.pdf>
-Package pdftex.def Info: assets/figures/fig_9.pdf  used on input line 382.
-(pdftex.def)             Requested size: 469.75499pt x 154.5947pt.
-<assets/figures/fig_10.pdf, id=4534, 3083.78099pt x 1065.40038pt>
+Package pdftex.def Info: assets/figures/fig_9.pdf  used on input line 446.
+(pdftex.def)             Requested size: 469.75499pt x 169.12509pt.
+<assets/figures/fig_10.pdf, id=6013, 3345.49875pt x 1204.5pt>
 File: assets/figures/fig_10.pdf Graphic file (type pdf)
 <use assets/figures/fig_10.pdf>
-Package pdftex.def Info: assets/figures/fig_10.pdf  used on input line 398.
-(pdftex.def)             Requested size: 469.75499pt x 162.29042pt.
- [14 <./assets/figures/fig_9.pdf>]
-<assets/figures/fig_11.pdf, id=4920, 3072.24791pt x 2168.1pt>
+Package pdftex.def Info: assets/figures/fig_10.pdf  used on input line 480.
+(pdftex.def)             Requested size: 469.75499pt x 169.12509pt.
+
+Underfull \vbox (badness 1152) has occurred while \output is active []
+
+ [18]
+Underfull \vbox (badness 2894) has occurred while \output is active []
+
+ [19 <./assets/figures/fig_9.pdf> <./assets/figures/fig_10.pdf
+
+pdfTeX warning: pdflatex (file ./assets/figures/fig_10.pdf): PDF inclusion: multiple pdfs with page group included in a single page
+>]
+<assets/figures/fig_11.pdf, id=6838, 3327.92308pt x 1095.302pt>
 File: assets/figures/fig_11.pdf Graphic file (type pdf)
 <use assets/figures/fig_11.pdf>
-Package pdftex.def Info: assets/figures/fig_11.pdf  used on input line 414.
-(pdftex.def)             Requested size: 469.75499pt x 331.48665pt.
- [15 <./assets/figures/fig_10.pdf>]
-<assets/figures/fig_12.pdf, id=5001, 3163.72957pt x 1067.42784pt>
+Package pdftex.def Info: assets/figures/fig_11.pdf  used on input line 496.
+(pdftex.def)             Requested size: 469.75499pt x 154.5947pt.
+<assets/figures/fig_12.pdf, id=6839, 3533.2pt x 1144.37535pt>
 File: assets/figures/fig_12.pdf Graphic file (type pdf)
 <use assets/figures/fig_12.pdf>
-Package pdftex.def Info: assets/figures/fig_12.pdf  used on input line 436.
-(pdftex.def)             Requested size: 469.75499pt x 158.4785pt.
-<assets/figures/fig_13.pdf, id=5004, 3033.03133pt x 1923.61667pt>
+Package pdftex.def Info: assets/figures/fig_12.pdf  used on input line 516.
+(pdftex.def)             Requested size: 469.75499pt x 152.14413pt.
+ [20 <./assets/figures/fig_11.pdf>]
+<assets/figures/fig_13.pdf, id=7174, 3072.24791pt x 2168.1pt>
 File: assets/figures/fig_13.pdf Graphic file (type pdf)
 <use assets/figures/fig_13.pdf>
-Package pdftex.def Info: assets/figures/fig_13.pdf  used on input line 452.
+Package pdftex.def Info: assets/figures/fig_13.pdf  used on input line 532.
+(pdftex.def)             Requested size: 469.75499pt x 331.48665pt.
+ [21 <./assets/figures/fig_12.pdf>]
+<assets/figures/fig_14.pdf, id=7286, 3533.2pt x 1203.2855pt>
+File: assets/figures/fig_14.pdf Graphic file (type pdf)
+<use assets/figures/fig_14.pdf>
+Package pdftex.def Info: assets/figures/fig_14.pdf  used on input line 554.
+(pdftex.def)             Requested size: 469.75499pt x 159.97621pt.
+ [22 <./assets/figures/fig_13.pdf>]
+<assets/figures/fig_15.pdf, id=7476, 3033.03133pt x 1923.61667pt>
+File: assets/figures/fig_15.pdf Graphic file (type pdf)
+<use assets/figures/fig_15.pdf>
+Package pdftex.def Info: assets/figures/fig_15.pdf  used on input line 570.
 (pdftex.def)             Requested size: 469.75499pt x 297.92268pt.
-
+ [23 <./assets/figures/fig_14.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [16 <./assets/figures/fig_11.pdf>]
-Underfull \vbox (badness 2173) has occurred while \output is active []
-
- [17 <./assets/figures/fig_12.pdf>]
+ [24 <./assets/figures/fig_15.pdf>] (./main.bbl [25] [26]) [27]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [18 <./assets/figures/fig_13.pdf>] (./main.bbl [19] [20]) [21]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 511.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 511.
- [22
+ [28
 
-]
-Underfull \hbox (badness 1394) in paragraph at lines 595--596
-\T1/lmr/bx/n/10 mon 8-GPU axis value for the dimension-, sample-, and grid-size-scaling work-loads.
- []
-
-<assets/figures/supp_fig_s1.pdf, id=6021, 1423.18701pt x 1083.43773pt>
+] [29]
+<assets/figures/supp_fig_s1.pdf, id=8423, 1423.18701pt x 1083.43773pt>
 File: assets/figures/supp_fig_s1.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s1.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s1.pdf  used on input line 606.
+Package pdftex.def Info: assets/figures/supp_fig_s1.pdf  used on input line 748.
 (pdftex.def)             Requested size: 469.75499pt x 357.61821pt.
-<assets/figures/supp_fig_s2.pdf, id=6022, 1423.18236pt x 1083.44226pt>
+<assets/figures/supp_fig_s2.pdf, id=8424, 1423.18236pt x 1083.44226pt>
 File: assets/figures/supp_fig_s2.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s2.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s2.pdf  used on input line 614.
+Package pdftex.def Info: assets/figures/supp_fig_s2.pdf  used on input line 756.
 (pdftex.def)             Requested size: 469.75499pt x 357.6197pt.
-<assets/figures/supp_fig_s3.pdf, id=6023, 1423.18701pt x 1083.43773pt>
+<assets/figures/supp_fig_s3.pdf, id=8425, 1423.18701pt x 1083.43773pt>
 File: assets/figures/supp_fig_s3.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s3.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s3.pdf  used on input line 622.
+Package pdftex.def Info: assets/figures/supp_fig_s3.pdf  used on input line 764.
 (pdftex.def)             Requested size: 469.75499pt x 357.61821pt.
-<assets/figures/supp_fig_s4.pdf, id=6024, 2649.9pt x 1023.97559pt>
+<assets/figures/supp_fig_s4.pdf, id=8426, 2649.9pt x 2365.20895pt>
 File: assets/figures/supp_fig_s4.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s4.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s4.pdf  used on input line 630.
-(pdftex.def)             Requested size: 469.75499pt x 181.51085pt.
-<assets/figures/supp_fig_s5.pdf, id=6025, 2649.9pt x 1171.52684pt>
+Package pdftex.def Info: assets/figures/supp_fig_s4.pdf  used on input line 772.
+(pdftex.def)             Requested size: 469.75499pt x 419.25911pt.
+<assets/figures/supp_fig_s5.pdf, id=8427, 3199.45313pt x 1957.3125pt>
 File: assets/figures/supp_fig_s5.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s5.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s5.pdf  used on input line 638.
-(pdftex.def)             Requested size: 469.75499pt x 207.66592pt.
-<assets/figures/supp_fig_s6.pdf, id=6026, 2649.9pt x 1171.52684pt>
+Package pdftex.def Info: assets/figures/supp_fig_s5.pdf  used on input line 780.
+(pdftex.def)             Requested size: 469.75499pt x 287.37206pt.
+<assets/figures/supp_fig_s6.pdf, id=8428, 2649.9pt x 1446.8304pt>
 File: assets/figures/supp_fig_s6.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s6.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s6.pdf  used on input line 646.
-(pdftex.def)             Requested size: 469.75499pt x 207.66592pt.
-<assets/figures/supp_fig_s7.pdf, id=6027, 2649.9pt x 1171.52684pt>
+Package pdftex.def Info: assets/figures/supp_fig_s6.pdf  used on input line 788.
+(pdftex.def)             Requested size: 469.75499pt x 256.46648pt.
+<assets/figures/supp_fig_s7.pdf, id=8429, 2649.9pt x 1036.47223pt>
 File: assets/figures/supp_fig_s7.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s7.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s7.pdf  used on input line 654.
-(pdftex.def)             Requested size: 469.75499pt x 207.66592pt.
-<assets/figures/supp_fig_s8.pdf, id=6028, 3533.2pt x 1365.3007pt>
+Package pdftex.def Info: assets/figures/supp_fig_s7.pdf  used on input line 796.
+(pdftex.def)             Requested size: 469.75499pt x 183.72601pt.
+<assets/figures/supp_fig_s8.pdf, id=8430, 2649.9pt x 1036.47223pt>
 File: assets/figures/supp_fig_s8.pdf Graphic file (type pdf)
 <use assets/figures/supp_fig_s8.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s8.pdf  used on input line 662.
-(pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
-<assets/figures/supp_fig_s9.pdf, id=6029, 3533.2pt x 1365.3007pt>
-File: assets/figures/supp_fig_s9.pdf Graphic file (type pdf)
-<use assets/figures/supp_fig_s9.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s9.pdf  used on input line 670.
-(pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
-<assets/figures/supp_fig_s10.pdf, id=6030, 3533.2pt x 1365.3007pt>
-File: assets/figures/supp_fig_s10.pdf Graphic file (type pdf)
-<use assets/figures/supp_fig_s10.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s10.pdf  used on input line 678.
-(pdftex.def)             Requested size: 469.75499pt x 181.51605pt.
-<assets/figures/supp_fig_s11.pdf, id=6031, 3533.2pt x 1929.10715pt>
-File: assets/figures/supp_fig_s11.pdf Graphic file (type pdf)
-<use assets/figures/supp_fig_s11.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s11.pdf  used on input line 686.
-(pdftex.def)             Requested size: 469.75499pt x 256.47383pt.
-<assets/figures/supp_fig_s12.pdf, id=6032, 3533.2pt x 1381.96304pt>
-File: assets/figures/supp_fig_s12.pdf Graphic file (type pdf)
-<use assets/figures/supp_fig_s12.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s12.pdf  used on input line 694.
-(pdftex.def)             Requested size: 469.75499pt x 183.7313pt.
-<assets/figures/supp_fig_s13.pdf, id=6033, 3533.2pt x 1381.96304pt>
-File: assets/figures/supp_fig_s13.pdf Graphic file (type pdf)
-<use assets/figures/supp_fig_s13.pdf>
-Package pdftex.def Info: assets/figures/supp_fig_s13.pdf  used on input line 702.
-(pdftex.def)             Requested size: 469.75499pt x 183.7313pt.
-[23] [24 <./assets/figures/supp_fig_s1.pdf>] [25 <./assets/figures/supp_fig_s2.pdf>] [26 <./assets/figures/supp_fig_s3.pdf>] [27 <./assets/figures/supp_fig_s4.pdf> <./assets/figures/supp_fig_s5.pdf
-
-pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s5.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [28 <./assets/figures/supp_fig_s6.pdf> <./assets/figures/supp_fig_s7.pdf
+Package pdftex.def Info: assets/figures/supp_fig_s8.pdf  used on input line 804.
+(pdftex.def)             Requested size: 469.75499pt x 183.72601pt.
+ [30] [31 <./assets/figures/supp_fig_s1.pdf>] [32 <./assets/figures/supp_fig_s2.pdf>] [33 <./assets/figures/supp_fig_s3.pdf>] [34 <./assets/figures/supp_fig_s4.pdf>] [35 <./assets/figures/supp_fig_s5.pdf>] [36 <./assets/figures/supp_fig_s6.pdf> <./assets/figures/supp_fig_s7.pdf
 
 pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s7.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [29 <./assets/figures/supp_fig_s8.pdf> <./assets/figures/supp_fig_s9.pdf
-
-pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s9.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [30 <./assets/figures/supp_fig_s10.pdf> <./assets/figures/supp_fig_s11.pdf
-
-pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s11.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [31 <./assets/figures/supp_fig_s12.pdf> <./assets/figures/supp_fig_s13.pdf
-
-pdfTeX warning: pdflatex (file ./assets/figures/supp_fig_s13.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] (./main.aux)
+>] [37 <./assets/figures/supp_fig_s8.pdf>] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 3681EC50FD62F40CF83177B8DE977BEC;11388.
+(rerunfilecheck)             Checksum: FE45ECC37AAEDA09AB063D00CD55E2FF;11795.
  ) 
 Here is how much of TeX's memory you used:
- 12929 strings out of 467525
- 195369 string characters out of 5418982
- 625838 words of memory out of 5000000
- 41476 multiletter control sequences out of 15000+600000
- 709912 words of font info for 98 fonts, out of 8000000 for 9000
+ 13032 strings out of 467525
+ 196807 string characters out of 5418982
+ 626053 words of memory out of 5000000
+ 41550 multiletter control sequences out of 15000+600000
+ 731083 words of font info for 111 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,90p,1306b,599s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on main.pdf (31 pages, 20707460 bytes).
+ 75i,12n,90p,2286b,599s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on main.pdf (37 pages, 8448459 bytes).
 PDF statistics:
- 9782 PDF objects out of 10688 (max. 8388607)
- 6021 compressed objects within 61 object streams
- 151 named destinations out of 1000 (max. 500000)
- 539 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 9497 PDF objects out of 10688 (max. 8388607)
+ 5206 compressed objects within 53 object streams
+ 167 named destinations out of 1000 (max. 500000)
+ 540 words of extra memory for PDF output out of 10000 (max. 10000000)
 

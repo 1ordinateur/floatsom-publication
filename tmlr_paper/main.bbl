@@ -1,13 +1,9 @@
-\begin{thebibliography}{24}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[HPC()]{HPCSystemsNCI}
-{{HPC Systems}} \textbar{} {{NCI}}.
-\newblock https://nci.org.au/our-systems/hpc-systems.
 
 \bibitem[Akiba et~al.(2019)Akiba, Sano, Yanase, Ohta, and Koyama]{akibaOptunaNextgenerationHyperparameter2019}
 Takuya Akiba, Shotaro Sano, Toshihiko Yanase, Takeru Ohta, and Masanori Koyama.
@@ -30,6 +26,12 @@ Damminda Alahakoon, Saman Halgamuge, and Srinivasan Bala.
 Florent Forest, Mustapha Lebbah, Hanane Azzag, and J{\'e}r{\^o}me Lacaille.
 \newblock A {{Survey}} and {{Implementation}} of {{Performance Metrics}} for {{Self-Organized Maps}}.
 \newblock https://arxiv.org/abs/2011.05847v1, November 2020.
+
+\bibitem[Ha et~al.(2025)Ha, N{\"a}ttil{\"a}, and Davelaar]{haAweSOMCPUGPUaccelerated2025}
+Trung Ha, Joonas N{\"a}ttil{\"a}, and Jordy Davelaar.
+\newblock {{aweSOM}}: A {{CPU}}/{{GPU-Accelerated Self-Organizing Map}} and {{Statistically Combined Ensemble Framework}} for {{Machine-Learning Clustering Analysis}}.
+\newblock \emph{Journal of Open Source Software}, 10\penalty0 (108):\penalty0 7613, 2025.
+\newblock \doi{10.21105/joss.07613}.
 
 \bibitem[Ito et~al.(2016)Ito, Couckuyt, {d'Ippolito}, and Dhaene]{itoDesignSpaceExploration2016}
 Keiichi Ito, Ivo Couckuyt, Roberto {d'Ippolito}, and Tom Dhaene.
@@ -93,6 +95,12 @@ Candace~C. Liu, Noah~F. Greenwald, Alex Kong, Erin~F. McCaffrey, Ke~Xuan Leow, D
 \newblock ISSN 2041-1723.
 \newblock \doi{10.1038/s41467-023-40068-5}.
 
+\bibitem[{Mach{\'o}n-Gonz{\'a}lez} \& {L{\'o}pez-Garc{\'i}a}(2010){Mach{\'o}n-Gonz{\'a}lez} and {L{\'o}pez-Garc{\'i}a}]{machon-gonzalezFLSOMIndividualKernel2010}
+Iv{\'a}n {Mach{\'o}n-Gonz{\'a}lez} and Hilario {L{\'o}pez-Garc{\'i}a}.
+\newblock {{FLSOM}} with individual kernel radii formation and application to optimization of a pickling line.
+\newblock \emph{Engineering Applications of Artificial Intelligence}, 23\penalty0 (3):\penalty0 411--419, 2010.
+\newblock \doi{10.1016/j.engappai.2010.01.016}.
+
 \bibitem[Mancini et~al.(2020)Mancini, Ritacco, Lanciano, and Cucinotta]{manciniXPySomHighPerformanceSelfOrganizing2020}
 Riccardo Mancini, Antonio Ritacco, Giacomo Lanciano, and Tommaso Cucinotta.
 \newblock {{XPySom}}: {{High-Performance Self-Organizing Maps}}.
@@ -105,11 +113,29 @@ Philipp Moritz, Robert Nishihara, Stephanie Wang, Alexey Tumanov, Richard Liaw, 
 \newblock In \emph{Proceedings of the 13th {{USENIX}} Conference on {{Operating Systems Design}} and {{Implementation}}}, {{OSDI}}'18, pp.\  561--577, USA, October 2018. USENIX Association.
 \newblock ISBN 978-1-931971-47-8.
 
+\bibitem[{National Computational Infrastructure}({n.d.})]{HPCSystemsNCI}
+{National Computational Infrastructure}.
+\newblock {{HPC Systems}} \textbar{} {{NCI}}.
+\newblock \url{https://nci.org.au/our-systems/hpc-systems}, {n.d.}
+\newblock Accessed 2026-03-22.
+
+\bibitem[Neme \& Miramontes(2005)Neme and Miramontes]{nemeStatisticalPropertiesLattices2005}
+Antonio Neme and Pedro Miramontes.
+\newblock Statistical {{Properties}} of {{Lattices Affect Topographic Error}} in {{Self-Organizing Maps}}.
+\newblock In \emph{Artificial {{Neural Networks}}: {{Biological Inspirations}} -- {{ICANN}} 2005}, pp.\  427--432, Berlin, Heidelberg, 2005. Springer.
+\newblock \doi{10.1007/11550822_67}.
+
 \bibitem[Pedregosa et~al.(2011)Pedregosa, Varoquaux, Gramfort, Michel, Thirion, Grisel, Blondel, Prettenhofer, Weiss, Dubourg, Vanderplas, Passos, Cournapeau, Brucher, Perrot, and Duchesnay]{pedregosaScikitlearnMachineLearning2011}
 Fabian Pedregosa, Ga{\"e}l Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, Peter Prettenhofer, Ron Weiss, Vincent Dubourg, Jake Vanderplas, Alexandre Passos, David Cournapeau, Matthieu Brucher, Matthieu Perrot, and {\'E}douard Duchesnay.
 \newblock Scikit-learn: {{Machine Learning}} in {{Python}}.
 \newblock \emph{Journal of Machine Learning Research}, 12\penalty0 (85):\penalty0 2825--2830, 2011.
 \newblock ISSN 1533-7928.
+
+\bibitem[Ramos et~al.(2018)Ramos, {L{\'o}pez-Rubio}, and Palomo]{ramosROLELATTICEDIMENSIONALITY2018}
+Antonio~D{\'i}az Ramos, Ezequiel {L{\'o}pez-Rubio}, and Esteban~J. Palomo.
+\newblock The role of the lattice dimensionality in the self-organizing map.
+\newblock \emph{Neural Network World}, 28\penalty0 (1):\penalty0 57--86, 2018.
+\newblock \doi{10.14311/NNW.2018.28.004}.
 
 \bibitem[Spanakis \& Weiss(2016)Spanakis and Weiss]{spanakisAMSOMAdaptiveMoving2016}
 Gerasimos Spanakis and Gerhard Weiss.
@@ -122,6 +148,13 @@ Godfried~T. Toussaint.
 \newblock \emph{Pattern Recognition}, 12\penalty0 (4):\penalty0 261--268, January 1980.
 \newblock ISSN 0031-3203.
 \newblock \doi{10.1016/0031-3203(80)90066-7}.
+
+\bibitem[Van~Gassen et~al.(2015)Van~Gassen, Callebaut, Van~Helden, Lambrecht, Demeester, Dhaene, and Saeys]{vangassenFlowSOMUsingSelforganizing2015}
+Sofie Van~Gassen, Britt Callebaut, Mary~J. Van~Helden, Bart~N. Lambrecht, Piet Demeester, Tom Dhaene, and Yvan Saeys.
+\newblock {{FlowSOM}}: {{Using}} self-organizing maps for visualization and interpretation of cytometry data.
+\newblock \emph{Cytometry Part A}, 87\penalty0 (7):\penalty0 636--645, 2015.
+\newblock ISSN 1552-4930.
+\newblock \doi{10.1002/cyto.a.22625}.
 
 \bibitem[Vasighi \& Amini(2017)Vasighi and Amini]{vasighiDirectedBatchGrowing2017}
 Mahdi Vasighi and Homa Amini.

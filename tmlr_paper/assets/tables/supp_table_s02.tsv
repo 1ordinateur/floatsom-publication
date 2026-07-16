@@ -1,0 +1,12 @@
+field	value
+pilot purpose	Initial HDSSSOM screening before the broader sampling comparison
+configuration scope	Smaller hexagonal Optuna pilot
+datasets	swiss_roll, moons, circles, blobs, s_curve, breast_cancer, wine, iris, digits, olivetti_faces
+dataset count	10
+seed count	5
+sampling methods present	full, random, HDSSSOM
+topology	hexagonal
+algorithm family in campaign	full_batch
+optimization split setup	evaluation-split=both, yielding QE_H and QE_T; Figure 3 reports paired QE_B
+trials per scenario	200
+main text figure slice	hexagonal / full vs HDSSSOM
