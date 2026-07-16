@@ -55,7 +55,7 @@ In the Discussion, we added:
 
 We also added the fixed-lattice/MST/RNG coupling explanation to Section 3.2 and the Discussion, and explicitly qualified the diagnostic evidence as consistent with, rather than uniquely establishing, that mechanism.
 
-In Section 5.3, we also added a qualitative interpretation of the representative KDD Cup 99 overlays. This identifies the apparently nonlocal hexagonal connections as a visual illustration of predetermined lattice coupling and restricted independent prototype redistribution, while explicitly noting that the PCA projection prevents treating the display as direct evidence of nonlocality in the original space.
+In Section 5.3, we also added a qualitative interpretation of the representative KDD Cup 99 overlays. This identifies the apparently nonlocal hexagonal connections as a visual illustration of predetermined lattice coupling and restricted independent prototype redistribution.
 
 ## 2. Hexagonal neighborhood-radius control
 
@@ -107,7 +107,9 @@ In Section 2.1, we revised the related-work discussion to:
 
 > "Open-source SOM libraries range from lightweight implementations to systems-oriented packages. MiniSom implements classical serial-online training [@vettigliJustGlowingMinisom2018], while aweSOM adds CPU/GPU acceleration and ensemble stacking for large single-node workloads [@haAweSOMCPUGPUaccelerated2025]. XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]."
 
-> "Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]. GigaSOM.jl, for example, trained a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. These systems differ from FloatSOM in training regime, execution model, language, or hardware, so we treat their published results as systems context rather than controlled benchmarks."
+> "Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
+
+We discuss Somoclu and GigaSOM in further detail in the Discussion (Section 8), including the published systems context and why these results are not controlled head-to-head benchmarks.
 
 In Section 4.2, we added the aweSOM benchmark attempt:
 

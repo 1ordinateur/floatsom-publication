@@ -10,15 +10,17 @@ We thank the reviewer for the careful and constructive assessment. We agree with
 
 ### Response
 
-We agree that the direct MST-versus-RNG comparison is necessary to support a topology-ordering claim. We have promoted that comparison from the supplement to the main topology results as Fig. 8. The separate Optuna contrasts consistently favor RNG over hexagonal across balanced, holdout, and train $QE$, but the direct MST--RNG evidence shows that the two graph topologies are close competitors on $QE$. The matched MTR diagnostics provide the additional evidence favoring RNG as the strongest joint $QE$/MTR option.
+We agree that the direct MST-versus-RNG comparison is necessary to support our topology recommendation, and we have promoted it from the supplement to the main topology results as Fig. 8. In the matched full-sampling Optuna top-$k$ analysis, RNG achieves significantly lower balanced and train $QE$ than MST, while no significant holdout-$QE$ difference is detected. The hyperparameter analysis also gives RNG the lowest overall stability score across seeds and datasets.
 
-We also revised the geometric explanation so that the RNG preference is not reduced to graph density alone. MST minimizes neighborhood coupling and permits substantial redistribution along irregular structures, but a tree cannot represent multiple locally appropriate connections in a dense region. RNG permits such connections only when supported by the evolving prototype geometry, whereas the hexagonal lattice imposes a uniform neighbor pattern before learning. The observed $QE$, MTR, utilization, and dead-node results are presented as consistent with this account rather than as identifying a unique causal mechanism.
+Taken together, these results support RNG as our quality-first default: it provides the strongest attainable $QE$ performance and the most reproducible tuned settings. MST remains a lower-cost alternative for runtime-constrained workloads, particularly at large grid sizes. We therefore do not claim that RNG dominates every endpoint or every deployment regime.
+
+We also revised the geometric explanation so that the RNG preference is not reduced to graph density alone. MST minimizes neighborhood coupling and permits substantial redistribution along irregular structures, but a tree cannot represent multiple locally appropriate connections in a dense region. RNG permits such connections only when supported by the evolving prototype geometry, whereas the hexagonal lattice imposes a uniform neighbor pattern before learning. The observed $QE$ results are presented as consistent with this account rather than as identifying a unique causal mechanism.
 
 ### Manuscript Amendment
 
 In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
 
-> "Fig. 8 directly compares MST and RNG under full sampling. The two graph topologies are close on $QE$, and neither dominates across all three endpoints."
+> "Fig. 8 directly compares MST and RNG under full sampling. In the matched Optuna top-$k$ analysis, RNG achieves significantly lower balanced and train $QE$ than MST, while no significant holdout-$QE$ difference is detected. Across the topology comparisons, RNG therefore provides the strongest attainable $QE$ performance among the evaluated topologies."
 
 ## 2. Section 6.2 versus Section 6.3 scaling language
 
@@ -28,7 +30,7 @@ In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the 
 
 ### Response
 
-We agree and have chosen the first remedy suggested by the reviewer: we qualified Section 6.2 so that it refers specifically to the sample-scaling workload, where the topologies exhibit similar scaling characteristics. We also added a direct contrast with Section 6.3, where increasing the number of SOM nodes produces large topology-dependent runtime differences. This makes explicit that the sample-scaling efficiency pattern and the grid-size runtime penalties are compatible findings.
+We agree and have qualified Section 6.2 to distinguish dimension and sample scaling from grid-size scaling. Across the dimension and sample workloads, the topologies show similar runtime and GPU-efficiency profiles, whereas increasing the number of SOM nodes produces large topology-dependent runtime differences. This makes explicit that the dimension- and sample-scaling patterns and the grid-size runtime penalties are compatible findings.
 
 ### Manuscript Amendment
 
@@ -38,9 +40,9 @@ In Section 6.2, we revised:
 
 to:
 
-> "Section 6.2 primarily concerns sample scaling. In that setting, the topologies exhibit similar scaling characteristics: as sample count increases, the GPU-count response and efficiency curves have similar qualitative shapes for RNG (Fig. 13B,E) and for the corresponding hexagonal and MST outputs (Fig. S6). Conversely, when the number of SOM nodes is increased (grid-size scaling), the topologies differ substantially. That grid-size regime is analyzed in Section 6.3, where MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively, at the largest tested grid size."
+> "Across dimension and sample scaling, hexagonal, MST, and RNG show similar qualitative runtime and GPU-efficiency trends, with similar absolute runtime levels at the largest tested axis values (4.70% pairwise spread for dimension scaling and 3.26% for sample scaling; Fig. 13A,B,D,E; Fig. S6). Grid-size scaling shows a different pattern: topology-dependent runtime and scaling behaviour diverge as the number of SOM nodes increases. At grid size 64, MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively; this grid-size regime is analyzed in Section 6.3."
 
-In Section 6.2.2, we also revised the Fig. S6 sentence to state that Fig. 13 and Fig. S6 support the same qualitative sample-scaling efficiency trend, but that this trend does not extend to grid-size scaling.
+In Section 6.2.2, we also revised the Fig. S6 sentence to state that the dimension- and sample-scaling panels show similar qualitative runtime and GPU-efficiency trends across topologies, but that this pattern does not extend to grid-size scaling.
 
 ## 3. Somoclu and GigaSOM comparison
 
@@ -58,17 +60,17 @@ In Section 2.1, we added the baseline-selection rationale:
 
 > "Open-source SOM libraries range from lightweight implementations to systems-oriented packages. MiniSom implements classical serial-online training [@vettigliJustGlowingMinisom2018], while aweSOM adds CPU/GPU acceleration and ensemble stacking for large single-node workloads [@haAweSOMCPUGPUaccelerated2025]. XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]."
 
-> "Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]. GigaSOM.jl, for example, trained a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. These systems differ from FloatSOM in training regime, execution model, language, or hardware, so we treat their published results as systems context rather than controlled benchmarks."
+> "Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
+
+We discuss Somoclu and GigaSOM in further detail in the Discussion (Section 8), including the published systems context and why these results are not controlled head-to-head benchmarks.
 
 In Section 4.2, we added the baseline selection and aweSOM attempt:
 
 > "XPySOM was selected as the executable external baseline because it most closely matches FloatSOM's Python/GPU batch-training regime. We also attempted aweSOM on the standard speed workload, but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching FloatSOM's 10 batch iterations would require $10N$ pointwise updates, so aweSOM was not included in the timed comparison."
 
-In Section 4.1.3, we added the reproducible XPySOM calibration protocol, including 14 datasets, 10 paired seeds, aligned initial prototypes, common splits and epochs, and paired Wilcoxon inference. We now describe the hexagonal result as no implementation-associated $QE$ difference detected rather than formal equivalence, because no equivalence margin was prespecified.
+In the Discussion (Section 8), we added the detailed Somoclu and GigaSOM comparison and clarified why these published results are not controlled head-to-head benchmarks:
 
-We also added the GigaSOM context:
-
-> "GigaSOM.jl, for example, trained a $32 \times 32$ SOM on 1,167,129,317 cells within a larger Julia analysis completed in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]."
+> "Somoclu and GigaSOM are important parallel-systems references, but neither is a controlled head-to-head baseline in this study. Somoclu was already benchmarked against XPySOM in the XPySOM study, which reported a speed difference of more than 10-fold in favor of XPySOM [@manciniXPySomHighPerformanceSelfOrganizing2020]. Because we conduct our own benchmarks against XPySOM, a further direct Somoclu comparison would be unlikely to provide much additional performance information. GigaSOM is a CPU-based algorithm implemented in Julia. In the large IMPC example, the published code selected and scaled 18 input columns, applying the asinh transform to 12 marker columns, and completed a workflow that trained a $32 \times 32$ SOM on 1,167,129,317 cells in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. FloatSOM trained a same-sized 1024-node SOM on 1,000,000,000 samples with 50 features in 6.16 minutes using 8 GPUs across two HPC nodes, representing an overall input dataset approximately 2.4 times larger. Note that these results are not a fair head-to-head comparison because the hardware requirements, programming languages, training regimes, timed workloads, and benchmark designs differ. Conducting a full systems benchmark of CPU-based systems against GPU-based systems, or reimplementing GigaSOM in Python to enable one, is outside the scope of this paper."
 
 ## 4. Multiple-comparison correction
 
@@ -120,7 +122,7 @@ In Section 5.5, we added:
 
 > "The quality analyses above used the in-memory pathway. Repeating the tuned diagnostics through Ray streaming with matched data and configurations produced small differences, none of which reached significance before or after Benjamini-Hochberg correction (Supplementary Table S14). The remaining differences may reflect floating-point accumulation order. The following speed benchmarks use the Ray pathway."
 
-In Section 4.3.4, we added the complete concordance protocol: 14 datasets, seeds 42--51, three topologies, full sampling, one V100, identical fixed tuned configurations and data splits, Ray-minus-local paired differences, 95% paired confidence intervals, and Benjamini--Hochberg correction across the 12 topology--metric tests. We also clarify that failure to detect a difference is not a formal equivalence claim because no equivalence margin was prespecified.
+In Section 4.3.4, we added the complete concordance protocol: 14 datasets, seeds 42--51, three topologies, full sampling, one V100, identical fixed tuned configurations and data splits, Ray-minus-local paired differences, 95% paired confidence intervals, and Benjamini--Hochberg correction across the 12 topology--metric tests.
 
 We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
 
@@ -148,7 +150,7 @@ In Section 5.2, we added:
 
 ### Response
 
-We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion now identifies RNG as the preferred joint $QE$/MTR topology when topology-construction overhead is acceptable, while recognizing that MST and RNG are close competitors for $QE$ alone and MST is the lower-cost graph option. It also states that for workloads dominated by very large grids, hexagonal remains the throughput-oriented default.
+We agree that the RNG recommendation must be explicitly conditional on runtime budget and grid size. The revised Discussion now identifies RNG as the quality-first default, supported by its stronger attainable $QE$ result and more stable tuned hyperparameters. It also identifies MST as the lower-cost graph alternative and states that for workloads dominated by very large grids, hexagonal remains the throughput-oriented default.
 
 The geometric rationale makes that conditional recommendation more precise: RNG retains more geometry-supported local connections than MST, which may benefit concentrated regions, but the same additional topology work contributes to its higher grid-size cost. Thus MST's greater freedom and lower graph cost make it the practical compromise when RNG's mesh-like local connectivity is not worth the runtime penalty.
 
@@ -156,7 +158,7 @@ The geometric rationale makes that conditional recommendation more precise: RNG 
 
 In Section 8, we revised the recommendation to:
 
-> "RNG is the preferred joint $QE$/MTR topology when topology overhead is acceptable; for $QE$ alone, MST and RNG are close competitors and MST offers the lower-cost graph option. This recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively."
+> "RNG is the quality-first default: it provides the strongest attainable $QE$ performance and the most stable tuned hyperparameters in our comparisons. MST remains the lower-cost graph alternative, and this recommendation depends on grid size. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively."
 
 ## 8. Discussion structure
 
@@ -172,7 +174,7 @@ We agree that the Discussion should read as a continuous argument rather than a 
 
 Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key systems interpretation points, topology-runtime cost, and grid-size-dependent recommendations. The matched execution-path validation is now reported in Section 5.5 immediately before the speed-scaling results.
 
-Within that continuous Discussion, we added a single geometric progression from fixed-lattice coupling, through MST's freedom and tree limitation, to RNG's geometry-supported additional connections. We then connect that interpretation cautiously to Fig. 9 node utilization and dead-node fraction, $QE$, and MTR, before turning to the measured runtime limits.
+Within that continuous Discussion, we added a single geometric progression from fixed-lattice coupling, through MST's freedom and tree limitation, to RNG's geometry-supported additional connections. We then connect that interpretation cautiously to the observed $QE$ results before turning to the measured runtime limits.
 
 ## 9. Appendix redundancy
 
