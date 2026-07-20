@@ -18,21 +18,9 @@ RNG occupies an intermediate position. It is less free than MST because nodes ma
 
 We expanded Fig. 5 from one row to a 2x3 layout. Panels A--C show circles in native 2D, and panels D--F show KDD Cup 99 trained on standardized 41-dimensional data and displayed using a shared two-dimensional PCA projection. In the KDD Cup 99 display, the hexagonal topology contains several apparently nonlocal connections spanning separated regions of the projected prototype distribution, whereas the MST and RNG connections more closely follow its local geometry. Quantitative node-utilization and dead-node evidence remains in Fig. 9 and the matched diagnostic tables.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 3.2, we added a concise implementation distinction while reserving the geometric interpretation for the Discussion:
-
-> "Thus, regular-lattice neighborhoods are fixed before training, whereas MST and RNG neighborhoods are recalculated from the evolving node weights during training."
-
-In the topology Results, we expanded Fig. 5 and added:
-
-> "Figure 5. Representative node and connection overlays for matched 100-node hexagonal, MST, and RNG SOMs. A--C: circles in native 2D. D--F: KDD Cup 99, trained on standardized 41-dimensional observations and displayed using one shared 2D PCA projection fitted to the observations and applied to all three sets of prototypes. Training used seed 42, full sampling, random initialization, 50 iterations, and the untuned XPySOM-like settings used at this point in the manuscript: initial learning rate 0.5, initial radius 5 with exponential decay, momentum disabled, and XPySOM-compatible normalization. Grey observation clouds show a deterministic maximum of 30,000 points; black lines are topology connections and red markers are SOM nodes. PCA can distort graph geometry in the original 41-dimensional space."
-
-> "In the KDD Cup 99 projection (Fig. 5D--F), the hexagonal topology contains several apparently nonlocal connections spanning separated regions of the projected prototype distribution, whereas the MST and RNG connections more closely follow its local geometry. This pattern illustrates how predetermined lattice neighbors can couple the updates of prototypes that are not locally adjacent in the displayed data structure, restricting how independently the nodes can redistribute."
-
-In the Discussion, we added:
-
-> "A geometric interpretation consistent with these results is that a fixed lattice imposes uniform, predetermined coupling: when a prototype moves, it can unnecessarily influence lattice neighbors that are unrelated in the learned data space, potentially displacing useful prototypes and increasing dead nodes. The apparently nonlocal hexagonal connections in the KDD Cup 99 projection (Fig. 5D) provide a visual illustration of this coupling and the associated restriction on independent prototype redistribution, subject to the distortions inherent in the two-dimensional PCA display. MST minimizes such coupling, allowing prototypes to redistribute more freely along irregular or elongated data structures. This freedom is also its limitation, because a tree cannot retain multiple locally appropriate connections where a concentrated region is better represented by a mesh. RNG occupies an intermediate position. Its nodes can influence several neighbors, but those connections arise from the evolving prototype geometry rather than being imposed before training; RNG can remain sparse where appropriate and form multiple connections in dense regions. This interpretation is supported by RNG achieving the lowest MTR and highest node utilization in Fig. 9 [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980]."
+We expanded Fig. 5 to a 2x3 comparison of matched hexagonal, MST, and RNG maps on both the native two-dimensional circles dataset and standardized 41-dimensional KDD Cup 99 data shown through a shared PCA projection. The Results now describe the apparently nonlocal fixed-lattice connections visible in the KDD projection, with an explicit warning that PCA can distort the original geometry. The Methods distinguish fixed regular-lattice adjacency from graph neighborhoods refreshed from evolving prototypes, and the Discussion develops the corresponding geometric interpretation: MST reduces predetermined coupling but is restricted to a tree, whereas RNG can retain several geometry-supported local connections. 
 
 ## 2. Distributed memory, communication, and large-grid cost
 
@@ -50,25 +38,11 @@ The memory explanation now separates the source of the cost from the mechanism u
 
 To further examine the RNG runtime spike in grid-size scaling, we compared the topology-construction operations. For each of the $\binom{P}{2}$ candidate node pairs, RNG checks every possible third node in its relative-neighborhood blocker test, giving up to $\binom{P}{2}(P-2)=O(P^3)$ pair--blocker comparisons per topology refresh. At $P=4096$, this is approximately 34.3 billion unordered pair--blocker checks. MST instead constructs and sorts approximately $\binom{4096}{2}=8.39$ million candidate edges using Kruskal's algorithm, an $O(P^2\log P)$ edge-construction step after pairwise distances are calculated. Both topologies then perform the shared graph-distance and influence calculations. The additional $O(P^3)$ RNG blocker-test work therefore provides a quantitative algorithmic explanation for the sharp RNG cost increase at large grid sizes.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 3.3.1, after the distributed-update equations, we added:
+We added communication and memory accounting to Section 3.3.1. For $P$ nodes, $d$ float32 features, and $G$ workers, the manuscript now gives the per-iteration logical all-reduce payload as $4P(d+1)$ bytes per worker plus the sample-count reduction, and the ring all-reduce traffic factor as approximately $2(G-1)/G$. It also distinguishes bounded worker storage, $O(Cd+Pd)$ for chunk size $C$, from the $P^2$ graph-distance and influence structures and explains tiling and RAM spill behavior.
 
-> "For $P$ nodes and $d$ features in float32, the two update accumulators contain $P d+P$ values, so their logical all-reduce payload is $4P(d+1)$ bytes per worker per iteration, plus one 4-byte sample count. A ring all-reduce sends and receives approximately $2(G-1)/G$ times that payload per worker for $G$ workers. This communication is independent of the number of observations $N$; increasing $N$ instead increases worker-local computation and data staging. With observation chunks of at most $C$ rows, the dominant bounded worker arrays scale as $O(Cd+Pd)$ rather than requiring the full $O(Nd)$ dataset in GPU memory. Graph-topology distance and influence structures add both computation and storage terms that scale with $P^2$. Their construction and refresh therefore become more expensive as node count increases, particularly for RNG. FloatSOM tiles these structures and can spill them from VRAM to system RAM when necessary. Spilling is a memory-management response that may add transfer overhead, but it is not the sole source of the topology-dependent runtime increase."
-
-In Section 6.2, we clarified the distinction between sample and grid-size scaling:
-
-> "Across dimension and sample scaling, hexagonal, MST, and RNG show similar qualitative runtime and GPU-efficiency trends, with similar absolute runtime levels at the largest tested axis values (4.70% pairwise spread for dimension scaling and 3.26% for sample scaling; Fig. 13A,B,D,E; Fig. S6). Grid-size scaling shows a different pattern: topology-dependent runtime and scaling behaviour diverge as the number of SOM nodes increases. At grid size 64, MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively; this grid-size regime is analyzed in Section 6.3."
-
-In Section 6.3, we added the absolute grid-size runtimes:
-
-> "However, when the grid itself is enlarged in Fig. 14C, topology-dependent runtime differences become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively."
-
-We also added the operation-count explanation for the RNG grid-size spike:
-
-> "For each of the $\binom{P}{2}$ candidate node pairs, RNG checks every possible third node in its relative-neighborhood blocker test, giving up to $\binom{P}{2}(P-2)=O(P^3)$ pair--blocker comparisons per topology refresh. At $P=4096$, this is approximately 34.3 billion unordered pair--blocker checks. MST instead constructs and sorts approximately $\binom{4096}{2}=8.39$ million candidate edges using Kruskal's algorithm, an $O(P^2\log P)$ edge-construction step after pairwise distances are calculated. Both topologies then perform the shared graph-distance and influence calculations. The additional $O(P^3)$ RNG blocker-test work provides a quantitative algorithmic explanation for the sharp RNG cost increase at large grid sizes."
-
-In the Discussion (Section 8), we also clarified the scope of the external benchmark comparisons. Somoclu and GigaSOM are treated as published parallel-systems context rather than controlled head-to-head baselines, with the differences in hardware, language, training regime, and workload design explained explicitly. XPySOM remains the executable external comparator, while the large-grid runtime measurements are interpreted as controlled internal comparisons among FloatSOM topologies.
+Section 6.3 now reports the grid-size-64 runtimes on 8 GPUs—32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG—and quantifies the construction cost: at $P=4096$, RNG may perform about 34.3 billion pair--blocker checks, compared with approximately 8.39 million candidate MST edges before the shared graph-distance calculations. The Discussion uses these controlled internal measurements to qualify the topology recommendation and treats Somoclu and GigaSOM only as non-comparable published systems context.
 
 ## 3. Forest-plot legibility
 
@@ -80,6 +54,6 @@ In the Discussion (Section 8), we also clarified the scope of the external bench
 
 We thank the reviewer for drawing our attention to this presentation issue. We increased the confidence-interval line widths and point-marker sizes by 200% across all forest plots to improve legibility at manuscript scale.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-We revised all forest-plot assets by increasing their confidence-interval line widths and point-marker sizes by 200%.
+We regenerated all forest-plot assets with confidence-interval lines and point markers increased by 200%.

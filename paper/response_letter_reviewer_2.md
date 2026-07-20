@@ -16,11 +16,9 @@ Taken together, these results support RNG as our quality-first default: it provi
 
 We also revised the geometric explanation so that the RNG preference is not reduced to graph density alone. MST minimizes neighborhood coupling and permits substantial redistribution along irregular structures, but a tree cannot represent multiple locally appropriate connections in a dense region. RNG permits such connections only when supported by the evolving prototype geometry, whereas the hexagonal lattice imposes a uniform neighbor pattern before learning. The observed $QE$ results are presented as consistent with this account rather than as identifying a unique causal mechanism.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the separate hexagonal-versus-MST and hexagonal-versus-RNG comparisons:
-
-> "Fig. 8 directly compares MST and RNG under full sampling. In the matched Optuna top-$k$ analysis, RNG achieves significantly lower balanced and train $QE$ than MST, while no significant holdout-$QE$ difference is detected. Across the topology comparisons, RNG therefore provides the strongest attainable $QE$ performance among the evaluated topologies."
+We moved the direct MST-versus-RNG comparison into the main text as Fig. 8. Section 5.3 now reports that RNG has lower balanced and train $QE$ than MST in the matched Optuna top-$k$ analysis, while no holdout-$QE$ difference was detected, providing direct support for the stated topology ordering.
 
 ## 2. Section 6.2 versus Section 6.3 scaling language
 
@@ -32,17 +30,9 @@ In Section 5.3, we added Fig. 8 and a direct MST-versus-RNG paragraph after the 
 
 We agree and have qualified Section 6.2 to distinguish dimension and sample scaling from grid-size scaling. Across the dimension and sample workloads, the topologies show similar runtime and GPU-efficiency profiles, whereas increasing the number of SOM nodes produces large topology-dependent runtime differences. This makes explicit that the dimension- and sample-scaling patterns and the grid-size runtime penalties are compatible findings.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 6.2, we revised:
-
-> "Across these increasingly demanding loads, runtime and efficiency show a broadly consistent scaling pattern, with stable behaviour regardless of topology (Figs. 11 and S11)."
-
-to:
-
-> "Across dimension and sample scaling, hexagonal, MST, and RNG show similar qualitative runtime and GPU-efficiency trends, with similar absolute runtime levels at the largest tested axis values (4.70% pairwise spread for dimension scaling and 3.26% for sample scaling; Fig. 13A,B,D,E; Fig. S6). Grid-size scaling shows a different pattern: topology-dependent runtime and scaling behaviour diverge as the number of SOM nodes increases. At grid size 64, MST and RNG take 8.19x and 27.07x the hexagonal runtime, respectively; this grid-size regime is analyzed in Section 6.3."
-
-In Section 6.2.2, we also revised the Fig. S6 sentence to state that the dimension- and sample-scaling panels show similar qualitative runtime and GPU-efficiency trends across topologies, but that this pattern does not extend to grid-size scaling.
+We revised the scaling language to distinguish similarity in scaling behavior from parity in absolute runtime. Section 6.2 now points to the topology-specific curves and reports that the maximum pairwise runtime spread remained 4.70% at 5,000 dimensions and 3.26% at one billion samples, while Section 6.3 separately presents the much larger topology-dependent costs that arise as grid size increases.
 
 ## 3. Somoclu and GigaSOM comparison
 
@@ -52,25 +42,11 @@ In Section 6.2.2, we also revised the Fig. S6 sentence to state that the dimensi
 
 ### Response
 
-We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. XPySOM most closely matches FloatSOM's Python/GPU batch-training pathway, while differences in execution model, language, hardware, and published benchmark design prevent controlled direct comparisons with Somoclu and GigaSOM in the present study. The manuscript now states this limitation explicitly.
+We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. Somoclu was not benchmarked against because both Somoclu and SomocluGPU were already compared directly with XPySOM in the XPySOM study and were more than 10 times slower in its reported benchmark [@manciniXPySomHighPerformanceSelfOrganizing2020]. As XPySOM most closely matches FloatSOM's Python/GPU batch-training pathway, we retained it as the controlled executable comparator. Regarding GigaSOM, differences in execution model, language, hardware, and published benchmark design likewise prevent a controlled direct comparison in the present study. The manuscript now states these limitations explicitly.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 2.1, we added the baseline-selection rationale:
-
-> "Open-source SOM libraries range from lightweight implementations to systems-oriented packages. MiniSom implements classical serial-online training [@vettigliJustGlowingMinisom2018], while aweSOM adds CPU/GPU acceleration and ensemble stacking for large single-node workloads [@haAweSOMCPUGPUaccelerated2025]. XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020]."
-
-> "Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020]."
-
-We discuss Somoclu and GigaSOM in further detail in the Discussion (Section 8), including the published systems context and why these results are not controlled head-to-head benchmarks.
-
-In Section 4.2, we added the baseline selection and aweSOM attempt:
-
-> "XPySOM was selected as the executable external baseline because it most closely matches FloatSOM's Python/GPU batch-training regime. We also attempted aweSOM on the standard speed workload, but all five runs reached the 1800-s timeout before completing 60% of $N$ online updates. Matching FloatSOM's 10 batch iterations would require $10N$ pointwise updates, so aweSOM was not included in the timed comparison."
-
-In the Discussion (Section 8), we added the detailed Somoclu and GigaSOM comparison and clarified why these published results are not controlled head-to-head benchmarks:
-
-> "Somoclu and GigaSOM are important parallel-systems references, but neither is a controlled head-to-head baseline in this study. Somoclu was already benchmarked against XPySOM in the XPySOM study, which reported a speed difference of more than 10-fold in favor of XPySOM [@manciniXPySomHighPerformanceSelfOrganizing2020]. Because we conduct our own benchmarks against XPySOM, a further direct Somoclu comparison would be unlikely to provide much additional performance information. GigaSOM is a CPU-based algorithm implemented in Julia. In the large IMPC example, the published code selected and scaled 18 input columns, applying the asinh transform to 12 marker columns, and completed a workflow that trained a $32 \times 32$ SOM on 1,167,129,317 cells in under 25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020]. FloatSOM trained a same-sized 1024-node SOM on 1,000,000,000 samples with 50 features in 6.16 minutes using 8 GPUs across two HPC nodes, representing an overall input dataset approximately 2.4 times larger. Note that these results are not a fair head-to-head comparison because the hardware requirements, programming languages, training regimes, timed workloads, and benchmark designs differ. Conducting a full systems benchmark of CPU-based systems against GPU-based systems, or reimplementing GigaSOM in Python to enable one, is outside the scope of this paper."
+We expanded the related-work and Discussion sections to explain the baseline selection. XPySOM was retained as the controlled executable comparator because it most closely matches FloatSOM's Python/GPU batch pathway. We also now note that XPySOM has already been compared directly with Somoclu and SomocluGPU with favourable findings to XPySOM. Finally, we note the GigaSOM differences in execution model, language, hardware, training regime, and workload design preventing a fair direct comparison with FloatSOM.
 
 ## 4. Multiple-comparison correction
 
@@ -84,13 +60,9 @@ We agree that the statistical reporting should state the correction policy. The 
 
 The added radius-control analysis applies a separate prespecified correction across 54 within-topology radius--metric tests. Its post hoc cross-topology analysis applies Benjamini--Hochberg correction across all 21 topology-pair--radius $QE_B$ contrasts, reported with estimates and confidence intervals in Supplementary Table S15.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 4.4, we added:
-
-> "We report Benjamini-Hochberg q-values alongside raw p-values for related dataset-level tests, and use q-values for figure markers and significance counts. Each topology contrast in Figs. 6-7 forms a separate family of 42 tests (14 datasets across $QE_B$, $QE_H$, and $QE_T$). Pooled overall tests are reported separately with raw p-values."
-
-Figure captions and Supplementary Table S7 were updated to use q-value language for dataset-level significance markers.
+We now report Benjamini--Hochberg adjusted q-values alongside raw p-values for the dataset-level tests. Each topology contrast uses a separate family of 42 tests (14 datasets across balanced, holdout, and train $QE$), and the adjusted q-values determine dataset-level figure markers and significance counts. Pooled overall tests are reported separately.
 
 ## 5. In-memory quality path versus distributed scaling path
 
@@ -104,27 +76,9 @@ We agree that the submitted version did not make this execution-path distinction
 
 To test whether the diagnostic conclusions depended on the execution path, we added a matched benchmark comparing local CuPy with Ray streaming under identical datasets, seeds, topologies, and fixed tuned configurations. No comparison reached statistical significance before or after Benjamini-Hochberg correction, and the estimated differences were small (Supplementary Table S14). We report this diagnostic after the tuning and stability results and before the Ray-pathway performance benchmarks.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 4.1, we state:
-
-> "The reported runs used the standard in-memory batch path rather than the Ray-distributed execution stack."
-
-In Section 4.2, we state:
-
-> "Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path."
-
-In Section 7, we revised the opening framing:
-
-> "Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects [@manciniXPySomHighPerformanceSelfOrganizing2020]."
-
-In Section 5.5, we added:
-
-> "The quality analyses above used the in-memory pathway. Repeating the tuned diagnostics through Ray streaming with matched data and configurations produced small differences, none of which reached significance before or after Benjamini-Hochberg correction (Supplementary Table S14). The remaining differences may reflect floating-point accumulation order. The following speed benchmarks use the Ray pathway."
-
-In Section 4.3.4, we added the complete concordance protocol: 14 datasets, seeds 42--51, three topologies, full sampling, one V100, identical fixed tuned configurations and data splits, Ray-minus-local paired differences, 95% paired confidence intervals, and Benjamini--Hochberg correction across the 12 topology--metric tests.
-
-We also added Supplementary Table S14, which reports the mean paired difference, standard deviation of the paired difference, 95% confidence interval, and Benjamini-Hochberg adjusted q-value for the local CuPy versus Ray streaming execution-path comparison.
+We now identify the execution pathway used by each experiment: the quality and Optuna analyses use the in-memory batch path, whereas the scaling and XPySOM runtime experiments use Ray distributed execution. We added a matched concordance analysis across 14 datasets, 10 seeds, three topologies, and identical tuned configurations; the small Ray-minus-local differences were not significant before or after correction. Section 5.5 and Supplementary Table S14 report the protocol, paired differences, confidence intervals, and adjusted q-values, while Section 7 separately retains the caveat that the deployment comparison combines implementation, tuning, and topology effects.
 
 ## 6. HDSSSOM pilot scope
 
@@ -136,11 +90,9 @@ We also added Supplementary Table S14, which reports the mean paired difference,
 
 We agree that the smaller protocol should not be presented as a full-scale elimination study. The revised manuscript frames HDSSSOM as a focused screening pilot and explicitly states that the result should be interpreted under the stated pilot configuration rather than as a comprehensive evaluation of all possible HDSSSOM schedules.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 5.2, we added:
-
-> "These HDSSSOM results should therefore be interpreted as a pilot screen under the stated configuration rather than as a comprehensive evaluation of all possible HDSSSOM schedules."
+We strengthened the qualification in Section 5.2 so that HDSSSOM is described as a focused pilot screen under the tested smaller configuration, rather than a full-scale elimination study or a comprehensive assessment of all possible schedules.
 
 ## 7. RNG runtime penalty in the practical recommendation
 
@@ -154,11 +106,9 @@ We agree that the RNG recommendation must be explicitly conditional on runtime b
 
 The geometric rationale makes that conditional recommendation more precise: RNG retains more geometry-supported local connections than MST, which may benefit concentrated regions, but the same additional topology work contributes to its higher grid-size cost. Thus MST's greater freedom and lower graph cost make it the practical compromise when RNG's mesh-like local connectivity is not worth the runtime penalty.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-In Section 8, we revised the recommendation to:
-
-> "Taken together, the topology results support RNG as the default topology for most datasets. This recommendation is caveated for workloads requiring very large grid sizes, and hence very large numbers of nodes. At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively. RNG's graph-construction and all-pairs path calculations therefore scale much more sharply with grid size, so MST is preferable when a large graph is required and this topology overhead is prohibitive."
+We made the RNG recommendation conditional on runtime budget and grid size. The Discussion now gives the measured 8-GPU runtimes at grid size 64—32.54 s for hexagonal, 266.45 s for MST, and 880.83 s for RNG—and recommends MST when RNG's graph-construction and path-calculation overhead is prohibitive on large grids. The geometric discussion also connects RNG's additional local connectivity to both its potential quality benefit and its higher cost.
 
 ## 8. Discussion structure
 
@@ -170,11 +120,9 @@ In Section 8, we revised the recommendation to:
 
 We agree that the Discussion should read as a continuous argument rather than a list of short independent subsections. We consolidated it into a continuous sequence covering sampling, topology, tuning, stability, and systems limits, while removing repeated interpretation already given in the Results.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-Section 8 now combines the previous short subsections into a continuous sequence of topic-led paragraphs, retaining the key systems interpretation points, topology-runtime cost, and grid-size-dependent recommendations. The matched execution-path validation is now reported in Section 5.5 immediately before the speed-scaling results.
-
-Within that continuous Discussion, we added a single geometric progression from fixed-lattice coupling, through MST's freedom and tree limitation, to RNG's geometry-supported additional connections. We then connect that interpretation cautiously to the observed $QE$ results before turning to the measured runtime limits.
+We consolidated the former short Discussion subsections into a continuous sequence of topic-led paragraphs covering sampling, topology, tuning, stability, and systems limitations. Repeated Results interpretation was removed, the execution-path validation was placed in Section 5.5 before the scaling results, and the topology discussion now progresses from fixed-lattice coupling through MST and RNG before turning to the measured runtime trade-offs.
 
 ## 9. Appendix redundancy
 
@@ -186,6 +134,6 @@ Within that continuous Discussion, we added a single geometric progression from 
 
 We agree that the supplement should prioritize results that materially support the main claims. In revision, we compressed the redundant robustness material into two consolidated supplementary figures: Supplementary Fig. S4 for the topology top-$k$ sensitivity analyses and Supplementary Fig. S5 for the topology-stratified tuned-versus-untuned comparisons. We also moved the direct MST-versus-RNG comparison into the main text as Fig. 8, so the central topology-ordering evidence is no longer relegated to the appendix.
 
-### Manuscript Amendment
+### Summary of Manuscript Changes
 
-Supplementary Fig. S4 now consolidates the topology sensitivity analyses, and Supplementary Fig. S5 now consolidates the topology-stratified tuned-versus-untuned comparisons. This retains the audit trail while reducing repeated figure-level interpretation.
+We consolidated the redundant supplementary robustness plots into two multi-panel figures: Supplementary Fig. S4 for topology top-$k$ sensitivity and Supplementary Fig. S5 for topology-stratified tuned-versus-untuned comparisons. The direct MST-versus-RNG comparison was promoted to main-text Fig. 8, preserving the supplementary audit trail while removing repeated figure-level interpretation.
