@@ -42,7 +42,7 @@ We revised the scaling language to distinguish similarity in scaling behavior fr
 
 ### Response
 
-We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. Somoclu was not benchmarked against because both Somoclu and SomocluGPU were already compared directly with XPySOM in the XPySOM study and were more than 10 times slower in its reported benchmark [@manciniXPySomHighPerformanceSelfOrganizing2020]. As XPySOM most closely matches FloatSOM's Python/GPU batch-training pathway, we retained it as the controlled executable comparator. Regarding GigaSOM, differences in execution model, language, hardware, and published benchmark design likewise prevent a controlled direct comparison in the present study. The manuscript now states these limitations explicitly.
+We agree that the baseline selection required clearer justification. We expanded the related-work discussion, attempted an aweSOM benchmark, and now explain why XPySOM was retained as the executable comparator. Somoclu was not benchmarked against because Mancini et al. (2020) directly compared both Somoclu and SomocluGPU with XPySOM and found them to be more than 10 times slower in the reported benchmark. As XPySOM most closely matches FloatSOM's Python/GPU batch-training pathway, we retained it as the controlled executable comparator. Regarding GigaSOM, differences in execution model, language, hardware, and published benchmark design likewise prevent a controlled direct comparison in the present study. The manuscript now states these limitations explicitly.
 
 ### Summary of Manuscript Changes
 
