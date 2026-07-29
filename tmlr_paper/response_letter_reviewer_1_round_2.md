@@ -12,7 +12,7 @@ We thank the reviewer for the careful follow-up and for identifying where the re
 
 ### Response
 
-We agree. The previous revision identified the component analyses but required the reader to reconstruct their quantitative relationship. We now report the split directly in Section 7. The matched untuned hexagonal implementation comparison showed no detectable global balanced-$QE$ gain, with a point estimate effectively equal to zero (median improvement 0.000016%, $p=0.0923$; Supplementary Table S6). On the common untuned-XPySOM reference scale, tuning accounted for 13.04 percentage points of the full tuned-RNG stack's 14.49% gain, and topology accounted for the remaining 1.44 points. The topology contribution was 0.88 points for holdout $QE$ and 2.34 points for train $QE$ (Supplementary Tables S8--S9), consistent with the direct 1.297% tuned RNG-over-hexagonal balanced-$QE$ advantage in Supplementary Table S7.
+We now report the split directly in Section 7. The matched untuned hexagonal implementation comparison showed no detectable global balanced-$QE$ gain, with a point estimate effectively equal to zero (median improvement 0.000016%, $p=0.0923$; Supplementary Table S6). On the common untuned-XPySOM reference scale, tuning accounted for 13.04 percentage points of the full tuned-RNG stack's 14.49% gain, and topology accounted for the remaining 1.44 points. The topology contribution was 0.88 points for holdout $QE$ and 2.34 points for train $QE$ (Supplementary Tables S8--S9), consistent with the direct 1.297% tuned RNG-over-hexagonal balanced-$QE$ advantage in Supplementary Table S7.
 
 ### Summary of Manuscript Changes
 
@@ -70,7 +70,7 @@ R_{\mathrm{MTR}}=
 {\overline{\mathrm{MTR}}_{\mathrm{permutation\ null}}}.
 $$
 
-The null MTR is nearly exactly 50 for a simple reason. Once the first BMU is fixed, random reassignment makes the second BMU equally likely to occupy any of the other 99 nodes. MTR's shell tied ranks, counted with their shell multiplicities, partition ordinal ranks 1 through 99. Their mean is therefore $(1+99)/2=50$, irrespective of node degree or shell sizes. The empirical profile--topology null means ranged from 49.999 to 50.012, confirming this result.
+The null MTR is nearly exactly 50 as once the first BMU is fixed, random reassignment makes the second BMU equally likely to occupy any of the other 99 nodes. MTR's shell tied ranks, counted with their shell multiplicities, partition ordinal ranks 1 through 99. Their mean is therefore $(1+99)/2=50$, irrespective of node degree or shell sizes. The empirical profile--topology null means ranged from 49.999 to 50.012, confirm this result.
 
 The mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for the tuned profiles. In matched comparisons across the 280 dataset--seed maps, untuned MST did not improve upon untuned hexagonal (paired effect favouring MST $-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$). The RNG--MST result survived the calibration: RNG had a lower ratio by 0.0520 in the untuned profile (95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and by 0.0614 in the tuned profile (95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$). Supplementary Table S21 reports all six ratios and all matched topology contrasts.
 
@@ -80,7 +80,7 @@ We therefore also adopted the second suggested approach. Graph-versus-hexagonal 
 
 ### Summary of Manuscript Changes
 
-We added a concise description of the calibration to the main Methods and placed the complete per-map fixed-adjacency permutation procedure and exact $P/2=50$ derivation in Supplementary Methods S2. We reported the six observed-to-null ratios and matched contrasts in the Results and Supplementary Table S21, treated graph-versus-hexagonal MTR differences as descriptive, and retained the RNG--MST comparison. The practical recommendation now reflects the combined $QE$, stability, and node-utilization evidence, with RNG's lower null-calibrated MTR than MST providing additional support.
+We added a description of the calibration to the main Methods and placed the complete per-map fixed-adjacency permutation procedure and exact $P/2=50$ derivation in Supplementary Methods S2. We reported the six observed-to-null ratios and matched contrasts in the Results and Supplementary Table S21, treated graph-versus-hexagonal MTR differences as descriptive, and retained the RNG--MST comparison. The practical recommendation now reflects the combined $QE$, stability, and node-utilization evidence, with RNG's lower null-calibrated MTR than MST providing additional support.
 
 ## 4. aweSOM quality baseline
 
@@ -92,7 +92,7 @@ We added a concise description of the calibration to the main Methods and placed
 
 We now evaluate aweSOM as a quality baseline alongside the distributed-systems comparators. As recommended, we ran aweSOM on Iris, Wine, Digits, Breast Cancer, and Olivetti Faces and compared it with untuned hexagonal FloatSOM using 10 shared seeds, matched preprocessing and train--holdout partitions, 100-node maps, and 50 training passes. Across the five datasets, FloatSOM reduced balanced, holdout, and train quantization error by an average of 36.77%, 28.52%, and 45.11%, respectively. The complete dataset-level effects, confidence intervals, and multiplicity-adjusted tests are reported in Supplementary Table S20.
 
-Given the large difference between aweSOM's serial-online training and the batch training used by FloatSOM and XPySOM, together with the large-workload timeout documented in the speed-benchmark protocol (Section 4.2), we used XPySOM as the external implementation comparator in subsequent analyses. Somoclu and GigaSOM remain included as published distributed-systems context.
+Given the large difference between aweSOM's serial-online training and the batch training used by FloatSOM and XPySOM, together with the large-workload timeout documented in the speed-benchmark protocol (Section 4.2), we used XPySOM as the external implementation comparator in subsequent analyses.
 
 ### Summary of Manuscript Changes
 
