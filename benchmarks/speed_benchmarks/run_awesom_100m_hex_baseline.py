@@ -651,8 +651,7 @@ def main() -> int:
             "device was visible to the benchmark harness."
         )
     row["published_awesom_som_context"] = (
-        "aweSOM JOSS Figure 1 SOM scaling reports F=6 and F=10 on one CPU node; "
-        "the JAX/GPU panel is for SCE rather than SOM training."
+        "aweSOM JOSS Figure 1 SOM scaling reports F=6 and F=10 on one CPU node."
     )
     row["jax_note"] = (
         "This benchmark leaves JAX platform selection unset unless --jax-platforms or "

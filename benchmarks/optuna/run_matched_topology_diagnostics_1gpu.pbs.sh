@@ -27,6 +27,7 @@ OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/Results/topology_diagnostics_matched_prof
 TRUE_DEFAULT_PARAMS_JSON="${TRUE_DEFAULT_PARAMS_JSON:-xpysom_untuned_defaults.json}"
 FIXED_PARAMS_JSON="${FIXED_PARAMS_JSON:-floatsom_min1000_tuned_defaults.json}"
 SKLEARN_DATA_HOME="${SKLEARN_DATA_HOME:-${REPO_ROOT}/sklearn_data}"
+MTR_NULL_PERMUTATIONS="${MTR_NULL_PERMUTATIONS:-1000}"
 
 mkdir -p "$OUTPUT_DIR"
 mkdir -p "$SKLEARN_DATA_HOME"
@@ -43,6 +44,7 @@ echo "Output directory: ${OUTPUT_DIR}"
 echo "True-default params JSON: ${TRUE_DEFAULT_PARAMS_JSON}"
 echo "Tuned fixed params JSON: ${FIXED_PARAMS_JSON}"
 echo "SCIKIT_LEARN_DATA: ${SCIKIT_LEARN_DATA}"
+echo "MTR null permutations per map and split: ${MTR_NULL_PERMUTATIONS}"
 
 DATASET_ARGS=()
 if [[ -n "${DATASETS:-}" ]]; then
@@ -69,6 +71,7 @@ python3 benchmarks/optuna/run_matched_default_floatsom_batch.py \
   --scikit-learn-data-home "$SKLEARN_DATA_HOME" \
   --true-default-fixed-params-by-sampling-topology-json "$TRUE_DEFAULT_PARAMS_JSON" \
   --fixed-params-by-sampling-topology-json "$FIXED_PARAMS_JSON" \
+  --mtr-null-permutations "$MTR_NULL_PERMUTATIONS" \
   --true-default-runs-csv-name matched_default_topology_diagnostics_runs.csv \
   --tuned-fixed-runs-csv-name matched_tuned_topology_diagnostics_runs.csv \
   --profile-manifest-name MATCHED_TOPOLOGY_DIAGNOSTICS_MANIFEST.json \

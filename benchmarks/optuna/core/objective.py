@@ -20,11 +20,13 @@ from floatsom.floatsom_params import FloatSOMParams, SamplingConfig, ProcessingC
 from floatsom.benchmarks.evaluation.metrics import (
     QuantizationError,
     MeanTiedRank,
+    MTR_PERMUTATION_NULL_METRIC_NAMES,
     TopographicError, 
     Trustworthiness, 
     NeighborhoodPreservation,
     DistortionMeasure,
     TopographicFunction,
+    calculate_mean_tied_rank_permutation_null,
     calculate_node_usage_stats,
 )
 
@@ -55,6 +57,7 @@ NODE_USAGE_METRICS = {
 
 DIAGNOSTIC_ONLY_METRICS = NODE_USAGE_METRICS | {
     'mean_tied_rank',
+    'mean_tied_rank_permutation_null',
 }
 
 
@@ -541,6 +544,22 @@ def calculate_metrics(
     # Create wrapper for metric compatibility
     som_wrapper = FloatSOMWrapper(som)
 
+    if 'mean_tied_rank_permutation_null' in requested_metrics:
+        try:
+            mtr_null_stats = calculate_mean_tied_rank_permutation_null(
+                som_wrapper,
+                data,
+                use_gpu=use_gpu,
+                batch_size=int(metrics_config.get('mean_tied_rank_batch_size', 50_000)),
+                n_permutations=int(metrics_config.get('mean_tied_rank_null_permutations', 1_000)),
+                random_seed=int(metrics_config.get('mean_tied_rank_null_seed', 0)),
+            )
+            metrics.update({name: float(value) for name, value in mtr_null_stats.items()})
+        except Exception as e:
+            print(f"Warning: MTR permutation null failed with error: {str(e)}")
+            for metric_name in MTR_PERMUTATION_NULL_METRIC_NAMES:
+                metrics[metric_name] = float('nan')
+
     requested_node_usage_metrics = [name for name in requested_metrics if name in NODE_USAGE_METRICS]
     if requested_node_usage_metrics:
         try:
@@ -559,7 +578,9 @@ def calculate_metrics(
     
     # Compute each requested metric
     for metric_name in requested_metrics:
-        if metric_name in NODE_USAGE_METRICS:
+        if metric_name in NODE_USAGE_METRICS or metric_name == 'mean_tied_rank_permutation_null':
+            continue
+        if metric_name == 'mean_tied_rank' and metric_name in metrics:
             continue
         if metric_name in available_metrics:
             try:
@@ -683,6 +704,8 @@ def get_metrics_config(
         'holdout_objectives': holdout_objectives,
         'train_objectives': train_objectives,
         'topology_k': 7,
+        'mean_tied_rank_null_permutations': 1_000,
+        'mean_tied_rank_null_seed': 0,
         'train_metrics': train_metrics,
         'topology_only_metrics': [metric for metric in metrics_to_compute if metric in TOPOLOGY_ONLY_METRICS]
     }

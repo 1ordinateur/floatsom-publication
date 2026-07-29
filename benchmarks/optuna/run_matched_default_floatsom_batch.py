@@ -69,8 +69,24 @@ KNOWN_RUNS_CSV_NAMES: Tuple[str, ...] = (
     "matched_tuned_topology_diagnostics_runs.csv",
 )
 DEFAULT_TRUE_DEFAULT_FIXED_PARAMS_JSON = "xpysom_untuned_defaults.json"
+MATCHED_TOPOLOGY_DIAGNOSTIC_REQUESTS: Tuple[str, ...] = (
+    "mean_tied_rank_permutation_null",
+    "node_utilization",
+    "dead_node_fraction",
+    "used_nodes",
+    "dead_nodes",
+    "total_nodes",
+)
 MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS: Tuple[str, ...] = (
     "mean_tied_rank",
+    "mean_tied_rank_null_mean",
+    "mean_tied_rank_null_theoretical_mean",
+    "mean_tied_rank_null_std",
+    "mean_tied_rank_null_q025",
+    "mean_tied_rank_null_q975",
+    "mean_tied_rank_observed_to_null_ratio",
+    "mean_tied_rank_null_lower_tail_p",
+    "mean_tied_rank_null_permutations",
     "node_utilization",
     "dead_node_fraction",
     "used_nodes",
@@ -79,6 +95,9 @@ MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS: Tuple[str, ...] = (
 )
 BALANCED_DIAGNOSTIC_COLUMNS: Dict[str, str] = {
     "mean_tied_rank": "balanced_mean_tied_rank_raw",
+    "mean_tied_rank_null_mean": "balanced_mean_tied_rank_null_mean",
+    "mean_tied_rank_null_theoretical_mean": "balanced_mean_tied_rank_null_theoretical_mean",
+    "mean_tied_rank_observed_to_null_ratio": "balanced_mean_tied_rank_observed_to_null_ratio",
     "node_utilization": "balanced_node_utilization_raw",
     "dead_node_fraction": "balanced_dead_node_fraction_raw",
 }
@@ -94,6 +113,9 @@ DIAGNOSTIC_REPORT_METRICS: Tuple[str, ...] = (
     "mean_tied_rank_holdout",
     "mean_tied_rank_train",
     "balanced_mean_tied_rank_raw",
+    "mean_tied_rank_observed_to_null_ratio_holdout",
+    "mean_tied_rank_observed_to_null_ratio_train",
+    "balanced_mean_tied_rank_observed_to_null_ratio",
     "node_utilization_holdout",
     "node_utilization_train",
     "balanced_node_utilization_raw",
@@ -108,6 +130,9 @@ LOWER_IS_BETTER_REPORT_METRICS = {
     "mean_tied_rank_holdout",
     "mean_tied_rank_train",
     "balanced_mean_tied_rank_raw",
+    "mean_tied_rank_observed_to_null_ratio_holdout",
+    "mean_tied_rank_observed_to_null_ratio_train",
+    "balanced_mean_tied_rank_observed_to_null_ratio",
     "dead_node_fraction_holdout",
     "dead_node_fraction_train",
     "balanced_dead_node_fraction_raw",
@@ -117,7 +142,28 @@ HIGHER_IS_BETTER_REPORT_METRICS = {
     "node_utilization_train",
     "balanced_node_utilization_raw",
 }
-REQUIRED_MATCHED_TOPOLOGY_REPORT_COLUMNS: Tuple[str, ...] = DIAGNOSTIC_REPORT_METRICS
+MTR_NULL_DATASET_METRICS: Tuple[str, ...] = (
+    "mean_tied_rank_null_mean_holdout",
+    "mean_tied_rank_null_mean_train",
+    "balanced_mean_tied_rank_null_mean",
+    "mean_tied_rank_null_theoretical_mean_holdout",
+    "mean_tied_rank_null_theoretical_mean_train",
+    "balanced_mean_tied_rank_null_theoretical_mean",
+    "mean_tied_rank_null_std_holdout",
+    "mean_tied_rank_null_std_train",
+    "mean_tied_rank_null_q025_holdout",
+    "mean_tied_rank_null_q025_train",
+    "mean_tied_rank_null_q975_holdout",
+    "mean_tied_rank_null_q975_train",
+    "mean_tied_rank_null_lower_tail_p_holdout",
+    "mean_tied_rank_null_lower_tail_p_train",
+    "mean_tied_rank_null_permutations_holdout",
+    "mean_tied_rank_null_permutations_train",
+)
+DIAGNOSTIC_DATASET_METRICS: Tuple[str, ...] = (
+    DIAGNOSTIC_REPORT_METRICS + MTR_NULL_DATASET_METRICS
+)
+REQUIRED_MATCHED_TOPOLOGY_REPORT_COLUMNS: Tuple[str, ...] = DIAGNOSTIC_DATASET_METRICS
 
 
 def _resolve_dataset_config() -> Dict[str, Any]:
@@ -983,7 +1029,7 @@ def _diagnostic_dataset_summary(combined_df: pd.DataFrame) -> pd.DataFrame:
         required_columns=REQUIRED_MATCHED_TOPOLOGY_REPORT_COLUMNS,
         context="Combined matched topology diagnostic runs",
     )
-    metric_columns = [column for column in DIAGNOSTIC_REPORT_METRICS if column in combined_df.columns]
+    metric_columns = [column for column in DIAGNOSTIC_DATASET_METRICS if column in combined_df.columns]
     if not metric_columns:
         raise ValueError("No diagnostic metric columns were found in combined profile runs.")
 
@@ -1199,10 +1245,74 @@ def _generate_matched_topology_diagnostic_report(
 
     dataset_summary_path = output_dir / "supp_matched_topology_diagnostics_by_dataset.tsv"
     paired_summary_path = output_dir / "supp_matched_topology_diagnostics_paired_summaries.tsv"
+    mtr_null_by_map_path = output_dir / "supp_mtr_permutation_null_by_map.tsv"
+    mtr_null_by_dataset_path = output_dir / "supp_mtr_permutation_null_by_dataset.tsv"
     markdown_path = output_dir / _validate_markdown_name(markdown_name, arg_name="markdown_name")
 
     dataset_summary.to_csv(dataset_summary_path, sep="\t", index=False)
     paired_summary.to_csv(paired_summary_path, sep="\t", index=False)
+
+    mtr_null_metric_columns = [
+        "mean_tied_rank_holdout",
+        "mean_tied_rank_train",
+        "balanced_mean_tied_rank_raw",
+        "mean_tied_rank_null_mean_holdout",
+        "mean_tied_rank_null_mean_train",
+        "balanced_mean_tied_rank_null_mean",
+        "mean_tied_rank_null_theoretical_mean_holdout",
+        "mean_tied_rank_null_theoretical_mean_train",
+        "balanced_mean_tied_rank_null_theoretical_mean",
+        "mean_tied_rank_null_std_holdout",
+        "mean_tied_rank_null_std_train",
+        "mean_tied_rank_null_q025_holdout",
+        "mean_tied_rank_null_q025_train",
+        "mean_tied_rank_null_q975_holdout",
+        "mean_tied_rank_null_q975_train",
+        "mean_tied_rank_observed_to_null_ratio_holdout",
+        "mean_tied_rank_observed_to_null_ratio_train",
+        "balanced_mean_tied_rank_observed_to_null_ratio",
+        "mean_tied_rank_null_lower_tail_p_holdout",
+        "mean_tied_rank_null_lower_tail_p_train",
+        "mean_tied_rank_null_permutations_holdout",
+        "mean_tied_rank_null_permutations_train",
+    ]
+    per_map_identity_columns = [
+        "profile",
+        "dataset",
+        "seed",
+        "architecture",
+        "sampling_method",
+    ]
+    mtr_null_by_map = combined_df[
+        per_map_identity_columns + mtr_null_metric_columns
+    ].rename(columns={"architecture": "topology"})
+    mtr_null_by_map = mtr_null_by_map.sort_values(
+        ["profile", "dataset", "topology", "seed", "sampling_method"]
+    ).reset_index(drop=True)
+    mtr_null_by_map.to_csv(mtr_null_by_map_path, sep="\t", index=False)
+
+    per_dataset_identity_columns = [
+        "profile",
+        "dataset",
+        "topology",
+        "sampling_method",
+        "n_seeds",
+    ]
+    mtr_null_by_dataset = dataset_summary[
+        per_dataset_identity_columns + mtr_null_metric_columns
+    ].copy()
+    mtr_null_by_dataset.to_csv(mtr_null_by_dataset_path, sep="\t", index=False)
+
+    permutation_counts = sorted(
+        {
+            int(value)
+            for value in pd.to_numeric(
+                combined_df["mean_tied_rank_null_permutations_holdout"],
+                errors="coerce",
+            ).dropna()
+        }
+    )
+    permutation_count_text = ", ".join(str(value) for value in permutation_counts)
 
     markdown_lines = [
         "# Matched Topology Diagnostics",
@@ -1215,6 +1325,13 @@ def _generate_matched_topology_diagnostic_report(
         "",
         _to_markdown_table(dataset_summary),
         "",
+        "## MTR Fixed-Adjacency Permutation Null By Dataset",
+        "",
+        "Each fitted graph is held fixed while final prototype weights are uniformly permuted among graph nodes. MST/RNG graphs are not rebuilt after permutation. "
+        f"Deterministic permutations per map and split: {permutation_count_text}.",
+        "",
+        _to_markdown_table(mtr_null_by_dataset),
+        "",
         "## Paired Summaries",
         "",
         _to_markdown_table(paired_summary),
@@ -1225,6 +1342,8 @@ def _generate_matched_topology_diagnostic_report(
     return {
         "diagnostic_dataset_summary_tsv": str(dataset_summary_path.resolve()),
         "diagnostic_paired_summary_tsv": str(paired_summary_path.resolve()),
+        "mtr_permutation_null_by_map_tsv": str(mtr_null_by_map_path.resolve()),
+        "mtr_permutation_null_by_dataset_tsv": str(mtr_null_by_dataset_path.resolve()),
         "diagnostic_markdown_report": str(markdown_path.resolve()),
     }
 
@@ -1450,6 +1569,17 @@ def _build_success_row(
         if balanced_column:
             diagnostic_metrics[balanced_column] = _balanced_optional_metric(holdout_value, train_value)
 
+    balanced_mtr = diagnostic_metrics.get("balanced_mean_tied_rank_raw", float("nan"))
+    balanced_null_mean = diagnostic_metrics.get("balanced_mean_tied_rank_null_mean", float("nan"))
+    if (
+        np.isfinite(float(balanced_mtr))
+        and np.isfinite(float(balanced_null_mean))
+        and float(balanced_null_mean) != 0.0
+    ):
+        diagnostic_metrics["balanced_mean_tied_rank_observed_to_null_ratio"] = float(
+            float(balanced_mtr) / float(balanced_null_mean)
+        )
+
     row: Dict[str, Any] = {
         "scenario_id": _create_scenario_id(dataset, forced_params),
         "dataset": dataset,
@@ -1537,8 +1667,11 @@ def _execute_profile_runs(
     compare_markdown_name: str,
     compare_split_policy: str,
     resume_enabled: bool,
+    mtr_null_permutations: int,
 ) -> Dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
+    if int(mtr_null_permutations) <= 0:
+        raise ValueError("mtr_null_permutations must be positive.")
     runs_csv_name = _validate_csv_name(runs_csv_name, arg_name="runs_csv_name")
     runs_csv = output_dir / runs_csv_name
     planned_runs = int(len(datasets) * len(seeds) * len(topologies) * len(sampling_methods))
@@ -1582,6 +1715,7 @@ def _execute_profile_runs(
     print("Batch mode: full_batch")
     print(f"Run profile: {run_profile}")
     print(f"Run label: {run_label}")
+    print(f"MTR fixed-adjacency null permutations per split: {int(mtr_null_permutations)}")
     print(f"Resume enabled: {bool(resume_enabled)}")
     if resume_enabled:
         print(f"Resume existing rows: {resume_existing_rows}")
@@ -1643,7 +1777,10 @@ def _execute_profile_runs(
                             n_trials=1,
                             timeout=timeout,
                             objectives=list(base_objectives),
-                            diagnostic_metrics=list(MATCHED_TOPOLOGY_DIAGNOSTIC_METRICS),
+                            diagnostic_metrics=list(MATCHED_TOPOLOGY_DIAGNOSTIC_REQUESTS),
+                            metrics_config_overrides={
+                                "mean_tied_rank_null_permutations": int(mtr_null_permutations),
+                            },
                             evaluation_split=evaluation_split,
                             output_dir=None,
                             use_ray_tune=False,
@@ -1744,6 +1881,13 @@ def _execute_profile_runs(
         "manual_fixed_params": manual_fixed_params,
         "manual_fixed_params_by_topology": manual_fixed_params_by_topology,
         "manual_fixed_params_by_sampling_topology": manual_fixed_params_by_sampling_topology,
+        "mtr_permutation_null": {
+            "adjacency_policy": "fixed_final_graph",
+            "rebuild_graph_after_permutation": False,
+            "n_permutations": int(mtr_null_permutations),
+            "random_seed_policy": "matched benchmark seed",
+            "ratio": "observed_mtr / empirical_permutation_null_mean",
+        },
         "datasets": list(datasets),
         "seeds": [int(seed) for seed in seeds],
         "topologies": list(topologies),
@@ -1960,6 +2104,15 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default="MATCHED_TOPOLOGY_DIAGNOSTICS_SUMMARY.md",
         help="Markdown filename for the dual-profile matched topology diagnostic report.",
+    )
+    parser.add_argument(
+        "--mtr-null-permutations",
+        type=int,
+        default=1_000,
+        help=(
+            "Number of deterministic fixed-adjacency prototype-label permutations per trained map and split "
+            "for the MTR null diagnostic (default: 1000)."
+        ),
     )
     parser.add_argument(
         "--require-complete-sampling-topology-overrides",
@@ -2231,6 +2384,7 @@ def main() -> int:
             compare_markdown_name=str(args.compare_markdown_name),
             compare_split_policy=str(args.compare_split_policy),
             resume_enabled=bool(args.resume),
+            mtr_null_permutations=int(args.mtr_null_permutations),
         )
 
         print(f"=== Profile 2/{total_profiles}: tuned_fixed ===")
@@ -2257,6 +2411,7 @@ def main() -> int:
             compare_markdown_name=str(args.compare_markdown_name),
             compare_split_policy=str(args.compare_split_policy),
             resume_enabled=bool(args.resume),
+            mtr_null_permutations=int(args.mtr_null_permutations),
         )
 
         additional_profile_results: List[Dict[str, Any]] = []
@@ -2295,6 +2450,7 @@ def main() -> int:
                 compare_markdown_name=str(args.compare_markdown_name),
                 compare_split_policy=str(args.compare_split_policy),
                 resume_enabled=bool(args.resume),
+                mtr_null_permutations=int(args.mtr_null_permutations),
             )
             additional_profile_results.append(
                 {
@@ -2394,6 +2550,7 @@ def main() -> int:
             compare_markdown_name=str(args.compare_markdown_name),
             compare_split_policy=str(args.compare_split_policy),
             resume_enabled=bool(args.resume),
+            mtr_null_permutations=int(args.mtr_null_permutations),
         )
     return 0
 

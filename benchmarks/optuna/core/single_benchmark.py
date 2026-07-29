@@ -347,6 +347,7 @@ def run_single_benchmark(
     timeout: Optional[float] = None,
     objectives: Optional[List[str]] = None,
     diagnostic_metrics: Optional[List[str]] = None,
+    metrics_config_overrides: Optional[Dict[str, Any]] = None,
     evaluation_split: str = 'both',
     output_dir: Optional[str] = None,
     use_ray_tune: bool = False,
@@ -367,6 +368,8 @@ def run_single_benchmark(
         objectives: List of objective metrics to optimize. If None or single objective,
                    uses single-objective TPE. If multiple objectives, uses NSGA-II.
         diagnostic_metrics: Extra metrics to evaluate and store without optimizing.
+        metrics_config_overrides: Optional metric-evaluation settings such as
+            permutation count and deterministic null seed.
         evaluation_split: Which dataset split(s) to optimise ('both', 'holdout', 'train')
         output_dir: Directory to save results (None for default)
         use_ray_tune: Whether to use Ray Tune for distributed execution (default: False)
@@ -394,6 +397,8 @@ def run_single_benchmark(
         evaluation_split=evaluation_split,
         diagnostic_metrics=diagnostic_metrics,
     )
+    metrics_config.update(dict(metrics_config_overrides or {}))
+    metrics_config["mean_tied_rank_null_seed"] = int(seed)
     expanded_objectives = metrics_config['objectives']
 
     # Set global random seed

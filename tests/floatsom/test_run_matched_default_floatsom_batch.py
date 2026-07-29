@@ -395,6 +395,14 @@ def test_build_success_row_includes_mtr_and_balanced_diagnostics(matched_runner_
             "metrics_holdout": {
                 "quantization_error": 2.0,
                 "mean_tied_rank": 4.0,
+                "mean_tied_rank_null_mean": 10.0,
+                "mean_tied_rank_null_theoretical_mean": 10.0,
+                "mean_tied_rank_null_std": 1.0,
+                "mean_tied_rank_null_q025": 8.0,
+                "mean_tied_rank_null_q975": 12.0,
+                "mean_tied_rank_observed_to_null_ratio": 0.4,
+                "mean_tied_rank_null_lower_tail_p": 0.001,
+                "mean_tied_rank_null_permutations": 1000,
                 "node_utilization": 0.5,
                 "dead_node_fraction": 0.5,
                 "used_nodes": 5,
@@ -404,6 +412,14 @@ def test_build_success_row_includes_mtr_and_balanced_diagnostics(matched_runner_
             "metrics_train": {
                 "quantization_error": 1.0,
                 "mean_tied_rank": 2.0,
+                "mean_tied_rank_null_mean": 10.0,
+                "mean_tied_rank_null_theoretical_mean": 10.0,
+                "mean_tied_rank_null_std": 1.0,
+                "mean_tied_rank_null_q025": 8.0,
+                "mean_tied_rank_null_q975": 12.0,
+                "mean_tied_rank_observed_to_null_ratio": 0.2,
+                "mean_tied_rank_null_lower_tail_p": 0.001,
+                "mean_tied_rank_null_permutations": 1000,
                 "node_utilization": 0.7,
                 "dead_node_fraction": 0.3,
                 "used_nodes": 7,
@@ -433,6 +449,8 @@ def test_build_success_row_includes_mtr_and_balanced_diagnostics(matched_runner_
     assert row["mean_tied_rank_holdout"] == pytest.approx(4.0)
     assert row["mean_tied_rank_train"] == pytest.approx(2.0)
     assert row["balanced_mean_tied_rank_raw"] == pytest.approx(3.0)
+    assert row["balanced_mean_tied_rank_null_mean"] == pytest.approx(10.0)
+    assert row["balanced_mean_tied_rank_observed_to_null_ratio"] == pytest.approx(0.3)
     assert row["balanced_node_utilization_raw"] == pytest.approx(0.6)
     assert row["balanced_dead_node_fraction_raw"] == pytest.approx(0.4)
     assert row["used_nodes_holdout"] == pytest.approx(5.0)
@@ -566,6 +584,25 @@ def test_generate_matched_topology_diagnostic_report_from_manifest(tmp_path, mat
             "mean_tied_rank_holdout": mtr + 0.1,
             "mean_tied_rank_train": mtr - 0.1,
             "balanced_mean_tied_rank_raw": mtr,
+            "mean_tied_rank_null_mean_holdout": 50.0,
+            "mean_tied_rank_null_mean_train": 50.0,
+            "balanced_mean_tied_rank_null_mean": 50.0,
+            "mean_tied_rank_null_theoretical_mean_holdout": 50.0,
+            "mean_tied_rank_null_theoretical_mean_train": 50.0,
+            "balanced_mean_tied_rank_null_theoretical_mean": 50.0,
+            "mean_tied_rank_null_std_holdout": 1.0,
+            "mean_tied_rank_null_std_train": 1.0,
+            "mean_tied_rank_null_q025_holdout": 48.0,
+            "mean_tied_rank_null_q025_train": 48.0,
+            "mean_tied_rank_null_q975_holdout": 52.0,
+            "mean_tied_rank_null_q975_train": 52.0,
+            "mean_tied_rank_observed_to_null_ratio_holdout": (mtr + 0.1) / 50.0,
+            "mean_tied_rank_observed_to_null_ratio_train": (mtr - 0.1) / 50.0,
+            "balanced_mean_tied_rank_observed_to_null_ratio": mtr / 50.0,
+            "mean_tied_rank_null_lower_tail_p_holdout": 0.001,
+            "mean_tied_rank_null_lower_tail_p_train": 0.001,
+            "mean_tied_rank_null_permutations_holdout": 1000,
+            "mean_tied_rank_null_permutations_train": 1000,
             "node_utilization_holdout": utilization - 0.05,
             "node_utilization_train": utilization + 0.05,
             "balanced_node_utilization_raw": utilization,
@@ -616,8 +653,12 @@ def test_generate_matched_topology_diagnostic_report_from_manifest(tmp_path, mat
 
     dataset_summary = pd.read_csv(outputs["diagnostic_dataset_summary_tsv"], sep="\t")
     paired_summary = pd.read_csv(outputs["diagnostic_paired_summary_tsv"], sep="\t")
+    mtr_null_by_map = pd.read_csv(outputs["mtr_permutation_null_by_map_tsv"], sep="\t")
+    mtr_null_by_dataset = pd.read_csv(outputs["mtr_permutation_null_by_dataset_tsv"], sep="\t")
 
     assert Path(outputs["diagnostic_markdown_report"]).exists()
+    assert len(mtr_null_by_map) == 12
+    assert "balanced_mean_tied_rank_observed_to_null_ratio" in mtr_null_by_dataset.columns
     assert set(dataset_summary["profile"]) == {"true_default", "tuned_fixed"}
     assert {"hexagonal", "mst", "rng"}.issubset(set(dataset_summary["topology"]))
 
@@ -649,6 +690,25 @@ def test_generate_matched_topology_report_includes_rng_variant_profile(tmp_path,
             "mean_tied_rank_holdout": mtr + 0.1,
             "mean_tied_rank_train": mtr - 0.1,
             "balanced_mean_tied_rank_raw": mtr,
+            "mean_tied_rank_null_mean_holdout": 50.0,
+            "mean_tied_rank_null_mean_train": 50.0,
+            "balanced_mean_tied_rank_null_mean": 50.0,
+            "mean_tied_rank_null_theoretical_mean_holdout": 50.0,
+            "mean_tied_rank_null_theoretical_mean_train": 50.0,
+            "balanced_mean_tied_rank_null_theoretical_mean": 50.0,
+            "mean_tied_rank_null_std_holdout": 1.0,
+            "mean_tied_rank_null_std_train": 1.0,
+            "mean_tied_rank_null_q025_holdout": 48.0,
+            "mean_tied_rank_null_q025_train": 48.0,
+            "mean_tied_rank_null_q975_holdout": 52.0,
+            "mean_tied_rank_null_q975_train": 52.0,
+            "mean_tied_rank_observed_to_null_ratio_holdout": (mtr + 0.1) / 50.0,
+            "mean_tied_rank_observed_to_null_ratio_train": (mtr - 0.1) / 50.0,
+            "balanced_mean_tied_rank_observed_to_null_ratio": mtr / 50.0,
+            "mean_tied_rank_null_lower_tail_p_holdout": 0.001,
+            "mean_tied_rank_null_lower_tail_p_train": 0.001,
+            "mean_tied_rank_null_permutations_holdout": 1000,
+            "mean_tied_rank_null_permutations_train": 1000,
             "node_utilization_holdout": utilization - 0.05,
             "node_utilization_train": utilization + 0.05,
             "balanced_node_utilization_raw": utilization,

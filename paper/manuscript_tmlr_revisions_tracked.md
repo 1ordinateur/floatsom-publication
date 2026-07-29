@@ -26,7 +26,7 @@ GPU-accelerated Self-Organizing Map (SOM) implementations are among the most com
 
 ## 1. Introduction
 
-Self-Organizing Map (SOM), originally introduced by Kohonen [@kohonenSelforganizingMap1990], is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale [@kangasVariantsSelforganizingMaps1990]. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. \begingroup\color{blue} Recent tools such as aweSOM have improved single-node serial-online SOM execution through CPU/GPU acceleration and ensemble stacking [@haAweSOMCPUGPUaccelerated2025].\endgroup \begingroup\color{blue} However, many current implementations remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.\endgroup
+Self-Organizing Map (SOM), originally introduced by Kohonen [@kohonenSelforganizingMap1990], is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale [@kangasVariantsSelforganizingMaps1990]. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. \begingroup\color{blue} Recent tools such as aweSOM provide optimized single-node serial-online SOM execution for clustering analysis [@haAweSOMCPUGPUaccelerated2025].\endgroup \begingroup\color{blue} However, many current implementations remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.\endgroup
 
 SOM topology presents a second limitation. Classical SOMs are traditionally trained on regular rectangular or hexagonal lattices because fixed grids make neighborhood definition, visualization, and optimization straightforward. However, these regular lattices also impose a strong geometric prior on the learned representation. Accordingly, prior work on dynamic, growing, and graph-structured SOM variants reflects a long-standing recognition that fixed lattices are not always the best match for irregular data geometry [@alahakoonDynamicSelforganizingMaps2000; @vasighiDirectedBatchGrowing2017; @kangasVariantsSelforganizingMaps1990]. However, these alternatives have generally not been developed or evaluated in the high-throughput, large-sample regime targeted by modern GPU-enabled applications and are broadly impractical for deployment at scale.
 
@@ -38,7 +38,7 @@ Related work on practical SOM deployment spans software implementations, samplin
 
 ### 2.1 Open-Source SOM Implementations and Systems
 
-\begingroup\color{blue} Open-source SOM libraries range from lightweight implementations to systems-oriented packages.\endgroup \begingroup\color{blue} MiniSom implements classical serial-online training [@vettigliJustGlowingMinisom2018], while aweSOM adds CPU/GPU acceleration and ensemble stacking for large single-node workloads [@haAweSOMCPUGPUaccelerated2025].\endgroup \begingroup\color{blue} XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020].\endgroup
+\begingroup\color{blue} Open-source SOM libraries range from lightweight implementations to systems-oriented packages.\endgroup \begingroup\color{blue} MiniSom implements classical serial-online training [@vettigliJustGlowingMinisom2018], while aweSOM provides a Numba-accelerated serial-online SOM for single-node workloads [@haAweSOMCPUGPUaccelerated2025].\endgroup \begingroup\color{blue} XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway [@manciniXPySomHighPerformanceSelfOrganizing2020].\endgroup
 
 \begingroup\color{blue} Somoclu and GigaSOM provide additional parallel-systems context [@wittekSomocluEfficientParallel2017; @kratochvilGigaSOMjlHighperformanceClustering2020] and are further elaborated on in Section 8.\endgroup
 
@@ -214,6 +214,8 @@ $$
 14_{\text{Datasets}} \times 10_{\text{Seeds}} \times 3_{\text{Topologies}} \times 2_{\text{SamplingMethods}} \times 200_{\text{Trials}}= 168{,}000 \text{ Runs}
 $$
 
+\begingroup\color{blue} Map size was fixed rather than optimized: every Optuna quality run used $P=100$ nodes, implemented as a $10\times10$ lattice for the hexagonal topology and as 100-node graphs for MST and RNG.\endgroup
+
 \begingroup\color{blue} The neighborhood-radius search space was shared across topology families.\endgroup \begingroup\color{blue} In particular, `initial_radius` was an Optuna-optimized parameter for hexagonal, MST, and RNG runs, with the same search interval of 0.5 to 10.0 in each case.\endgroup \begingroup\color{blue} Thus, the hexagonal topology comparisons below use a tuned hexagonal comparator rather than a default-radius hexagonal baseline.\endgroup
 
 Sampling comparisons in Section 5.2 compare full versus random paired analyses pooled across all topologies. Topology comparisons in Sections 5.3-5.4 use full sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This pilot additionally included the HDSSSOM sampling methodology alongside the full and random sampling methodologies.
@@ -246,7 +248,9 @@ $$
 
 \endgroup
 
-\begingroup\color{blue} Hexagonal, MST, and RNG maps define adjacency differently: hexagonal connections are fixed by the lattice, MST connections form a sparse tree derived from the node weights, and RNG connections are also weight-derived but can give nodes different numbers of neighbors.\endgroup \begingroup\color{blue} MTR applies the same graph-distance ranking procedure to each trained map while accounting for topology-specific differences in node degree and tied hop distances.\endgroup \begingroup\color{blue} The $L_{i,d_i}$ term counts all units fewer hops away, while the second term assigns the average rank across the $|S_{i,d_i}|$ units at the same hop distance as the second BMU.\endgroup \begingroup\color{blue} It therefore supports consistent comparison among the fixed hexagonal, MST, and RNG adjacency structures.\endgroup \begingroup\color{blue} Lower MTR indicates that first and second BMUs tend to occur earlier in this graph-specific ordering and therefore reflects better local neighborhood ordering.\endgroup
+\begingroup\color{blue} Hexagonal, MST, and RNG maps define adjacency differently: hexagonal connections are fixed by the lattice, MST connections form a sparse tree derived from the node weights, and RNG connections are also weight-derived but can give nodes different numbers of neighbors.\endgroup \begingroup\color{blue} MTR applies the same graph-distance ranking procedure to each trained map while accounting for topology-specific differences in node degree and tied hop distances.\endgroup \begingroup\color{blue} The $L_{i,d_i}$ term counts all units fewer hops away, while the second term assigns the average rank across the $|S_{i,d_i}|$ units at the same hop distance as the second BMU.\endgroup \begingroup\color{blue} Lower MTR indicates that first and second BMUs tend to occur earlier in this graph-specific ordering, but the raw scale remains graph-specific because shell sizes and adjacency construction differ among topology families.\endgroup
+
+\begingroup\color{blue} We additionally calibrated MTR against a per-map fixed-adjacency permutation null and report the observed-to-null ratio $R_{\mathrm{MTR}}=\mathrm{MTR}_{\mathrm{observed}}/\overline{\mathrm{MTR}}_{\mathrm{null}}$ (Supplementary Methods S2).\endgroup \begingroup\color{blue} Cross-family ratios are interpreted as calibrated comparisons on the MTR scale rather than as direct evidence that one topology family preserves data topology better than another.\endgroup
 
 \begingroup\color{blue} We additionally report node utilization, defined as the fraction of nodes selected as a BMU, and its complement, dead-node fraction.\endgroup \begingroup\color{blue} These post hoc diagnostics are computed on training and holdout splits and balanced as for $QE$.\endgroup
 
@@ -261,6 +265,16 @@ $$
 \begingroup\color{blue} We calibrated the FloatSOM batch pathway against XPySOM using the 14 benchmark datasets, 10 shared seeds, full sampling, a $32\times32$ map, and one run per dataset--seed condition without top-$k$ selection.\endgroup \begingroup\color{blue} Both implementations used the same deterministic 70/30 train--holdout split, number of batch epochs, and XPySOM-like untuned hyperparameters.\endgroup \begingroup\color{blue} XPySOM's initialized node weights were transferred into FloatSOM after reconciling the two implementations' node-coordinate ordering, so paired runs began from corresponding prototypes.\endgroup \begingroup\color{blue} The primary implementation-concordance comparison used the hexagonal topology in both implementations; the associated MST and RNG FloatSOM paths retained the same XPySOM hexagonal reference to quantify the additional effect of changing the FloatSOM training topology.\endgroup
 
 \begingroup\color{blue} We recorded train, holdout, and balanced $QE$ together with training time.\endgroup \begingroup\color{blue} Within each dataset, paired percentage effects across the 10 seeds were summarized using the Wilcoxon signed-rank location estimate, its exact distribution-free 95% interval, and a two-sided paired Wilcoxon test; global rows pool the 140 dataset--seed pairs.\endgroup \begingroup\color{blue} Supplementary Figs. S1--S3 and Supplementary Tables S4--S6 report these results.\endgroup
+
+\begingroup
+
+\color{blue}
+
+#### 4.1.4 aweSOM quality baseline
+
+We evaluated aweSOM as an external quality baseline on Iris, Wine, Digits, Breast Cancer, and Olivetti Faces using 10 shared seeds. Preprocessing and the deterministic 70/30 train--holdout split followed Section 4.1.1. Both implementations used 100-node maps and 50 matched data passes. FloatSOM used a $10\times10$ hexagonal lattice and the untuned XPySOM defaults employed elsewhere in the manuscript, while aweSOM used its native $10\times10$ rectangular lattice with Chebyshev neighborhood distance and its native default learning and initialization settings. We calculated train, holdout, and balanced $QE$ and performed paired comparisons within dataset and seed. Dataset-level p-values were Holm-adjusted separately within each $QE$ endpoint.
+
+\endgroup
 
 ### 4.2 Speed scaling benchmark protocol
 
@@ -286,7 +300,7 @@ The stability analysis focuses on four tuned hyperparameters that govern SOM tra
 
 #### 4.3.1 Tuned Configuration versus Untuned Reference Analysis
 
-\begingroup\color{blue} Fixed configurations were rerun under matched dataset, seed, topology, and split keys.\endgroup \begingroup\color{blue} The final topology diagnostic comprised all 14 benchmark datasets, 20 shared random seeds, full sampling, and each of the hexagonal, MST, and RNG topologies, giving 280 dataset--seed units per paired contrast.\endgroup \begingroup\color{blue} Preprocessing and the deterministic 70/30 train--holdout split followed Section 4.1.1. The untuned profile used the same XPySOM-like reference settings for all topologies, whereas the tuned profile used the fixed topology-specific full-sampling configurations derived above.\endgroup \begingroup\color{blue} Deployment analyses compare these tuned FloatSOM configurations with untuned hexagonal XPySOM, while topology diagnostics compare tuned and untuned FloatSOM within and between topologies.\endgroup \begingroup\color{blue} These reruns estimate deployable fixed-configuration performance; the top-$k$ Optuna summaries instead estimate attainable performance within the search budget.\endgroup
+\begingroup\color{blue} Fixed configurations were rerun under matched dataset, seed, topology, and split keys.\endgroup \begingroup\color{blue} All tuned and untuned diagnostic reruns retained this same fixed $P=100$ node count across the three topologies.\endgroup \begingroup\color{blue} The final topology diagnostic comprised all 14 benchmark datasets, 20 shared random seeds, full sampling, and each of the hexagonal, MST, and RNG topologies, giving 280 dataset--seed units per paired contrast.\endgroup \begingroup\color{blue} Preprocessing and the deterministic 70/30 train--holdout split followed Section 4.1.1. The untuned profile used the same XPySOM-like reference settings for all topologies, whereas the tuned profile used the fixed topology-specific full-sampling configurations derived above.\endgroup \begingroup\color{blue} Deployment analyses compare these tuned FloatSOM configurations with untuned hexagonal XPySOM, while topology diagnostics compare tuned and untuned FloatSOM within and between topologies.\endgroup \begingroup\color{blue} These reruns estimate deployable fixed-configuration performance; the top-$k$ Optuna summaries instead estimate attainable performance within the search budget.\endgroup
 
 \begingroup\color{blue} For Supplementary Fig. S5, tuned and untuned values were paired within dataset, seed, topology, and split.\endgroup \begingroup\color{blue} Supplementary Table S12 pools the 280 matched dataset--seed differences for each prespecified profile--topology--metric contrast and reports the mean paired effect, two-sided one-sample paired $t$-test confidence interval, Cohen's $d_z$, raw p-value, and win/loss/tie counts.\endgroup \begingroup\color{blue} These raw p-values are descriptive diagnostics rather than a multiplicity-adjusted family; effect sizes and confidence intervals are the primary summaries.\endgroup \begingroup\color{blue} Supplementary Table S13 instead reports the corresponding mean observed metric within each profile, dataset, and topology across the 20 seeds.\endgroup \begingroup\color{blue} Dataset-level forest-plot results use the convention described above, and overall rows pool all matched pairs with the same paired $t$-test and confidence-interval calculation.\endgroup
 
@@ -302,11 +316,13 @@ Hyperparameter stability is important because it determines whether a method can
 
 \endgroup
 
-\begingroup\color{blue} To determine whether topology differences could be explained by topology-specific treatment of neighborhood radius, we performed a controlled initial-radius sweep.\endgroup \begingroup\color{blue} Hexagonal, MST, and RNG maps were evaluated at $r\in\{0.5,0.75,1.0266,1.5,2,3,5\}$ using the same 20 random seeds on each of the 14 benchmark datasets.\endgroup \begingroup\color{blue} The value $r=1.0266$ was the selected hexagonal full-sampling radius and is denoted `Hex optimal` in Fig. 9. Apart from topology and the deliberately varied initial radius, the training configuration was fixed: full sampling, random initialization, asymptotic radius decay, momentum enabled with initial momentum 0.6069, and XPySOM-compatible normalization.\endgroup \begingroup\color{blue} Runs were therefore matched by dataset and seed, ensuring that topology families received the same radius values rather than different search ranges or topology-specific radius schedules.\endgroup
+\begingroup\color{blue} To determine whether topology differences could be explained by topology-specific treatment of neighborhood radius, we performed a controlled initial-radius sweep.\endgroup \begingroup\color{blue} Hexagonal, MST, and RNG maps were evaluated at $r\in\{0.5,0.75,1.0266,1.5,2,3,5\}$ using the same 20 random seeds on each of the 14 benchmark datasets.\endgroup \begingroup\color{blue} The value $r=1.0266$ was the independently Optuna-selected hexagonal full-sampling radius and is denoted `Hex optimal` in Fig. 9; this label does not denote the minimum observed for hexagonal within the fixed-configuration sweep. Apart from topology and the deliberately varied initial radius, the training configuration was fixed: full sampling, random initialization, asymptotic radius decay, momentum enabled with initial momentum 0.6069, and XPySOM-compatible normalization.\endgroup \begingroup\color{blue} Runs were therefore matched by dataset and seed, ensuring that topology families received the same radius values rather than different search ranges or topology-specific radius schedules.\endgroup
 
 \begingroup\color{blue} We evaluated balanced $QE$, balanced MTR, and balanced node utilization.\endgroup \begingroup\color{blue} Because absolute $QE$ scales differ substantially among datasets, each dataset--seed $QE_B$ value was divided by the matched hexagonal $QE_B$ at $r=1.0266$.\endgroup \begingroup\color{blue} Ratios were averaged on the log scale across seeds within each dataset and then across datasets with equal dataset weight; exponentiating this mean yields the geometric-mean ratio shown in Fig. 9A.\endgroup \begingroup\color{blue} Balanced MTR and balanced node utilization are retained in their observed units in Fig. 9B and Fig. 9C, respectively.\endgroup \begingroup\color{blue} Along each topology's response curve, direction-aware percentage changes from $r=1.0266$ were calculated for all 280 matched dataset--seed units and tested against zero using two-sided one-sample $t$-tests; Benjamini--Hochberg adjustment was applied across the 54 non-anchor radius--topology--metric tests.\endgroup \begingroup\color{blue} These tests assess within-topology radius response.\endgroup
 
 \begingroup\color{blue} We additionally conducted post hoc cross-topology $QE_B$ contrasts at each radius.\endgroup \begingroup\color{blue} For every topology pair, dataset, seed, and radius, we calculated the log ratio of the comparator $QE_B$ to the reference $QE_B$, averaged log ratios across the 20 seeds within each dataset, and applied a two-sided one-sample $t$-test to the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} Exponentiated means and confidence limits are geometric-mean $QE_B$ ratios, with values below 1 favouring the comparator.\endgroup \begingroup\color{blue} Benjamini--Hochberg correction was applied across all 21 topology-pair--radius contrasts.\endgroup \begingroup\color{blue} Supplementary Table S15 reports the estimates, intervals, raw p-values, and adjusted q-values.\endgroup
+
+\begingroup\color{blue} We then identified the per-topology minimum $QE_B$ across the seven tested radii using the same dataset-balanced geometric-mean summary as Fig. 9A.\endgroup \begingroup\color{blue} Paired tests compared $QE_H$, $QE_T$, and $QE_B$ between the configurations at those topology-specific radii, with Benjamini--Hochberg correction applied across the three topology contrasts separately for each endpoint (Supplementary Table S16).\endgroup \begingroup\color{blue} For the per-dataset analyses, paired percentage improvements were calculated across the 20 matched seeds for $QE_H$, $QE_T$, and $QE_B$.\endgroup \begingroup\color{blue} For each topology-minimum contrast, Benjamini--Hochberg correction was applied separately across the 14 dataset-level tests for each $QE$ endpoint (Supplementary Tables S17--S19).\endgroup
 
 \begingroup
 
@@ -330,11 +346,23 @@ All Optuna comparisons use matched pairs within dataset, seed, and split units t
 
 \color{blue}
 
-### 5.1 XPySOM calibration
+### 5.1 External SOM quality baselines
+
+#### 5.1.1 XPySOM calibration
 
 \endgroup
 
 Under matched-configuration XPySOM versus FloatSOM calibration on hexagonal $QE$ (Fig. \begingroup\color{blue} S3), no implementation-associated $QE$ difference was detected.\endgroup \begingroup\color{blue} Accordingly, we use hexagonal FloatSOM batch as the operational XPySOM reference in the benchmarks that follow, while not claiming formal statistical equivalence.\endgroup The runtime differences are attributable to FloatSOM's JIT kernels, which incur a small startup cost. This overhead is progressively amortized as workload size increases, after which FloatSOM runs faster than XPySOM on larger datasets.
+
+\begingroup
+
+\color{blue}
+
+#### 5.1.2 aweSOM quality baseline
+
+Relative to default aweSOM, untuned hexagonal FloatSOM reduced quantization error across all five evaluated datasets. Averaged equally across datasets, the improvements were 36.77% for balanced $QE$, 28.52% for holdout $QE$, and 45.11% for train $QE$. The complete dataset-level results are reported in Supplementary Table S20. Given the large difference between aweSOM's serial-online training and the batch training used by FloatSOM and XPySOM, together with the large-workload timeout documented in the speed-benchmark protocol (Section 4.2), we used XPySOM as the external implementation comparator in subsequent analyses.
+
+\endgroup
 
 ### 5.2 Comparison of Different Sampling Methods
 
@@ -446,9 +474,15 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 \begingroup\color{blue} Because initial radius was selected during tuning and differed across topology families, we isolated its effect in a fixed-configuration sweep.\endgroup \begingroup\color{blue} All non-radius hyperparameters were held at the tuned hexagonal full-sampling configuration, and each of seven radii was evaluated for hexagonal, MST, and RNG maps using the same 20 seeds on all 14 datasets.\endgroup \begingroup\color{blue} Fig. 9A reports $QE_B$ after normalizing every dataset--seed condition to its matched hexagonal value at the selected radius ($r=1.027$).\endgroup \begingroup\color{blue} We summarize these ratios by averaging log ratios across seeds within each dataset, weighting the 14 datasets equally, and exponentiating the cross-dataset mean.\endgroup \begingroup\color{blue} The resulting geometric-mean ratio is dimensionless: 1 denotes matched hexagonal performance at the selected radius, values below 1 indicate lower $QE_B$, and values above 1 indicate higher $QE_B$.\endgroup
 
-\begingroup\color{blue} Across the seven tested radii, MST and RNG maintained lower observed $QE_B$ than hexagonal, with adjusted differences evident from $r=1.027$ onward.\endgroup
+\begingroup\color{blue} Separation vanished at $r\leq0.75$, with no significant MST--hexagonal or RNG--hexagonal difference at either $r=0.5$ or $r=0.75$ (Supplementary Table S15).\endgroup \begingroup\color{blue} The per-topology minimum $QE_B$ across the sweep occurred at $r=0.75$ for hexagonal and $r=1.5$ for MST and RNG.\endgroup \begingroup\color{blue} In paired tests between those minima, MST was 0.98% lower than hexagonal (ratio 0.9902, 95% CI [0.9747, 1.0060]; $p=0.203$, $q=0.304$), and RNG was 1.35% lower than hexagonal (ratio 0.9865, 95% CI [0.9689, 1.0043]; $p=0.125$, $q=0.304$); neither difference was significant.\endgroup \begingroup\color{blue} RNG and MST also did not differ significantly (ratio 0.9962, 95% CI [0.9834, 1.0092]; $p=q=0.538$; Supplementary Table S16).\endgroup
 
-\begingroup\color{blue} Increasing radius eventually exchanged higher $QE_B$ for lower MTR in every topology, but this trade-off emerged earlier and more sharply for hexagonal maps.\endgroup \begingroup\color{blue} RNG maintained the lowest observed MTR throughout the sweep, while the node-utilization curves did not indicate that the graph-topology results were driven by poorer use of the available map nodes.\endgroup \begingroup\color{blue} The significance symbols in Fig. 9 represent within-topology radius comparisons.\endgroup
+\begingroup\color{blue} The split-specific aggregate comparisons followed the same pattern.\endgroup \begingroup\color{blue} Relative to hexagonal, MST had 0.69% lower $QE_H$ ($p=0.316$, $q=0.474$) and 2.19% lower $QE_T$ ($p=0.145$, $q=0.257$), while RNG had 0.79% lower $QE_H$ ($p=0.139$, $q=0.418$) and 4.04% lower $QE_T$ ($p=0.171$, $q=0.257$).\endgroup \begingroup\color{blue} RNG was 0.10% lower than MST for $QE_H$ ($p=q=0.773$) and 1.90% lower for $QE_T$ ($p=q=0.332$).\endgroup \begingroup\color{blue} Thus, all split-specific aggregate point estimates favoured the graph comparator, but none was significant (Supplementary Table S16).\endgroup
+
+\begingroup\color{blue} These aggregate summaries should be interpreted alongside substantial dataset-level heterogeneity in both direction and magnitude.\endgroup \begingroup\color{blue} RNG had lower observed $QE_H$, $QE_T$, and $QE_B$ than hexagonal in 12, 8, and 9 of the 14 datasets, respectively, with significant improvements in six, seven, and four datasets and significant reversals in one, five, and one datasets.\endgroup \begingroup\color{blue} MST had lower observed $QE_H$, $QE_T$, and $QE_B$ in 9, 8, and 9 datasets, with significant improvements in four, three, and four datasets and significant reversals in one, three, and one datasets (Supplementary Tables S17--S18).\endgroup
+
+\begingroup\color{blue} Moreover, where graph topologies were significantly better, the relative improvements reached 15.44% for MST and 26.49% for RNG, substantially larger than the largest significant hexagonal advantage of 2.23%.\endgroup \begingroup\color{blue} For example, RNG reduced Iris $QE_H$, $QE_T$, and $QE_B$ by 2.26%, 26.49%, and 7.28%, respectively, with all three differences significant.\endgroup
+
+\begingroup\color{blue} Increasing radius eventually exchanged higher $QE_B$ for lower observed MTR in every topology, but this trade-off emerged earlier and more sharply for hexagonal maps.\endgroup \begingroup\color{blue} RNG maintained the lowest observed MTR throughout the sweep, while the node-utilization curves did not indicate poorer use of the available map nodes.\endgroup \begingroup\color{blue} Because these raw MTR curves compare a fixed lattice with weight-derived graphs, their cross-family separation is descriptive.\endgroup \begingroup\color{blue} The significance symbols in Fig. 9 represent within-topology radius comparisons.\endgroup
 
 \begingroup
 
@@ -459,7 +493,9 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 \endgroup
 
-\begingroup\color{blue} The fixed-configuration diagnostics provide the corresponding deployable tuned-default comparison (Table \ref{tab:matched_topology_diagnostics_summary}).\endgroup \begingroup\color{blue} Unlike the Optuna matched top-$k$ results, no balanced-$QE$ difference was detected between the tuned RNG and MST defaults ($p=0.126$).\endgroup \begingroup\color{blue} RNG nevertheless produced significantly better local ordering, lowering mean balanced MTR from 7.87 to 4.91, a difference of 2.96 tied-rank positions ($p=1.75\times10^{-65}$).\endgroup \begingroup\color{blue} Thus, when non-winning nodes were ordered by graph distance from the first BMU, the second BMU appeared approximately three positions earlier under RNG than under MST.\endgroup \begingroup\color{blue} Finally, RNG also produced significantly higher balanced node utilization, increasing it by 0.0040 ($p=6.07\times10^{-4}$).\endgroup
+\begingroup\color{blue} The fixed-configuration diagnostics provide the corresponding deployable tuned-default comparison (Table \ref{tab:matched_topology_diagnostics_summary}).\endgroup \begingroup\color{blue} Unlike the Optuna matched top-$k$ results, no balanced-$QE$ difference was detected between the tuned RNG and MST defaults ($p=0.126$).\endgroup \begingroup\color{blue} Within these two weight-derived graph families, RNG lowered mean balanced MTR from 7.87 to 4.91, a difference of 2.96 tied-rank positions ($p=1.75\times10^{-65}$), and increased balanced node utilization by 0.0040 ($p=6.07\times10^{-4}$).\endgroup
+
+\begingroup\color{blue} The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50.\endgroup \begingroup\color{blue} Mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for their tuned counterparts.\endgroup \begingroup\color{blue} In matched per-map comparisons, untuned MST did not improve upon untuned hexagonal ($-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$), whereas untuned RNG had a ratio 0.0477 lower than hexagonal ($p=8.17\times10^{-58}$).\endgroup \begingroup\color{blue} In the tuned profiles, the ratios were lower than hexagonal by 0.4539 for MST and 0.5153 for RNG (both $p<3\times10^{-152}$).\endgroup \begingroup\color{blue} RNG also had lower ratios than MST in both the untuned (difference favouring RNG 0.0520, 95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$).\endgroup \begingroup\color{blue} Supplementary Table S21 reports all six ratios and matched contrasts.\endgroup \begingroup\color{blue} Graph-versus-hexagonal MTR contrasts are therefore reported descriptively and are not interpreted as evidence that weight-derived graphs preserve data topology better than a fixed lattice.\endgroup \begingroup\color{blue} The RNG--MST contrasts compare two weight-derived graph families and show lower null-calibrated MTR for RNG in both profiles.\endgroup
 
 \begingroup
 
@@ -467,7 +503,7 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 \begin{table}[t]
 \centering
-\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Asterisks mark prespecified pooled paired effects with raw $p<0.05$; these are distinct from the dataset-level multiplicity-adjusted test families. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
+\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Cross-family MTR effects quantify differences on the metric's graph-specific scale rather than direct differences in topology preservation; fixed-adjacency permutation-null ratios and matched contrasts are reported in Supplementary Table S21. Asterisks mark prespecified pooled paired effects with raw $p<0.05$; these are distinct from the dataset-level multiplicity-adjusted test families. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
 \label{tab:matched_topology_diagnostics_summary}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -500,7 +536,7 @@ Tuned & +0.064\textsuperscript{*} & +0.052\textsuperscript{*} & -0.012 & +22.71\
 
 \endgroup
 
-\begingroup\color{blue} The fixed tuned configurations had lower values for all three pooled $QE$ metrics than the untuned references, but also had higher balanced MTR: by 24.34 tied-rank positions for hexagonal maps compared with 1.43 for MST and 1.11 for RNG.\endgroup \begingroup\color{blue} This profile-associated local-ordering trade-off was therefore much stronger for the fixed lattice and was not accompanied by lower node utilization.\endgroup
+\begingroup\color{blue} The fixed tuned configurations had lower values for all three pooled $QE$ metrics than the untuned references, while observed balanced MTR increased by 24.34 tied-rank positions for hexagonal maps, 1.43 for MST, and 1.11 for RNG.\endgroup \begingroup\color{blue} These raw changes are reported descriptively: because the MTR scale and adjacency construction differ across topology families, they do not establish that tuning caused a larger loss of local ordering in the fixed lattice.\endgroup \begingroup\color{blue} The changes were not accompanied by lower node utilization.\endgroup
 <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:START -->
 \begingroup\color{blue} The $QE$ improvement was observed in every topology family.\endgroup
 <!-- AUTO-DEFAULT-AWARE-TOPOLOGY-STATS:END -->
@@ -606,6 +642,8 @@ We next consider GPU efficiency under strong scaling, relative to ideal linear s
 \begingroup\color{blue} At the overall level, Fig. 15 shows median percentage improvements of $QE_B$ (14.5%); $QE_H$ (9.1%); and $QE_T$ (22.5%) for tuned FloatSOM RNG relative to untuned hexagonal XPySOM, capturing the combined deployment effect of implementation, topology choice, and tuning on $QE$.\endgroup
 <!-- AUTO-FIGURE13-DEPLOYMENT-QE-STATS:END -->
 
+\begingroup\color{blue} The matched untuned hexagonal implementation comparison showed no detectable global balanced-$QE$ gain (median improvement 0.000016%, $p=0.0923$; Supplementary Table S6); on the common untuned-XPySOM reference scale, tuning accounted for 13.04 percentage points of the full tuned-RNG stack's 14.49% gain, and topology accounted for the remaining 1.44 points (0.88 for holdout $QE$ and 2.34 for train $QE$; Supplementary Tables S8-S9), consistent with the direct 1.297% tuned RNG-over-hexagonal balanced-$QE$ advantage in Supplementary Table S7.\endgroup
+
 \begingroup\color{blue} For the untuned hexagonal XPySOM reference in Fig. 15, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory.\endgroup \begingroup\color{blue} Taken together, Fig. 15 shows the point at which the workload size is large enough to warrant the extra startup overhead incurred by tuned FloatSOM RNG: tuned FloatSOM RNG delivers better $QE$ than the untuned hexagonal XPySOM baseline, while also running faster and scaling to larger workloads.\endgroup
 
 ## 8. Discussion
@@ -614,17 +652,19 @@ We next consider GPU efficiency under strong scaling, relative to ideal linear s
 
 \begingroup\color{blue} The trade-off between full and random sampling is scale dependent.\endgroup \begingroup\color{blue} Random sampling is less stable on small datasets, while above $10{,}000$ samples we detect little paired $QE$ difference.\endgroup \begingroup\color{blue} Full sampling is therefore preferable when stability is critical; random sampling offers higher throughput on larger datasets, although disk-backed operation limits its I/O advantage.\endgroup
 
-\begingroup\color{blue} Across the Optuna matched top-$k$ runs, RNG showed significantly better balanced and train $QE$ than MST, while no significant holdout-$QE$ difference was detected.\endgroup \begingroup\color{blue} RNG also had better overall hyperparameter stability.\endgroup \begingroup\color{blue} In the tuned defaults, no balanced-$QE$ difference was detected, possibly reflecting the relatively smaller fixed-default sample compared with the broader Optuna runs; however, these runs did readily demonstrate RNG's superiority in topology, where RNG exhibited significantly lower MTR and better node utilization than both MST and hexagonal.\endgroup
+\begingroup\color{blue} Across the Optuna matched top-$k$ runs, RNG showed significantly better balanced and train $QE$ than MST, while no significant holdout-$QE$ difference was detected.\endgroup \begingroup\color{blue} RNG also had better overall hyperparameter stability.\endgroup \begingroup\color{blue} In the tuned defaults, no balanced-$QE$ difference was detected, although RNG had higher node utilization than MST.\endgroup \begingroup\color{blue} Graph-versus-hexagonal MTR differences are retained as descriptive results because null calibration does not remove differences in adjacency construction or attainable MTR floors.\endgroup \begingroup\color{blue} The RNG--MST comparison shows lower null-calibrated MTR for RNG in both the tuned and untuned profiles.\endgroup
 
-\begingroup\color{blue} A geometric interpretation consistent with these results is that a fixed lattice imposes uniform, predetermined coupling: when a prototype moves, it can unnecessarily influence lattice neighbors that are unrelated in the learned data space, potentially displacing useful prototypes and increasing dead nodes.\endgroup \begingroup\color{blue} The apparently nonlocal hexagonal connections in the KDD Cup 99 projection (Fig. 5D) provide a visual illustration of this coupling and the associated restriction on independent prototype redistribution, subject to the distortions inherent in the two-dimensional PCA display.\endgroup \begingroup\color{blue} MST minimizes such coupling, allowing prototypes to redistribute more freely along irregular or elongated data structures.\endgroup \begingroup\color{blue} This freedom is also its limitation, because a tree cannot retain multiple locally appropriate connections where a concentrated region is better represented by a mesh.\endgroup \begingroup\color{blue} RNG occupies an intermediate position.\endgroup \begingroup\color{blue} Its nodes can influence several neighbors, but those connections arise from the evolving prototype geometry rather than being imposed before training; RNG can remain sparse where appropriate and form multiple connections in dense regions.\endgroup \begingroup\color{blue} This interpretation is supported by RNG achieving the lowest MTR and highest node utilization in Fig. 9 [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980].\endgroup
+\begingroup\color{blue} A geometric interpretation consistent with these results is that a fixed lattice imposes uniform, predetermined coupling: when a prototype moves, it can unnecessarily influence lattice neighbors that are unrelated in the learned data space, potentially displacing useful prototypes and increasing dead nodes.\endgroup \begingroup\color{blue} The apparently nonlocal hexagonal connections in the KDD Cup 99 projection (Fig. 5D) provide a visual illustration of this coupling and the associated restriction on independent prototype redistribution, subject to the distortions inherent in the two-dimensional PCA display.\endgroup \begingroup\color{blue} MST minimizes such coupling, allowing prototypes to redistribute more freely along irregular or elongated data structures.\endgroup \begingroup\color{blue} This freedom is also its limitation, because a tree cannot retain multiple locally appropriate connections where a concentrated region is better represented by a mesh.\endgroup \begingroup\color{blue} RNG occupies an intermediate position.\endgroup \begingroup\color{blue} Its nodes can influence several neighbors, but those connections arise from the evolving prototype geometry rather than being imposed before training; RNG can remain sparse where appropriate and form multiple connections in dense regions.\endgroup \begingroup\color{blue} Within the two weight-derived graph families, RNG's lower MTR and higher node utilization are consistent with this interpretation [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980].\endgroup
 
-\begingroup\color{blue} $QE$ and MTR capture different properties: $QE$ measures vector-quantization fidelity, while MTR measures local ordering between the first and second BMUs.\endgroup \begingroup\color{blue} The fixed QE-tuned profiles are associated with higher MTR in every topology, but the topological cost is far larger for hexagonal maps: balanced MTR is 24.34 tied-rank positions higher than in the untuned profile, compared with 1.43 for MST and 1.11 for RNG.\endgroup \begingroup\color{blue} The matched radius sweep reinforces this distinction across the full tested range: MST and RNG maintained lower observed $QE$ than hexagonal, while RNG maintained the lowest observed MTR throughout.\endgroup \begingroup\color{blue} Thus, the QE-tuned MST and RNG profiles are associated with far lower ordering penalties than the fixed hexagonal lattice.\endgroup \begingroup\color{blue} Topology and hyperparameter choice should therefore be considered jointly rather than treating topology as a post-training visualization choice.\endgroup \begingroup\color{blue} The lower seed-to-seed variability of MST and RNG may likewise reflect their ability to rebuild connectivity from evolving node locations, unlike the fixed hexagonal lattice [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990].\endgroup
+\begingroup\color{blue} For moderate map sizes, RNG remains the recommended starting topology based on its overall $QE$, stability, and node-utilization results.\endgroup \begingroup\color{blue} Although cross-family MTR is retained as descriptive, the MTR analysis allows the RNG--MST comparison, which shows that RNG achieves lower null-calibrated MTR in both tuned and untuned profiles.\endgroup \begingroup\color{blue} Topology should nevertheless be rechecked on the target dataset.\endgroup
+
+\begingroup\color{blue} The topology-specific minimum analysis indicates that the effect of graph topology is strongly dataset-dependent.\endgroup \begingroup\color{blue} Within the datasets evaluated here, MST and RNG could provide significantly lower $QE$, with improvements exceeding 20% in some dataset--endpoint comparisons.\endgroup \begingroup\color{blue} Conversely, when a graph topology performed worse than hexagonal, the largest observed penalty was 2.23%.\endgroup \begingroup\color{blue} These results indicate that, on a per-dataset basis, graph topologies may provide substantially better quantization while incurring at worst a comparatively small penalty in the evaluated benchmarks, supporting dataset-specific topology evaluation when quantization performance is important.\endgroup
 
 \begingroup\color{blue} The quality experiments use the in-memory pathway, whereas the scaling experiments use Ray.\endgroup \begingroup\color{blue} Within the distributed benchmark, scaling depends on workload size: overhead dominates small problems, while larger workloads benefit from parallel throughput and may remain in RAM when the 1-GPU case requires disk backing.\endgroup \begingroup\color{blue} Efficiencies above 100\% reflect this change in memory regime rather than super-linear computation.\endgroup
 
 \begingroup\color{blue} Regarding existing distributed SOM implementations, Somoclu and GigaSOM are important parallel-systems references.\endgroup \begingroup\color{blue} However, Somoclu was not benchmarked against because both Somoclu and SomocluGPU were already compared directly with XPySOM in the XPySOM study and found to be more than 10 times slower [@manciniXPySomHighPerformanceSelfOrganizing2020].\endgroup \begingroup\color{blue} GigaSOM is a CPU-based algorithm implemented in Julia with perhaps the strongest demonstrated speed and size scale-ups.\endgroup \begingroup\color{blue} However, considering GigaSOM's hardware requirements, programming language difference, and dataset availability, a full systems benchmark was outside the scope of this paper.\endgroup \begingroup\color{blue} For context though, in GigaSOM's large dataset example completed a workflow that trained a 1024 node SOM on 1,167,129,317 events with 18 features in <25 minutes on an 11-node, 256-core CPU cluster [@kratochvilGigaSOMjlHighperformanceClustering2020].\endgroup \begingroup\color{blue} Comparatively, FloatSOM trained a same-sized 1024-node SOM on 1,000,000,000 samples with 50 features, a dataset ~x2.4 larger than GigaSOM's, in 6.16 minutes using 8 GPUs across two HPC nodes.\endgroup
 
-\begingroup\color{blue} Taken together, the topology results support RNG as the default topology for most datasets.\endgroup \begingroup\color{blue} This recommendation is caveated for workloads requiring very large grid sizes, and hence very large numbers of nodes.\endgroup \begingroup\color{blue} At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively.\endgroup \begingroup\color{blue} RNG's graph-construction and all-pairs path calculations therefore scale much more sharply with grid size, so MST is preferable when a large graph is required and this topology overhead is prohibitive.\endgroup \begingroup\color{blue} More generally, full sampling favors stability, random sampling favors throughput on large datasets, and additional GPUs are most useful when they keep the workload in RAM.\endgroup
+\begingroup\color{blue} The RNG recommendation is caveated for workloads requiring very large grid sizes, and hence very large numbers of nodes.\endgroup \begingroup\color{blue} At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively.\endgroup \begingroup\color{blue} RNG's graph-construction and all-pairs path calculations therefore scale much more sharply with grid size, so MST is preferable when a large graph is required and this topology overhead is prohibitive.\endgroup \begingroup\color{blue} More generally, full sampling favors stability, random sampling favors throughput on large datasets, and additional GPUs are most useful when they keep the workload in RAM.\endgroup
 
 \begingroup\color{blue} FloatSOM brings these topology and systems choices together in a single large-scale SOM framework.\endgroup
 
@@ -660,6 +700,26 @@ We thank Prof. Hanna Suominen for her input and advice.
 \begingroup\color{blue} The execution-path analysis used all 14 datasets, the 10 shared seeds 42--51, full sampling, and the hexagonal, MST, and RNG topologies on one NVIDIA V100 GPU.\endgroup \begingroup\color{blue} For each dataset--seed--topology unit, local CuPy and Ray streaming received the same standardized data, deterministic train--holdout split, topology-specific tuned parameters from Section 4.3.1, and evaluation metrics; execution profile was the only deliberately changed factor.\endgroup \begingroup\color{blue} Differences were defined as Ray streaming minus local CuPy.\endgroup
 
 \begingroup\color{blue} For each topology, Supplementary Table S14 reports paired differences for balanced $QE$, MTR, node utilization, and dead-node fraction across 140 matched dataset--seed units.\endgroup \begingroup\color{blue} Mean differences and 95% confidence intervals were calculated from two-sided one-sample paired $t$-tests against zero, with Benjamini--Hochberg correction applied jointly across the 12 topology--metric tests.\endgroup
+
+\begingroup
+
+\color{blue}
+
+### Supplementary Methods S2. MTR fixed-adjacency permutation-null protocol
+
+For every trained map and evaluation split, we held the final graph and the observed first--second BMU identity pairs fixed. Prototype identities were then uniformly permuted among the $P=100$ graph nodes 1,000 times, and MTR was recomputed after each permutation. MST and RNG graphs were not rebuilt. We calculated the empirical null mean and the observed-to-null ratio
+
+$$
+R_{\mathrm{MTR}}=
+\frac{\mathrm{MTR}_{\mathrm{observed}}}
+{\overline{\mathrm{MTR}}_{\mathrm{null}}},
+$$
+
+where lower values indicate stronger ordering relative to random prototype placement within the fitted graph. Split-specific statistics were balanced by averaging the train and holdout values, as for the other diagnostic metrics. Matched topology contrasts were calculated across the 280 shared dataset--seed maps using two-sided one-sample paired $t$-tests.
+
+For any connected $P$-node graph, the exact permutation-null expectation is $P/2$. Conditional on the first BMU, the permuted second BMU is uniform over the other $P-1$ nodes. When counted with their shell multiplicities, the tied ranks partition ordinal ranks 1 through $P-1$, whose mean is $P/2$. The theoretical null mean is therefore exactly 50 for the 100-node maps, irrespective of graph degree or shell sizes.
+
+\endgroup
 
 \begingroup
 
@@ -1191,7 +1251,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 
 \endgroup
 
-\begingroup\color{blue} **Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.**\endgroup \begingroup\color{blue} Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark.\endgroup \begingroup\color{blue} `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization.\endgroup \begingroup\color{blue} Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values.\endgroup \begingroup\color{blue} `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup \begingroup\color{blue} The tuned profile uses the deployable tuned configurations reported in the main text.\endgroup
+\begingroup\color{blue} **Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.**\endgroup \begingroup\color{blue} Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark.\endgroup \begingroup\color{blue} `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization.\endgroup \begingroup\color{blue} Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S21.\endgroup \begingroup\color{blue} Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values.\endgroup \begingroup\color{blue} `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup \begingroup\color{blue} The tuned profile uses the deployable tuned configurations reported in the main text.\endgroup
 
 \begingroup
 
@@ -1310,7 +1370,7 @@ We thank Prof. Hanna Suominen for her input and advice.
 
 \endgroup
 
-\begingroup\color{blue} **Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.**\endgroup \begingroup\color{blue} Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting.\endgroup \begingroup\color{blue} `untuned` denotes the untuned reference profile using XPySOM-like default hyperparameters and `tuned` denotes the fixed QE-tuned profile.\endgroup \begingroup\color{blue} Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup
+\begingroup\color{blue} **Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.**\endgroup \begingroup\color{blue} Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting.\endgroup \begingroup\color{blue} `untuned` denotes the untuned reference profile using XPySOM-like default hyperparameters and `tuned` denotes the fixed QE-tuned profile.\endgroup \begingroup\color{blue} Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization.\endgroup \begingroup\color{blue} Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S21.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup
 
 \begingroup
 
@@ -1457,6 +1517,159 @@ We thank Prof. Hanna Suominen for her input and advice.
 | MST vs Hex | 5 | 14 | 280 | 0.8842 | [0.8224, 0.9506] | 11.58% | 0.0028 | 0.0141 |
 | RNG vs Hex | 5 | 14 | 280 | 0.8919 | [0.8416, 0.9452] | 10.81% | 0.0009 | 0.0141 |
 | RNG vs MST | 5 | 14 | 280 | 1.0088 | [0.9923, 1.0255] | -0.88% | 0.2731 | 0.3824 |
+
+\endgroup
+
+\begingroup\color{blue} **Supplementary Table S16. Per-topology minimum balanced QE across the initial-radius sweep and paired QE tests at those topology-specific radii.**\endgroup \begingroup\color{blue} Per-topology radii were selected from the dataset-balanced geometric-mean $QE_B$ response over the seven tested radii.\endgroup \begingroup\color{blue} Minimum normalized $QE_B$ is expressed relative to the matched hexagonal configuration at the selected radius $r=1.027$.\endgroup \begingroup\color{blue} Paired contrasts compare $QE_H$, $QE_T$, and $QE_B$ at the topology-specific radii.\endgroup \begingroup\color{blue} Seed-level log ratios were averaged within each dataset and tested across the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust across the three topology contrasts separately for each $QE$ endpoint.\endgroup
+
+\begingroup
+
+\color{blue}
+
+| Topology | Minimum radius | Minimum normalized $QE_B$ | 95% CI |
+| --- | ---: | ---: | --- |
+| Hexagonal | 0.75 | 0.9933 | [0.9826, 1.0042] |
+| MST | 1.5 | 0.9836 | [0.9737, 0.9936] |
+| RNG | 1.5 | 0.9799 | [0.9642, 0.9958] |
+
+| Endpoint | Contrast | Reference radius | Comparator radius | QE ratio | 95% CI | Improvement | raw p | BH q |
+| --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| $QE_H$ | MST vs Hex | 0.75 | 1.5 | 0.9931 | [0.9788, 1.0075] | 0.69% | 0.3163 | 0.4745 |
+| $QE_H$ | RNG vs Hex | 0.75 | 1.5 | 0.9921 | [0.9814, 1.0029] | 0.79% | 0.1392 | 0.4176 |
+| $QE_H$ | RNG vs MST | 1.5 | 1.5 | 0.9990 | [0.9919, 1.0062] | 0.10% | 0.7727 | 0.7727 |
+| $QE_T$ | MST vs Hex | 0.75 | 1.5 | 0.9781 | [0.9484, 1.0087] | 2.19% | 0.1450 | 0.2570 |
+| $QE_T$ | RNG vs Hex | 0.75 | 1.5 | 0.9596 | [0.9023, 1.0205] | 4.04% | 0.1714 | 0.2570 |
+| $QE_T$ | RNG vs MST | 1.5 | 1.5 | 0.9810 | [0.9416, 1.0222] | 1.90% | 0.3324 | 0.3324 |
+| $QE_B$ | MST vs Hex | 0.75 | 1.5 | 0.9902 | [0.9747, 1.0060] | 0.98% | 0.2028 | 0.3042 |
+| $QE_B$ | RNG vs Hex | 0.75 | 1.5 | 0.9865 | [0.9689, 1.0043] | 1.35% | 0.1252 | 0.3042 |
+| $QE_B$ | RNG vs MST | 1.5 | 1.5 | 0.9962 | [0.9834, 1.0092] | 0.38% | 0.5377 | 0.5377 |
+
+\endgroup
+
+\begingroup\color{blue} **Supplementary Table S17. Per-dataset paired QE improvements for MST at its minimum radius ($r=1.5$) versus hexagonal at its minimum radius ($r=0.75$).**\endgroup \begingroup\color{blue} Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{Hex}}-QE_{\mathrm{MST}})/QE_{\mathrm{Hex}}$; positive values favour MST and negative values favour hexagonal.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.\endgroup
+
+\begingroup
+
+\color{blue}
+
+| Dataset | $QE_H$ improvement | $QE_H$ q | $QE_T$ improvement | $QE_T$ q | $QE_B$ improvement | $QE_B$ q |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| blobs | 0.1056% | 0.4952 | 0.2413% | 0.1459 | 0.1731% | 0.3718 |
+| circles | -0.1373% | 0.4582 | -0.0659% | 0.5014 | -0.1022% | 0.4642 |
+| moons | -0.0238% | 0.8547 | 0.1845% | 0.1144 | 0.0796% | 0.5192 |
+| s_curve | 0.1708% | 0.2183 | 0.0846% | 0.2243 | 0.1282% | 0.2643 |
+| swiss_roll | -0.1293% | 0.5610 | -0.2453% | 0.1459 | -0.1861% | 0.4325 |
+| breast_cancer | 0.2825% | 0.3627 | -0.1227% | 0.7575 | 0.1318% | 0.6083 |
+| wine | 0.9409% | 0.0751 | 15.4414% | 2.88e-07 | 4.6004% | 3.11e-06 |
+| iris | -1.1810% | 0.4502 | 5.8423% | 0.1391 | 0.3121% | 0.7722 |
+| digits | 0.4832% | 0.0050 | -0.7261% | 0.0003 | -0.0801% | 0.5189 |
+| olivetti_faces | 1.2437% | 0.0033 | 0.3296% | 0.5014 | 0.8880% | 0.0313 |
+| diabetes | 0.3300% | 0.4937 | -1.0357% | 0.0032 | -0.1970% | 0.5299 |
+| california_housing | 0.3743% | 0.0004 | 0.4048% | 0.0003 | 0.3895% | 2.22e-05 |
+| covertype | -1.8798% | 1.70e-06 | -1.8316% | 1.18e-06 | -1.8556% | 1.65e-06 |
+| kddcup99 | 8.5195% | 5.72e-10 | 8.9261% | 1.30e-10 | 8.7198% | 2.12e-10 |
+
+\endgroup
+
+\begingroup\color{blue} **Supplementary Table S18. Per-dataset paired QE improvements for RNG at its minimum radius ($r=1.5$) versus hexagonal at its minimum radius ($r=0.75$).**\endgroup \begingroup\color{blue} Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{Hex}}-QE_{\mathrm{RNG}})/QE_{\mathrm{Hex}}$; positive values favour RNG and negative values favour hexagonal.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.\endgroup
+
+\begingroup
+
+\color{blue}
+
+| Dataset | $QE_H$ improvement | $QE_H$ q | $QE_T$ improvement | $QE_T$ q | $QE_B$ improvement | $QE_B$ q |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| blobs | 0.4201% | 0.0401 | 0.3763% | 0.0147 | 0.3987% | 0.0213 |
+| circles | 0.1170% | 0.3678 | 0.1579% | 0.0376 | 0.1374% | 0.1215 |
+| moons | -0.1426% | 0.2237 | 0.3283% | 0.0052 | 0.0909% | 0.3449 |
+| s_curve | 0.0507% | 0.5795 | 0.1682% | 0.0164 | 0.1090% | 0.1501 |
+| swiss_roll | 0.0308% | 0.8581 | -0.3185% | 0.0376 | -0.1416% | 0.4214 |
+| breast_cancer | 0.5746% | 0.0401 | -1.2760% | 0.0039 | -0.1750% | 0.4395 |
+| wine | 1.6086% | 0.0007 | 21.8860% | 3.36e-10 | 6.7400% | 3.65e-09 |
+| iris | 2.2639% | 0.0446 | 26.4934% | 1.45e-07 | 7.2767% | 9.30e-07 |
+| digits | 0.4509% | 0.0112 | -0.3066% | 0.0506 | 0.0971% | 0.3449 |
+| olivetti_faces | 0.6942% | 0.0622 | -1.5808% | 0.0052 | -0.1856% | 0.5879 |
+| diabetes | 0.6091% | 0.2014 | -1.3077% | 0.0007 | -0.1326% | 0.5879 |
+| california_housing | 0.1043% | 0.3168 | 0.0875% | 0.3429 | 0.0962% | 0.3449 |
+| covertype | -2.2239% | 1.45e-07 | -2.1563% | 1.28e-07 | -2.1901% | 8.90e-08 |
+| kddcup99 | 6.0688% | 4.74e-06 | 5.9137% | 3.89e-06 | 5.9916% | 2.88e-06 |
+
+\endgroup
+
+\begingroup\color{blue} **Supplementary Table S19. Per-dataset paired QE improvements for RNG and MST at their common minimum radius ($r=1.5$).**\endgroup \begingroup\color{blue} Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{MST}}-QE_{\mathrm{RNG}})/QE_{\mathrm{MST}}$; positive values favour RNG and negative values favour MST.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.\endgroup
+
+\begingroup
+
+\color{blue}
+
+| Dataset | $QE_H$ improvement | $QE_H$ q | $QE_T$ improvement | $QE_T$ q | $QE_B$ improvement | $QE_B$ q |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| blobs | 0.3140% | 0.1016 | 0.1342% | 0.2066 | 0.2253% | 0.0738 |
+| circles | 0.2518% | 0.1633 | 0.2228% | 0.0129 | 0.2384% | 0.0130 |
+| moons | -0.1210% | 0.3987 | 0.1437% | 0.0672 | 0.0104% | 0.9005 |
+| s_curve | -0.1213% | 0.2620 | 0.0834% | 0.1513 | -0.0198% | 0.8553 |
+| swiss_roll | 0.1579% | 0.2620 | -0.0744% | 0.5269 | 0.0432% | 0.8356 |
+| breast_cancer | 0.2876% | 0.3046 | -1.1682% | 0.0127 | -0.3119% | 0.1879 |
+| wine | 0.6587% | 0.1633 | 7.1938% | 0.0071 | 2.2034% | 0.0043 |
+| iris | 3.3093% | 0.0067 | 20.9880% | 2.22e-05 | 6.8495% | 7.88e-05 |
+| digits | -0.0340% | 0.7944 | 0.4136% | 0.0436 | 0.1758% | 0.1879 |
+| olivetti_faces | -0.5748% | 0.2789 | -1.9303% | 0.0006 | -1.0939% | 0.0130 |
+| diabetes | 0.2725% | 0.3987 | -0.2777% | 0.4120 | 0.0586% | 0.8607 |
+| california_housing | -0.2713% | 0.0067 | -0.3188% | 0.0006 | -0.2946% | 0.0005 |
+| covertype | -0.3436% | 0.2620 | -0.3241% | 0.2066 | -0.3338% | 0.2386 |
+| kddcup99 | -2.7078% | 0.0158 | -3.3258% | 0.0013 | -3.0104% | 0.0043 |
+
+\endgroup
+
+\begingroup
+
+\color{blue}
+
+**Supplementary Table S20. Default aweSOM versus untuned hexagonal FloatSOM quality comparison.** Rows report balanced, holdout, and train quantization error across five datasets and 10 matched seeds. Percentage improvement is calculated as $100(QE_{\mathrm{aweSOM}}-QE_{\mathrm{FloatSOM}})/QE_{\mathrm{aweSOM}}$, so positive values favour FloatSOM. Confidence intervals are two-sided paired $t$-intervals. Holm-adjusted p-values control the five dataset-level tests separately within each $QE$ endpoint.
+
+| Dataset | Endpoint | aweSOM mean | FloatSOM mean | FloatSOM improvement (95% CI) | p | Holm p |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| iris | $QE_B$ | 0.7535 | 0.2697 | 64.21% [63.42%, 65.01%] | 1.62e-13 | 1.62e-13 |
+| iris | $QE_H$ | 0.7589 | 0.3526 | 53.29% [51.00%, 55.58%] | 1.67e-08 | 1.67e-08 |
+| iris | $QE_T$ | 0.7482 | 0.1868 | 75.00% [73.82%, 76.18%] | 5.98e-13 | 5.98e-13 |
+| wine | $QE_B$ | 2.4159 | 1.5191 | 37.13% [36.19%, 38.07%] | 8.35e-15 | 1.67e-14 |
+| wine | $QE_H$ | 2.4477 | 1.9075 | 22.05% [20.78%, 23.32%] | 1.59e-10 | 3.18e-10 |
+| wine | $QE_T$ | 2.3841 | 1.1306 | 52.56% [51.47%, 53.65%] | 6.96e-14 | 1.39e-13 |
+| digits | $QE_B$ | 6.1457 | 4.4321 | 27.88% [27.65%, 28.11%] | 1.09e-17 | 5.44e-17 |
+| digits | $QE_H$ | 6.1776 | 4.5869 | 25.75% [25.37%, 26.12%] | 4.38e-15 | 2.19e-14 |
+| digits | $QE_T$ | 6.1138 | 4.2773 | 30.04% [29.84%, 30.23%] | 3.38e-19 | 1.69e-18 |
+| breast_cancer | $QE_B$ | 3.3915 | 2.4363 | 28.16% [27.88%, 28.44%] | 1.16e-15 | 4.63e-15 |
+| breast_cancer | $QE_H$ | 3.4370 | 2.6877 | 21.77% [21.02%, 22.53%] | 1.95e-11 | 5.84e-11 |
+| breast_cancer | $QE_T$ | 3.3461 | 2.1849 | 34.70% [34.25%, 35.15%] | 3.27e-16 | 1.31e-15 |
+| olivetti_faces | $QE_B$ | 51.8372 | 38.1205 | 26.46% [25.87%, 27.05%] | 4.49e-15 | 1.35e-14 |
+| olivetti_faces | $QE_H$ | 52.1553 | 41.8633 | 19.72% [18.97%, 20.48%] | 3.89e-12 | 1.56e-11 |
+| olivetti_faces | $QE_T$ | 51.5190 | 34.3777 | 33.27% [32.59%, 33.95%] | 2.85e-15 | 8.56e-15 |
+
+\endgroup
+
+\begingroup
+
+\color{blue}
+
+**Supplementary Table S21. Per-map fixed-adjacency MTR permutation-null calibration.** For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Cross-family contrasts quantify differences on the calibrated MTR scale rather than direct differences in topology preservation; RNG--MST contrasts compare the two weight-derived graph families. P-values are raw two-sided paired $t$-test values.
+
+| Part A: Profile | Topology | Maps | Empirical null MTR | Observed/null ratio |
+| --- | --- | ---: | ---: | ---: |
+| Untuned | Hexagonal | 280 | 50.012 | 0.123 |
+| Untuned | MST | 280 | 50.004 | 0.127 |
+| Untuned | RNG | 280 | 50.003 | 0.075 |
+| Tuned | Hexagonal | 280 | 49.999 | 0.614 |
+| Tuned | MST | 280 | 50.001 | 0.160 |
+| Tuned | RNG | 280 | 50.004 | 0.098 |
+
+| Part B: Profile | Contrast (reference vs comparator) | Paired ratio effect | 95% CI | p |
+| --- | --- | ---: | ---: | ---: |
+| Untuned | Hexagonal vs MST | -0.0044 | [-0.0091, 0.0003] | 0.0656 |
+| Untuned | Hexagonal vs RNG | 0.0477 | [0.0431, 0.0522] | 8.17e-58 |
+| Untuned | MST vs RNG | 0.0520 | [0.0468, 0.0573] | 1.33e-54 |
+| Tuned | Hexagonal vs MST | 0.4539 | [0.4377, 0.4701] | 2.66e-152 |
+| Tuned | Hexagonal vs RNG | 0.5153 | [0.4978, 0.5329] | 3.36e-157 |
+| Tuned | MST vs RNG | 0.0614 | [0.0561, 0.0668] | 1.63e-65 |
 
 \endgroup
 

@@ -343,6 +343,139 @@ def calculate_tied_rank_table(graph_distances: np.ndarray) -> np.ndarray:
     return tied_ranks
 
 
+MTR_PERMUTATION_NULL_METRIC_NAMES: Tuple[str, ...] = (
+    "mean_tied_rank",
+    "mean_tied_rank_null_mean",
+    "mean_tied_rank_null_theoretical_mean",
+    "mean_tied_rank_null_std",
+    "mean_tied_rank_null_q025",
+    "mean_tied_rank_null_q975",
+    "mean_tied_rank_observed_to_null_ratio",
+    "mean_tied_rank_null_lower_tail_p",
+    "mean_tied_rank_null_permutations",
+)
+
+
+def calculate_mean_tied_rank_permutation_null_from_bmus(
+    bmu1: np.ndarray,
+    bmu2: np.ndarray,
+    tied_rank_table: np.ndarray,
+    *,
+    n_permutations: int = 1_000,
+    random_seed: int = 0,
+) -> Dict[str, float]:
+    """
+    Compare observed MTR with fixed-adjacency prototype-label permutations.
+
+    The graph and its tied-rank table remain fixed. Each permutation uniformly
+    reassigns prototype identities to graph-node identities, then evaluates the
+    already-computed ordered BMU identity pairs at their permuted node
+    locations. This deliberately does not rebuild an MST or RNG after
+    permutation.
+
+    For a connected ``P``-node graph, the exact permutation-null expectation is
+    ``P / 2`` under the midrank definition used by MTR. The empirical null is
+    retained to report its map- and BMU-pair-specific spread and quantiles.
+    """
+    first = np.asarray(bmu1, dtype=np.int64).reshape(-1)
+    second = np.asarray(bmu2, dtype=np.int64).reshape(-1)
+    ranks = np.asarray(tied_rank_table, dtype=np.float64)
+
+    if first.shape != second.shape:
+        raise ValueError("bmu1 and bmu2 must have matching shapes.")
+    if first.size == 0:
+        raise ValueError("At least one BMU pair is required for the MTR permutation null.")
+    if ranks.ndim != 2 or ranks.shape[0] != ranks.shape[1]:
+        raise ValueError("tied_rank_table must be a square matrix.")
+
+    total_nodes = int(ranks.shape[0])
+    if total_nodes < 2:
+        raise ValueError("At least two graph nodes are required for the MTR permutation null.")
+    if np.any(first < 0) or np.any(first >= total_nodes):
+        raise ValueError("bmu1 contains node indices outside tied_rank_table.")
+    if np.any(second < 0) or np.any(second >= total_nodes):
+        raise ValueError("bmu2 contains node indices outside tied_rank_table.")
+    if np.any(first == second):
+        raise ValueError("First and second BMUs must be distinct.")
+
+    permutation_count = int(n_permutations)
+    if permutation_count <= 0:
+        raise ValueError("n_permutations must be positive.")
+
+    observed_sample_ranks = ranks[first, second]
+    if not np.isfinite(observed_sample_ranks).all():
+        raise ValueError("MTR permutation null encountered invalid observed BMU ranks.")
+    observed_mtr = float(np.mean(observed_sample_ranks))
+
+    pair_indices = first * total_nodes + second
+    pair_counts = np.bincount(
+        pair_indices,
+        minlength=total_nodes * total_nodes,
+    ).reshape(total_nodes, total_nodes).astype(np.float64, copy=False)
+    rank_lookup = np.nan_to_num(ranks, nan=0.0)
+    sample_count = float(first.size)
+
+    rng = np.random.default_rng(int(random_seed))
+    null_values = np.empty(permutation_count, dtype=np.float64)
+    for permutation_index in range(permutation_count):
+        prototype_to_node = rng.permutation(total_nodes)
+        permuted_ranks = rank_lookup[np.ix_(prototype_to_node, prototype_to_node)]
+        null_values[permutation_index] = float(np.sum(pair_counts * permuted_ranks) / sample_count)
+
+    null_mean = float(np.mean(null_values))
+    null_std = float(np.std(null_values, ddof=1)) if permutation_count > 1 else 0.0
+    null_q025, null_q975 = np.quantile(null_values, [0.025, 0.975])
+    theoretical_null_mean = float(total_nodes / 2.0)
+    observed_to_null_ratio = float(observed_mtr / null_mean)
+    lower_tail_p = float(
+        (1 + np.count_nonzero(null_values <= observed_mtr))
+        / (permutation_count + 1)
+    )
+
+    return {
+        "mean_tied_rank": observed_mtr,
+        "mean_tied_rank_null_mean": null_mean,
+        "mean_tied_rank_null_theoretical_mean": theoretical_null_mean,
+        "mean_tied_rank_null_std": null_std,
+        "mean_tied_rank_null_q025": float(null_q025),
+        "mean_tied_rank_null_q975": float(null_q975),
+        "mean_tied_rank_observed_to_null_ratio": observed_to_null_ratio,
+        "mean_tied_rank_null_lower_tail_p": lower_tail_p,
+        "mean_tied_rank_null_permutations": float(permutation_count),
+    }
+
+
+def calculate_mean_tied_rank_permutation_null(
+    som_wrapper,
+    data: Union[np.ndarray, cp.ndarray],
+    *,
+    use_gpu: bool = True,
+    batch_size: int = 50_000,
+    n_permutations: int = 1_000,
+    random_seed: int = 0,
+) -> Dict[str, float]:
+    """Compute observed MTR and its fixed-adjacency permutation-null statistics."""
+    weights = som_wrapper.weights if hasattr(som_wrapper, "weights") else som_wrapper.get_weights()
+    if int(data.shape[0]) <= 0:
+        return {metric_name: float("nan") for metric_name in MTR_PERMUTATION_NULL_METRIC_NAMES}
+
+    bmu1, bmu2 = calculate_bmu1_bmu2(
+        data,
+        weights,
+        use_gpu=use_gpu,
+        batch_size=batch_size,
+    )
+    graph_distances = extract_topology_distance_matrix(som_wrapper, weights)
+    tied_ranks = calculate_tied_rank_table(graph_distances)
+    return calculate_mean_tied_rank_permutation_null_from_bmus(
+        bmu1,
+        bmu2,
+        tied_ranks,
+        n_permutations=n_permutations,
+        random_seed=random_seed,
+    )
+
+
 def calculate_mean_tied_rank(
     som_wrapper,
     data: Union[np.ndarray, cp.ndarray],

@@ -123,3 +123,67 @@ def test_calculate_mean_tied_rank_on_hand_built_graph(metrics_module):
         use_gpu=False,
         batch_size=1,
     ) == pytest.approx(1.0)
+
+
+def test_mtr_permutation_null_freezes_graph_and_has_expected_midrank_mean(metrics_module):
+    graph_distances = np.asarray(
+        [
+            [0, 1, 2, 3],
+            [1, 0, 1, 2],
+            [2, 1, 0, 1],
+            [3, 2, 1, 0],
+        ],
+        dtype=np.float32,
+    )
+    tied_ranks = metrics_module.calculate_tied_rank_table(graph_distances)
+
+    # Deliberately concentrate all observations in two ordered BMU pairs. The
+    # exact permutation-null expectation remains P/2 despite this imbalance.
+    bmu1 = np.asarray([0] * 90 + [2] * 10, dtype=np.int64)
+    bmu2 = np.asarray([1] * 90 + [3] * 10, dtype=np.int64)
+    stats = metrics_module.calculate_mean_tied_rank_permutation_null_from_bmus(
+        bmu1,
+        bmu2,
+        tied_ranks,
+        n_permutations=5_000,
+        random_seed=123,
+    )
+
+    assert stats["mean_tied_rank"] == pytest.approx(1.05)
+    assert stats["mean_tied_rank_null_theoretical_mean"] == pytest.approx(2.0)
+    assert stats["mean_tied_rank_null_mean"] == pytest.approx(2.0, abs=0.05)
+    assert stats["mean_tied_rank_observed_to_null_ratio"] == pytest.approx(0.525, abs=0.02)
+    assert stats["mean_tied_rank_null_permutations"] == pytest.approx(5_000)
+    assert 0.0 < stats["mean_tied_rank_null_lower_tail_p"] < 0.5
+
+
+def test_mtr_permutation_null_is_reproducible(metrics_module):
+    graph_distances = np.asarray(
+        [
+            [0, 1, 1, 2],
+            [1, 0, 2, 1],
+            [1, 2, 0, 1],
+            [2, 1, 1, 0],
+        ],
+        dtype=np.float32,
+    )
+    tied_ranks = metrics_module.calculate_tied_rank_table(graph_distances)
+    bmu1 = np.asarray([0, 0, 1, 2, 3], dtype=np.int64)
+    bmu2 = np.asarray([1, 2, 3, 3, 1], dtype=np.int64)
+
+    first = metrics_module.calculate_mean_tied_rank_permutation_null_from_bmus(
+        bmu1,
+        bmu2,
+        tied_ranks,
+        n_permutations=100,
+        random_seed=77,
+    )
+    second = metrics_module.calculate_mean_tied_rank_permutation_null_from_bmus(
+        bmu1,
+        bmu2,
+        tied_ranks,
+        n_permutations=100,
+        random_seed=77,
+    )
+
+    assert first == second
