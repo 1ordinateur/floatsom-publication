@@ -32,15 +32,13 @@ We added one sentence to Section 7 that reports the implementation, tuning, and 
 
 ### Response
 
-We apologise for misinterpreting the requested comparison. We have now rectified this by comparing each topology at its own minimum across the radius sweep. We also now state that separation vanished at $r\leq0.75$, with no significant MST--hexagonal or RNG--hexagonal difference at either of the two smallest radii. The minimum dataset-balanced $QE_B$ occurred at $r=0.75$ for hexagonal and at $r=1.5$ for MST and RNG.
+We added Supplementary Table S15, which reports the exact dataset-balanced normalized $QE_B$ value and 95% confidence interval for hexagonal, MST, and RNG at each of the seven tested radii. These are the numerical values underlying Fig. 9A, so the per-topology minima can now be reconstructed directly. The table shows that the fixed-sweep minimum occurred at $r=0.75$ for hexagonal and $r=1.5$ for MST and RNG. We also clarified that $r=1.0266$ is the independently Optuna-selected hexagonal anchor, not the hexagonal minimum within this fixed sweep.
 
-In paired tests comparing each topology at its own minimum, MST had 0.98% lower $QE_B$ than hexagonal (ratio 0.9902, 95% CI [0.9747, 1.0060], $p=0.2028$, $q=0.3042$), and RNG had 1.35% lower $QE_B$ than hexagonal (ratio 0.9865, 95% CI [0.9689, 1.0043], $p=0.1252$, $q=0.3042$); neither difference was significant. RNG and MST also did not differ significantly (ratio 0.9962, 95% CI [0.9834, 1.0092], $p=q=0.5377$).
-
-We have also added further explanation and exploration of dataset-specific behaviour across $QE_H$, $QE_T$, and $QE_B$, including the direction and relative magnitude of these effects, in Section 5.3.4 and Supplementary Tables S17--S19.
+Supplementary Table S16 reports the cross-topology comparisons at each shared radius and shows that separation vanished at $r\leq0.75$, with no significant MST--hexagonal or RNG--hexagonal difference at either of the two smallest radii. Supplementary Table S17 reports the requested paired comparisons between configurations at their topology-specific minima. MST had 0.98% lower $QE_B$ than hexagonal (ratio 0.9902, 95% CI [0.9747, 1.0060], $p=0.2028$, $q=0.3042$), and RNG had 1.35% lower $QE_B$ than hexagonal (ratio 0.9865, 95% CI [0.9689, 1.0043], $p=0.1252$, $q=0.3042$); neither difference was significant. RNG and MST also did not differ significantly (ratio 0.9962, 95% CI [0.9834, 1.0092], $p=q=0.5377$).
 
 ### Summary of Manuscript Changes
 
-We revised Section 5.3.4 to state that separation vanished at $r\leq0.75$, to report the paired comparisons at the topology-specific minima across all three $QE$ endpoints, and to describe the heterogeneous dataset-level effects. Supplementary Table S16 reports the per-topology minima and the paired minimum-radius contrasts. Supplementary Tables S17--S19 report the per-dataset results for MST versus hexagonal, RNG versus hexagonal, and RNG versus MST.
+We added the exact normalized $QE_B$ radius-response values to Supplementary Table S15, moved the shared-radius contrasts to Supplementary Table S16, and moved the topology-specific minimum comparisons to Supplementary Table S17. We also revised the Methods, Section 5.3.4, and the Fig. 9 caption to distinguish the selected hexagonal anchor from the fixed-sweep minimum and to identify where each numerical result is reported.
 
 ## 3. MTR permutation-null calibration and claim scope
 
@@ -72,7 +70,7 @@ $$
 
 The null MTR is nearly exactly 50 as once the first BMU is fixed, random reassignment makes the second BMU equally likely to occupy any of the other 99 nodes. MTR's shell tied ranks, counted with their shell multiplicities, partition ordinal ranks 1 through 99. Their mean is therefore $(1+99)/2=50$, irrespective of node degree or shell sizes. The empirical profile--topology null means ranged from 49.999 to 50.012, confirm this result.
 
-The mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for the tuned profiles. In matched comparisons across the 280 dataset--seed maps, untuned MST did not improve upon untuned hexagonal (paired effect favouring MST $-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$). The RNG--MST result survived the calibration: RNG had a lower ratio by 0.0520 in the untuned profile (95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and by 0.0614 in the tuned profile (95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$). Supplementary Table S21 reports all six ratios and all matched topology contrasts.
+The mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for the tuned profiles. In matched comparisons across the 280 dataset--seed maps, untuned MST did not improve upon untuned hexagonal (paired effect favouring MST $-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$). The RNG--MST result survived the calibration: RNG had a lower ratio by 0.0520 in the untuned profile (95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and by 0.0614 in the tuned profile (95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$). Supplementary Table S19 reports all six ratios and all matched topology contrasts.
 
 However, the analysis also showed that the permutation null does not resolve the underlying cross-family comparability problem. Its expectation is 50 for every connected 100-node graph, so the observed-to-null ratio retains the effects of different shell sizes and weight-derived adjacency. It establishes ordering relative to random prototype placement within each fitted graph, but cannot establish that a weight-derived graph preserves data topology better than a fixed lattice or rule out the loose-vector-quantizer interpretation.
 
@@ -80,7 +78,7 @@ We therefore also adopted the second suggested approach. Graph-versus-hexagonal 
 
 ### Summary of Manuscript Changes
 
-We added a description of the calibration to the main Methods and placed the complete per-map fixed-adjacency permutation procedure and exact $P/2=50$ derivation in Supplementary Methods S2. We reported the six observed-to-null ratios and matched contrasts in the Results and Supplementary Table S21, treated graph-versus-hexagonal MTR differences as descriptive, and retained the RNG--MST comparison. The practical recommendation now reflects the combined $QE$, stability, and node-utilization evidence, with RNG's lower null-calibrated MTR than MST providing additional support.
+We added a description of the calibration to the main Methods and placed the complete per-map fixed-adjacency permutation procedure and exact $P/2=50$ derivation in Supplementary Methods S2. We reported the six observed-to-null ratios and matched contrasts in the Results and Supplementary Table S19, treated graph-versus-hexagonal MTR differences as descriptive, and retained the RNG--MST comparison. The practical recommendation now reflects the combined $QE$, stability, and node-utilization evidence, with RNG's lower null-calibrated MTR than MST providing additional support.
 
 ## 4. aweSOM quality baseline
 
@@ -90,13 +88,13 @@ We added a description of the calibration to the main Methods and placed the com
 
 ### Response
 
-We now evaluate aweSOM as a quality baseline alongside the distributed-systems comparators. As recommended, we ran aweSOM on Iris, Wine, Digits, Breast Cancer, and Olivetti Faces and compared it with untuned hexagonal FloatSOM using 10 shared seeds, matched preprocessing and train--holdout partitions, 100-node maps, and 50 training passes. Across the five datasets, FloatSOM reduced balanced, holdout, and train quantization error by an average of 36.77%, 28.52%, and 45.11%, respectively. The complete dataset-level effects, confidence intervals, and multiplicity-adjusted tests are reported in Supplementary Table S20.
+We now evaluate aweSOM as a quality baseline alongside the distributed-systems comparators. As recommended, we ran aweSOM on Iris, Wine, Digits, Breast Cancer, and Olivetti Faces and compared it with untuned hexagonal FloatSOM using 10 shared seeds, matched preprocessing and train--holdout partitions, 100-node maps, and 50 training passes. Across the five datasets, FloatSOM reduced balanced, holdout, and train quantization error by an average of 36.77%, 28.52%, and 45.11%, respectively. The complete dataset-level effects, confidence intervals, and multiplicity-adjusted tests are reported in Supplementary Table S18.
 
 Given the large difference between aweSOM's serial-online training and the batch training used by FloatSOM and XPySOM, together with the large-workload timeout documented in the speed-benchmark protocol (Section 4.2), we used XPySOM as the external implementation comparator in subsequent analyses.
 
 ### Summary of Manuscript Changes
 
-We added the aweSOM quality protocol to Section 4.1.4, the average quality results and subsequent-comparator rationale to Section 5.1.2, and the complete dataset-level comparison to Supplementary Table S20. We also clarified that aweSOM's large serial-online speed workload was separate from its evaluation as a quality baseline.
+We added the aweSOM quality protocol to Section 4.1.4, the average quality results and subsequent-comparator rationale to Section 5.1.2, and the complete dataset-level comparison to Supplementary Table S18. We also clarified that aweSOM's large serial-online speed workload was separate from its evaluation as a quality baseline.
 
 ## 5. Fixed node count across topology comparisons
 

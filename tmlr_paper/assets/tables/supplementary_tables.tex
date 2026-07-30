@@ -1,6 +1,7 @@
 % AUTO-GENERATED SUPPLEMENTARY TABLES.
-% Data source: assets/tables/supp_table_s01.tsv through supp_table_s15.tsv,
-% with S16--S21 embedded from paper/manuscript_tmlr_revisions.md.
+% Data source: assets/tables/supp_table_s01.tsv through supp_table_s14.tsv;
+% S16 uses the rows from assets/tables/supp_table_s15.tsv, and S15 plus
+% S17--S19 are embedded from paper/manuscript_tmlr_revisions.md.
 % Titles, descriptions, inline code, and math source: paper/manuscript_tmlr_revisions.md.
 % The data rows are embedded below so the TMLR folder remains self-contained.
 % Required packages supplied by main.tex: array, booktabs, longtable, and pdflscape.
@@ -774,7 +775,7 @@ Grid-Size Scaling & 64 & 32.54 & 266.45 & 880.83 & hexagonal & rng & 2606.61 \\
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.17\linewidth}L{0.08\linewidth}L{0.08\linewidth}C{0.06\linewidth}C{0.11\linewidth}C{0.16\linewidth}C{0.08\linewidth}C{0.10\linewidth}C{0.10\linewidth}@{}}
 \caption{\TrackSuppTable{Matched topology diagnostic paired summaries across tuned and untuned profiles.}}\label{tab:s12} \\
-\multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S21. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.}} \\[\baselineskip]
+\multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S19. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.}} \\[\baselineskip]
 \TrackSuppTableBodyOn
 \toprule
 \textbf{Comparison} & \textbf{Metric} & \textbf{Better} & \textbf{n} & \textbf{Effect favoring comparator} & \textbf{95\% CI} & \textbf{dz} & \textbf{raw p} & \textbf{comp/ref/tie} \\
@@ -916,7 +917,7 @@ Tuned vs untuned RNG & Dead\_\allowbreak{}B & lower & 280 & 0.0101 & [0.0067, 0.
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.08\linewidth}L{0.16\linewidth}L{0.10\linewidth}C{0.05\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}@{}}
 \caption{\TrackSuppTable{Full matched topology diagnostic means by profile, dataset, and topology.}}\label{tab:s13} \\
-\multicolumn{10}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S21. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries.}} \\[\baselineskip]
+\multicolumn{10}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S19. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries.}} \\[\baselineskip]
 \TrackSuppTableBodyOn
 \toprule
 \textbf{Profile} & \textbf{Dataset} & \textbf{Topology} & \textbf{n} & \textbf{QE\_\allowbreak{}H} & \textbf{QE\_\allowbreak{}T} & \textbf{QE\_\allowbreak{}B} & \textbf{MTR\_\allowbreak{}H} & \textbf{MTR\_\allowbreak{}T} & \textbf{MTR\_\allowbreak{}B} \\
@@ -1184,7 +1185,38 @@ RNG & Balanced dead-node fraction & 1.07e-04 & 0.0035 & [-4.76e-04, 6.90e-04] & 
 \end{longtable}
 \endgroup
 
-% GENERATED SOURCE: assets/tables/supp_table_s15.tsv (21 data rows x 9 columns).
+% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S15.
+\begin{landscape}
+\TrackSuppTableBodyColor
+\begin{table}[p]
+\centering
+\normalsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.10}
+\caption{\TrackSuppTable{Dataset-balanced normalized $QE_B$ across the initial-radius sweep.}}\label{tab:s15}
+\begin{minipage}{0.96\linewidth}
+\TrackSuppTable{Values are the exact numerical summaries underlying Fig. 9A. Each dataset--seed $QE_B$ value was divided by the matched hexagonal $QE_B$ at the independently selected radius $r=1.0266$. Log ratios were averaged across the 20 seeds within each dataset and then across the 14 equally weighted datasets before exponentiation. Confidence intervals are exponentiated 95\% $t$ intervals across the dataset-level mean log ratios. Bold values identify the minimum within each topology.}
+\end{minipage}
+
+\vspace{\baselineskip}
+\begin{tabular}{@{}C{0.08\linewidth}C{0.29\linewidth}C{0.29\linewidth}C{0.29\linewidth}@{}}
+\toprule
+\textbf{Radius} & \textbf{Hexagonal normalized $QE_B$ (95\% CI)} & \textbf{MST normalized $QE_B$ (95\% CI)} & \textbf{RNG normalized $QE_B$ (95\% CI)} \\
+\midrule
+0.5 & 1.0056 [0.9710, 1.0415] & 1.0024 [0.9635, 1.0429] & 0.9935 [0.9601, 1.0280] \\
+0.75 & \textbf{0.9933 [0.9826, 1.0042]} & 0.9925 [0.9756, 1.0097] & 0.9864 [0.9648, 1.0084] \\
+1.027 & 1.0000 [1.0000, 1.0000] & 0.9849 [0.9732, 0.9968] & 0.9815 [0.9674, 0.9957] \\
+1.5 & 1.0172 [1.0038, 1.0308] & \textbf{0.9836 [0.9737, 0.9936]} & \textbf{0.9799 [0.9642, 0.9958]} \\
+2 & 1.0399 [1.0104, 1.0702] & 0.9916 [0.9842, 0.9991] & 0.9895 [0.9743, 1.0050] \\
+3 & 1.1273 [1.0596, 1.1994] & 1.0420 [1.0269, 1.0572] & 1.0529 [1.0233, 1.0833] \\
+5 & 1.3152 [1.1885, 1.4554] & 1.1628 [1.1217, 1.2055] & 1.1730 [1.1201, 1.2285] \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{landscape}
+
+% GENERATED SOURCE: assets/tables/supp_table_s15.tsv (21 data rows x 9 columns);
+% presented as Supplementary Table S16 after insertion of the exact curve values.
 \begin{landscape}
 \TrackSuppTableBodyColor
 \begingroup
@@ -1196,7 +1228,7 @@ RNG & Balanced dead-node fraction & 1.07e-04 & 0.0035 & [-4.76e-04, 6.90e-04] & 
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.13\linewidth}C{0.08\linewidth}C{0.08\linewidth}C{0.08\linewidth}C{0.09\linewidth}C{0.15\linewidth}C{0.13\linewidth}C{0.09\linewidth}C{0.09\linewidth}@{}}
-\caption{\TrackSuppTable{Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.}}\label{tab:s15} \\
+\caption{\TrackSuppTable{Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.}}\label{tab:s16} \\
 \multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{For each topology pair and radius, seed-level log $QE_B$ ratios were averaged within each dataset and then tested across the 14 equally weighted dataset effects. \texttt{QE ratio} is the exponentiated mean log ratio (comparator/reference), so values below 1 and positive improvement values favor the comparator. Confidence intervals are exponentiated 95\% paired $t$ intervals. Benjamini--Hochberg q-values adjust across all 21 topology-pair--radius tests.}} \\[\baselineskip]
 \TrackSuppTableBodyOn
 \toprule
@@ -1239,7 +1271,7 @@ RNG vs MST & 5 & 14 & 280 & 1.0088 & [0.9923, 1.0255] & -0.88\% & 0.2731 & 0.382
 \endgroup
 \end{landscape}
 
-% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S16.
+% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S17.
 \begin{landscape}
 \TrackSuppTableBodyColor
 \begin{table}[p]
@@ -1247,9 +1279,9 @@ RNG vs MST & 5 & 14 & 280 & 1.0088 & [0.9923, 1.0255] & -0.88\% & 0.2731 & 0.382
 \normalsize
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.08}
-\caption{\TrackSuppTable{Per-topology minimum balanced QE across the initial-radius sweep and paired QE tests at those topology-specific radii.}}\label{tab:s16}
+\caption{\TrackSuppTable{Per-topology minimum balanced QE across the initial-radius sweep and paired $QE_B$ tests at those topology-specific radii.}}\label{tab:s17}
 \begin{minipage}{0.96\linewidth}
-\TrackSuppTable{Per-topology radii were selected from the dataset-balanced geometric-mean $QE_B$ response over the seven tested radii. Minimum normalized $QE_B$ is expressed relative to the matched hexagonal configuration at the selected radius $r=1.027$. Paired contrasts compare $QE_H$, $QE_T$, and $QE_B$ at the topology-specific radii. Seed-level log ratios were averaged within each dataset and tested across the 14 equally weighted dataset effects. Benjamini--Hochberg q-values adjust across the three topology contrasts separately for each $QE$ endpoint.}
+\TrackSuppTable{Per-topology radii were selected from the dataset-balanced geometric-mean $QE_B$ response over the seven tested radii. Minimum normalized $QE_B$ is expressed relative to the matched hexagonal configuration at the selected radius $r=1.027$. Seed-level log ratios were averaged within each dataset and tested across the 14 equally weighted dataset effects. Benjamini--Hochberg q-values adjust across the three topology contrasts.}
 \end{minipage}
 
 \vspace{\baselineskip}
@@ -1264,68 +1296,16 @@ RNG & 1.5 & 0.9799 & [0.9642, 0.9958] \\
 \end{tabular}
 
 \vspace{\baselineskip}
-\begin{tabular}{@{}llrrrlrrr@{}}
+\begin{tabular}{@{}lrrrlrrr@{}}
 \toprule
-\textbf{Endpoint} & \textbf{Contrast} & \textbf{Reference radius} & \textbf{Comparator radius} & \textbf{QE ratio} & \textbf{95\% CI} & \textbf{Improvement} & \textbf{raw p} & \textbf{BH q} \\
+\textbf{Contrast} & \textbf{Reference radius} & \textbf{Comparator radius} & \textbf{QE ratio} & \textbf{95\% CI} & \textbf{Improvement} & \textbf{raw p} & \textbf{BH q} \\
 \midrule
-$QE_H$ & MST vs Hex & 0.75 & 1.5 & 0.9931 & [0.9788, 1.0075] & 0.69\% & 0.3163 & 0.4745 \\
-$QE_H$ & RNG vs Hex & 0.75 & 1.5 & 0.9921 & [0.9814, 1.0029] & 0.79\% & 0.1392 & 0.4176 \\
-$QE_H$ & RNG vs MST & 1.5 & 1.5 & 0.9990 & [0.9919, 1.0062] & 0.10\% & 0.7727 & 0.7727 \\
-$QE_T$ & MST vs Hex & 0.75 & 1.5 & 0.9781 & [0.9484, 1.0087] & 2.19\% & 0.1450 & 0.2570 \\
-$QE_T$ & RNG vs Hex & 0.75 & 1.5 & 0.9596 & [0.9023, 1.0205] & 4.04\% & 0.1714 & 0.2570 \\
-$QE_T$ & RNG vs MST & 1.5 & 1.5 & 0.9810 & [0.9416, 1.0222] & 1.90\% & 0.3324 & 0.3324 \\
-$QE_B$ & MST vs Hex & 0.75 & 1.5 & 0.9902 & [0.9747, 1.0060] & 0.98\% & 0.2028 & 0.3042 \\
-$QE_B$ & RNG vs Hex & 0.75 & 1.5 & 0.9865 & [0.9689, 1.0043] & 1.35\% & 0.1252 & 0.3042 \\
-$QE_B$ & RNG vs MST & 1.5 & 1.5 & 0.9962 & [0.9834, 1.0092] & 0.38\% & 0.5377 & 0.5377 \\
+MST vs Hex & 0.75 & 1.5 & 0.9902 & [0.9747, 1.0060] & 0.98\% & 0.2028 & 0.3042 \\
+RNG vs Hex & 0.75 & 1.5 & 0.9865 & [0.9689, 1.0043] & 1.35\% & 0.1252 & 0.3042 \\
+RNG vs MST & 1.5 & 1.5 & 0.9962 & [0.9834, 1.0092] & 0.38\% & 0.5377 & 0.5377 \\
 \bottomrule
 \end{tabular}
 \end{table}
-\end{landscape}
-
-% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S17.
-\begin{landscape}
-\TrackSuppTableBodyColor
-\begingroup
-\normalsize
-\setlength{\tabcolsep}{2pt}
-\renewcommand{\arraystretch}{1.08}
-\setlength{\LTpre}{\baselineskip}
-\setlength{\LTpost}{\baselineskip}
-\setlength{\LTleft}{\fill}
-\setlength{\LTright}{\fill}
-\begin{longtable}{@{}L{0.18\linewidth}C{0.13\linewidth}C{0.10\linewidth}C{0.13\linewidth}C{0.10\linewidth}C{0.13\linewidth}C{0.10\linewidth}@{}}
-\caption{\TrackSuppTable{Per-dataset paired QE improvements for MST at its minimum radius ($r=1.5$) versus hexagonal at its minimum radius ($r=0.75$).}}\label{tab:s17} \\
-\multicolumn{7}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{Hex}}-QE_{\mathrm{MST}})/QE_{\mathrm{Hex}}$; positive values favour MST and negative values favour hexagonal. Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.}} \\[\baselineskip]
-\toprule
-\textbf{Dataset} & \textbf{$QE_H$ improvement} & \textbf{$QE_H$ q} & \textbf{$QE_T$ improvement} & \textbf{$QE_T$ q} & \textbf{$QE_B$ improvement} & \textbf{$QE_B$ q} \\
-\midrule
-\endfirsthead
-\multicolumn{7}{c}{\tablename~\thetable\ (continued)} \\
-\toprule
-\textbf{Dataset} & \textbf{$QE_H$ improvement} & \textbf{$QE_H$ q} & \textbf{$QE_T$ improvement} & \textbf{$QE_T$ q} & \textbf{$QE_B$ improvement} & \textbf{$QE_B$ q} \\
-\midrule
-\endhead
-\midrule
-\multicolumn{7}{r}{Continued on next page} \\
-\endfoot
-\bottomrule
-\endlastfoot
-blobs & 0.1056\% & 0.4952 & 0.2413\% & 0.1459 & 0.1731\% & 0.3718 \\
-circles & -0.1373\% & 0.4582 & -0.0659\% & 0.5014 & -0.1022\% & 0.4642 \\
-moons & -0.0238\% & 0.8547 & 0.1845\% & 0.1144 & 0.0796\% & 0.5192 \\
-s\_\allowbreak{}curve & 0.1708\% & 0.2183 & 0.0846\% & 0.2243 & 0.1282\% & 0.2643 \\
-swiss\_\allowbreak{}roll & -0.1293\% & 0.5610 & -0.2453\% & 0.1459 & -0.1861\% & 0.4325 \\
-breast\_\allowbreak{}cancer & 0.2825\% & 0.3627 & -0.1227\% & 0.7575 & 0.1318\% & 0.6083 \\
-wine & 0.9409\% & 0.0751 & 15.4414\% & 2.88e-07 & 4.6004\% & 3.11e-06 \\
-iris & -1.1810\% & 0.4502 & 5.8423\% & 0.1391 & 0.3121\% & 0.7722 \\
-digits & 0.4832\% & 0.0050 & -0.7261\% & 0.0003 & -0.0801\% & 0.5189 \\
-olivetti\_\allowbreak{}faces & 1.2437\% & 0.0033 & 0.3296\% & 0.5014 & 0.8880\% & 0.0313 \\
-diabetes & 0.3300\% & 0.4937 & -1.0357\% & 0.0032 & -0.1970\% & 0.5299 \\
-california\_\allowbreak{}housing & 0.3743\% & 0.0004 & 0.4048\% & 0.0003 & 0.3895\% & 2.22e-05 \\
-covertype & -1.8798\% & 1.70e-06 & -1.8316\% & 1.18e-06 & -1.8556\% & 1.65e-06 \\
-kddcup99 & 8.5195\% & 5.72e-10 & 8.9261\% & 1.30e-10 & 8.7198\% & 2.12e-10 \\
-\end{longtable}
-\endgroup
 \end{landscape}
 
 % EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S18.
@@ -1339,100 +1319,8 @@ kddcup99 & 8.5195\% & 5.72e-10 & 8.9261\% & 1.30e-10 & 8.7198\% & 2.12e-10 \\
 \setlength{\LTpost}{\baselineskip}
 \setlength{\LTleft}{\fill}
 \setlength{\LTright}{\fill}
-\begin{longtable}{@{}L{0.18\linewidth}C{0.13\linewidth}C{0.10\linewidth}C{0.13\linewidth}C{0.10\linewidth}C{0.13\linewidth}C{0.10\linewidth}@{}}
-\caption{\TrackSuppTable{Per-dataset paired QE improvements for RNG at its minimum radius ($r=1.5$) versus hexagonal at its minimum radius ($r=0.75$).}}\label{tab:s18} \\
-\multicolumn{7}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{Hex}}-QE_{\mathrm{RNG}})/QE_{\mathrm{Hex}}$; positive values favour RNG and negative values favour hexagonal. Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.}} \\[\baselineskip]
-\toprule
-\textbf{Dataset} & \textbf{$QE_H$ improvement} & \textbf{$QE_H$ q} & \textbf{$QE_T$ improvement} & \textbf{$QE_T$ q} & \textbf{$QE_B$ improvement} & \textbf{$QE_B$ q} \\
-\midrule
-\endfirsthead
-\multicolumn{7}{c}{\tablename~\thetable\ (continued)} \\
-\toprule
-\textbf{Dataset} & \textbf{$QE_H$ improvement} & \textbf{$QE_H$ q} & \textbf{$QE_T$ improvement} & \textbf{$QE_T$ q} & \textbf{$QE_B$ improvement} & \textbf{$QE_B$ q} \\
-\midrule
-\endhead
-\midrule
-\multicolumn{7}{r}{Continued on next page} \\
-\endfoot
-\bottomrule
-\endlastfoot
-blobs & 0.4201\% & 0.0401 & 0.3763\% & 0.0147 & 0.3987\% & 0.0213 \\
-circles & 0.1170\% & 0.3678 & 0.1579\% & 0.0376 & 0.1374\% & 0.1215 \\
-moons & -0.1426\% & 0.2237 & 0.3283\% & 0.0052 & 0.0909\% & 0.3449 \\
-s\_\allowbreak{}curve & 0.0507\% & 0.5795 & 0.1682\% & 0.0164 & 0.1090\% & 0.1501 \\
-swiss\_\allowbreak{}roll & 0.0308\% & 0.8581 & -0.3185\% & 0.0376 & -0.1416\% & 0.4214 \\
-breast\_\allowbreak{}cancer & 0.5746\% & 0.0401 & -1.2760\% & 0.0039 & -0.1750\% & 0.4395 \\
-wine & 1.6086\% & 0.0007 & 21.8860\% & 3.36e-10 & 6.7400\% & 3.65e-09 \\
-iris & 2.2639\% & 0.0446 & 26.4934\% & 1.45e-07 & 7.2767\% & 9.30e-07 \\
-digits & 0.4509\% & 0.0112 & -0.3066\% & 0.0506 & 0.0971\% & 0.3449 \\
-olivetti\_\allowbreak{}faces & 0.6942\% & 0.0622 & -1.5808\% & 0.0052 & -0.1856\% & 0.5879 \\
-diabetes & 0.6091\% & 0.2014 & -1.3077\% & 0.0007 & -0.1326\% & 0.5879 \\
-california\_\allowbreak{}housing & 0.1043\% & 0.3168 & 0.0875\% & 0.3429 & 0.0962\% & 0.3449 \\
-covertype & -2.2239\% & 1.45e-07 & -2.1563\% & 1.28e-07 & -2.1901\% & 8.90e-08 \\
-kddcup99 & 6.0688\% & 4.74e-06 & 5.9137\% & 3.89e-06 & 5.9916\% & 2.88e-06 \\
-\end{longtable}
-\endgroup
-\end{landscape}
-
-% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S19.
-\begin{landscape}
-\TrackSuppTableBodyColor
-\begingroup
-\normalsize
-\setlength{\tabcolsep}{2pt}
-\renewcommand{\arraystretch}{1.08}
-\setlength{\LTpre}{\baselineskip}
-\setlength{\LTpost}{\baselineskip}
-\setlength{\LTleft}{\fill}
-\setlength{\LTright}{\fill}
-\begin{longtable}{@{}L{0.18\linewidth}C{0.13\linewidth}C{0.10\linewidth}C{0.13\linewidth}C{0.10\linewidth}C{0.13\linewidth}C{0.10\linewidth}@{}}
-\caption{\TrackSuppTable{Per-dataset paired QE improvements for RNG and MST at their common minimum radius ($r=1.5$).}}\label{tab:s19} \\
-\multicolumn{7}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{MST}}-QE_{\mathrm{RNG}})/QE_{\mathrm{MST}}$; positive values favour RNG and negative values favour MST. Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.}} \\[\baselineskip]
-\toprule
-\textbf{Dataset} & \textbf{$QE_H$ improvement} & \textbf{$QE_H$ q} & \textbf{$QE_T$ improvement} & \textbf{$QE_T$ q} & \textbf{$QE_B$ improvement} & \textbf{$QE_B$ q} \\
-\midrule
-\endfirsthead
-\multicolumn{7}{c}{\tablename~\thetable\ (continued)} \\
-\toprule
-\textbf{Dataset} & \textbf{$QE_H$ improvement} & \textbf{$QE_H$ q} & \textbf{$QE_T$ improvement} & \textbf{$QE_T$ q} & \textbf{$QE_B$ improvement} & \textbf{$QE_B$ q} \\
-\midrule
-\endhead
-\midrule
-\multicolumn{7}{r}{Continued on next page} \\
-\endfoot
-\bottomrule
-\endlastfoot
-blobs & 0.3140\% & 0.1016 & 0.1342\% & 0.2066 & 0.2253\% & 0.0738 \\
-circles & 0.2518\% & 0.1633 & 0.2228\% & 0.0129 & 0.2384\% & 0.0130 \\
-moons & -0.1210\% & 0.3987 & 0.1437\% & 0.0672 & 0.0104\% & 0.9005 \\
-s\_\allowbreak{}curve & -0.1213\% & 0.2620 & 0.0834\% & 0.1513 & -0.0198\% & 0.8553 \\
-swiss\_\allowbreak{}roll & 0.1579\% & 0.2620 & -0.0744\% & 0.5269 & 0.0432\% & 0.8356 \\
-breast\_\allowbreak{}cancer & 0.2876\% & 0.3046 & -1.1682\% & 0.0127 & -0.3119\% & 0.1879 \\
-wine & 0.6587\% & 0.1633 & 7.1938\% & 0.0071 & 2.2034\% & 0.0043 \\
-iris & 3.3093\% & 0.0067 & 20.9880\% & 2.22e-05 & 6.8495\% & 7.88e-05 \\
-digits & -0.0340\% & 0.7944 & 0.4136\% & 0.0436 & 0.1758\% & 0.1879 \\
-olivetti\_\allowbreak{}faces & -0.5748\% & 0.2789 & -1.9303\% & 0.0006 & -1.0939\% & 0.0130 \\
-diabetes & 0.2725\% & 0.3987 & -0.2777\% & 0.4120 & 0.0586\% & 0.8607 \\
-california\_\allowbreak{}housing & -0.2713\% & 0.0067 & -0.3188\% & 0.0006 & -0.2946\% & 0.0005 \\
-covertype & -0.3436\% & 0.2620 & -0.3241\% & 0.2066 & -0.3338\% & 0.2386 \\
-kddcup99 & -2.7078\% & 0.0158 & -3.3258\% & 0.0013 & -3.0104\% & 0.0043 \\
-\end{longtable}
-\endgroup
-\end{landscape}
-
-% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S20.
-\begin{landscape}
-\TrackSuppTableBodyColor
-\begingroup
-\normalsize
-\setlength{\tabcolsep}{2pt}
-\renewcommand{\arraystretch}{1.08}
-\setlength{\LTpre}{\baselineskip}
-\setlength{\LTpost}{\baselineskip}
-\setlength{\LTleft}{\fill}
-\setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.14\linewidth}C{0.09\linewidth}C{0.11\linewidth}C{0.12\linewidth}C{0.25\linewidth}C{0.10\linewidth}C{0.10\linewidth}@{}}
-\caption{\TrackSuppTable{Default aweSOM versus untuned hexagonal FloatSOM quality comparison.}}\label{tab:s20} \\
+\caption{\TrackSuppTable{Default aweSOM versus untuned hexagonal FloatSOM quality comparison.}}\label{tab:s18} \\
 \multicolumn{7}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report balanced, holdout, and train quantization error across five datasets and 10 matched seeds. Percentage improvement is calculated as $100(QE_{\mathrm{aweSOM}}-QE_{\mathrm{FloatSOM}})/QE_{\mathrm{aweSOM}}$, so positive values favour FloatSOM. Confidence intervals are two-sided paired $t$-intervals. Holm-adjusted p-values control the five dataset-level tests separately within each $QE$ endpoint.}} \\[\baselineskip]
 \toprule
 \textbf{Dataset} & \textbf{Endpoint} & \textbf{aweSOM mean} & \textbf{FloatSOM mean} & \textbf{FloatSOM improvement (95\% CI)} & \textbf{p} & \textbf{Holm p} \\
@@ -1467,7 +1355,7 @@ olivetti\_\allowbreak{}faces & $QE_T$ & 51.5190 & 34.3777 & 33.27\% [32.59\%, 33
 \endgroup
 \end{landscape}
 
-% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S21.
+% EMBEDDED SOURCE: paper/manuscript_tmlr_revisions.md, Supplementary Table S19.
 \begin{landscape}
 \TrackSuppTableBodyColor
 \begin{table}[p]
@@ -1475,7 +1363,7 @@ olivetti\_\allowbreak{}faces & $QE_T$ & 51.5190 & 34.3777 & 33.27\% [32.59\%, 33
 \normalsize
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.10}
-\caption{\TrackSuppTable{Per-map fixed-adjacency MTR permutation-null calibration.}}\label{tab:s21}
+\caption{\TrackSuppTable{Per-map fixed-adjacency MTR permutation-null calibration.}}\label{tab:s19}
 \begin{minipage}{0.96\linewidth}
 \TrackSuppTable{For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Cross-family contrasts quantify differences on the calibrated MTR scale rather than direct differences in topology preservation; RNG--MST contrasts compare the two weight-derived graph families. P-values are raw two-sided paired $t$-test values.}
 \end{minipage}

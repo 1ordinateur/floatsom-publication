@@ -318,11 +318,11 @@ Hyperparameter stability is important because it determines whether a method can
 
 \begingroup\color{blue} To determine whether topology differences could be explained by topology-specific treatment of neighborhood radius, we performed a controlled initial-radius sweep.\endgroup \begingroup\color{blue} Hexagonal, MST, and RNG maps were evaluated at $r\in\{0.5,0.75,1.0266,1.5,2,3,5\}$ using the same 20 random seeds on each of the 14 benchmark datasets.\endgroup \begingroup\color{blue} The value $r=1.0266$ was the independently Optuna-selected hexagonal full-sampling radius and is denoted `Hex optimal` in Fig. 9; this label does not denote the minimum observed for hexagonal within the fixed-configuration sweep. Apart from topology and the deliberately varied initial radius, the training configuration was fixed: full sampling, random initialization, asymptotic radius decay, momentum enabled with initial momentum 0.6069, and XPySOM-compatible normalization.\endgroup \begingroup\color{blue} Runs were therefore matched by dataset and seed, ensuring that topology families received the same radius values rather than different search ranges or topology-specific radius schedules.\endgroup
 
-\begingroup\color{blue} We evaluated balanced $QE$, balanced MTR, and balanced node utilization.\endgroup \begingroup\color{blue} Because absolute $QE$ scales differ substantially among datasets, each dataset--seed $QE_B$ value was divided by the matched hexagonal $QE_B$ at $r=1.0266$.\endgroup \begingroup\color{blue} Ratios were averaged on the log scale across seeds within each dataset and then across datasets with equal dataset weight; exponentiating this mean yields the geometric-mean ratio shown in Fig. 9A.\endgroup \begingroup\color{blue} Balanced MTR and balanced node utilization are retained in their observed units in Fig. 9B and Fig. 9C, respectively.\endgroup \begingroup\color{blue} Along each topology's response curve, direction-aware percentage changes from $r=1.0266$ were calculated for all 280 matched dataset--seed units and tested against zero using two-sided one-sample $t$-tests; Benjamini--Hochberg adjustment was applied across the 54 non-anchor radius--topology--metric tests.\endgroup \begingroup\color{blue} These tests assess within-topology radius response.\endgroup
+\begingroup\color{blue} We evaluated balanced $QE$, balanced MTR, and balanced node utilization.\endgroup \begingroup\color{blue} Because absolute $QE$ scales differ substantially among datasets, each dataset--seed $QE_B$ value was divided by the matched hexagonal $QE_B$ at $r=1.0266$.\endgroup \begingroup\color{blue} Ratios were averaged on the log scale across seeds within each dataset and then across datasets with equal dataset weight; exponentiating this mean yields the geometric-mean ratio shown in Fig. 9A.\endgroup \begingroup\color{blue} Supplementary Table S15 reports the exact normalized $QE_B$ values and confidence intervals for every topology and radius.\endgroup \begingroup\color{blue} Balanced MTR and balanced node utilization are retained in their observed units in Fig. 9B and Fig. 9C, respectively.\endgroup \begingroup\color{blue} Along each topology's response curve, direction-aware percentage changes from $r=1.0266$ were calculated for all 280 matched dataset--seed units and tested against zero using two-sided one-sample $t$-tests; Benjamini--Hochberg adjustment was applied across the 54 non-anchor radius--topology--metric tests.\endgroup \begingroup\color{blue} These tests assess within-topology radius response.\endgroup
 
-\begingroup\color{blue} We additionally conducted post hoc cross-topology $QE_B$ contrasts at each radius.\endgroup \begingroup\color{blue} For every topology pair, dataset, seed, and radius, we calculated the log ratio of the comparator $QE_B$ to the reference $QE_B$, averaged log ratios across the 20 seeds within each dataset, and applied a two-sided one-sample $t$-test to the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} Exponentiated means and confidence limits are geometric-mean $QE_B$ ratios, with values below 1 favouring the comparator.\endgroup \begingroup\color{blue} Benjamini--Hochberg correction was applied across all 21 topology-pair--radius contrasts.\endgroup \begingroup\color{blue} Supplementary Table S15 reports the estimates, intervals, raw p-values, and adjusted q-values.\endgroup
+\begingroup\color{blue} We additionally conducted post hoc cross-topology $QE_B$ contrasts at each radius.\endgroup \begingroup\color{blue} For every topology pair, dataset, seed, and radius, we calculated the log ratio of the comparator $QE_B$ to the reference $QE_B$, averaged log ratios across the 20 seeds within each dataset, and applied a two-sided one-sample $t$-test to the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} Exponentiated means and confidence limits are geometric-mean $QE_B$ ratios, with values below 1 favouring the comparator.\endgroup \begingroup\color{blue} Benjamini--Hochberg correction was applied across all 21 topology-pair--radius contrasts.\endgroup \begingroup\color{blue} Supplementary Table S16 reports the estimates, intervals, raw p-values, and adjusted q-values.\endgroup
 
-\begingroup\color{blue} We then identified the per-topology minimum $QE_B$ across the seven tested radii using the same dataset-balanced geometric-mean summary as Fig. 9A.\endgroup \begingroup\color{blue} Paired tests compared $QE_H$, $QE_T$, and $QE_B$ between the configurations at those topology-specific radii, with Benjamini--Hochberg correction applied across the three topology contrasts separately for each endpoint (Supplementary Table S16).\endgroup \begingroup\color{blue} For the per-dataset analyses, paired percentage improvements were calculated across the 20 matched seeds for $QE_H$, $QE_T$, and $QE_B$.\endgroup \begingroup\color{blue} For each topology-minimum contrast, Benjamini--Hochberg correction was applied separately across the 14 dataset-level tests for each $QE$ endpoint (Supplementary Tables S17--S19).\endgroup
+\begingroup\color{blue} We then identified the per-topology minimum $QE_B$ across the seven tested radii using the same dataset-balanced geometric-mean summary as Fig. 9A.\endgroup \begingroup\color{blue} Paired tests compared $QE_B$ between the configurations at those topology-specific radii, with Benjamini--Hochberg correction applied across the three topology contrasts (Supplementary Table S17).\endgroup
 
 \begingroup
 
@@ -360,7 +360,7 @@ Under matched-configuration XPySOM versus FloatSOM calibration on hexagonal $QE$
 
 #### 5.1.2 aweSOM quality baseline
 
-Relative to default aweSOM, untuned hexagonal FloatSOM reduced quantization error across all five evaluated datasets. Averaged equally across datasets, the improvements were 36.77% for balanced $QE$, 28.52% for holdout $QE$, and 45.11% for train $QE$. The complete dataset-level results are reported in Supplementary Table S20. Given the large difference between aweSOM's serial-online training and the batch training used by FloatSOM and XPySOM, together with the large-workload timeout documented in the speed-benchmark protocol (Section 4.2), we used XPySOM as the external implementation comparator in subsequent analyses.
+Relative to default aweSOM, untuned hexagonal FloatSOM reduced quantization error across all five evaluated datasets. Averaged equally across datasets, the improvements were 36.77% for balanced $QE$, 28.52% for holdout $QE$, and 45.11% for train $QE$. The complete dataset-level results are reported in Supplementary Table S18. Given the large difference between aweSOM's serial-online training and the batch training used by FloatSOM and XPySOM, together with the large-workload timeout documented in the speed-benchmark protocol (Section 4.2), we used XPySOM as the external implementation comparator in subsequent analyses.
 
 \endgroup
 
@@ -474,28 +474,22 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 \begingroup\color{blue} Because initial radius was selected during tuning and differed across topology families, we isolated its effect in a fixed-configuration sweep.\endgroup \begingroup\color{blue} All non-radius hyperparameters were held at the tuned hexagonal full-sampling configuration, and each of seven radii was evaluated for hexagonal, MST, and RNG maps using the same 20 seeds on all 14 datasets.\endgroup \begingroup\color{blue} Fig. 9A reports $QE_B$ after normalizing every dataset--seed condition to its matched hexagonal value at the selected radius ($r=1.027$).\endgroup \begingroup\color{blue} We summarize these ratios by averaging log ratios across seeds within each dataset, weighting the 14 datasets equally, and exponentiating the cross-dataset mean.\endgroup \begingroup\color{blue} The resulting geometric-mean ratio is dimensionless: 1 denotes matched hexagonal performance at the selected radius, values below 1 indicate lower $QE_B$, and values above 1 indicate higher $QE_B$.\endgroup
 
-\begingroup\color{blue} Separation vanished at $r\leq0.75$, with no significant MST--hexagonal or RNG--hexagonal difference at either $r=0.5$ or $r=0.75$ (Supplementary Table S15).\endgroup \begingroup\color{blue} The per-topology minimum $QE_B$ across the sweep occurred at $r=0.75$ for hexagonal and $r=1.5$ for MST and RNG.\endgroup \begingroup\color{blue} In paired tests between those minima, MST was 0.98% lower than hexagonal (ratio 0.9902, 95% CI [0.9747, 1.0060]; $p=0.203$, $q=0.304$), and RNG was 1.35% lower than hexagonal (ratio 0.9865, 95% CI [0.9689, 1.0043]; $p=0.125$, $q=0.304$); neither difference was significant.\endgroup \begingroup\color{blue} RNG and MST also did not differ significantly (ratio 0.9962, 95% CI [0.9834, 1.0092]; $p=q=0.538$; Supplementary Table S16).\endgroup
+\begingroup\color{blue} The exact normalized $QE_B$ radius-response values are reported in Supplementary Table S15.\endgroup \begingroup\color{blue} Separation vanished at $r\leq0.75$, with no significant MST--hexagonal or RNG--hexagonal difference at either $r=0.5$ or $r=0.75$ (Supplementary Table S16).\endgroup \begingroup\color{blue} The per-topology minimum $QE_B$ across the sweep occurred at $r=0.75$ for hexagonal and $r=1.5$ for MST and RNG.\endgroup \begingroup\color{blue} In paired tests between those minima, MST was 0.98% lower than hexagonal (ratio 0.9902, 95% CI [0.9747, 1.0060]; $p=0.203$, $q=0.304$), and RNG was 1.35% lower than hexagonal (ratio 0.9865, 95% CI [0.9689, 1.0043]; $p=0.125$, $q=0.304$); neither difference was significant.\endgroup \begingroup\color{blue} RNG and MST also did not differ significantly (ratio 0.9962, 95% CI [0.9834, 1.0092]; $p=q=0.538$; Supplementary Table S17).\endgroup
 
-\begingroup\color{blue} The split-specific aggregate comparisons followed the same pattern.\endgroup \begingroup\color{blue} Relative to hexagonal, MST had 0.69% lower $QE_H$ ($p=0.316$, $q=0.474$) and 2.19% lower $QE_T$ ($p=0.145$, $q=0.257$), while RNG had 0.79% lower $QE_H$ ($p=0.139$, $q=0.418$) and 4.04% lower $QE_T$ ($p=0.171$, $q=0.257$).\endgroup \begingroup\color{blue} RNG was 0.10% lower than MST for $QE_H$ ($p=q=0.773$) and 1.90% lower for $QE_T$ ($p=q=0.332$).\endgroup \begingroup\color{blue} Thus, all split-specific aggregate point estimates favoured the graph comparator, but none was significant (Supplementary Table S16).\endgroup
-
-\begingroup\color{blue} These aggregate summaries should be interpreted alongside substantial dataset-level heterogeneity in both direction and magnitude.\endgroup \begingroup\color{blue} RNG had lower observed $QE_H$, $QE_T$, and $QE_B$ than hexagonal in 12, 8, and 9 of the 14 datasets, respectively, with significant improvements in six, seven, and four datasets and significant reversals in one, five, and one datasets.\endgroup \begingroup\color{blue} MST had lower observed $QE_H$, $QE_T$, and $QE_B$ in 9, 8, and 9 datasets, with significant improvements in four, three, and four datasets and significant reversals in one, three, and one datasets (Supplementary Tables S17--S18).\endgroup
-
-\begingroup\color{blue} Moreover, where graph topologies were significantly better, the relative improvements reached 15.44% for MST and 26.49% for RNG, substantially larger than the largest significant hexagonal advantage of 2.23%.\endgroup \begingroup\color{blue} For example, RNG reduced Iris $QE_H$, $QE_T$, and $QE_B$ by 2.26%, 26.49%, and 7.28%, respectively, with all three differences significant.\endgroup
-
-\begingroup\color{blue} Increasing radius eventually exchanged higher $QE_B$ for lower observed MTR in every topology, but this trade-off emerged earlier and more sharply for hexagonal maps.\endgroup \begingroup\color{blue} RNG maintained the lowest observed MTR throughout the sweep, while the node-utilization curves did not indicate poorer use of the available map nodes.\endgroup \begingroup\color{blue} Because these raw MTR curves compare a fixed lattice with weight-derived graphs, their cross-family separation is descriptive.\endgroup \begingroup\color{blue} The significance symbols in Fig. 9 represent within-topology radius comparisons.\endgroup
+\begingroup\color{blue} Increasing radius eventually exchanged higher $QE_B$ for lower observed MTR in every topology, but this trade-off emerged earlier and much more sharply for hexagonal maps.\endgroup \begingroup\color{blue} RNG maintained the lowest observed MTR throughout the sweep, while the node-utilization curves did not indicate poorer use of the available map nodes.\endgroup \begingroup\color{blue} Because these raw MTR curves compare a fixed lattice with weight-derived graphs, their cross-family separation is descriptive.\endgroup \begingroup\color{blue} The significance symbols in Fig. 9 represent within-topology radius comparisons.\endgroup
 
 \begingroup
 
 \color{blue}
 
 ![Figure 9](assets_manual/figures/fig_9.svg)
-*Figure 9. Initial-radius sensitivity under matched fixed configurations. A: dataset-balanced geometric-mean $QE_B$ ratio relative to the matched hexagonal configuration at its selected radius ($r=1.027$); lower values are better and the dashed horizontal line marks a ratio of 1. B: observed balanced Mean Tied Rank (MTR; lower is better). C: observed balanced node utilization (higher is better). All panels summarize 14 datasets with 20 matched seeds per topology and radius. The dotted vertical line and `Hex optimal` tick mark $r=1.027$. Significance markers use Benjamini--Hochberg adjusted tests comparing each non-anchor radius with $r=1.027$ within topology across the 54 radius--topology--metric tests. Confidence intervals are omitted from the plotted panels for readability; Supplementary Table S15 reports the post hoc matched cross-topology $QE_B$ estimates, intervals, and adjusted tests at every radius.*
+*Figure 9. Initial-radius sensitivity under matched fixed configurations. A: dataset-balanced geometric-mean $QE_B$ ratio relative to the matched hexagonal configuration at its selected radius ($r=1.027$); lower values are better and the dashed horizontal line marks a ratio of 1. B: observed balanced Mean Tied Rank (MTR; lower is better). C: observed balanced node utilization (higher is better). All panels summarize 14 datasets with 20 matched seeds per topology and radius. The dotted vertical line and `Hex optimal` tick mark $r=1.027$. Significance markers use Benjamini--Hochberg adjusted tests comparing each non-anchor radius with $r=1.027$ within topology across the 54 radius--topology--metric tests. Confidence intervals are omitted from the plotted panels for readability; Supplementary Table S15 reports the exact normalized $QE_B$ values and intervals underlying panel A, and Supplementary Table S16 reports the post hoc matched cross-topology estimates and adjusted tests at every radius.*
 
 \endgroup
 
 \begingroup\color{blue} The fixed-configuration diagnostics provide the corresponding deployable tuned-default comparison (Table \ref{tab:matched_topology_diagnostics_summary}).\endgroup \begingroup\color{blue} Unlike the Optuna matched top-$k$ results, no balanced-$QE$ difference was detected between the tuned RNG and MST defaults ($p=0.126$).\endgroup \begingroup\color{blue} Within these two weight-derived graph families, RNG lowered mean balanced MTR from 7.87 to 4.91, a difference of 2.96 tied-rank positions ($p=1.75\times10^{-65}$), and increased balanced node utilization by 0.0040 ($p=6.07\times10^{-4}$).\endgroup
 
-\begingroup\color{blue} The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50.\endgroup \begingroup\color{blue} Mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for their tuned counterparts.\endgroup \begingroup\color{blue} In matched per-map comparisons, untuned MST did not improve upon untuned hexagonal ($-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$), whereas untuned RNG had a ratio 0.0477 lower than hexagonal ($p=8.17\times10^{-58}$).\endgroup \begingroup\color{blue} In the tuned profiles, the ratios were lower than hexagonal by 0.4539 for MST and 0.5153 for RNG (both $p<3\times10^{-152}$).\endgroup \begingroup\color{blue} RNG also had lower ratios than MST in both the untuned (difference favouring RNG 0.0520, 95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$).\endgroup \begingroup\color{blue} Supplementary Table S21 reports all six ratios and matched contrasts.\endgroup \begingroup\color{blue} Graph-versus-hexagonal MTR contrasts are therefore reported descriptively and are not interpreted as evidence that weight-derived graphs preserve data topology better than a fixed lattice.\endgroup \begingroup\color{blue} The RNG--MST contrasts compare two weight-derived graph families and show lower null-calibrated MTR for RNG in both profiles.\endgroup
+\begingroup\color{blue} The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50.\endgroup \begingroup\color{blue} Mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for their tuned counterparts.\endgroup \begingroup\color{blue} In matched per-map comparisons, untuned MST did not improve upon untuned hexagonal ($-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$), whereas untuned RNG had a ratio 0.0477 lower than hexagonal ($p=8.17\times10^{-58}$).\endgroup \begingroup\color{blue} In the tuned profiles, the ratios were lower than hexagonal by 0.4539 for MST and 0.5153 for RNG (both $p<3\times10^{-152}$).\endgroup \begingroup\color{blue} RNG also had lower ratios than MST in both the untuned (difference favouring RNG 0.0520, 95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$).\endgroup \begingroup\color{blue} Supplementary Table S19 reports all six ratios and matched contrasts.\endgroup \begingroup\color{blue} Graph-versus-hexagonal MTR contrasts are therefore reported descriptively and are not interpreted as evidence that weight-derived graphs preserve data topology better than a fixed lattice.\endgroup \begingroup\color{blue} The RNG--MST contrasts compare two weight-derived graph families and show lower null-calibrated MTR for RNG in both profiles.\endgroup
 
 \begingroup
 
@@ -503,7 +497,7 @@ The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balan
 
 \begin{table}[t]
 \centering
-\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Cross-family MTR effects quantify differences on the metric's graph-specific scale rather than direct differences in topology preservation; fixed-adjacency permutation-null ratios and matched contrasts are reported in Supplementary Table S21. Asterisks mark prespecified pooled paired effects with raw $p<0.05$; these are distinct from the dataset-level multiplicity-adjusted test families. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
+\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Cross-family MTR effects quantify differences on the metric's graph-specific scale rather than direct differences in topology preservation; fixed-adjacency permutation-null ratios and matched contrasts are reported in Supplementary Table S19. Asterisks mark prespecified pooled paired effects with raw $p<0.05$; these are distinct from the dataset-level multiplicity-adjusted test families. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
 \label{tab:matched_topology_diagnostics_summary}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -658,7 +652,7 @@ We next consider GPU efficiency under strong scaling, relative to ideal linear s
 
 \begingroup\color{blue} For moderate map sizes, RNG remains the recommended starting topology based on its overall $QE$, stability, and node-utilization results.\endgroup \begingroup\color{blue} Although cross-family MTR is retained as descriptive, the MTR analysis allows the RNG--MST comparison, which shows that RNG achieves lower null-calibrated MTR in both tuned and untuned profiles.\endgroup \begingroup\color{blue} Topology should nevertheless be rechecked on the target dataset.\endgroup
 
-\begingroup\color{blue} The topology-specific minimum analysis indicates that the effect of graph topology is strongly dataset-dependent.\endgroup \begingroup\color{blue} Within the datasets evaluated here, MST and RNG could provide significantly lower $QE$, with improvements exceeding 20% in some dataset--endpoint comparisons.\endgroup \begingroup\color{blue} Conversely, when a graph topology performed worse than hexagonal, the largest observed penalty was 2.23%.\endgroup \begingroup\color{blue} These results indicate that, on a per-dataset basis, graph topologies may provide substantially better quantization while incurring at worst a comparatively small penalty in the evaluated benchmarks, supporting dataset-specific topology evaluation when quantization performance is important.\endgroup
+\begingroup\color{blue} Across the radius sweep, reducing the hexagonal radius narrowed the balanced-$QE$ gap to MST and RNG, but at the cost of a much sharper deterioration in within-map local ordering.\endgroup \begingroup\color{blue} MST and RNG maintained a more stable $QE$--ordering balance across radii, making their performance less sensitive to radius choice over the tested range.\endgroup
 
 \begingroup\color{blue} The quality experiments use the in-memory pathway, whereas the scaling experiments use Ray.\endgroup \begingroup\color{blue} Within the distributed benchmark, scaling depends on workload size: overhead dominates small problems, while larger workloads benefit from parallel throughput and may remain in RAM when the 1-GPU case requires disk backing.\endgroup \begingroup\color{blue} Efficiencies above 100\% reflect this change in memory regime rather than super-linear computation.\endgroup
 
@@ -1251,7 +1245,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 \endgroup
 
-\begingroup\color{blue} **Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.**\endgroup \begingroup\color{blue} Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark.\endgroup \begingroup\color{blue} `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization.\endgroup \begingroup\color{blue} Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S21.\endgroup \begingroup\color{blue} Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values.\endgroup \begingroup\color{blue} `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup \begingroup\color{blue} The tuned profile uses the deployable tuned configurations reported in the main text.\endgroup
+\begingroup\color{blue} **Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.**\endgroup \begingroup\color{blue} Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark.\endgroup \begingroup\color{blue} `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization.\endgroup \begingroup\color{blue} Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S19.\endgroup \begingroup\color{blue} Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values.\endgroup \begingroup\color{blue} `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup \begingroup\color{blue} The tuned profile uses the deployable tuned configurations reported in the main text.\endgroup
 
 \begingroup
 
@@ -1370,7 +1364,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 \endgroup
 
-\begingroup\color{blue} **Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.**\endgroup \begingroup\color{blue} Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting.\endgroup \begingroup\color{blue} `untuned` denotes the untuned reference profile using XPySOM-like default hyperparameters and `tuned` denotes the fixed QE-tuned profile.\endgroup \begingroup\color{blue} Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization.\endgroup \begingroup\color{blue} Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S21.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup
+\begingroup\color{blue} **Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.**\endgroup \begingroup\color{blue} Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting.\endgroup \begingroup\color{blue} `untuned` denotes the untuned reference profile using XPySOM-like default hyperparameters and `tuned` denotes the fixed QE-tuned profile.\endgroup \begingroup\color{blue} Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization.\endgroup \begingroup\color{blue} Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S19.\endgroup \begingroup\color{blue} Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.\endgroup
 
 \begingroup
 
@@ -1488,7 +1482,25 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 \endgroup
 
-\begingroup\color{blue} **Supplementary Table S15. Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.**\endgroup \begingroup\color{blue} For each topology pair and radius, seed-level log $QE_B$ ratios were averaged within each dataset and then tested across the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} `QE ratio` is the exponentiated mean log ratio (comparator/reference), so values below 1 and positive improvement values favor the comparator.\endgroup \begingroup\color{blue} Confidence intervals are exponentiated 95% paired $t$ intervals.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust across all 21 topology-pair--radius tests.\endgroup
+\begingroup\color{blue} **Supplementary Table S15. Dataset-balanced normalized $QE_B$ across the initial-radius sweep.**\endgroup \begingroup\color{blue} Values are the exact numerical summaries underlying Fig. 9A.\endgroup \begingroup\color{blue} Each dataset--seed $QE_B$ value was divided by the matched hexagonal $QE_B$ at the independently selected radius $r=1.0266$.\endgroup \begingroup\color{blue} Log ratios were averaged across the 20 seeds within each dataset and then across the 14 equally weighted datasets before exponentiation.\endgroup \begingroup\color{blue} Confidence intervals are exponentiated 95% $t$ intervals across the dataset-level mean log ratios.\endgroup \begingroup\color{blue} Bold values identify the minimum within each topology.\endgroup
+
+\begingroup
+
+\color{blue}
+
+| Radius | Hexagonal normalized $QE_B$ (95% CI) | MST normalized $QE_B$ (95% CI) | RNG normalized $QE_B$ (95% CI) |
+| ---: | ---: | ---: | ---: |
+| 0.5 | 1.0056 [0.9710, 1.0415] | 1.0024 [0.9635, 1.0429] | 0.9935 [0.9601, 1.0280] |
+| 0.75 | **0.9933 [0.9826, 1.0042]** | 0.9925 [0.9756, 1.0097] | 0.9864 [0.9648, 1.0084] |
+| 1.027 | 1.0000 [1.0000, 1.0000] | 0.9849 [0.9732, 0.9968] | 0.9815 [0.9674, 0.9957] |
+| 1.5 | 1.0172 [1.0038, 1.0308] | **0.9836 [0.9737, 0.9936]** | **0.9799 [0.9642, 0.9958]** |
+| 2 | 1.0399 [1.0104, 1.0702] | 0.9916 [0.9842, 0.9991] | 0.9895 [0.9743, 1.0050] |
+| 3 | 1.1273 [1.0596, 1.1994] | 1.0420 [1.0269, 1.0572] | 1.0529 [1.0233, 1.0833] |
+| 5 | 1.3152 [1.1885, 1.4554] | 1.1628 [1.1217, 1.2055] | 1.1730 [1.1201, 1.2285] |
+
+\endgroup
+
+\begingroup\color{blue} **Supplementary Table S16. Post hoc matched cross-topology balanced-QE contrasts across the initial-radius sweep.**\endgroup \begingroup\color{blue} For each topology pair and radius, seed-level log $QE_B$ ratios were averaged within each dataset and then tested across the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} `QE ratio` is the exponentiated mean log ratio (comparator/reference), so values below 1 and positive improvement values favor the comparator.\endgroup \begingroup\color{blue} Confidence intervals are exponentiated 95% paired $t$ intervals.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust across all 21 topology-pair--radius tests.\endgroup
 
 \begingroup
 
@@ -1520,7 +1532,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 \endgroup
 
-\begingroup\color{blue} **Supplementary Table S16. Per-topology minimum balanced QE across the initial-radius sweep and paired QE tests at those topology-specific radii.**\endgroup \begingroup\color{blue} Per-topology radii were selected from the dataset-balanced geometric-mean $QE_B$ response over the seven tested radii.\endgroup \begingroup\color{blue} Minimum normalized $QE_B$ is expressed relative to the matched hexagonal configuration at the selected radius $r=1.027$.\endgroup \begingroup\color{blue} Paired contrasts compare $QE_H$, $QE_T$, and $QE_B$ at the topology-specific radii.\endgroup \begingroup\color{blue} Seed-level log ratios were averaged within each dataset and tested across the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust across the three topology contrasts separately for each $QE$ endpoint.\endgroup
+\begingroup\color{blue} **Supplementary Table S17. Per-topology minimum balanced QE across the initial-radius sweep and paired $QE_B$ tests at those topology-specific radii.**\endgroup \begingroup\color{blue} Per-topology radii were selected from the dataset-balanced geometric-mean $QE_B$ response over the seven tested radii.\endgroup \begingroup\color{blue} Minimum normalized $QE_B$ is expressed relative to the matched hexagonal configuration at the selected radius $r=1.027$.\endgroup \begingroup\color{blue} Seed-level log ratios were averaged within each dataset and tested across the 14 equally weighted dataset effects.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust across the three topology contrasts.\endgroup
 
 \begingroup
 
@@ -1532,92 +1544,11 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | MST | 1.5 | 0.9836 | [0.9737, 0.9936] |
 | RNG | 1.5 | 0.9799 | [0.9642, 0.9958] |
 
-| Endpoint | Contrast | Reference radius | Comparator radius | QE ratio | 95% CI | Improvement | raw p | BH q |
-| --- | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
-| $QE_H$ | MST vs Hex | 0.75 | 1.5 | 0.9931 | [0.9788, 1.0075] | 0.69% | 0.3163 | 0.4745 |
-| $QE_H$ | RNG vs Hex | 0.75 | 1.5 | 0.9921 | [0.9814, 1.0029] | 0.79% | 0.1392 | 0.4176 |
-| $QE_H$ | RNG vs MST | 1.5 | 1.5 | 0.9990 | [0.9919, 1.0062] | 0.10% | 0.7727 | 0.7727 |
-| $QE_T$ | MST vs Hex | 0.75 | 1.5 | 0.9781 | [0.9484, 1.0087] | 2.19% | 0.1450 | 0.2570 |
-| $QE_T$ | RNG vs Hex | 0.75 | 1.5 | 0.9596 | [0.9023, 1.0205] | 4.04% | 0.1714 | 0.2570 |
-| $QE_T$ | RNG vs MST | 1.5 | 1.5 | 0.9810 | [0.9416, 1.0222] | 1.90% | 0.3324 | 0.3324 |
-| $QE_B$ | MST vs Hex | 0.75 | 1.5 | 0.9902 | [0.9747, 1.0060] | 0.98% | 0.2028 | 0.3042 |
-| $QE_B$ | RNG vs Hex | 0.75 | 1.5 | 0.9865 | [0.9689, 1.0043] | 1.35% | 0.1252 | 0.3042 |
-| $QE_B$ | RNG vs MST | 1.5 | 1.5 | 0.9962 | [0.9834, 1.0092] | 0.38% | 0.5377 | 0.5377 |
-
-\endgroup
-
-\begingroup\color{blue} **Supplementary Table S17. Per-dataset paired QE improvements for MST at its minimum radius ($r=1.5$) versus hexagonal at its minimum radius ($r=0.75$).**\endgroup \begingroup\color{blue} Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{Hex}}-QE_{\mathrm{MST}})/QE_{\mathrm{Hex}}$; positive values favour MST and negative values favour hexagonal.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.\endgroup
-
-\begingroup
-
-\color{blue}
-
-| Dataset | $QE_H$ improvement | $QE_H$ q | $QE_T$ improvement | $QE_T$ q | $QE_B$ improvement | $QE_B$ q |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| blobs | 0.1056% | 0.4952 | 0.2413% | 0.1459 | 0.1731% | 0.3718 |
-| circles | -0.1373% | 0.4582 | -0.0659% | 0.5014 | -0.1022% | 0.4642 |
-| moons | -0.0238% | 0.8547 | 0.1845% | 0.1144 | 0.0796% | 0.5192 |
-| s_curve | 0.1708% | 0.2183 | 0.0846% | 0.2243 | 0.1282% | 0.2643 |
-| swiss_roll | -0.1293% | 0.5610 | -0.2453% | 0.1459 | -0.1861% | 0.4325 |
-| breast_cancer | 0.2825% | 0.3627 | -0.1227% | 0.7575 | 0.1318% | 0.6083 |
-| wine | 0.9409% | 0.0751 | 15.4414% | 2.88e-07 | 4.6004% | 3.11e-06 |
-| iris | -1.1810% | 0.4502 | 5.8423% | 0.1391 | 0.3121% | 0.7722 |
-| digits | 0.4832% | 0.0050 | -0.7261% | 0.0003 | -0.0801% | 0.5189 |
-| olivetti_faces | 1.2437% | 0.0033 | 0.3296% | 0.5014 | 0.8880% | 0.0313 |
-| diabetes | 0.3300% | 0.4937 | -1.0357% | 0.0032 | -0.1970% | 0.5299 |
-| california_housing | 0.3743% | 0.0004 | 0.4048% | 0.0003 | 0.3895% | 2.22e-05 |
-| covertype | -1.8798% | 1.70e-06 | -1.8316% | 1.18e-06 | -1.8556% | 1.65e-06 |
-| kddcup99 | 8.5195% | 5.72e-10 | 8.9261% | 1.30e-10 | 8.7198% | 2.12e-10 |
-
-\endgroup
-
-\begingroup\color{blue} **Supplementary Table S18. Per-dataset paired QE improvements for RNG at its minimum radius ($r=1.5$) versus hexagonal at its minimum radius ($r=0.75$).**\endgroup \begingroup\color{blue} Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{Hex}}-QE_{\mathrm{RNG}})/QE_{\mathrm{Hex}}$; positive values favour RNG and negative values favour hexagonal.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.\endgroup
-
-\begingroup
-
-\color{blue}
-
-| Dataset | $QE_H$ improvement | $QE_H$ q | $QE_T$ improvement | $QE_T$ q | $QE_B$ improvement | $QE_B$ q |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| blobs | 0.4201% | 0.0401 | 0.3763% | 0.0147 | 0.3987% | 0.0213 |
-| circles | 0.1170% | 0.3678 | 0.1579% | 0.0376 | 0.1374% | 0.1215 |
-| moons | -0.1426% | 0.2237 | 0.3283% | 0.0052 | 0.0909% | 0.3449 |
-| s_curve | 0.0507% | 0.5795 | 0.1682% | 0.0164 | 0.1090% | 0.1501 |
-| swiss_roll | 0.0308% | 0.8581 | -0.3185% | 0.0376 | -0.1416% | 0.4214 |
-| breast_cancer | 0.5746% | 0.0401 | -1.2760% | 0.0039 | -0.1750% | 0.4395 |
-| wine | 1.6086% | 0.0007 | 21.8860% | 3.36e-10 | 6.7400% | 3.65e-09 |
-| iris | 2.2639% | 0.0446 | 26.4934% | 1.45e-07 | 7.2767% | 9.30e-07 |
-| digits | 0.4509% | 0.0112 | -0.3066% | 0.0506 | 0.0971% | 0.3449 |
-| olivetti_faces | 0.6942% | 0.0622 | -1.5808% | 0.0052 | -0.1856% | 0.5879 |
-| diabetes | 0.6091% | 0.2014 | -1.3077% | 0.0007 | -0.1326% | 0.5879 |
-| california_housing | 0.1043% | 0.3168 | 0.0875% | 0.3429 | 0.0962% | 0.3449 |
-| covertype | -2.2239% | 1.45e-07 | -2.1563% | 1.28e-07 | -2.1901% | 8.90e-08 |
-| kddcup99 | 6.0688% | 4.74e-06 | 5.9137% | 3.89e-06 | 5.9916% | 2.88e-06 |
-
-\endgroup
-
-\begingroup\color{blue} **Supplementary Table S19. Per-dataset paired QE improvements for RNG and MST at their common minimum radius ($r=1.5$).**\endgroup \begingroup\color{blue} Entries are mean paired percentage improvements across 20 matched seeds, calculated as $100(QE_{\mathrm{MST}}-QE_{\mathrm{RNG}})/QE_{\mathrm{MST}}$; positive values favour RNG and negative values favour MST.\endgroup \begingroup\color{blue} Benjamini--Hochberg q-values adjust separately across the 14 dataset-level tests for each $QE$ endpoint.\endgroup
-
-\begingroup
-
-\color{blue}
-
-| Dataset | $QE_H$ improvement | $QE_H$ q | $QE_T$ improvement | $QE_T$ q | $QE_B$ improvement | $QE_B$ q |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| blobs | 0.3140% | 0.1016 | 0.1342% | 0.2066 | 0.2253% | 0.0738 |
-| circles | 0.2518% | 0.1633 | 0.2228% | 0.0129 | 0.2384% | 0.0130 |
-| moons | -0.1210% | 0.3987 | 0.1437% | 0.0672 | 0.0104% | 0.9005 |
-| s_curve | -0.1213% | 0.2620 | 0.0834% | 0.1513 | -0.0198% | 0.8553 |
-| swiss_roll | 0.1579% | 0.2620 | -0.0744% | 0.5269 | 0.0432% | 0.8356 |
-| breast_cancer | 0.2876% | 0.3046 | -1.1682% | 0.0127 | -0.3119% | 0.1879 |
-| wine | 0.6587% | 0.1633 | 7.1938% | 0.0071 | 2.2034% | 0.0043 |
-| iris | 3.3093% | 0.0067 | 20.9880% | 2.22e-05 | 6.8495% | 7.88e-05 |
-| digits | -0.0340% | 0.7944 | 0.4136% | 0.0436 | 0.1758% | 0.1879 |
-| olivetti_faces | -0.5748% | 0.2789 | -1.9303% | 0.0006 | -1.0939% | 0.0130 |
-| diabetes | 0.2725% | 0.3987 | -0.2777% | 0.4120 | 0.0586% | 0.8607 |
-| california_housing | -0.2713% | 0.0067 | -0.3188% | 0.0006 | -0.2946% | 0.0005 |
-| covertype | -0.3436% | 0.2620 | -0.3241% | 0.2066 | -0.3338% | 0.2386 |
-| kddcup99 | -2.7078% | 0.0158 | -3.3258% | 0.0013 | -3.0104% | 0.0043 |
+| Contrast | Reference radius | Comparator radius | QE ratio | 95% CI | Improvement | raw p | BH q |
+| --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MST vs Hex | 0.75 | 1.5 | 0.9902 | [0.9747, 1.0060] | 0.98% | 0.2028 | 0.3042 |
+| RNG vs Hex | 0.75 | 1.5 | 0.9865 | [0.9689, 1.0043] | 1.35% | 0.1252 | 0.3042 |
+| RNG vs MST | 1.5 | 1.5 | 0.9962 | [0.9834, 1.0092] | 0.38% | 0.5377 | 0.5377 |
 
 \endgroup
 
@@ -1625,7 +1556,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 \color{blue}
 
-**Supplementary Table S20. Default aweSOM versus untuned hexagonal FloatSOM quality comparison.** Rows report balanced, holdout, and train quantization error across five datasets and 10 matched seeds. Percentage improvement is calculated as $100(QE_{\mathrm{aweSOM}}-QE_{\mathrm{FloatSOM}})/QE_{\mathrm{aweSOM}}$, so positive values favour FloatSOM. Confidence intervals are two-sided paired $t$-intervals. Holm-adjusted p-values control the five dataset-level tests separately within each $QE$ endpoint.
+**Supplementary Table S18. Default aweSOM versus untuned hexagonal FloatSOM quality comparison.** Rows report balanced, holdout, and train quantization error across five datasets and 10 matched seeds. Percentage improvement is calculated as $100(QE_{\mathrm{aweSOM}}-QE_{\mathrm{FloatSOM}})/QE_{\mathrm{aweSOM}}$, so positive values favour FloatSOM. Confidence intervals are two-sided paired $t$-intervals. Holm-adjusted p-values control the five dataset-level tests separately within each $QE$ endpoint.
 
 | Dataset | Endpoint | aweSOM mean | FloatSOM mean | FloatSOM improvement (95% CI) | p | Holm p |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -1651,7 +1582,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 \color{blue}
 
-**Supplementary Table S21. Per-map fixed-adjacency MTR permutation-null calibration.** For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Cross-family contrasts quantify differences on the calibrated MTR scale rather than direct differences in topology preservation; RNG--MST contrasts compare the two weight-derived graph families. P-values are raw two-sided paired $t$-test values.
+**Supplementary Table S19. Per-map fixed-adjacency MTR permutation-null calibration.** For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Cross-family contrasts quantify differences on the calibrated MTR scale rather than direct differences in topology preservation; RNG--MST contrasts compare the two weight-derived graph families. P-values are raw two-sided paired $t$-test values.
 
 | Part A: Profile | Topology | Maps | Empirical null MTR | Observed/null ratio |
 | --- | --- | ---: | ---: | ---: |
