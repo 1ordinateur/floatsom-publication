@@ -232,7 +232,7 @@ $$
 
 Hexagonal, MST, and RNG maps define adjacency differently: hexagonal connections are fixed by the lattice, MST connections form a sparse tree derived from the node weights, and RNG connections are also weight-derived but can give nodes different numbers of neighbors. MTR applies the same graph-distance ranking procedure to each trained map while accounting for topology-specific differences in node degree and tied hop distances. The $L_{i,d_i}$ term counts all units fewer hops away, while the second term assigns the average rank across the $|S_{i,d_i}|$ units at the same hop distance as the second BMU. Lower MTR indicates that first and second BMUs tend to occur earlier in this graph-specific ordering, but the raw scale remains graph-specific because shell sizes and adjacency construction differ among topology families.
 
-We additionally calibrated MTR against a per-map fixed-adjacency permutation null and report the observed-to-null ratio $R_{\mathrm{MTR}}=\mathrm{MTR}_{\mathrm{observed}}/\overline{\mathrm{MTR}}_{\mathrm{null}}$ (Supplementary Methods S2). Cross-family ratios are interpreted as calibrated comparisons on the MTR scale rather than as direct evidence that one topology family preserves data topology better than another.
+For MST and RNG, adjacency is derived from the same prototype-vector distances that determine first and second BMU identity, so we additionally evaluated MTR using a per-map fixed-adjacency permutation null. For each fitted map and evaluation split, prototype identities were randomly permuted among the $P=100$ nodes 1,000 times while retaining the final graph connections, and MTR was recomputed. We report the observed-to-null ratio $R_{\mathrm{MTR}}=\mathrm{MTR}_{\mathrm{observed}}/\overline{\mathrm{MTR}}_{\mathrm{null}}$; the complete procedure is provided in Supplementary Methods S2.
 
 We additionally report node utilization, defined as the fraction of nodes selected as a BMU, and its complement, dead-node fraction. These post hoc diagnostics are computed on training and holdout splits and balanced as for $QE$.
 
@@ -381,11 +381,11 @@ Increasing radius eventually exchanged higher $QE_B$ for lower observed MTR in e
 
 The fixed-configuration diagnostics provide the corresponding deployable tuned-default comparison (Table \ref{tab:matched_topology_diagnostics_summary}). Unlike the Optuna matched top-$k$ results, no balanced-$QE$ difference was detected between the tuned RNG and MST defaults ($p=0.126$). Within these two weight-derived graph families, RNG lowered mean balanced MTR from 7.87 to 4.91, a difference of 2.96 tied-rank positions ($p=1.75\times10^{-65}$), and increased balanced node utilization by 0.0040 ($p=6.07\times10^{-4}$).
 
-The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50. Mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for their tuned counterparts. In matched per-map comparisons, untuned MST did not improve upon untuned hexagonal ($-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$), whereas untuned RNG had a ratio 0.0477 lower than hexagonal ($p=8.17\times10^{-58}$). In the tuned profiles, the ratios were lower than hexagonal by 0.4539 for MST and 0.5153 for RNG (both $p<3\times10^{-152}$). RNG also had lower ratios than MST in both the untuned (difference favouring RNG 0.0520, 95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$). Supplementary Table S19 reports all six ratios and matched contrasts. Graph-versus-hexagonal MTR contrasts are therefore reported descriptively and are not interpreted as evidence that weight-derived graphs preserve data topology better than a fixed lattice. The RNG--MST contrasts compare two weight-derived graph families and show lower null-calibrated MTR for RNG in both profiles.
+The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50. Because the null values were effectively identical across topology families, graph--hexagonal MTR comparisons are reported descriptively, and MTR is used inferentially only to compare MST and RNG. Within these two weight-derived graph families, RNG showed significantly better local topological ordering than MST, as measured by null-relative MTR, in both the untuned (difference favouring RNG 0.0520, 95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$; Supplementary Table S19).
 
 \begin{table}[t]
 \centering
-\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Cross-family MTR effects quantify differences on the metric's graph-specific scale rather than direct differences in topology preservation; fixed-adjacency permutation-null ratios and matched contrasts are reported in Supplementary Table S19. Asterisks mark prespecified pooled paired effects with raw $p<0.05$; these are distinct from the dataset-level multiplicity-adjusted test families. Full confidence intervals, raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
+\caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Graph--hexagonal MTR effects are descriptive; MTR is used inferentially only for the RNG--MST comparison between the two weight-derived graph families. Asterisks mark prespecified pooled paired effects with raw $p<0.05$, except that graph--hexagonal MTR cells are unmarked; these tests are distinct from the dataset-level multiplicity-adjusted families. Fixed-adjacency permutation-null ratios and matched contrasts are reported in Supplementary Table S19. Full confidence intervals, applicable raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S12.}
 \label{tab:matched_topology_diagnostics_summary}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -393,8 +393,8 @@ The permutation-null rerun gave empirical null means between 49.999 and 50.012 a
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 Profile & MST vs hex & RNG vs hex & RNG vs MST & MST vs hex & RNG vs hex & RNG vs MST \\
 \midrule
-Untuned & +0.269\textsuperscript{*} & +0.249\textsuperscript{*} & -0.020\textsuperscript{*} & -0.20 & +2.44\textsuperscript{*} & +2.64\textsuperscript{*} \\
-Tuned & +0.064\textsuperscript{*} & +0.052\textsuperscript{*} & -0.012 & +22.71\textsuperscript{*} & +25.67\textsuperscript{*} & +2.96\textsuperscript{*} \\
+Untuned & +0.269\textsuperscript{*} & +0.249\textsuperscript{*} & -0.020\textsuperscript{*} & -0.20 & +2.44 & +2.64\textsuperscript{*} \\
+Tuned & +0.064\textsuperscript{*} & +0.052\textsuperscript{*} & -0.012 & +22.71 & +25.67 & +2.96\textsuperscript{*} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -502,13 +502,11 @@ FloatSOM combines graph-based SOM topologies with distributed, out-of-memory GPU
 
 The trade-off between full and random sampling is scale dependent. Random sampling is less stable on small datasets, while above $10{,}000$ samples we detect little paired $QE$ difference. Full sampling is therefore preferable when stability is critical; random sampling offers higher throughput on larger datasets, although disk-backed operation limits its I/O advantage.
 
-Across the Optuna matched top-$k$ runs, RNG showed significantly better balanced and train $QE$ than MST, while no significant holdout-$QE$ difference was detected. RNG also had better overall hyperparameter stability. In the tuned defaults, no balanced-$QE$ difference was detected, although RNG had higher node utilization than MST. Graph-versus-hexagonal MTR differences are retained as descriptive results because null calibration does not remove differences in adjacency construction or attainable MTR floors. The RNG--MST comparison shows lower null-calibrated MTR for RNG in both the tuned and untuned profiles.
+Across the Optuna matched top-$k$ runs, RNG showed significantly better balanced and train $QE$ than MST, while no significant holdout-$QE$ difference was detected. RNG also had better overall hyperparameter stability. In the tuned defaults, no balanced-$QE$ difference was detected, although RNG had higher node utilization than MST.
 
-A geometric interpretation consistent with these results is that a fixed lattice imposes uniform, predetermined coupling: when a prototype moves, it can unnecessarily influence lattice neighbors that are unrelated in the learned data space, potentially displacing useful prototypes and increasing dead nodes. The apparently nonlocal hexagonal connections in the KDD Cup 99 projection (Fig. 5D) provide a visual illustration of this coupling and the associated restriction on independent prototype redistribution, subject to the distortions inherent in the two-dimensional PCA display. MST minimizes such coupling, allowing prototypes to redistribute more freely along irregular or elongated data structures. This freedom is also its limitation, because a tree cannot retain multiple locally appropriate connections where a concentrated region is better represented by a mesh. RNG occupies an intermediate position. Its nodes can influence several neighbors, but those connections arise from the evolving prototype geometry rather than being imposed before training; RNG can remain sparse where appropriate and form multiple connections in dense regions. Within the two weight-derived graph families, RNG's lower MTR and higher node utilization are consistent with this interpretation [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980].
+A geometric interpretation consistent with these results is that a fixed lattice imposes uniform, predetermined coupling: when a prototype moves, it can unnecessarily influence lattice neighbors that are unrelated in the learned data space, potentially displacing useful prototypes and increasing dead nodes. The apparently nonlocal hexagonal connections in the KDD Cup 99 projection (Fig. 5D) provide a visual illustration of this coupling and the associated restriction on independent prototype redistribution, subject to the distortions inherent in the two-dimensional PCA display. MST minimizes such coupling, allowing prototypes to redistribute more freely along irregular or elongated data structures. This freedom is also its limitation, because a tree cannot retain multiple locally appropriate connections where a concentrated region is better represented by a mesh. RNG occupies an intermediate position. Its nodes can influence several neighbors, but those connections arise from the evolving prototype geometry rather than being imposed before training; RNG can remain sparse where appropriate and form multiple connections in dense regions. Within the two weight-derived graph families, RNG's higher node utilization is consistent with this interpretation [@kohonenEssentialsSelforganizingMap2013; @kangasVariantsSelforganizingMaps1990; @toussaintRelativeNeighbourhoodGraph1980].
 
-For moderate map sizes, RNG remains the recommended starting topology based on its overall $QE$, stability, and node-utilization results. Although cross-family MTR is retained as descriptive, the MTR analysis allows the RNG--MST comparison, which shows that RNG achieves lower null-calibrated MTR in both tuned and untuned profiles. Topology should nevertheless be rechecked on the target dataset.
-
-Across the radius sweep, reducing the hexagonal radius narrowed the balanced-$QE$ gap to MST and RNG, but at the cost of a much sharper deterioration in within-map local ordering. MST and RNG maintained a more stable $QE$--ordering balance across radii, making their performance less sensitive to radius choice over the tested range.
+For moderate map sizes, RNG remains the recommended starting topology based on its overall $QE$, stability, and node-utilization results. MTR is used inferentially only to compare the two weight-derived graph topologies; within this comparison, RNG showed significantly better local topological ordering than MST in both tuned and untuned profiles. Topology should nevertheless be rechecked on the target dataset.
 
 The quality experiments use the in-memory pathway, whereas the scaling experiments use Ray. Within the distributed benchmark, scaling depends on workload size: overhead dominates small problems, while larger workloads benefit from parallel throughput and may remain in RAM when the 1-GPU case requires disk backing. Efficiencies above 100\% reflect this change in memory regime rather than super-linear computation.
 
@@ -1017,16 +1015,16 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | Sample Scaling | 1e+09 | 363.58 | 375.44 | 369.41 | hexagonal | mst | 3.26 |
 | Grid-Size Scaling | 64 | 32.54 | 266.45 | 880.83 | hexagonal | rng | 2606.61 |
 
-**Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.** Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S19. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.
+**Supplementary Table S12. Matched topology diagnostic paired summaries across tuned and untuned profiles.** Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. `Effect favoring comparator` is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Hexagonal--graph MTR entries are descriptive and their p-values are omitted; the fixed-adjacency permutation-null analysis is reported in Supplementary Table S19. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the remaining tests report raw paired-test p-values. `comp/ref/tie` gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.
 
 | Comparison | Metric | Better | n | Effect favoring comparator | 95% CI | dz | raw p | comp/ref/tie |
 | --- | --- | --- | ---: | ---: | --- | ---: | ---: | --- |
 | Untuned hex vs untuned MST | QE_H | lower | 280 | 0.1523 | [0.1110, 0.1937] | 0.4330 | 4.22e-12 | 185/95/0 |
 | Untuned hex vs untuned MST | QE_T | lower | 280 | 0.3862 | [0.2780, 0.4944] | 0.4199 | 1.63e-11 | 226/54/0 |
 | Untuned hex vs untuned MST | QE_B | lower | 280 | 0.2693 | [0.1975, 0.3410] | 0.4415 | 1.73e-12 | 222/58/0 |
-| Untuned hex vs untuned MST | MTR_H | lower | 280 | -0.6164 | [-0.9036, -0.3292] | -0.2525 | 3.24e-05 | 125/155/0 |
-| Untuned hex vs untuned MST | MTR_T | lower | 280 | 0.2075 | [-0.0155, 0.4304] | 0.1095 | 0.068 | 167/113/0 |
-| Untuned hex vs untuned MST | MTR_B | lower | 280 | -0.2045 | [-0.4382, 0.0293] | -0.1029 | 0.086 | 139/141/0 |
+| Untuned hex vs untuned MST | MTR_H | lower | 280 | -0.6164 | [-0.9036, -0.3292] | -0.2525 | -- | 125/155/0 |
+| Untuned hex vs untuned MST | MTR_T | lower | 280 | 0.2075 | [-0.0155, 0.4304] | 0.1095 | -- | 167/113/0 |
+| Untuned hex vs untuned MST | MTR_B | lower | 280 | -0.2045 | [-0.4382, 0.0293] | -0.1029 | -- | 139/141/0 |
 | Untuned hex vs untuned MST | Util_H | higher | 280 | 0.0187 | [0.0115, 0.0260] | 0.3056 | 5.88e-07 | 110/73/97 |
 | Untuned hex vs untuned MST | Util_T | higher | 280 | 0.0414 | [0.0345, 0.0483] | 0.7049 | 2.55e-26 | 147/17/116 |
 | Untuned hex vs untuned MST | Util_B | higher | 280 | 0.0301 | [0.0237, 0.0364] | 0.5534 | 5.62e-18 | 144/46/90 |
@@ -1036,9 +1034,9 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | Untuned hex vs untuned RNG | QE_H | lower | 280 | 0.1523 | [0.1094, 0.1953] | 0.4174 | 2.10e-11 | 206/74/0 |
 | Untuned hex vs untuned RNG | QE_T | lower | 280 | 0.3464 | [0.2480, 0.4447] | 0.4143 | 2.88e-11 | 246/34/0 |
 | Untuned hex vs untuned RNG | QE_B | lower | 280 | 0.2494 | [0.1808, 0.3179] | 0.4281 | 6.99e-12 | 241/39/0 |
-| Untuned hex vs untuned RNG | MTR_H | lower | 280 | 2.3952 | [2.1221, 2.6683] | 1.0316 | 6.30e-46 | 256/24/0 |
-| Untuned hex vs untuned RNG | MTR_T | lower | 280 | 2.4838 | [2.2596, 2.7080] | 1.3032 | 3.18e-62 | 272/8/0 |
-| Untuned hex vs untuned RNG | MTR_B | lower | 280 | 2.4395 | [2.2033, 2.6757] | 1.2152 | 5.16e-57 | 269/11/0 |
+| Untuned hex vs untuned RNG | MTR_H | lower | 280 | 2.3952 | [2.1221, 2.6683] | 1.0316 | -- | 256/24/0 |
+| Untuned hex vs untuned RNG | MTR_T | lower | 280 | 2.4838 | [2.2596, 2.7080] | 1.3032 | -- | 272/8/0 |
+| Untuned hex vs untuned RNG | MTR_B | lower | 280 | 2.4395 | [2.2033, 2.6757] | 1.2152 | -- | 269/11/0 |
 | Untuned hex vs untuned RNG | Util_H | higher | 280 | 0.0225 | [0.0157, 0.0294] | 0.3886 | 3.65e-10 | 125/55/100 |
 | Untuned hex vs untuned RNG | Util_T | higher | 280 | 0.0432 | [0.0361, 0.0504] | 0.7162 | 5.62e-27 | 157/10/113 |
 | Untuned hex vs untuned RNG | Util_B | higher | 280 | 0.0329 | [0.0266, 0.0392] | 0.6130 | 3.69e-21 | 157/30/93 |
@@ -1060,9 +1058,9 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | Tuned hex vs tuned MST | QE_H | lower | 280 | 0.0404 | [0.0199, 0.0608] | 0.2323 | 1.27e-04 | 199/81/0 |
 | Tuned hex vs tuned MST | QE_T | lower | 280 | 0.0872 | [0.0537, 0.1207] | 0.3063 | 5.54e-07 | 246/34/0 |
 | Tuned hex vs tuned MST | QE_B | lower | 280 | 0.0638 | [0.0379, 0.0897] | 0.2897 | 2.07e-06 | 226/54/0 |
-| Tuned hex vs tuned MST | MTR_H | lower | 280 | 22.2866 | [21.4521, 23.1212] | 3.1417 | 8.86e-147 | 280/0/0 |
-| Tuned hex vs tuned MST | MTR_T | lower | 280 | 23.1240 | [22.2558, 23.9922] | 3.1331 | 1.77e-146 | 280/0/0 |
-| Tuned hex vs tuned MST | MTR_B | lower | 280 | 22.7053 | [21.8739, 23.5368] | 3.2126 | 3.06e-149 | 280/0/0 |
+| Tuned hex vs tuned MST | MTR_H | lower | 280 | 22.2866 | [21.4521, 23.1212] | 3.1417 | -- | 280/0/0 |
+| Tuned hex vs tuned MST | MTR_T | lower | 280 | 23.1240 | [22.2558, 23.9922] | 3.1331 | -- | 280/0/0 |
+| Tuned hex vs tuned MST | MTR_B | lower | 280 | 22.7053 | [21.8739, 23.5368] | 3.2126 | -- | 280/0/0 |
 | Tuned hex vs tuned MST | Util_H | higher | 280 | 0.0092 | [0.0055, 0.0129] | 0.2905 | 1.95e-06 | 116/63/101 |
 | Tuned hex vs tuned MST | Util_T | higher | 280 | 0.0222 | [0.0185, 0.0260] | 0.6975 | 6.79e-26 | 150/13/117 |
 | Tuned hex vs tuned MST | Util_B | higher | 280 | 0.0157 | [0.0125, 0.0189] | 0.5798 | 2.30e-19 | 139/47/94 |
@@ -1072,9 +1070,9 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | Tuned hex vs tuned RNG | QE_H | lower | 280 | 0.0360 | [0.0186, 0.0533] | 0.2434 | 6.04e-05 | 210/70/0 |
 | Tuned hex vs tuned RNG | QE_T | lower | 280 | 0.0671 | [0.0409, 0.0932] | 0.3014 | 8.25e-07 | 245/35/0 |
 | Tuned hex vs tuned RNG | QE_B | lower | 280 | 0.0515 | [0.0318, 0.0712] | 0.3077 | 4.94e-07 | 240/40/0 |
-| Tuned hex vs tuned RNG | MTR_H | lower | 280 | 25.4035 | [24.5013, 26.3057] | 3.3124 | 1.24e-152 | 280/0/0 |
-| Tuned hex vs tuned RNG | MTR_T | lower | 280 | 25.9296 | [25.0046, 26.8545] | 3.2979 | 3.81e-152 | 280/0/0 |
-| Tuned hex vs tuned RNG | MTR_B | lower | 280 | 25.6665 | [24.7693, 26.5638] | 3.3652 | 2.17e-154 | 280/0/0 |
+| Tuned hex vs tuned RNG | MTR_H | lower | 280 | 25.4035 | [24.5013, 26.3057] | 3.3124 | -- | 280/0/0 |
+| Tuned hex vs tuned RNG | MTR_T | lower | 280 | 25.9296 | [25.0046, 26.8545] | 3.2979 | -- | 280/0/0 |
+| Tuned hex vs tuned RNG | MTR_B | lower | 280 | 25.6665 | [24.7693, 26.5638] | 3.3652 | -- | 280/0/0 |
 | Tuned hex vs tuned RNG | Util_H | higher | 280 | 0.0117 | [0.0076, 0.0158] | 0.3348 | 5.07e-08 | 110/59/111 |
 | Tuned hex vs tuned RNG | Util_T | higher | 280 | 0.0276 | [0.0226, 0.0326] | 0.6496 | 3.52e-23 | 143/12/125 |
 | Tuned hex vs tuned RNG | Util_B | higher | 280 | 0.0197 | [0.0158, 0.0235] | 0.6025 | 1.38e-20 | 138/40/102 |
@@ -1130,7 +1128,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | Tuned vs untuned RNG | Dead_T | lower | 280 | 0.0224 | [0.0180, 0.0268] | 0.6043 | 1.10e-20 | 134/19/127 |
 | Tuned vs untuned RNG | Dead_B | lower | 280 | 0.0101 | [0.0067, 0.0136] | 0.3465 | 1.82e-08 | 117/68/95 |
 
-**Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.** Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. `untuned` denotes the untuned reference profile using XPySOM-like default hyperparameters and `tuned` denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S19. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.
+**Supplementary Table S13. Full matched topology diagnostic means by profile, dataset, and topology.** Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. `untuned` denotes the untuned reference profile using XPySOM-like default hyperparameters and `tuned` denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Hexagonal--graph MTR values are descriptive; the per-map fixed-adjacency permutation-null analysis is reported in Supplementary Table S19. Metric suffixes denote holdout (`_H`), train (`_T`), and balanced train-holdout (`_B`) summaries.
 
 | Profile | Dataset | Topology | n | QE_H | QE_T | QE_B | MTR_H | MTR_T | MTR_B | Util_H | Util_T | Util_B | Dead_H | Dead_T | Dead_B |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -1308,7 +1306,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 | olivetti_faces | $QE_H$ | 52.1553 | 41.8633 | 19.72% [18.97%, 20.48%] | 3.89e-12 | 1.56e-11 |
 | olivetti_faces | $QE_T$ | 51.5190 | 34.3777 | 33.27% [32.59%, 33.95%] | 2.85e-15 | 8.56e-15 |
 
-**Supplementary Table S19. Per-map fixed-adjacency MTR permutation-null calibration.** For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Cross-family contrasts quantify differences on the calibrated MTR scale rather than direct differences in topology preservation; RNG--MST contrasts compare the two weight-derived graph families. P-values are raw two-sided paired $t$-test values.
+**Supplementary Table S19. Per-map fixed-adjacency MTR permutation-null analysis.** For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Graph--hexagonal contrasts are reported descriptively and their p-values are omitted; RNG--MST contrasts compare the two weight-derived graph families using raw two-sided paired $t$-tests.
 
 | Part A: Profile | Topology | Maps | Empirical null MTR | Observed/null ratio |
 | --- | --- | ---: | ---: | ---: |
@@ -1321,11 +1319,11 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 
 | Part B: Profile | Contrast (reference vs comparator) | Paired ratio effect | 95% CI | p |
 | --- | --- | ---: | ---: | ---: |
-| Untuned | Hexagonal vs MST | -0.0044 | [-0.0091, 0.0003] | 0.0656 |
-| Untuned | Hexagonal vs RNG | 0.0477 | [0.0431, 0.0522] | 8.17e-58 |
+| Untuned | Hexagonal vs MST | -0.0044 | [-0.0091, 0.0003] | -- |
+| Untuned | Hexagonal vs RNG | 0.0477 | [0.0431, 0.0522] | -- |
 | Untuned | MST vs RNG | 0.0520 | [0.0468, 0.0573] | 1.33e-54 |
-| Tuned | Hexagonal vs MST | 0.4539 | [0.4377, 0.4701] | 2.66e-152 |
-| Tuned | Hexagonal vs RNG | 0.5153 | [0.4978, 0.5329] | 3.36e-157 |
+| Tuned | Hexagonal vs MST | 0.4539 | [0.4377, 0.4701] | -- |
+| Tuned | Hexagonal vs RNG | 0.5153 | [0.4978, 0.5329] | -- |
 | Tuned | MST vs RNG | 0.0614 | [0.0561, 0.0668] | 1.63e-65 |
 
 ## 12. Supplementary Figures (End Matter)

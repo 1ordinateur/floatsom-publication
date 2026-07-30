@@ -775,7 +775,7 @@ Grid-Size Scaling & 64 & 32.54 & 266.45 & 880.83 & hexagonal & rng & 2606.61 \\
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.17\linewidth}L{0.08\linewidth}L{0.08\linewidth}C{0.06\linewidth}C{0.11\linewidth}C{0.16\linewidth}C{0.08\linewidth}C{0.10\linewidth}C{0.10\linewidth}@{}}
 \caption{\TrackSuppTable{Matched topology diagnostic paired summaries across tuned and untuned profiles.}}\label{tab:s12} \\
-\multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Hexagonal--graph MTR entries quantify differences on MTR's graph-specific scale rather than direct differences in topology preservation; null-calibrated ratios are reported in Supplementary Table S19. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the table reports raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.}} \\[\baselineskip]
+\multicolumn{9}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report pooled paired effects from the final matched random-seed topology diagnostic benchmark. \texttt{Effect favoring comparator} is oriented so positive values favor the comparator after applying each metric's directionality; lower is better for QE, MTR, and dead-node fraction, while higher is better for node utilization. Hexagonal--graph MTR entries are descriptive and their p-values are omitted; the fixed-adjacency permutation-null analysis is reported in Supplementary Table S19. Because these are pre-specified pooled paired summaries rather than dataset-level test families, the remaining tests report raw paired-test p-values. \texttt{comp/ref/tie} gives the number of comparator-favoring, reference-favoring, and tied matched pairs. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries. The tuned profile uses the deployable tuned configurations reported in the main text.}} \\[\baselineskip]
 \TrackSuppTableBodyOn
 \toprule
 \textbf{Comparison} & \textbf{Metric} & \textbf{Better} & \textbf{n} & \textbf{Effect favoring comparator} & \textbf{95\% CI} & \textbf{dz} & \textbf{raw p} & \textbf{comp/ref/tie} \\
@@ -794,9 +794,9 @@ Grid-Size Scaling & 64 & 32.54 & 266.45 & 880.83 & hexagonal & rng & 2606.61 \\
 Untuned hex vs untuned MST & QE\_\allowbreak{}H & lower & 280 & 0.1523 & [0.1110, 0.1937] & 0.4330 & 4.22e-12 & 185/95/0 \\
 Untuned hex vs untuned MST & QE\_\allowbreak{}T & lower & 280 & 0.3862 & [0.2780, 0.4944] & 0.4199 & 1.63e-11 & 226/54/0 \\
 Untuned hex vs untuned MST & QE\_\allowbreak{}B & lower & 280 & 0.2693 & [0.1975, 0.3410] & 0.4415 & 1.73e-12 & 222/58/0 \\
-Untuned hex vs untuned MST & MTR\_\allowbreak{}H & lower & 280 & -0.6164 & [-0.9036, -0.3292] & -0.2525 & 3.24e-05 & 125/155/0 \\
-Untuned hex vs untuned MST & MTR\_\allowbreak{}T & lower & 280 & 0.2075 & [-0.0155, 0.4304] & 0.1095 & 0.068 & 167/113/0 \\
-Untuned hex vs untuned MST & MTR\_\allowbreak{}B & lower & 280 & -0.2045 & [-0.4382, 0.0293] & -0.1029 & 0.086 & 139/141/0 \\
+Untuned hex vs untuned MST & MTR\_\allowbreak{}H & lower & 280 & -0.6164 & [-0.9036, -0.3292] & -0.2525 & -- & 125/155/0 \\
+Untuned hex vs untuned MST & MTR\_\allowbreak{}T & lower & 280 & 0.2075 & [-0.0155, 0.4304] & 0.1095 & -- & 167/113/0 \\
+Untuned hex vs untuned MST & MTR\_\allowbreak{}B & lower & 280 & -0.2045 & [-0.4382, 0.0293] & -0.1029 & -- & 139/141/0 \\
 Untuned hex vs untuned MST & Util\_\allowbreak{}H & higher & 280 & 0.0187 & [0.0115, 0.0260] & 0.3056 & 5.88e-07 & 110/73/97 \\
 Untuned hex vs untuned MST & Util\_\allowbreak{}T & higher & 280 & 0.0414 & [0.0345, 0.0483] & 0.7049 & 2.55e-26 & 147/17/116 \\
 Untuned hex vs untuned MST & Util\_\allowbreak{}B & higher & 280 & 0.0301 & [0.0237, 0.0364] & 0.5534 & 5.62e-18 & 144/46/90 \\
@@ -806,9 +806,9 @@ Untuned hex vs untuned MST & Dead\_\allowbreak{}B & lower & 280 & 0.0301 & [0.02
 Untuned hex vs untuned RNG & QE\_\allowbreak{}H & lower & 280 & 0.1523 & [0.1094, 0.1953] & 0.4174 & 2.10e-11 & 206/74/0 \\
 Untuned hex vs untuned RNG & QE\_\allowbreak{}T & lower & 280 & 0.3464 & [0.2480, 0.4447] & 0.4143 & 2.88e-11 & 246/34/0 \\
 Untuned hex vs untuned RNG & QE\_\allowbreak{}B & lower & 280 & 0.2494 & [0.1808, 0.3179] & 0.4281 & 6.99e-12 & 241/39/0 \\
-Untuned hex vs untuned RNG & MTR\_\allowbreak{}H & lower & 280 & 2.3952 & [2.1221, 2.6683] & 1.0316 & 6.30e-46 & 256/24/0 \\
-Untuned hex vs untuned RNG & MTR\_\allowbreak{}T & lower & 280 & 2.4838 & [2.2596, 2.7080] & 1.3032 & 3.18e-62 & 272/8/0 \\
-Untuned hex vs untuned RNG & MTR\_\allowbreak{}B & lower & 280 & 2.4395 & [2.2033, 2.6757] & 1.2152 & 5.16e-57 & 269/11/0 \\
+Untuned hex vs untuned RNG & MTR\_\allowbreak{}H & lower & 280 & 2.3952 & [2.1221, 2.6683] & 1.0316 & -- & 256/24/0 \\
+Untuned hex vs untuned RNG & MTR\_\allowbreak{}T & lower & 280 & 2.4838 & [2.2596, 2.7080] & 1.3032 & -- & 272/8/0 \\
+Untuned hex vs untuned RNG & MTR\_\allowbreak{}B & lower & 280 & 2.4395 & [2.2033, 2.6757] & 1.2152 & -- & 269/11/0 \\
 Untuned hex vs untuned RNG & Util\_\allowbreak{}H & higher & 280 & 0.0225 & [0.0157, 0.0294] & 0.3886 & 3.65e-10 & 125/55/100 \\
 Untuned hex vs untuned RNG & Util\_\allowbreak{}T & higher & 280 & 0.0432 & [0.0361, 0.0504] & 0.7162 & 5.62e-27 & 157/10/113 \\
 Untuned hex vs untuned RNG & Util\_\allowbreak{}B & higher & 280 & 0.0329 & [0.0266, 0.0392] & 0.6130 & 3.69e-21 & 157/30/93 \\
@@ -830,9 +830,9 @@ Untuned MST vs untuned RNG & Dead\_\allowbreak{}B & lower & 280 & 0.0028 & [-9.2
 Tuned hex vs tuned MST & QE\_\allowbreak{}H & lower & 280 & 0.0404 & [0.0199, 0.0608] & 0.2323 & 1.27e-04 & 199/81/0 \\
 Tuned hex vs tuned MST & QE\_\allowbreak{}T & lower & 280 & 0.0872 & [0.0537, 0.1207] & 0.3063 & 5.54e-07 & 246/34/0 \\
 Tuned hex vs tuned MST & QE\_\allowbreak{}B & lower & 280 & 0.0638 & [0.0379, 0.0897] & 0.2897 & 2.07e-06 & 226/54/0 \\
-Tuned hex vs tuned MST & MTR\_\allowbreak{}H & lower & 280 & 22.2866 & [21.4521, 23.1212] & 3.1417 & 8.86e-147 & 280/0/0 \\
-Tuned hex vs tuned MST & MTR\_\allowbreak{}T & lower & 280 & 23.1240 & [22.2558, 23.9922] & 3.1331 & 1.77e-146 & 280/0/0 \\
-Tuned hex vs tuned MST & MTR\_\allowbreak{}B & lower & 280 & 22.7053 & [21.8739, 23.5368] & 3.2126 & 3.06e-149 & 280/0/0 \\
+Tuned hex vs tuned MST & MTR\_\allowbreak{}H & lower & 280 & 22.2866 & [21.4521, 23.1212] & 3.1417 & -- & 280/0/0 \\
+Tuned hex vs tuned MST & MTR\_\allowbreak{}T & lower & 280 & 23.1240 & [22.2558, 23.9922] & 3.1331 & -- & 280/0/0 \\
+Tuned hex vs tuned MST & MTR\_\allowbreak{}B & lower & 280 & 22.7053 & [21.8739, 23.5368] & 3.2126 & -- & 280/0/0 \\
 Tuned hex vs tuned MST & Util\_\allowbreak{}H & higher & 280 & 0.0092 & [0.0055, 0.0129] & 0.2905 & 1.95e-06 & 116/63/101 \\
 Tuned hex vs tuned MST & Util\_\allowbreak{}T & higher & 280 & 0.0222 & [0.0185, 0.0260] & 0.6975 & 6.79e-26 & 150/13/117 \\
 Tuned hex vs tuned MST & Util\_\allowbreak{}B & higher & 280 & 0.0157 & [0.0125, 0.0189] & 0.5798 & 2.30e-19 & 139/47/94 \\
@@ -842,9 +842,9 @@ Tuned hex vs tuned MST & Dead\_\allowbreak{}B & lower & 280 & 0.0157 & [0.0125, 
 Tuned hex vs tuned RNG & QE\_\allowbreak{}H & lower & 280 & 0.0360 & [0.0186, 0.0533] & 0.2434 & 6.04e-05 & 210/70/0 \\
 Tuned hex vs tuned RNG & QE\_\allowbreak{}T & lower & 280 & 0.0671 & [0.0409, 0.0932] & 0.3014 & 8.25e-07 & 245/35/0 \\
 Tuned hex vs tuned RNG & QE\_\allowbreak{}B & lower & 280 & 0.0515 & [0.0318, 0.0712] & 0.3077 & 4.94e-07 & 240/40/0 \\
-Tuned hex vs tuned RNG & MTR\_\allowbreak{}H & lower & 280 & 25.4035 & [24.5013, 26.3057] & 3.3124 & 1.24e-152 & 280/0/0 \\
-Tuned hex vs tuned RNG & MTR\_\allowbreak{}T & lower & 280 & 25.9296 & [25.0046, 26.8545] & 3.2979 & 3.81e-152 & 280/0/0 \\
-Tuned hex vs tuned RNG & MTR\_\allowbreak{}B & lower & 280 & 25.6665 & [24.7693, 26.5638] & 3.3652 & 2.17e-154 & 280/0/0 \\
+Tuned hex vs tuned RNG & MTR\_\allowbreak{}H & lower & 280 & 25.4035 & [24.5013, 26.3057] & 3.3124 & -- & 280/0/0 \\
+Tuned hex vs tuned RNG & MTR\_\allowbreak{}T & lower & 280 & 25.9296 & [25.0046, 26.8545] & 3.2979 & -- & 280/0/0 \\
+Tuned hex vs tuned RNG & MTR\_\allowbreak{}B & lower & 280 & 25.6665 & [24.7693, 26.5638] & 3.3652 & -- & 280/0/0 \\
 Tuned hex vs tuned RNG & Util\_\allowbreak{}H & higher & 280 & 0.0117 & [0.0076, 0.0158] & 0.3348 & 5.07e-08 & 110/59/111 \\
 Tuned hex vs tuned RNG & Util\_\allowbreak{}T & higher & 280 & 0.0276 & [0.0226, 0.0326] & 0.6496 & 3.52e-23 & 143/12/125 \\
 Tuned hex vs tuned RNG & Util\_\allowbreak{}B & higher & 280 & 0.0197 & [0.0158, 0.0235] & 0.6025 & 1.38e-20 & 138/40/102 \\
@@ -917,7 +917,7 @@ Tuned vs untuned RNG & Dead\_\allowbreak{}B & lower & 280 & 0.0101 & [0.0067, 0.
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}L{0.08\linewidth}L{0.16\linewidth}L{0.10\linewidth}C{0.05\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}@{}}
 \caption{\TrackSuppTable{Full matched topology diagnostic means by profile, dataset, and topology.}}\label{tab:s13} \\
-\multicolumn{10}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Hexagonal--graph MTR values quantify the metric's graph-specific ordering; their per-map permutation-null calibration is reported in Supplementary Table S19. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries.}} \\[\baselineskip]
+\multicolumn{10}{@{}L{0.94\linewidth}@{}}{\TrackSuppTable{Rows report the mean value across the final matched random seeds for each profile, dataset, topology, and full-sampling setting. \texttt{untuned} denotes the untuned reference profile using XPySOM-like default hyperparameters and \texttt{tuned} denotes the fixed QE-tuned profile. Lower is better for QE, MTR, and dead-node fraction; higher is better for node utilization. Hexagonal--graph MTR values are descriptive; the per-map fixed-adjacency permutation-null analysis is reported in Supplementary Table S19. Metric suffixes denote holdout (\texttt{\_\allowbreak{}H}), train (\texttt{\_\allowbreak{}T}), and balanced train-holdout (\texttt{\_\allowbreak{}B}) summaries.}} \\[\baselineskip]
 \TrackSuppTableBodyOn
 \toprule
 \textbf{Profile} & \textbf{Dataset} & \textbf{Topology} & \textbf{n} & \textbf{QE\_\allowbreak{}H} & \textbf{QE\_\allowbreak{}T} & \textbf{QE\_\allowbreak{}B} & \textbf{MTR\_\allowbreak{}H} & \textbf{MTR\_\allowbreak{}T} & \textbf{MTR\_\allowbreak{}B} \\
@@ -1363,9 +1363,9 @@ olivetti\_\allowbreak{}faces & $QE_T$ & 51.5190 & 34.3777 & 33.27\% [32.59\%, 33
 \normalsize
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.10}
-\caption{\TrackSuppTable{Per-map fixed-adjacency MTR permutation-null calibration.}}\label{tab:s19}
+\caption{\TrackSuppTable{Per-map fixed-adjacency MTR permutation-null analysis.}}\label{tab:s19}
 \begin{minipage}{0.96\linewidth}
-\TrackSuppTable{For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Cross-family contrasts quantify differences on the calibrated MTR scale rather than direct differences in topology preservation; RNG--MST contrasts compare the two weight-derived graph families. P-values are raw two-sided paired $t$-test values.}
+\TrackSuppTable{For each trained map and split, the final graph was held fixed while prototype identities were uniformly permuted among its 100 nodes 1,000 times; MST and RNG graphs were not rebuilt. Part A reports arithmetic means across 280 dataset--seed maps per profile--topology combination. The ratio is observed balanced MTR divided by its per-map empirical null mean, so lower values indicate stronger ordering relative to random prototype placement. Part B reports matched paired effects on that ratio, calculated as reference minus comparator so positive values favour the comparator. Graph--hexagonal contrasts are reported descriptively and their p-values are omitted; RNG--MST contrasts compare the two weight-derived graph families using raw two-sided paired $t$-tests.}
 \end{minipage}
 
 \vspace{\baselineskip}
@@ -1387,11 +1387,11 @@ Tuned & RNG & 280 & 50.004 & 0.098 \\
 \toprule
 \textbf{Part B: Profile} & \textbf{Contrast (reference vs comparator)} & \textbf{Paired ratio effect} & \textbf{95\% CI} & \textbf{p} \\
 \midrule
-Untuned & Hexagonal vs MST & -0.0044 & [-0.0091, 0.0003] & 0.0656 \\
-Untuned & Hexagonal vs RNG & 0.0477 & [0.0431, 0.0522] & 8.17e-58 \\
+Untuned & Hexagonal vs MST & -0.0044 & [-0.0091, 0.0003] & -- \\
+Untuned & Hexagonal vs RNG & 0.0477 & [0.0431, 0.0522] & -- \\
 Untuned & MST vs RNG & 0.0520 & [0.0468, 0.0573] & 1.33e-54 \\
-Tuned & Hexagonal vs MST & 0.4539 & [0.4377, 0.4701] & 2.66e-152 \\
-Tuned & Hexagonal vs RNG & 0.5153 & [0.4978, 0.5329] & 3.36e-157 \\
+Tuned & Hexagonal vs MST & 0.4539 & [0.4377, 0.4701] & -- \\
+Tuned & Hexagonal vs RNG & 0.5153 & [0.4978, 0.5329] & -- \\
 Tuned & MST vs RNG & 0.0614 & [0.0561, 0.0668] & 1.63e-65 \\
 \bottomrule
 \end{tabular}

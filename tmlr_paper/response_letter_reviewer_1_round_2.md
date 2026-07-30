@@ -40,7 +40,7 @@ Supplementary Table S16 reports the cross-topology comparisons at each shared ra
 
 We added the exact normalized $QE_B$ radius-response values to Supplementary Table S15, moved the shared-radius contrasts to Supplementary Table S16, and moved the topology-specific minimum comparisons to Supplementary Table S17. We also revised the Methods, Section 5.3.4, and the Fig. 9 caption to distinguish the selected hexagonal anchor from the fixed-sweep minimum and to identify where each numerical result is reported.
 
-## 3. MTR permutation-null calibration and claim scope
+## 3. MTR permutation-null analysis and claim scope
 
 ### Reviewer Comment
 
@@ -68,17 +68,17 @@ R_{\mathrm{MTR}}=
 {\overline{\mathrm{MTR}}_{\mathrm{permutation\ null}}}.
 $$
 
-The null MTR is nearly exactly 50 as once the first BMU is fixed, random reassignment makes the second BMU equally likely to occupy any of the other 99 nodes. MTR's shell tied ranks, counted with their shell multiplicities, partition ordinal ranks 1 through 99. Their mean is therefore $(1+99)/2=50$, irrespective of node degree or shell sizes. The empirical profile--topology null means ranged from 49.999 to 50.012, confirm this result.
+The null MTR is nearly exactly 50 as once the first BMU is fixed, random reassignment makes the second BMU equally likely to occupy any of the other 99 nodes. MTR's shell tied ranks, counted with their shell multiplicities, partition ordinal ranks 1 through 99. Their mean is therefore $(1+99)/2=50$, irrespective of node degree or shell sizes. The empirical profile--topology null means ranged from 49.999 to 50.012, confirming this result.
 
-The mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for the tuned profiles. In matched comparisons across the 280 dataset--seed maps, untuned MST did not improve upon untuned hexagonal (paired effect favouring MST $-0.0044$, 95% CI [$-0.0091$, 0.0003], $p=0.0656$). The RNG--MST result survived the calibration: RNG had a lower ratio by 0.0520 in the untuned profile (95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and by 0.0614 in the tuned profile (95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$). Supplementary Table S19 reports all six ratios and all matched topology contrasts.
+The mean observed-to-null ratios were 0.123, 0.127, and 0.075 for untuned hexagonal, MST, and RNG, respectively, and 0.614, 0.160, and 0.098 for the tuned profiles. Within the two weight-derived graph families, RNG had a lower null-relative MTR ratio than MST by 0.0520 in the untuned profile (95% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and by 0.0614 in the tuned profile (95% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$). Supplementary Table S19 reports all six ratios and all matched topology contrasts.
 
-However, the analysis also showed that the permutation null does not resolve the underlying cross-family comparability problem. Its expectation is 50 for every connected 100-node graph, so the observed-to-null ratio retains the effects of different shell sizes and weight-derived adjacency. It establishes ordering relative to random prototype placement within each fitted graph, but cannot establish that a weight-derived graph preserves data topology better than a fixed lattice or rule out the loose-vector-quantizer interpretation.
+Because the null values were effectively identical across topology families, the ratio did not provide a topology-specific normalization. We therefore report graph--hexagonal MTR differences descriptively and use MTR inferentially only to compare MST and RNG.
 
-We therefore also adopted the second suggested approach. Graph-versus-hexagonal MTR comparisons are now treated as descriptive, while the RNG--MST comparison is retained and shows lower null-calibrated MTR for RNG in both tuned and untuned profiles. We removed the claim that RNG beats “both MST and hexagonal” in topology preservation. For moderate map sizes, the practical recommendation of RNG as the starting topology is now based primarily on its overall $QE$, stability, and node-utilization results, with the RNG--MST MTR comparison providing additional support.
+Within this comparison, RNG showed significantly better local topological ordering than MST, as measured by null-relative MTR, in both tuned and untuned profiles. We removed the claim that RNG beats “both MST and hexagonal” in topology preservation. For moderate map sizes, the practical recommendation of RNG as the starting topology is now based primarily on its overall $QE$, stability, and node-utilization results, with the RNG--MST MTR comparison providing additional support.
 
 ### Summary of Manuscript Changes
 
-We added a description of the calibration to the main Methods and placed the complete per-map fixed-adjacency permutation procedure and exact $P/2=50$ derivation in Supplementary Methods S2. We reported the six observed-to-null ratios and matched contrasts in the Results and Supplementary Table S19, treated graph-versus-hexagonal MTR differences as descriptive, and retained the RNG--MST comparison. The practical recommendation now reflects the combined $QE$, stability, and node-utilization evidence, with RNG's lower null-calibrated MTR than MST providing additional support.
+We added a description of the permutation-null analysis to the main Methods and placed the complete per-map fixed-adjacency permutation procedure and exact $P/2=50$ derivation in Supplementary Methods S2. We reported the six observed-to-null ratios and matched contrasts in Supplementary Table S19, treated graph--hexagonal MTR differences as descriptive, and used MTR inferentially only for the RNG--MST comparison. The practical recommendation now reflects the combined $QE$, stability, and node-utilization evidence, with RNG's significantly better MTR-defined local ordering than MST providing additional support.
 
 ## 4. aweSOM quality baseline
 
