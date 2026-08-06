@@ -1,0 +1,4 @@
+axis	axis value	hexagonal s	MST s	RNG s	fastest	slowest	spread %
+Dimension Scaling	5000	404.17	423.15	409.94	hexagonal	mst	4.7
+Sample Scaling	1e+09	363.58	375.44	369.41	hexagonal	mst	3.26
+Grid-Size Scaling	64	32.54	266.45	880.83	hexagonal	rng	2606.61

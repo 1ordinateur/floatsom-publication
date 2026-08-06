@@ -1,0 +1,11 @@
+former_item	title	archived_files	revised_manuscript_status
+Table S4	Untuned FloatSOM MST versus hexagonal XPySOM	tables/former_table_s4_mst_vs_xpysom.tsv	Removed; detailed comparison archived
+Table S5	Untuned FloatSOM RNG versus hexagonal XPySOM	tables/former_table_s5_rng_vs_xpysom.tsv	Removed; detailed comparison archived
+Table S9	Tuned FloatSOM hexagonal versus untuned hexagonal XPySOM	tables/former_table_s9_tuned_hex_vs_xpysom.tsv	Removed; global tuning contribution retained in main text
+Table S10	Tuned FloatSOM MST versus untuned hexagonal XPySOM	tables/former_table_s10_tuned_mst_vs_xpysom.tsv	Removed; detailed comparison archived
+Table S11	Figure 14 topology runtime summary at the largest common 8-GPU axis values	tables/former_table_s11_topology_runtime_summary.tsv	Removed; Figure 14 and main-text runtime values retained
+Table S13	Full matched topology diagnostic means by profile, dataset, and topology	tables/former_table_s13_topology_diagnostic_means.tsv	Removed; paired effects retained in renumbered supplementary table
+Figure S1	Untuned FloatSOM MST versus hexagonal XPySOM	figures/former_figure_s1_mst_vs_xpysom.svg; figures/former_figure_s1_mst_vs_xpysom.pdf	Removed with former Table S4
+Figure S2	Untuned FloatSOM RNG versus hexagonal XPySOM	figures/former_figure_s2_rng_vs_xpysom.svg; figures/former_figure_s2_rng_vs_xpysom.pdf	Removed with former Table S5
+Figure S7	Tuned FloatSOM hexagonal versus untuned hexagonal XPySOM	figures/former_figure_s7_tuned_hex_vs_xpysom.svg; figures/former_figure_s7_tuned_hex_vs_xpysom.pdf	Removed with former Table S9
+Figure S8	Tuned FloatSOM MST versus untuned hexagonal XPySOM	figures/former_figure_s8_tuned_mst_vs_xpysom.svg; figures/former_figure_s8_tuned_mst_vs_xpysom.pdf	Removed with former Table S10
