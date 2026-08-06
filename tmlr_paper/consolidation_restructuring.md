@@ -4,11 +4,9 @@ We thank the reviewers for their helpful comments on the manuscript's central ob
 
 ## Manuscript framing
 
-We revised the Abstract, Introduction, contribution statement, and Discussion accordingly. The manuscript now presents distributed multi-GPU execution, out-of-memory disk-backed streaming, automated hyperparameter tuning, and the billion-sample demonstration as the primary contribution. The Introduction states the paper's objective and contributions explicitly. Training-time MST and RNG topologies are presented as additional capabilities enabled by the framework rather than as the dominant source of improvement.
+We revised the Abstract, Introduction, contribution statement, and Discussion accordingly. The Introduction now states the paper's objective and contributions explicitly, with the systems and scaling framework presented as the primary contribution and training-time MST and RNG support as a secondary contribution.
 
-The topology claims have also been narrowed to match the evidence. On the common untuned-XPySOM reference scale, tuning accounts for 13.04 percentage points of the full tuned-RNG stack's 14.49% balanced-QE gain, while topology accounts for 1.44 points. We therefore do not attribute the overall improvement primarily to topology. Among the graph topologies, RNG gave the most favorable QE, stability, and node-utilization results and is retained as the default. For larger node counts, where RNG construction becomes substantially more expensive, we instead suggest MST.
-
-We did not add further attribution experiments. The existing matched-configuration comparison, radius-sensitivity analysis, and gain decomposition already establish the size and limits of the topology effect. We also retain the qualification that graph--hexagonal MTR comparisons are descriptive because the permutation-null values were effectively identical across topology families; MTR is used inferentially only for MST--RNG comparisons.
+We narrowed the topology claims to reflect the existing attribution analysis and retained the qualification that graph--hexagonal MTR comparisons are descriptive. We did not add further attribution experiments because the existing decomposition already addresses the attribution question.
 
 ## Supplementary consolidation
 
