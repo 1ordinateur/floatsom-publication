@@ -60,13 +60,7 @@ We added the exact normalized $QE_B$ radius-response values to Supplementary Tab
 
 ### Response
 
-We implemented the first suggested analysis. For every trained map and evaluation split, we held the final adjacency and observed first--second BMU identity pairs fixed, uniformly permuted prototype identities among the 100 graph nodes 1,000 times, and recomputed MTR. The MST and RNG graphs were not rebuilt after permutation. We report the per-map ratio
-
-$$
-R_{\mathrm{MTR}}=
-\frac{\mathrm{MTR}_{\mathrm{observed}}}
-{\overline{\mathrm{MTR}}_{\mathrm{permutation\ null}}}.
-$$
+We implemented the first suggested analysis. For every trained map and evaluation split, we held the final adjacency and observed first--second BMU identity pairs fixed, uniformly permuted prototype identities among the 100 graph nodes 1,000 times, and recomputed MTR. The MST and RNG graphs were not rebuilt after permutation. For each map, we calculated the observed-to-null ratio as the observed MTR divided by the mean permutation-null MTR.
 
 The null MTR is nearly exactly 50 as once the first BMU is fixed, random reassignment makes the second BMU equally likely to occupy any of the other 99 nodes. MTR's shell tied ranks, counted with their shell multiplicities, partition ordinal ranks 1 through 99. Their mean is therefore $(1+99)/2=50$, irrespective of node degree or shell sizes. The empirical profile--topology null means ranged from 49.999 to 50.012, confirming this result.
 
