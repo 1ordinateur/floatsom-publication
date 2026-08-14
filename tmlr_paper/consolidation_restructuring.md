@@ -4,7 +4,7 @@ We thank the reviewers for their helpful comments on the manuscript's central ob
 
 ## Manuscript framing
 
-We revised the Abstract, Introduction, contribution statement, and Discussion accordingly. The Introduction now states the paper's objective and contributions explicitly, with the systems and scaling framework presented as the primary contribution and training-time MST and RNG support as a secondary contribution.
+We revised the Abstract, Introduction, contribution statement, and Discussion accordingly. The Abstract now identifies the scalable systems architecture as FloatSOM's primary contribution and the topology comparison as a secondary evaluation. The Introduction now states the primary research question explicitly and labels the contribution bullets as the “Primary systems contribution” and “Secondary topology contribution.”
 
 We narrowed the topology claims to reflect the existing attribution analysis and retained the qualification that graph--hexagonal MTR comparisons are descriptive.
 
