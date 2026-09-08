@@ -15,8 +15,8 @@ Topology-Flexible Self-Organizing Maps**. The actively developed library is in
 - [Benchmark scripts](benchmarks) and [default-profile guide](benchmarks/optuna/config/DEFAULTS.md).
 
 The manuscript uses the September 2026 TMLR publication date and links to its
-[OpenReview page](https://openreview.net/forum?id=n2NQNxu9Ei). The remaining
-author email addresses still need confirmation before final submission.
+[OpenReview page](https://openreview.net/forum?id=n2NQNxu9Ei). Author email
+addresses have been supplied for all six authors.
 
 ## Build the manuscript
 

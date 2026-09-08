@@ -8,7 +8,7 @@ The table and figure numbers are the **former supplementary labels** used before
 
 - Tony Xu
 - Sarah Klamt
-- Katherine Turner
+- Katharine Turner
 - Anne Brüstle
 - Felix Marsh-Wakefield
 - Givanna Putri
