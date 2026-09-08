@@ -58,19 +58,19 @@
 \maketitle
 
 \begin{abstract}
-GPU-accelerated Self-Organizing Map (SOM) implementations are among the most competitive options for large-scale SOM analysis, but growing dataset sizes increasingly challenge their practical use because workloads no longer fit cleanly within device-memory limits. We introduce FloatSOM, a distributed, GPU-accelerated SOM framework. The primary contribution of this work is a scalable systems architecture supporting multi-GPU execution, out-of-core disk-backed streaming, and hyperparameter tuning. FloatSOM additionally supports scalable training-time graph topologies beyond the regular hexagonal lattice. In our largest benchmark, we trained a 1024-node SOM on a dataset containing 1,000,000,000 samples and 50 features in 6.16 minutes using 8 GPUs across two high-performance computing (HPC) nodes. As a secondary evaluation enabled by this framework, we benchmarked graph-based topologies against the conventional hexagonal topology and found that the former yielded a modest reduction in quantization error.
+GPU-accelerated Self-Organizing Map (SOM) implementations are among the most competitive options for large-scale SOM analysis, but growing dataset sizes increasingly challenge their practical use because workloads no longer fit cleanly within device-memory limits. We introduce FloatSOM, a distributed, GPU-accelerated SOM framework. The primary contribution of this work is a scalable systems architecture supporting multi-GPU execution, out-of-memory disk-backed streaming, and hyperparameter tuning. FloatSOM additionally supports scalable training-time graph topologies beyond the regular hexagonal lattice. In our largest benchmark, we trained a 1024-node SOM on a dataset containing 1,000,000,000 samples and 50 features in 6.16 minutes using 8 GPUs across two high-performance-computing nodes. As a secondary evaluation enabled by this framework, we benchmarked graph-based topologies against the conventional hexagonal topology and found that the former yielded a modest reduction in quantization error.
 \end{abstract}
 
 \section{Introduction}
 
-The self-organizing map (SOM), originally introduced by Kohonen \citep{kohonenSelforganizingMap1990}, is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale \citep{kangasVariantsSelforganizingMaps1990}. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. Recent tools such as aweSOM provide optimized single-node serial-online SOM execution for clustering analysis \citep{haAweSOMCPUGPUaccelerated2025}. However, many current implementations remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.
+Self-Organizing Map (SOM), originally introduced by Kohonen \citep{kohonenSelforganizingMap1990}, is an unsupervised machine-learning method that uses competitive learning to organize nodes such that they capture the topology of the data. In practice, this topology-preserving representation means SOMs are commonly used to map dataset topology, produce dimensionality-reduced visualizations, and conduct clustering at scale \citep{kangasVariantsSelforganizingMaps1990}. As dataset size and heterogeneity increase, the computational requirements of SOMs grow in both time and memory. Recent tools such as aweSOM provide optimized single-node serial-online SOM execution for clustering analysis \citep{haAweSOMCPUGPUaccelerated2025}. However, many current implementations remain constrained to single-device workloads that must fit within video random-access memory (VRAM, GPU memory), with limited support for distributed compute, out-of-core execution, and modern GPU orchestration.
 
 Beyond their scalability constraints, existing implementations are also generally limited in the choice of neighborhood topology they support, restricting SOM training to just conventional rectangular or hexagonal lattices \citep{kohonenSelforganizingMap1990,kohonenEssentialsSelforganizingMap2013}. This is despite a long line of work exploring graph-based SOM topologies as alternatives to the fixed lattice \citep{alahakoonDynamicSelforganizingMaps2000,vasighiDirectedBatchGrowing2017,kangasVariantsSelforganizingMaps1990,spanakisAMSOMAdaptiveMoving2016}. Where graph structures such as minimum spanning trees do appear in deployed SOM workflows, they are typically applied post hoc, derived from a trained lattice map \citep{vangassenFlowSOMUsingSelforganizing2015,jangUseMinimalSpanning2009} rather than as the neighborhood relation that drives learning. Critically, there is currently no implementation of these graph topologies that leverages GPU-accelerated high-throughput processing, leaving them broadly impractical for deployment at scale.
 
-In this paper, we introduce FloatSOM, a distributed, GPU-accelerated SOM framework that removes these constraints. Our primary research question is whether SOM training can be scaled beyond single-device memory and single-GPU throughput through distributed multi-GPU execution and out-of-core disk-backed streaming. To address this question, FloatSOM implements these systems capabilities together with automated hyperparameter tuning. As a secondary contribution, we also implement scalable minimum-spanning-tree (MST) and relative-neighborhood-graph (RNG) topologies that define the SOM neighborhood during training rather than being derived from a trained map. Accordingly, our primary and secondary contributions are:
+In this paper, we introduce FloatSOM, a distributed, GPU-accelerated SOM framework that removes these constraints. Our primary research question is whether SOM training can be scaled beyond single-device memory and single-GPU throughput through distributed multi-GPU execution and out-of-memory disk-backed streaming. To address this question, FloatSOM implements these systems capabilities together with automated hyperparameter tuning. As a secondary contribution, we also implement scalable minimum-spanning-tree (MST) and relative-neighborhood-graph (RNG) topologies that define the SOM neighborhood during training rather than being derived from a trained map. Accordingly, our primary and secondary contributions are:
 
 \begin{itemize}
-\item \textbf{Primary systems contribution:} A distributed, out-of-core GPU SOM framework that supports multi-GPU execution and disk-backed streaming, scaling SOM training from desktop GPUs to billion-sample workloads across multiple HPC nodes.
+\item \textbf{Primary systems contribution:} A distributed, out-of-memory GPU SOM framework that supports multi-GPU execution and disk-backed streaming, scaling SOM training from desktop GPUs to billion-sample workloads across multiple HPC nodes.
 \item \textbf{Secondary topology contribution:} Scalable training-time graph topologies (MST and RNG), implemented for the first time in a GPU-accelerated, distributed setting.
 \end{itemize}
 
@@ -82,11 +82,11 @@ Related work on practical SOM deployment spans software implementations, samplin
 
 Open-source SOM libraries range from lightweight implementations to systems-oriented packages. MiniSom implements classical serial-online training \citep{vettigliJustGlowingMinisom2018}, while aweSOM provides a Numba-accelerated serial-online SOM for single-node workloads \citep{haAweSOMCPUGPUaccelerated2025}. XPySOM instead provides GPU-accelerated batch training and is the closest executable comparator to FloatSOM's Python/GPU training pathway \citep{manciniXPySomHighPerformanceSelfOrganizing2020}.
 
-Somoclu and GigaSOM provide additional parallel-systems context \citep{wittekSomocluEfficientParallel2017,kratochvilGigaSOMjlHighperformanceClustering2020} and are discussed further in Section 8.
+Somoclu and GigaSOM provide additional parallel-systems context \citep{wittekSomocluEfficientParallel2017,kratochvilGigaSOMjlHighperformanceClustering2020} and are further elaborated on in Section 8.
 
 \subsection{Sampling Methodologies for SOM Training}
 
-Classical online and batch SOM training schemes traditionally sample every data point in every training iteration \citep{kohonenSelfOrganizingMaps2001,liuRobustPhenotypingHighly2023}. Consequently, one route to improving SOM speed and scalability is subsampling, which reduces the amount of data used to train the final SOM.
+Classical online and batch SOM training schemes traditionally sample every data-point in every training iteration \citep{kohonenSelfOrganizingMaps2001,liuRobustPhenotypingHighly2023}. Consequently, one obvious route to improving SOM speed and scalability is subsampling, which reduces the amount of data used to train the final SOM.
 
 To date, numerous subsampling strategies have been proposed. Beyond naive random sampling, guided subsampling methods include hierarchical dynamic subset selection SOM (HDSSSOM), which concentrates computation on difficult or stale regions of the data \citep{wetmoreSpeedingSelfOrganizingFeature2005}, and adaptive sampling strategies for design-space exploration \citep{itoDesignSpaceExploration2016}. However, systematically benchmarked and openly maintained implementations that compare full-data, random, and guided sampling within a modern high-performance SOM workflow remain limited.
 
@@ -140,7 +140,7 @@ For index sets $\mathcal{I}_t^{(s)}$ at iteration $t$, the implemented full and 
 \tag{2}
 \end{equation*}
 
-If $m\ge N$, the random selector returns the full dataset (no subsampling). Otherwise, to avoid biasing training toward a single fixed subsample, the random selector redraws $\mathcal{I}_t^{\mathrm{random}}$ from the entire dataset at every training iteration. The selected training subset is $X_t^{(s)}=\{x_i:i\in\mathcal{I}_t^{(s)}\}$. Redrawing uniform size-$m$ subsets across iterations improves coverage of the full dataset.
+If $m\ge N$, random returns the full dataset (no subsampling). Otherwise, to avoid biasing training toward a single fixed subsample, the random selector redraws $\mathcal{I}_t^{\mathrm{random}}$ from the entire dataset at every training iteration. The selected training subset is $X_t^{(s)}=\{x_i:i\in\mathcal{I}_t^{(s)}\}$. Because random subsampling draws uniformly from size-$m$ subsets, we are able to better obtain coverage over the full dataset.
 
 HDSSSOM is implemented in multi-GPU-compatible form as an adaptive sampler that preferentially revisits difficult, under-trained, or stale samples \citep{wetmoreSpeedingSelfOrganizingFeature2005}.
 
@@ -150,11 +150,11 @@ After initialization, neighborhood relations are defined by the selected topolog
 
 Thus, regular-lattice neighborhoods are fixed before training, whereas MST and RNG neighborhoods are recalculated from the evolving node weights during training.
 
-Regardless of the selected topology, FloatSOM uses the same node-weight initialization options. Initialization determines only the starting node weights; neighborhood relations are applied afterward according to the selected topology to establish node connections, keeping the initial state comparable across regular-lattice and graph-based runs.
+Note that regardless of the selected topology, FloatSOM uses the same node-weight initialization options. Initialization determines only the starting node weights; neighborhood relations are applied afterward according to the selected topology to establish node connections, keeping the initial state comparable across regular-lattice and graph-based runs.
 
 \subsubsection{MST Topology Implementation}
 
-The MST topology replaces fixed-lattice neighborhood distance with graph hop distance on a minimum spanning tree built from current SOM nodes. The MST is therefore part of the SOM training rule: it determines which nodes receive neighborhood influence during each topology-refresh interval, rather than serving as a visualization or analysis layer after training. For $P$ nodes in feature dimension $d$, the pairwise node-distance matrix is formed with the standard squared-distance Gram identity, which avoids 3D broadcast tensors and preserves $O(P^2 d)$ dense linear-algebra structure.
+The MST topology replaces fixed lattice neighborhood distance with graph hop distance on a minimum spanning tree built from current SOM nodes. The MST is therefore part of the SOM training rule: it determines which nodes receive neighborhood influence during each topology-refresh interval, rather than serving as a visualization or analysis layer after training. For $P$ nodes in feature dimension $d$, the pairwise node-distance matrix is formed with the standard squared-distance Gram identity, which avoids 3D broadcast tensors and preserves $O(P^2 d)$ dense linear-algebra structure.
 
 In a standard lattice SOM, neighborhood distance is determined by fixed node grid coordinates, which are assigned before training and are independent of the learned node-weight geometry in data space. MST instead uses the node weight vectors to locate the nodes in data space, then calculates the minimum spanning tree between those node locations \citep{kruskalShortestSpanningSubtree1956}. The node distances therefore determine which tree edges are selected, while the neighborhood distance used by the Gaussian update is the graph hop distance along the resulting tree. Topology-derived influence matrices are cached and refreshed according to the topology-refresh schedule.
 
@@ -181,7 +181,7 @@ At the beginning of training, the topology is refreshed every iteration: the pre
 
 \subsubsection{RNG Topology Implementation}
 
-Our RNG topology constructs a relative neighborhood graph from current node distances using the standard RNG criterion \citep{toussaintRelativeNeighbourhoodGraph1980}. Unlike MST, RNG is not restricted to a single spanning-tree backbone, so multiple locally supported neighborhood relations can be retained. Conceptually, the absence of this restriction permits the RNG topology to represent both tree-like and denser mesh-like local structures simultaneously throughout the training process. We therefore hypothesize that this topological flexibility allows RNG-based SOMs to represent a variety of distributions more effectively.
+Our RNG topology constructs a Relative Neighborhood Graph over current node distances using the standard RNG criterion \citep{toussaintRelativeNeighbourhoodGraph1980}. Unlike MST, RNG is not restricted to a single spanning-tree backbone, so multiple locally supported neighborhood relations can be retained. Conceptually, the absence of this restriction permits the RNG topology to represent both tree-like and denser mesh-like local structures simultaneously throughout the training process. Consequently, we hypothesise that this greater freedom in topology will allow RNG-based SOM maps to better represent a variety of distributions.
 
 \begin{algorithm}[H]
 \caption{Dynamic RNG topology update with refresh-triggered recomputation and cached influence reuse.}
@@ -202,15 +202,15 @@ Our RNG topology constructs a relative neighborhood graph from current node dist
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Multi-GPU and Larger-Than-Memory Methodology and Implementation}
+\subsection{Multi-GPU + Larger-Than-Memory Methodology and Implementation}
 
-FloatSOM is implemented for distributed GPU execution, with support for RAM (random-access memory, or CPU memory) spilling and disk-backed execution when datasets exceed available VRAM and RAM, respectively.
+FloatSOM is implemented for distributed GPU execution, with support for RAM (Random Access Memory, CPU memory) spilling and disk-backed execution when datasets exceed available VRAM and RAM, respectively.
 
 \begin{figure}[tbp]
 \centering
 % SVG source: assets/figures/fig_2.svg
 \includegraphics[width=0.47\linewidth]{assets/figures/fig_2.pdf}
-\caption{Multi-GPU data loading and NCCL synchronization schematic. In disk-backed mode, data are sharded to worker-local storage, loaded chunk-wise into pinned host memory, transferred to GPU with data transfer overlapping computation, processed locally, and synchronized by NCCL all-reduce before one weight update per iteration. In RAM mode, data are instead pre-sharded into worker-local CPU RAM and follow the same pinned-memory-to-GPU path without disk reads.}
+\caption{Multi-GPU data loading and NCCL synchronization schematic. In disk-backed mode, data are sharded to worker-local storage, loaded chunk-wise into pinned host memory, transferred to GPU with transfer overlapped with compute, processed locally, and synchronized by NCCL all-reduce before one weight update per iteration. In RAM mode, data are instead pre-sharded into worker-local CPU RAM and follow the same pinned-memory-to-GPU path without disk reads.}
 \label{fig:2}
 \end{figure}
 
@@ -218,7 +218,7 @@ FloatSOM is implemented for distributed GPU execution, with support for RAM (ran
 
 Distributed execution uses Ray actors with one GPU per worker and NCCL collectives for synchronous aggregation \citep{moritzRayDistributedFramework2018}. At each iteration, every worker processes its assigned shard locally in \texttt{n\_chunks}, accumulates worker-local statistics across those chunks, and synchronizes once per iteration.
 
-For worker $g \in \{1,\dots,G\}$, let $X_{t,g}^{(s)}$ denote the worker-local shard of the selected iteration subset $X_t^{(s)}$. Let $j$ index SOM nodes, let $w_j^{(t)}$ denote the weight vector of node $j$ at iteration $t$, let $b(x)$ denote the best-matching unit (BMU) of sample $x$ under the current weights, let $h_{j,b(x)}^{(t)}$ denote the iteration-$t$ neighborhood influence between node $j$ and the BMU of $x$, and let $\eta_t$ denote the learning rate at iteration $t$. The local accumulators are:
+For worker $g \in \{1,\dots,G\}$, let $X_{t,g}^{(s)}$ denote the worker-local shard of the selected iteration subset $X_t^{(s)}$. Let $j$ index SOM nodes, let $w_j^{(t)}$ denote the weight vector of node $j$ at iteration $t$, let $b(x)$ denote the best-matching unit (BMU) of sample $x$ under the current weights, let $h_{j,b(x)}^{(t)}$ denote the iteration-$t$ neighborhood influence between node $j$ and the BMU (Best Matching Unit)of $x$, and let $\eta_t$ denote the learning rate at iteration $t$. The local accumulators are:
 
 \begin{equation*}
 \begin{aligned}
@@ -230,7 +230,7 @@ For worker $g \in \{1,\dots,G\}$, let $X_{t,g}^{(s)}$ denote the worker-local sh
 
 $U_j^{(g)}$ is worker $g$'s summed learning-rate-scaled displacement for node $j$, and $H_j^{(g)}$ is the corresponding summed neighborhood influence used to normalize that displacement.
 
-The globally synchronized accumulators are:
+Global synchronized accumulators are:
 
 \begin{equation*}
 \begin{aligned}
@@ -240,15 +240,15 @@ H_j &= \sum_{g=1}^{G} H_j^{(g)}.
 \tag{4}
 \end{equation*}
 
-In the implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker's \texttt{n\_chunks} and synchronized once per iteration. After synchronization, $U_j$ and $H_j$ define the global update numerator and normalization denominator for node $j$. Under weighted normalization, the normalized update is given by $U_j/H_j$ up to numerical safeguards; optional momentum is then added to this normalized update before applying the resulting change to the node weight $w_j^{(t)}$.
+In implementation, $U_j^{(g)}$ and $H_j^{(g)}$ are accumulated across the worker's \texttt{n\_chunks} and synchronized once per iteration. After synchronization, $U_j$ and $H_j$ define the global update numerator and normalization denominator for node $j$. Under weighted normalization, the normalized update is given by $U_j/H_j$ up to numerical safeguards; optional momentum is then added to this normalized update before applying the resulting change to the node weight $w_j^{(t)}$.
 
 For $P$ nodes and $d$ features in float32, the two update accumulators contain $P d+P$ values, so their logical all-reduce payload is $4P(d+1)$ bytes per worker per iteration, plus one 4-byte sample count. A ring all-reduce sends and receives approximately $2(G-1)/G$ times that payload per worker for $G$ workers. This communication is independent of the number of observations $N$; increasing $N$ instead increases worker-local computation and data staging. With observation chunks of at most $C$ rows, the dominant bounded worker arrays scale as $O(Cd+Pd)$ rather than requiring the full $O(Nd)$ dataset in GPU memory. Graph-topology distance and influence structures add both computation and storage terms that scale with $P^2$. Their construction and refresh therefore become more expensive as node count increases, particularly for RNG. FloatSOM tiles these structures and can spill them from VRAM to system RAM when necessary. Spilling is a memory-management response that may add transfer overhead, but it is not the sole source of the topology-dependent runtime increase.
 
 \subsubsection{Multi-GPU Implementation Details}
 
-As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses just-in-time (JIT) compilation for the core BMU and update kernels, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations. For large topologies that would otherwise exceed VRAM, FloatSOM also supports spilling the associated graph-distance or influence structures from VRAM to system RAM.
+As shown in Fig. 2, each worker uses a chunked loading path from CPU memory to GPU memory. In streaming mode, data are distributed to worker-local disk shards and then read chunk-by-chunk into pinned host memory before transfer to GPU; in RAM mode, data are pre-sharded into worker-local CPU RAM and follow the same pinned-memory path without disk reads. FloatSOM overlaps data transfer and compute across CUDA streams, uses JIT-compiled kernels (Just-In-Time) for the core BMU and update steps, and synchronizes worker-local accumulators once per iteration with NCCL all-reduce. Weights therefore remain resident on worker GPUs across iterations. For large topologies that would otherwise exceed VRAM, FloatSOM also supports spilling the associated graph-distance or influence structures from VRAM to system RAM.
 
-\subsubsection{Larger-Than-Memory Topology Updates}
+\subsubsection{Larger-Than-Memory Capable Topology Updates}
 
 Additional larger-than-memory support for topology updates is provided through topological chunking. Topological chunking applies the same idea to topology-side computations within each worker. When graph-distance or influence structures would otherwise exceed a worker's VRAM, those computations are tiled and evaluated in bounded pieces rather than materialized at once. This topology-side chunking is not depicted in the Fig. 2 data path, but it follows the same per-worker bounded-memory execution rule.
 
@@ -272,7 +272,7 @@ Map size was fixed rather than optimized: every Optuna quality run used $P=100$ 
 
 The neighborhood-radius search space was shared across topology families. In particular, \texttt{initial\_radius} was an Optuna-optimized parameter for hexagonal, MST, and RNG runs, with the same search interval of 0.5 to 10.0 in each case. Thus, the hexagonal topology comparisons below use a tuned hexagonal comparator rather than a default-radius hexagonal baseline.
 
-The full-versus-random sampling comparison in Section 5.2 uses paired hexagonal runs. Topology comparisons in Sections 5.3-5.4 use full sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This pilot included HDSSSOM alongside full and random sampling.
+Sampling comparisons in Section 5.2 compare full versus random paired analyses pooled across all topologies. Topology comparisons in Sections 5.3-5.4 use full sampling runs across hexagonal, MST, and RNG. Otherwise, the remaining analyses use full sampling. A separate focused HDSSSOM pilot is reported in Section 5.2 and summarized in Supplementary Table S2. This pilot additionally included the HDSSSOM sampling methodology alongside the full and random sampling methodologies.
 
 \subsubsection{Optuna benchmark datasets and preprocessing}
 
@@ -280,9 +280,9 @@ The Optuna benchmark uses 14 synthetic and real scikit-learn datasets spanning l
 
 \subsubsection{Optuna quality metrics}
 
-Our primary quality metric is quantization error ($QE$) \citep{kohonenSelfOrganizingMaps2001}. We report $QE$ on both the training partition ($QE_T$) and the holdout partition ($QE_H$). The training value reflects how well the fitted SOM represents the samples it was trained on, whereas the holdout value evaluates the same trained map after projecting previously unseen samples onto it. The holdout partition is therefore not used during fitting; it is used only to evaluate the trained map, analogous to a test set in conventional model-training workflows.
+Our primary quality metric is Quantization Error ($QE$) \citep{kohonenSelfOrganizingMaps2001}. We report $QE$ on both the training partition ($QE_T$) and the holdout partition ($QE_H$). The training value reflects how well the fitted SOM represents the samples it was trained on, whereas the holdout value evaluates the same trained map after projecting previously unseen samples onto it. The holdout partition is therefore not used during fitting; it is used only to evaluate the trained map, analogous to a test set in conventional model-training workflows.
 
-Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_B$ is therefore a composite endpoint that weights fidelity of data representation (train) and generalizability (holdout) equally. Note that in the Optuna runs, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector, with $QE_B$ only calculated \emph{post hoc}.
+Balanced $QE$, denoted $QE_B$, is defined as the mean of $QE_T$ and $QE_H$. $QE_B$ is therefore a composite endpoint that weights data representation fidelity (train) and generalizability (holdout) equally. Note that in the Optuna runs, $QE_T$ and $QE_H$ are optimized jointly as a two-objective vector, with $QE_B$ only calculated \emph{post hoc}.
 
 We quantify local BMU-neighborhood ordering using Mean Tied Rank (MTR), following its application to comparisons among alternative SOM grid topologies \citep{lopez-rubioGridTopologiesSelforganizing2014}. For each sample $x_i$, let $b_i^{(1)}$ and $b_i^{(2)}$ denote the first and second best-matching units (BMUs), respectively. Starting from $b_i^{(1)}$, we group all non-winning units by the number of hops along the shortest path in the SOM graph. Let $d_i$ be the number of hops from $b_i^{(1)}$ to $b_i^{(2)}$, let $S_{i,d_i}$ be the set of units exactly $d_i$ hops away, and let $L_{i,d_i}$ be the number of units fewer than $d_i$ hops away. Because every unit in $S_{i,d_i}$ is tied at the same hop distance, the second BMU is assigned their average ordinal rank:
 
@@ -314,7 +314,7 @@ We evaluated aweSOM as an external quality baseline on Iris, Wine, Digits, Breas
 
 \subsection{Speed scaling benchmark protocol}
 
-The speed scaling benchmark evaluates runtime and distributed scaling behavior across computational and algorithmic configurations. Speed scaling is evaluated with runs across $G\in\{1,2,3,4,8\}$ GPUs under fixed scaling protocols. Runtime summaries are computed from repeated executions per configuration and reported as both absolute training time and efficiency relative to the corresponding 1-GPU comparison. We compute scaling efficiency as $E_G=(T_1/T_G)/G \times 100\%$, where $T_1$ is the 1-GPU runtime and $T_G$ is the runtime on $G$ GPUs. A value of 100\% corresponds to ideal linear scaling; lower values indicate that communication, orchestration, or I/O overhead has reduced the realized speedup, while values above 100\% can occur when additional GPUs also change the memory or data-staging regime. These scaling runs use the Ray-orchestrated distributed execution layer built on top of the standard FloatSOM training path \citep{moritzRayDistributedFramework2018}. Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path.
+The speed scaling benchmark evaluates runtime and distributed scaling behavior in different compute and algorithm configurations. Speed scaling is evaluated with runs across $G\in\{1,2,4,8\}$ GPUs under a series of fixed scaling protocols. Runtime summaries are computed from repeated executions per configuration and reported as both absolute training time and efficiency relative to the corresponding 1-GPU comparison. We compute scaling efficiency as $E_G=(T_1/T_G)/G \times 100\%$, where $T_1$ is the 1-GPU runtime and $T_G$ is the runtime on $G$ GPUs. A value of 100\% corresponds to ideal linear scaling; lower values indicate that communication, orchestration, or I/O overhead has reduced the realized speedup, while values above 100\% can occur when additional GPUs also change the memory or data-staging regime. These scaling runs use the Ray-orchestrated distributed execution layer built on top of the standard FloatSOM training path \citep{moritzRayDistributedFramework2018}. Accordingly, the scaling figures in Sections 6.1-6.2 and the runtime/scaling comparison reported later against XPySOM should be interpreted as distributed-execution results rather than the in-memory Optuna path.
 
 Some 1-GPU baselines were unavailable because the corresponding runs did not complete within the fixed benchmark timeout, particularly for workloads entering disk-backed execution. Because efficiency is defined relative to the 1-GPU runtime, we estimated these missing denominators by local extrapolation from the last successful 1-GPU point on the same curve. These extrapolated denominators are plotting references rather than measured runtimes and are interpreted only descriptively.
 
@@ -326,11 +326,11 @@ XPySOM was selected as the executable external baseline because it most closely 
 
 The speed benchmark uses synthetic random matrices with uniform values in $[0,1]$. No train-holdout split is used here because the objective is runtime rather than generalization, so all generated data are used for training. We use a shared default configuration of $10^7$ samples, 50 dimensions, a $32 \times 32$ SOM grid, and 10 training iterations, and then vary one workload axis at a time: sample count ($10^6$--$10^9$), feature dimension (50--5000), or grid side length (8--64). The exact axis values used for each scaling panel are provided in Supplementary Table S3.
 
-Additional CPU and RAM resources attached to each GPU are scaled linearly with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run is terminated if it exceeds 30 minutes of wall-clock time. Per-GPU resource allocation is fixed at one NVIDIA V100 (32 GB VRAM), 12 CPU cores, and 90 GB of system RAM. A full node comprises 4 GPUs and their associated CPU resources, with 400 GB of node-local disk storage.
+Additional CPU and RAM resources attached to each GPU are scaled linearly with GPU count while keeping the software environment and benchmark procedure consistent across runs. For scaling benchmarks, each run is timed out if it exceeds 30 minutes of wall time. Per-GPU resource allocation is fixed at one NVIDIA V100 (32 GB VRAM), 12 CPU cores, 90 GB system RAM, with one full node comprising 4 GPUs and their associated CPUs, and with 400 GB of associated local disk storage.
 
 \subsection{Hyperparameter Tuning and Stability}
 
-To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into deployable default configurations by taking the mean of numerical parameters and the mode of categorical parameters.
+To quantify parameter-tuning benefit, we performed an explicit paired analysis between the tuned configuration and the XPySOM untuned default reference. For each sampling mode and topology combination, we first extracted the parameter settings from the best-performing Optuna runs under the benchmark objective for that combination. We then distilled these per-seed best-performing tuned settings into deployable default configurations by taking the mean of numeric parameters and the mode of categorical parameters.
 
 The stability analysis focuses on four tuned hyperparameters that govern SOM training dynamics. These settings determine how the map is initialized and how updates evolve over training: the initial radius sets the early neighborhood scale around each BMU, the initialization method sets the starting node weights, the radius decay type controls the shift from broad global organization toward local refinement, and the momentum-use parameter determines whether each update retains part of the previous update direction.
 
@@ -342,7 +342,7 @@ For Supplementary Fig. S3, tuned and untuned values were paired within dataset, 
 
 \subsubsection{Hyperparameter stability and dataset-type stratification}
 
-Hyperparameter stability is important because it determines whether a method can be deployed reliably without bespoke retuning. We therefore extracted the top-ranked tuned Optuna trial separately for each seed and compared the recovered hyperparameter values across seeds. We define hyperparameter stability as the variation in these recovered settings. For numerical parameters, stability is measured by the relative difference between runs, $|a-b| / \max(|a|,|b|,\varepsilon)$, where $a$ and $b$ are the values of a given parameter for the two compared seeds and $\varepsilon=10^{-12}$. These relative differences are then averaged across numerical parameters, with lower values indicating higher stability. For categorical parameters, stability is defined as the mismatch rate across the same seed pairs. We report both mean per-parameter stability and an equal-weight overall stability summary across datasets.
+Hyperparameter stability is important because it determines whether a method can be deployed reliably without bespoke retuning. We therefore extracted the top-ranked tuned Optuna trial separately for each seed and compared the recovered hyperparameter values across seeds. We define hyperparameter stability as the variation in these recovered settings. For numeric parameters, stability is measured by the relative difference between runs, $|a-b| / \max(|a|,|b|,\varepsilon)$, where $a$ and $b$ are the values of a given parameter for the two compared seeds and $\varepsilon=10^{-12}$. These relative differences are then averaged across numeric parameters, with lower values indicating higher stability. For categorical parameters, stability is defined as the mismatch rate across the same seed pairs. We report both mean per-parameter stability and an equal-weight overall stability summary across datasets.
 
 \subsubsection{Matched initial-radius sensitivity analysis}
 
@@ -350,7 +350,7 @@ To determine whether topology differences could be explained by topology-specifi
 
 We evaluated balanced $QE$, balanced MTR, and balanced node utilization. Because absolute $QE$ scales differ substantially among datasets, each dataset--seed $QE_B$ value was divided by the matched hexagonal $QE_B$ at $r=1.0266$. Ratios were averaged on the log scale across seeds within each dataset and then across datasets with equal dataset weight; exponentiating this mean yields the geometric-mean ratio shown in Fig. 9A. Supplementary Table S9 reports the exact normalized $QE_B$ values and confidence intervals for every topology and radius. Balanced MTR and balanced node utilization are retained in their observed units in Fig. 9B and Fig. 9C, respectively. Along each topology's response curve, direction-aware percentage changes from $r=1.0266$ were calculated for all 280 matched dataset--seed units and tested against zero using two-sided one-sample $t$-tests; Benjamini--Hochberg adjustment was applied across the 54 non-anchor radius--topology--metric tests. These tests assess within-topology radius response.
 
-We additionally conducted post hoc cross-topology $QE_B$ contrasts at each radius. For every topology pair, dataset, seed, and radius, we calculated the log ratio of the comparator $QE_B$ to the reference $QE_B$, averaged log ratios across the 20 seeds within each dataset, and applied a two-sided one-sample $t$-test to the 14 equally weighted dataset effects. Exponentiated means and confidence limits are geometric-mean $QE_B$ ratios, with values below 1 favoring the comparator. Benjamini--Hochberg correction was applied across all 21 topology-pair--radius contrasts. Supplementary Table S10 reports the estimates, intervals, raw p-values, and adjusted q-values.
+We additionally conducted post hoc cross-topology $QE_B$ contrasts at each radius. For every topology pair, dataset, seed, and radius, we calculated the log ratio of the comparator $QE_B$ to the reference $QE_B$, averaged log ratios across the 20 seeds within each dataset, and applied a two-sided one-sample $t$-test to the 14 equally weighted dataset effects. Exponentiated means and confidence limits are geometric-mean $QE_B$ ratios, with values below 1 favouring the comparator. Benjamini--Hochberg correction was applied across all 21 topology-pair--radius contrasts. Supplementary Table S10 reports the estimates, intervals, raw p-values, and adjusted q-values.
 
 We then identified the per-topology minimum $QE_B$ across the seven tested radii using the same dataset-balanced geometric-mean summary as Fig. 9A. Paired tests compared $QE_B$ between the configurations at those topology-specific radii, with Benjamini--Hochberg correction applied across the three topology contrasts (Supplementary Table S11).
 
@@ -362,7 +362,7 @@ To determine whether the quality diagnostics depended on execution pathway, we c
 
 All Optuna comparisons use matched pairs within dataset, seed, and split units to control for substantial between-run heterogeneity. Within each matched unit, trials were ranked by the target metric, the top five were retained, and each condition was summarized by the median of those retained trials, yielding a top-$k$ summary with $k=5$ intended to estimate near-optimal attainable performance under a fixed number of tuning trials, where each trial is one candidate hyperparameter configuration evaluated by Optuna. Paired effects were then computed as simple condition differences, with negative values favoring the first condition for lower-is-better metrics. Dataset-level and global summaries are shown as forest plots with 95\% confidence intervals from two-sided paired one-sample $t$-tests. Supplementary Fig. S2 repeats the topology comparisons at $k\in\{1,3,5,10\}$, always using the median of the retained trials within each matched unit, to assess sensitivity to the number of near-optimal trials retained.
 
-We report Benjamini--Hochberg q-values alongside raw p-values for related dataset-level tests, and use q-values for figure markers and significance counts. Each topology contrast in Figs. 6-7 forms a separate family of 42 tests (14 datasets across $QE_B$, $QE_H$, and $QE_T$). Pooled overall tests are reported separately with raw p-values.
+We report Benjamini-Hochberg q-values alongside raw p-values for related dataset-level tests, and use q-values for figure markers and significance counts. Each topology contrast in Figs. 6-7 forms a separate family of 42 tests (14 datasets across $QE_B$, $QE_H$, and $QE_T$). Pooled overall tests are reported separately with raw p-values.
 
 \section{Results}
 
@@ -380,7 +380,7 @@ Relative to default aweSOM, untuned hexagonal FloatSOM reduced quantization erro
 
 We first report a focused HDSSSOM pilot as an elimination comparison rather than as part of the broader sampling benchmark. This pilot used a smaller, more limited configuration than the later full versus random analysis and is summarized in Supplementary Table S2.
 
-Under that pilot configuration, HDSSSOM was materially worse than full sampling. In the hexagonal view shown in Fig. 3, full sampling outperformed HDSSSOM in all 50 paired comparisons (10 datasets $\times$ 5 seeds; 50 wins, 0 losses, 0 ties), with dataset-level median balanced-$QE$ improvements ranging from 2.5\% to 209.7\% and a global median improvement of 38.7\%. These HDSSSOM results should therefore be interpreted as a pilot screen under the stated configuration rather than as a comprehensive evaluation of all possible HDSSSOM schedules. Given these large differences, we focused on full and random sampling for the remainder of the manuscript.
+Under that pilot configuration, HDSSSOM was materially worse than full sampling. In the hexagonal view shown in Fig. 3, full outperformed HDSSSOM in all 50 paired comparisons (10 datasets $\times$ 5 seeds; 50 wins, 0 losses, 0 ties), with dataset-level median balanced-$QE$ improvements ranging from 2.5\% to 209.7\% and a global median improvement of 38.7\%. These HDSSSOM results should therefore be interpreted as a pilot screen under the stated configuration rather than as a comprehensive evaluation of all possible HDSSSOM schedules. Given these large differences, we focused on the full and random sampling methodologies for the remainder of the manuscript.
 
 \begin{figure}[tb]
 \centering
@@ -390,19 +390,19 @@ Under that pilot configuration, HDSSSOM was materially worse than full sampling.
 \label{fig:3}
 \end{figure}
 
-The full versus random analysis in Fig. 4 was generated from matched hexagonal Optuna runs in which the sampling selector was switched from full to random. Effects were computed within matched seed-specific units and then summarized across seeds. Panels A--C of Fig. 4 summarize the matched full versus random paired effects for balanced, holdout, and train $QE$, respectively, showing that full sampling generally provides equal or better $QE$ than random sampling. Notably, this full versus random separation is much smaller than the full versus HDSSSOM pilot effect shown in Fig. 3; in most dataset-level comparisons, the full versus HDSSSOM improvement is at least twice as large, as reflected in the different axis scales of Figs. 3 and 4.
+The full versus random analysis in Fig. 4 was generated from matched hexagonal Optuna runs in which the sampling selector was switched from full to random. Effects were computed within matched seed-specific units and then summarized across seeds. Fig. 4A-C summarize the matched full versus random paired effects for balanced, holdout, and train $QE$, respectively, showing that full sampling generally provides equal or better $QE$ than random sampling. Notably, this full versus random separation is much smaller than the full versus HDSSSOM pilot effect shown in Fig. 3; in most dataset-level comparisons, the full versus HDSSSOM improvement is at least twice as large - as evidenced by the difference in axis scales between Fig. 3 and Fig. 4.
 
-We find that the effectiveness of random sampling relative to full sampling is scale-dependent. Above $10{,}000$ samples, we detect little paired $QE$ difference, whereas in smaller datasets random sampling shows higher variability and less stable outcomes (Fig. 4D-F). This is consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random sampling behavior.
+We find the effectiveness of random sampling relative to full sampling is scale-dependent. Above $10{,}000$ samples, paired $QE$ differences are not meaningfully detected, whereas in smaller datasets the random arm shows higher variability and less stable outcomes (Fig. 4D-F). This is consistent with reduced per-iteration sample support under random subsampling (Fig. 4D-F). In this benchmark, the $>10{,}000$ regime is therefore a useful practical proxy for more stable random sampling behavior.
 
 \begin{figure}[tb]
 \centering
 % SVG source: assets/figures/fig_4.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_4.pdf}
-\caption{Full versus random sampling under the hexagonal topology. Panels A-C report paired full-versus-random effects for $QE_B$, $QE_H$, and $QE_T$. Panels D-F show the corresponding dataset-size regressions for the same three metrics, with numbered datasets keyed in Supplementary Table S1. Figure significance markers use Benjamini--Hochberg adjusted q-values. In the larger-dataset regime observed here (>10,000 samples), little paired $QE$ separation is detected; at smaller dataset scales, random is more variable and less stable.}
+\caption{Full versus random sampling under the hexagonal topology. Panels A-C report paired full-versus-random effects for $QE_B$, $QE_H$, and $QE_T$. Panels D-F show the corresponding dataset-size regressions for the same three metrics, with numbered datasets keyed in Supplementary Table S1. Figure significance markers use Benjamini-Hochberg adjusted q-values. In the larger-dataset regime observed here (>10,000 samples), little paired $QE$ separation is detected; at smaller dataset scales, random is more variable and less stable.}
 \label{fig:4}
 \end{figure}
 
-Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ results. Accordingly, all remaining analyses reported below rely on full sampling unless otherwise specified.
+Nevertheless, full sampling remains the best sampling strategy for optimal $QE$ results. Accordingly, all remaining analyses reported below rely on full sampling unless specified.
 
 \subsection{Topology Results}
 
@@ -412,7 +412,7 @@ Topology comparisons use $QE$ as the optimized endpoint and hexagonal batch SOM 
 \centering
 % SVG source: assets/figures/fig_5.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_5.pdf}
-\caption{Representative node and connection overlays for matched 100-node hexagonal, MST, and RNG SOMs. A--C: circles in native 2D. D--F: KDD Cup 99, trained on standardized 41-dimensional observations and displayed using one shared 2D PCA projection fitted to the observations and applied to all three sets of prototypes. Training used seed 42, full sampling, random initialization, 50 iterations, and the untuned XPySOM-like settings used at this point in the manuscript: initial learning rate 0.5, initial radius 5 with exponential decay, momentum disabled, and XPySOM-compatible normalization. Gray observation clouds show a deterministic maximum of 30,000 points; black lines are topology connections and red markers are SOM nodes. PCA can distort graph geometry in the original 41-dimensional space.}
+\caption{Representative node and connection overlays for matched 100-node hexagonal, MST, and RNG SOMs. A--C: circles in native 2D. D--F: KDD Cup 99, trained on standardized 41-dimensional observations and displayed using one shared 2D PCA projection fitted to the observations and applied to all three sets of prototypes. Training used seed 42, full sampling, random initialization, 50 iterations, and the untuned XPySOM-like settings used at this point in the manuscript: initial learning rate 0.5, initial radius 5 with exponential decay, momentum disabled, and XPySOM-compatible normalization. Grey observation clouds show a deterministic maximum of 30,000 points; black lines are topology connections and red markers are SOM nodes. PCA can distort graph geometry in the original 41-dimensional space.}
 \label{fig:5}
 \end{figure}
 
@@ -420,31 +420,31 @@ In the KDD Cup 99 projection (Fig. 5D--F), the hexagonal topology contains sever
 
 \subsubsection{MST}
 
-Fig. 6 reports dataset-wise paired improvement summaries (hexagonal over MST), calculated using the statistical procedure in Section 4.4.
+We report dataset-wise paired improvement summaries (hexagonal over MST) using the statistical procedure in Section 4.4 in Fig. 6.
 
-Overall, MST outperforms the matched hexagonal baseline on balanced $QE$ (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by train $QE$ (Fig. 6C), while holdout $QE$ results are more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The overall paired $t$-test p-values are $p=1.12\times10^{-5}$ for balanced $QE$, $p=0.15$ for holdout $QE$, and $p=0.0064$ for train $QE$. Supplementary Table S5 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95\% confidence intervals, raw p-values, and Benjamini--Hochberg q-values for MST and RNG.
+Overall, MST outperforms matched hexagonal on Balanced QE (Fig. 6A), indicating a net advantage across train and holdout performance. This aggregate gain is driven more clearly by Train QE (Fig. 6C), while Holdout QE is more mixed across datasets (Fig. 6B) and shows no clear overall holdout advantage. The overall paired t-test p-values are Balanced QE (p=1.12e-05); Holdout QE (p=0.15); and Train QE (p=0.0064). Supplementary Table S5 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95\% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST and RNG.
 
 \begin{figure}[tb]
 \centering
 % SVG source: assets/figures/fig_6.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_6.pdf}
-\caption{Hexagonal versus MST topology on $QE$ metrics under full sampling. Panels A--C report paired effects for $QE_B$, $QE_H$, and $QE_T$ across the available datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect. Supplementary Table S5 reports the per-dataset effect estimates, 95\% confidence intervals, raw p-values, and dataset-level Benjamini--Hochberg adjusted q-values.}
+\caption{Hexagonal versus MST topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect. Supplementary Table S5 reports the per-dataset effect estimates, 95\% confidence intervals, raw p-values, and dataset-level Benjamini-Hochberg adjusted q-values.}
 \label{fig:6}
 \end{figure}
 
 \subsubsection{RNG}
 
-To evaluate RNG topology performance, we apply the same paired analysis to hexagonal versus RNG, reporting $QE_B$, $QE_H$, and $QE_T$ in Fig. 7.
+To evaluate RNG topology performance, we reuse the paired reporting logic on hexagonal versus RNG, again centered on $QE_B$ with $QE_H$ and $QE_T$ in Fig. 7.
 
-RNG has lower $QE$ than the matched hexagonal baseline on all reported $QE$ endpoints (Fig. 7A--7C). The overall paired $t$-test p-values are $p=7.4\times10^{-10}$ for balanced $QE$, $p=0.0232$ for holdout $QE$, and $p=4.69\times10^{-6}$ for train $QE$. Supplementary Table S5 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95\% confidence intervals, raw p-values, and Benjamini--Hochberg q-values for MST and RNG.
+RNG has lower QE than matched hexagonal on the reported QE endpoints (Fig. 7A-7C), with overall paired t-test p-values of Balanced QE (p=7.4e-10); Holdout QE (p=0.0232); and Train QE (p=4.69e-06). Supplementary Table S5 lists the corresponding per-dataset and overall hexagonal-comparison effect estimates, 95\% confidence intervals, raw p-values, and Benjamini-Hochberg q-values for MST and RNG.
 
-The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced $QE$ and especially in train $QE$, with the separation most apparent in the real-world and larger datasets where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice.
+The main trend in Fig. 7 is that RNG improves on hexagonal most clearly in balanced QE and especially in train QE, with the separation most apparent in the real and larger datasets where the added flexibility of the graph neighborhood appears more useful than the fixed regular lattice.
 
 \begin{figure}[tb]
 \centering
 % SVG source: assets/figures/fig_7.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_7.pdf}
-\caption{Hexagonal versus RNG topology on $QE$ metrics under full sampling. Panels A--C report paired effects for $QE_B$, $QE_H$, and $QE_T$ across the available datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect. Supplementary Table S5 reports the per-dataset effect estimates, 95\% confidence intervals, raw p-values, and dataset-level Benjamini--Hochberg adjusted q-values.}
+\caption{Hexagonal versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect. Supplementary Table S5 reports the per-dataset effect estimates, 95\% confidence intervals, raw p-values, and dataset-level Benjamini-Hochberg adjusted q-values.}
 \label{fig:7}
 \end{figure}
 
@@ -456,7 +456,7 @@ Fig. 8 directly compares MST and RNG under full sampling. In the Optuna matched 
 \centering
 % SVG source: assets/figures/fig_8.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_8.pdf}
-\caption{MST versus RNG topology on $QE$ metrics under full sampling. Panels A--C report paired effects for $QE_B$, $QE_H$, and $QE_T$ across the available datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect.}
+\caption{MST versus RNG topology on $QE$ metrics under full sampling only. Panels A-C report paired full sampling only $QE$ effects for $QE_B$, $QE_H$, and $QE_T$ across the available full sampling datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect.}
 \label{fig:8}
 \end{figure}
 
@@ -466,7 +466,7 @@ Because initial radius was selected during tuning and differed across topology f
 
 The exact normalized $QE_B$ radius-response values are reported in Supplementary Table S9. Separation vanished at $r\leq0.75$, with no significant MST--hexagonal or RNG--hexagonal difference at either $r=0.5$ or $r=0.75$ (Supplementary Table S10). The per-topology minimum $QE_B$ across the sweep occurred at $r=0.75$ for hexagonal and $r=1.5$ for MST and RNG. In paired tests between those minima, MST was 0.98\% lower than hexagonal (ratio 0.9902, 95\% CI [0.9747, 1.0060]; $p=0.203$, $q=0.304$), and RNG was 1.35\% lower than hexagonal (ratio 0.9865, 95\% CI [0.9689, 1.0043]; $p=0.125$, $q=0.304$); neither difference was significant. RNG and MST also did not differ significantly (ratio 0.9962, 95\% CI [0.9834, 1.0092]; $p=q=0.538$; Supplementary Table S11).
 
-Increasing radius eventually traded higher $QE_B$ for lower observed MTR in every topology, but this trade-off emerged earlier and much more sharply for hexagonal maps. RNG maintained the lowest observed MTR throughout the sweep, while the node-utilization curves did not indicate poorer use of the available map nodes. Because these raw MTR curves compare a fixed lattice with weight-derived graphs, their cross-family separation is descriptive. The significance symbols in Fig. 9 represent within-topology radius comparisons.
+Increasing radius eventually exchanged higher $QE_B$ for lower observed MTR in every topology, but this trade-off emerged earlier and much more sharply for hexagonal maps. RNG maintained the lowest observed MTR throughout the sweep, while the node-utilization curves did not indicate poorer use of the available map nodes. Because these raw MTR curves compare a fixed lattice with weight-derived graphs, their cross-family separation is descriptive. The significance symbols in Fig. 9 represent within-topology radius comparisons.
 
 \begin{figure}[tb]
 \centering
@@ -478,7 +478,7 @@ Increasing radius eventually traded higher $QE_B$ for lower observed MTR in ever
 
 The fixed-configuration diagnostics provide the corresponding deployable tuned-default comparison (Table \ref{tab:matched_topology_diagnostics_summary}). Unlike the Optuna matched top-$k$ results, no balanced-$QE$ difference was detected between the tuned RNG and MST defaults ($p=0.126$). Within these two weight-derived graph families, RNG lowered mean balanced MTR from 7.87 to 4.91, a difference of 2.96 tied-rank positions ($p=1.75\times10^{-65}$), and increased balanced node utilization by 0.0040 ($p=6.07\times10^{-4}$).
 
-The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50. Because the null values were effectively identical across topology families, graph--hexagonal MTR comparisons are reported descriptively, and MTR is used inferentially only to compare MST and RNG. Within these two weight-derived graph families, RNG showed significantly better local topological ordering than MST, as measured by null-relative MTR, in both the untuned (difference favoring RNG 0.0520, 95\% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95\% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$; Supplementary Table S13).
+The permutation-null rerun gave empirical null means between 49.999 and 50.012 across the six profile--topology summaries, consistent with the exact expectation of 50. Because the null values were effectively identical across topology families, graph--hexagonal MTR comparisons are reported descriptively, and MTR is used inferentially only to compare MST and RNG. Within these two weight-derived graph families, RNG showed significantly better local topological ordering than MST, as measured by null-relative MTR, in both the untuned (difference favouring RNG 0.0520, 95\% CI [0.0468, 0.0573], $p=1.33\times10^{-54}$) and tuned profiles (0.0614, 95\% CI [0.0561, 0.0668], $p=1.63\times10^{-65}$; Supplementary Table S13).
 
 \begin{table}[tb]
 \caption{Matched topology diagnostics for balanced quantization error and Mean Tied Rank. Positive paired effects favor the second topology in each contrast after applying metric directionality; lower raw values are better for both $QE_B$ and $MTR_B$. Graph--hexagonal MTR effects are descriptive; MTR is used inferentially only for the RNG--MST comparison between the two weight-derived graph families. Asterisks mark prespecified pooled paired effects with raw $p<0.05$, except that graph--hexagonal MTR cells are unmarked; these tests are distinct from the dataset-level multiplicity-adjusted families. Fixed-adjacency permutation-null ratios and matched contrasts are reported in Supplementary Table S13. Full confidence intervals, applicable raw paired-test p-values, split-specific metrics, node utilization, and dead-node fraction are reported in Supplementary Table S7.}
@@ -501,7 +501,7 @@ Tuned & +0.064\textsuperscript{*} & +0.052\textsuperscript{*} & -0.012 & +22.71 
 
 \subsubsection{Performance Gains from Hyperparameter Tuning}
 
-After examining topology effects while varying radius under a common tuned non-radius configuration, we next quantify the broader effect of complete topology-specific tuning relative to the untuned reference.
+Having shown that the graph-topology effects persist when radius is varied under a common tuned non-radius configuration, we next quantify the broader effect of complete topology-specific tuning relative to the untuned reference.
 
 Fig. 10 compares the fixed tuned and untuned configurations using pooled topology-level $QE$ summaries; topology-stratified results are provided in Supplementary Fig. S3.
 
@@ -509,7 +509,7 @@ Fig. 10 compares the fixed tuned and untuned configurations using pooled topolog
 \centering
 % SVG source: assets/figures/fig_10.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_10.pdf}
-\caption{Tuned configuration versus untuned reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate that the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned configuration/untuned reference pairs across datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect.}
+\caption{Tuned configuration versus untuned reference $QE$ comparison across $QE_B$, $QE_H$, and $QE_T$, pooled across all topology runs under the matched pairing keys. Positive values indicate the tuned configuration outperforms the untuned reference; the global overall row pools all matched tuned configuration/untuned reference pairs across datasets. Forest whiskers denote 95\% paired $t$-test confidence intervals around the mean paired effect.}
 \label{fig:10}
 \end{figure}
 
@@ -531,7 +531,7 @@ To assess whether the derived hyperparameters are robust across runs and dataset
 
 \subsection{Execution-Path Diagnostic}
 
-The quality analyses above used the in-memory pathway. Repeating the tuned diagnostics through Ray streaming with matched data and configurations produced small differences, none of which reached significance before or after Benjamini--Hochberg correction (Supplementary Table S8). The remaining differences may reflect floating-point accumulation order. The following speed benchmarks use the Ray pathway.
+The quality analyses above used the in-memory pathway. Repeating the tuned diagnostics through Ray streaming with matched data and configurations produced small differences, none of which reached significance before or after Benjamini-Hochberg correction (Supplementary Table S8). The remaining differences may reflect floating-point accumulation order. The following speed benchmarks use the Ray pathway.
 
 \section{Speed Scaling}
 
@@ -551,11 +551,11 @@ We report sample scaling runtime comparisons for full versus random sampling usi
 
 Across topologies, random sampling is faster than full sampling across all 1-, 2-, and 4-GPU comparisons, with similar proportional reductions at a given dataset size. With more GPUs, larger datasets can also be processed before timing out, although the runtime advantage of random over full narrows at the largest sample counts.
 
-For random sampling on 1 GPU, the last successful run used 100M samples, matching the largest completed full-sampling workload despite random sampling being much faster. We suspect that the subsequent failures on larger datasets were due to the transition from RAM operation to disk-backed operation. Even in random sampling mode, the implementation still stages the full dataset initially and loads full chunks before the subsampler selects the training samples. The relevant cost therefore depends on more than the reduced number of selected samples. We treat the 1-GPU random failure at 500M samples as a disk-mode systems limitation rather than as evidence against the general random versus full runtime ordering.
+For the 1-GPU random sampling runs, the last successful 1-GPU run was at 100M samples, the same number of samples as run on full samples, despite random being much faster. We reason that the failed subsequent runs on larger samples were due to the transition from RAM operation to disk-backed operation. Even in random sampling mode, the implementation still stages the full dataset initially and loads full chunks before the subsampler selects the training samples. Therefore, the relevant cost is no longer only the reduced number of selected samples. We therefore treat the 1-GPU random failure at 500M samples as a disk-mode systems limitation rather than as evidence against the general random versus full runtime ordering.
 
-\subsection{Multi-GPU Topology Scaling and Larger-Than-Memory Context}
+\subsection{Multi-GPU topology scaling and Larger-Than-Memory context}
 
-To examine parallel scaling, we benchmarked FloatSOM under full sampling across $G\in\{1,2,3,4,8\}$ GPUs using workload-scaling benchmarks that extend from standard in-memory settings to larger workloads that exceed available memory.
+To examine parallel scaling, we benchmarked FloatSOM under full sampling across $G\in\{1,2,4,8\}$ GPUs using workload-scaling benchmarks that extend from standard in-memory settings to larger workloads that exceed available memory.
 
 \begin{figure}[tb]
 \centering
@@ -567,7 +567,7 @@ To examine parallel scaling, we benchmarked FloatSOM under full sampling across 
 
 \subsubsection{GPU Scaling and Larger-Than-Memory Runtime Performance}
 
-Fig. 13 shows that increasing GPU count improves performance in the sample scaling regime by increasing parallel throughput and delaying the transition to disk-backed execution. In the sample scaling benchmark, the 500,000,000-sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000-sample dataset; when staging is still required, the disk-to-GPU path is distributed across more nodes. The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min). This runtime includes the time required to transfer data from shared storage to node-local shards, alongside the overhead associated with operating across multiple HPC nodes.
+Fig. 13 shows that increasing GPU count improves performance in the sample scaling regime by increasing parallel throughput and delaying the transition to disk-backed execution. In the sample scaling benchmark, the 500,000,000 sample dataset requires disk backing under the 2-GPU configuration, whereas the 8-GPU configuration remains in RAM mode until the 1,000,000,000 sample dataset; when staging is still required, the disk-to-GPU path is distributed across more nodes. The 8-GPU RNG configuration processes 1,000,000,000 samples in 369.41 s (6.16 min). Note that this speed includes the time required to transfer data from shared storage to node-local shards, alongside the overhead associated with operating across multiple HPC nodes.
 
 Grid-size scaling is the main exception: at the largest tested grid size (64), runtime decreases from 934.01 s (15.57 min) on 1 GPU to 880.83 s (14.68 min) on 8 GPUs, a 5.69\% reduction. Once map-size and topology-refresh costs dominate, additional GPUs therefore contribute little further speedup.
 
@@ -589,7 +589,7 @@ With that systems context in place, we next compare topology runtimes across hex
 
 In Fig. 14A-B, the topologies scale similarly as input complexity and data volume increase: even at the largest tested axis values, the maximum pairwise runtime spread remains modest at dimension scaling (4.70\% at 5,000 dimensions) and sample scaling (3.26\% at 1,000,000,000 samples).
 
-However, when the grid itself is enlarged in Fig. 14C, topology-dependent runtime differences become readily evident. At the largest tested grid size (64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively.
+However, when the grid itself is enlarged in Fig. 14C, topology-dependent runtime differences become readily evident. At the largest tested grid size (grid size 64), the 8-GPU mean runtimes are 32.54 s (0.54 min) for hexagonal, 266.45 s (4.44 min) for MST, and 880.83 s (14.68 min) for RNG, corresponding to 8-GPU MST and RNG runtimes that are 8.19x and 27.07x the hexagonal runtime, respectively.
 
 To further examine the RNG runtime spike in grid-size scaling, we compared the topology-construction operations. For each of the $\binom{P}{2}$ candidate node pairs, RNG checks every possible third node in its relative-neighborhood blocker test, giving up to $\binom{P}{2}(P-2)=O(P^3)$ pair--blocker comparisons per topology refresh. At $P=4096$, this is approximately 34.3 billion unordered pair--blocker checks. MST instead constructs and sorts approximately $\binom{4096}{2}=8.39$ million candidate edges using Kruskal's algorithm, an $O(P^2\log P)$ edge-construction step after pairwise distances are calculated. Both topologies then perform the shared graph-distance and influence calculations. The additional $O(P^3)$ RNG blocker-test work therefore provides a quantitative algorithmic explanation for the sharp RNG cost increase at large grid sizes.
 
@@ -605,7 +605,7 @@ Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore 
 \label{fig:15}
 \end{figure}
 
-Overall, Fig. 15 shows median improvements of 14.5\% in $QE_B$, 9.1\% in $QE_H$, and 22.5\% in $QE_T$ for tuned FloatSOM RNG relative to untuned hexagonal XPySOM, capturing the combined deployment effect of implementation, topology choice, and tuning on $QE$.
+At the overall level, Fig. 15 shows median percentage improvements of $QE_B$ (14.5\%); $QE_H$ (9.1\%); and $QE_T$ (22.5\%) for tuned FloatSOM RNG relative to untuned hexagonal XPySOM, capturing the combined deployment effect of implementation, topology choice, and tuning on $QE$.
 
 The matched untuned hexagonal implementation comparison showed no detectable global balanced-$QE$ gain (median improvement 0.000016\%, $p=0.0923$; Supplementary Table S4); on the common untuned-XPySOM reference scale, tuning accounted for 13.04 percentage points of the full tuned-RNG stack's 14.49\% gain, and topology accounted for the remaining 1.44 points (0.88 for holdout $QE$ and 2.34 for train $QE$; Supplementary Table S6 and the \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries}), consistent with the direct 1.297\% tuned RNG-over-hexagonal balanced-$QE$ advantage in Supplementary Table S5.
 
@@ -613,9 +613,9 @@ For the untuned hexagonal XPySOM reference in Fig. 15, workloads beyond the $10^
 
 \section{Discussion}
 
-In this paper, we introduce FloatSOM, a distributed, out-of-core GPU framework for large-scale SOM training that supports training-time graph topologies. FloatSOM scales SOM training across multiple GPUs and HPC nodes and supports datasets larger than available device memory through disk-backed streaming.
+In this paper, we introduce FloatSOM, a distributed, out-of-memory GPU framework for large-scale SOM training that supports training-time graph topologies. FloatSOM scales SOM training across multiple GPUs and HPC nodes and supports datasets larger than available device memory through disk-backed streaming.
 
-The trade-off between full and random sampling is scale-dependent. Random sampling is less stable on small datasets, while above $10{,}000$ samples we detect little paired $QE$ difference. Full sampling is therefore preferable when stability is critical; random sampling offers higher throughput on larger datasets, although disk-backed operation limits its I/O advantage.
+The trade-off between full and random sampling is scale dependent. Random sampling is less stable on small datasets, while above $10{,}000$ samples we detect little paired $QE$ difference. Full sampling is therefore preferable when stability is critical; random sampling offers higher throughput on larger datasets, although disk-backed operation limits its I/O advantage.
 
 Across the Optuna matched top-$k$ runs, RNG showed significantly better balanced and train $QE$ than MST, while no significant holdout-$QE$ difference was detected. RNG also had better overall hyperparameter stability. In the tuned defaults, no balanced-$QE$ difference was detected, although RNG had higher node utilization than MST.
 
@@ -623,9 +623,9 @@ A geometric interpretation consistent with these results is that a fixed lattice
 
 Among the graph topologies evaluated, RNG performed best on $QE$, stability, and node utilization, though its improvement over a tuned hexagonal lattice was modest. Where a graph topology is used at larger node counts, MST is preferable due to its lower compute cost.
 
-The quality experiments use the in-memory pathway, whereas the scaling experiments use Ray. Within the distributed benchmark, scaling depends on workload size: overhead dominates small problems, while larger workloads benefit from parallel throughput and may remain in RAM when the 1-GPU case requires disk backing. Efficiencies above 100\% reflect this change in memory regime rather than superlinear computation.
+The quality experiments use the in-memory pathway, whereas the scaling experiments use Ray. Within the distributed benchmark, scaling depends on workload size: overhead dominates small problems, while larger workloads benefit from parallel throughput and may remain in RAM when the 1-GPU case requires disk backing. Efficiencies above 100\% reflect this change in memory regime rather than super-linear computation.
 
-Regarding existing distributed SOM implementations, Somoclu and GigaSOM are important parallel-systems references. However, we did not benchmark Somoclu because both Somoclu and SomocluGPU were already compared directly with XPySOM in the XPySOM study and found to be more than 10 times slower \citep{manciniXPySomHighPerformanceSelfOrganizing2020}. GigaSOM is a CPU-based algorithm implemented in Julia with perhaps the strongest demonstrated runtime and dataset-size scaling. However, considering GigaSOM's hardware requirements, programming language difference, and dataset availability, a full systems benchmark was outside the scope of this paper. For context, GigaSOM's large-dataset example completed a workflow that trained a 1024-node SOM on 1,167,129,317 events with 18 features in $<25$ minutes on an 11-node, 256-core CPU cluster \citep{kratochvilGigaSOMjlHighperformanceClustering2020}. By comparison, FloatSOM trained a SOM of the same size (1024 nodes) on 1,000,000,000 samples with 50 features, a dataset with approximately $2.4\times$ as many scalar values as GigaSOM's, in 6.16 minutes using 8 GPUs across two HPC nodes.
+Regarding existing distributed SOM implementations, Somoclu and GigaSOM are important parallel-systems references. However, Somoclu was not benchmarked against because both Somoclu and SomocluGPU were already compared directly with XPySOM in the XPySOM study and found to be more than 10 times slower \citep{manciniXPySomHighPerformanceSelfOrganizing2020}. GigaSOM is a CPU-based algorithm implemented in Julia with perhaps the strongest demonstrated speed and size scale-ups. However, considering GigaSOM's hardware requirements, programming language difference, and dataset availability, a full systems benchmark was outside the scope of this paper. For context though, in GigaSOM's large dataset example completed a workflow that trained a 1024 node SOM on 1,167,129,317 events with 18 features in $<25$ minutes on an 11-node, 256-core CPU cluster \citep{kratochvilGigaSOMjlHighperformanceClustering2020}. Comparatively, FloatSOM trained a same-sized 1024-node SOM on 1,000,000,000 samples with 50 features, a dataset \textasciitilde{}x2.4 larger than GigaSOM's, in 6.16 minutes using 8 GPUs across two HPC nodes.
 
 At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on 8 GPUs, respectively. RNG's graph-construction and all-pairs path calculations therefore scale much more sharply with grid size. More generally, full sampling favors stability, random sampling favors throughput on large datasets, and additional GPUs are most useful when they keep the workload in RAM.
 
