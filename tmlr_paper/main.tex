@@ -45,11 +45,10 @@
   pdfauthor={Tony Xu; Sarah Klamt; Katherine Turner; Anne Brüstle; Felix Marsh-Wakefield; Givanna Putri}
 }
 
-% TODO(TMLR CAMERA-READY): Confirm publication month/year and OpenReview forum URL.
-% These publisher-specific fields are pending author input; do not infer them.
-\def\month{MM}
-\def\year{YYYY}
-\def\openreview{\url{https://openreview.net/forum?id=XXXX}}
+% Publication metadata confirmed by the corresponding author.
+\def\month{09}
+\def\year{2026}
+\def\openreview{\url{https://openreview.net/forum?id=n2NQNxu9Ei}}
 
 \begin{document}
 
@@ -307,7 +306,7 @@ We additionally report node utilization, defined as the fraction of nodes select
 
 We calibrated the FloatSOM batch pathway against XPySOM using the 14 benchmark datasets, 10 shared seeds, full sampling, a $32\times32$ map, and one run per dataset--seed condition without top-$k$ selection. Both implementations used the same deterministic 70/30 train--holdout split, number of batch epochs, and XPySOM-like untuned hyperparameters. XPySOM's initialized node weights were transferred into FloatSOM after reconciling the two implementations' node-coordinate ordering, so paired runs began from corresponding prototypes. The primary implementation-concordance comparison used the hexagonal topology in both implementations; the associated MST and RNG FloatSOM paths retained the same XPySOM hexagonal reference to quantify the additional effect of changing the FloatSOM training topology.
 
-We recorded train, holdout, and balanced $QE$ together with training time. Within each dataset, paired percentage effects across the 10 seeds were summarized using the Wilcoxon signed-rank location estimate, its exact distribution-free 95\% interval, and a two-sided paired Wilcoxon test; global rows pool the 140 dataset--seed pairs. Supplementary Fig. S1 and Supplementary Table S4 report the hexagonal implementation-calibration results; the detailed MST and RNG comparisons are available in the accompanying Zenodo archive.
+We recorded train, holdout, and balanced $QE$ together with training time. Within each dataset, paired percentage effects across the 10 seeds were summarized using the Wilcoxon signed-rank location estimate, its exact distribution-free 95\% interval, and a two-sided paired Wilcoxon test; global rows pool the 140 dataset--seed pairs. Supplementary Fig. S1 and Supplementary Table S4 report the hexagonal implementation-calibration results; the detailed MST and RNG comparisons are available in the \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries}.
 
 \subsubsection{aweSOM quality baseline}
 
@@ -339,7 +338,7 @@ The stability analysis focuses on four tuned hyperparameters that govern SOM tra
 
 Fixed configurations were rerun under matched dataset, seed, topology, and split keys. All tuned and untuned diagnostic reruns retained this same fixed $P=100$ node count across the three topologies. The final topology diagnostic comprised all 14 benchmark datasets, 20 shared random seeds, full sampling, and each of the hexagonal, MST, and RNG topologies, giving 280 dataset--seed units per paired contrast. Preprocessing and the deterministic 70/30 train--holdout split followed Section 4.1.1. The untuned profile used the same XPySOM-like reference settings for all topologies, whereas the tuned profile used the fixed topology-specific full-sampling configurations derived above. Deployment analyses compare these tuned FloatSOM configurations with untuned hexagonal XPySOM, while topology diagnostics compare tuned and untuned FloatSOM within and between topologies. These reruns estimate deployable fixed-configuration performance; the top-$k$ Optuna summaries instead estimate attainable performance within the search budget.
 
-For Supplementary Fig. S3, tuned and untuned values were paired within dataset, seed, topology, and split. Supplementary Table S7 pools the 280 matched dataset--seed differences for each prespecified profile--topology--metric contrast and reports the mean paired effect, two-sided one-sample paired $t$-test confidence interval, Cohen's $d_z$, raw p-value, and win/loss/tie counts. These raw p-values are descriptive diagnostics rather than a multiplicity-adjusted family; effect sizes and confidence intervals are the primary summaries. The corresponding dataset-level mean observed metrics are available in the accompanying Zenodo archive. Dataset-level forest-plot results use the convention described above, and overall rows pool all matched pairs with the same paired $t$-test and confidence-interval calculation.
+For Supplementary Fig. S3, tuned and untuned values were paired within dataset, seed, topology, and split. Supplementary Table S7 pools the 280 matched dataset--seed differences for each prespecified profile--topology--metric contrast and reports the mean paired effect, two-sided one-sample paired $t$-test confidence interval, Cohen's $d_z$, raw p-value, and win/loss/tie counts. These raw p-values are descriptive diagnostics rather than a multiplicity-adjusted family; effect sizes and confidence intervals are the primary summaries. The corresponding dataset-level mean observed metrics are available in the \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries}. Dataset-level forest-plot results use the convention described above, and overall rows pool all matched pairs with the same paired $t$-test and confidence-interval calculation.
 
 \subsubsection{Hyperparameter stability and dataset-type stratification}
 
@@ -584,7 +583,7 @@ With that systems context in place, we next compare topology runtimes across hex
 \centering
 % SVG source: assets/figures/fig_14.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_14.pdf}
-\caption{Topology runtime comparison at fixed $G=8$ GPUs under full sampling. Panels A-C report mean wall-clock runtime (s) for dimension, sample, and grid size scaling workloads, respectively, with topology traces for hexagonal, MST, and RNG. Error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration. Detailed numerical summaries are available in the accompanying Zenodo archive.}
+\caption{Topology runtime comparison at fixed $G=8$ GPUs under full sampling. Panels A-C report mean wall-clock runtime (s) for dimension, sample, and grid size scaling workloads, respectively, with topology traces for hexagonal, MST, and RNG. Error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration. Detailed numerical summaries are available in the \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries}.}
 \label{fig:14}
 \end{figure}
 
@@ -596,7 +595,7 @@ To further examine the RNG runtime spike in grid-size scaling, we compared the t
 
 \section{Final FloatSOM RNG Comparison with XPySOM}
 
-Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects \citep{manciniXPySomHighPerformanceSelfOrganizing2020}. Sections 5.1, 5.3, and 5.4 separate these components; the corresponding detailed tuned-hexagonal and tuned-MST comparisons are available in the accompanying Zenodo archive.
+Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore combines implementation, tuning, and topology effects \citep{manciniXPySomHighPerformanceSelfOrganizing2020}. Sections 5.1, 5.3, and 5.4 separate these components; the corresponding detailed tuned-hexagonal and tuned-MST comparisons are available in the \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries}.
 
 \begin{figure}[tb]
 \centering
@@ -608,7 +607,7 @@ Fig. 15 compares untuned hexagonal XPySOM with tuned FloatSOM RNG and therefore 
 
 At the overall level, Fig. 15 shows median percentage improvements of $QE_B$ (14.5\%); $QE_H$ (9.1\%); and $QE_T$ (22.5\%) for tuned FloatSOM RNG relative to untuned hexagonal XPySOM, capturing the combined deployment effect of implementation, topology choice, and tuning on $QE$.
 
-The matched untuned hexagonal implementation comparison showed no detectable global balanced-$QE$ gain (median improvement 0.000016\%, $p=0.0923$; Supplementary Table S4); on the common untuned-XPySOM reference scale, tuning accounted for 13.04 percentage points of the full tuned-RNG stack's 14.49\% gain, and topology accounted for the remaining 1.44 points (0.88 for holdout $QE$ and 2.34 for train $QE$; Supplementary Table S6 and the accompanying Zenodo archive), consistent with the direct 1.297\% tuned RNG-over-hexagonal balanced-$QE$ advantage in Supplementary Table S5.
+The matched untuned hexagonal implementation comparison showed no detectable global balanced-$QE$ gain (median improvement 0.000016\%, $p=0.0923$; Supplementary Table S4); on the common untuned-XPySOM reference scale, tuning accounted for 13.04 percentage points of the full tuned-RNG stack's 14.49\% gain, and topology accounted for the remaining 1.44 points (0.88 for holdout $QE$ and 2.34 for train $QE$; Supplementary Table S6 and the \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries}), consistent with the direct 1.297\% tuned RNG-over-hexagonal balanced-$QE$ advantage in Supplementary Table S5.
 
 For the untuned hexagonal XPySOM reference in Fig. 15, workloads beyond the $10^8$-sample case were not processed because they exceeded available VRAM and XPySOM requires the full dataset to be loaded into memory. Taken together, Fig. 15 shows the point at which the workload size is large enough to warrant the extra startup overhead incurred by tuned FloatSOM RNG: tuned FloatSOM RNG delivers better $QE$ than the untuned hexagonal XPySOM baseline, while also running faster and scaling to larger workloads.
 
@@ -634,7 +633,7 @@ FloatSOM brings these topology and systems choices together in a single large-sc
 
 \subsubsection*{Code Availability}
 
-The FloatSOM source code is available at \url{https://github.com/1ordinateur/floatsom}. The manuscript sources, figure assets, benchmark code, and supporting analysis tables are available at \url{https://github.com/1ordinateur/floatsom-publication}.
+The FloatSOM source code is available at \url{https://github.com/1ordinateur/floatsom}. The manuscript sources, figure assets, benchmark code, and supporting analysis tables are available at \url{https://github.com/1ordinateur/floatsom-publication}. The \href{https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip}{extended supplementaries ZIP} is available from the same repository.
 
 \subsubsection*{Acknowledgments}
 

@@ -10,12 +10,13 @@ Topology-Flexible Self-Organizing Maps**. The actively developed library is in
 - [Editable figures and exported PDFs](tmlr_paper/assets/figures), including
   [figure editing instructions](tmlr_paper/assets/figures/STYLE_NOTES.md).
 - [Current supplementary tables](tmlr_paper/assets/tables).
-- [Extended supplementary archive](zenodo/floatsom_extended_supplementary/README.md).
+- [Extended supplementaries ZIP](extended_supplementaries.zip) and [contents guide](extended_supplementaries/README.md).
 - [Analysis tables](paper/README.md) retained as numerical supporting material.
 - [Benchmark scripts](benchmarks) and [default-profile guide](benchmarks/optuna/config/DEFAULTS.md).
 
-The accepted-format manuscript still needs its publication month/year, OpenReview
-forum URL and the remaining author email addresses before final submission.
+The manuscript uses the September 2026 TMLR publication date and links to its
+[OpenReview page](https://openreview.net/forum?id=n2NQNxu9Ei). The remaining
+author email addresses still need confirmation before final submission.
 
 ## Build the manuscript
 
@@ -85,7 +86,7 @@ python -m pytest tests/benchmarks/test_xpysom_figure2_wiring.py tests/benchmarks
 The numerical supplement includes checksums; verify it with:
 
 ```bash
-cd zenodo/floatsom_extended_supplementary
+cd extended_supplementaries
 sha256sum -c SHA256SUMS
 ```
 

@@ -46,8 +46,7 @@ endpoints, significance annotations, and embedded observation images were retain
 
 PDFs were exported from the edited vectors with CairoSVG and Arial. The accepted
 TMLR draft, with restored authors and acknowledgments, was rebuilt with Tectonic
-and contains 56 pages. Publication date and OpenReview metadata await author
-input. Figure exports and affected manuscript layouts were inspected.
+and contains 56 pages. Publication metadata is set to September 2026 and the confirmed OpenReview page. Figure exports and affected manuscript layouts were inspected.
 Checks confirmed preservation of original panel IDs, data path instructions,
 and named data-path centers. Earlier manuscript asset directories and plotting
 generators were not changed.

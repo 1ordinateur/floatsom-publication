@@ -1,4 +1,4 @@
-# FloatSOM extended supplementary results
+# FloatSOM extended supplementaries
 
 This archive contains detailed benchmark results removed from the revised FloatSOM manuscript to keep the paper focused on its primary distributed-systems and scaling contribution. The archived material remains available for readers who want the full dataset-level comparisons.
 
@@ -32,11 +32,14 @@ The revised manuscript retains the hexagonal FloatSOM--XPySOM equivalence result
 
 ## Files and formats
 
-Tables are tab-separated UTF-8 text files. Figures are supplied as editable SVG and rendered PDF files. Checksums in `SHA256SUMS` can be used to verify the deposited files.
+Tables are tab-separated UTF-8 text files. Figures are supplied as editable SVG and rendered PDF files. Checksums in `SHA256SUMS` can be used to verify the archived files.
 
 ## Citation
 
-Use the DOI assigned to the published Zenodo record. The DOI will be added to the manuscript after the record is deposited.
+These extended supplementaries accompany the FloatSOM paper and are hosted in the
+[publication repository](https://github.com/1ordinateur/floatsom-publication).
+Download the self-contained [extended_supplementaries.zip](https://github.com/1ordinateur/floatsom-publication/blob/main/extended_supplementaries.zip).
+Please cite the [FloatSOM paper on OpenReview](https://openreview.net/forum?id=n2NQNxu9Ei).
 
 ## License
 

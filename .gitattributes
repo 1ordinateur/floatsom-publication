@@ -1,8 +1,8 @@
-# Preserve binary publication artifacts and the byte-exact Zenodo deposit.
+# Preserve binary publication artifacts and the extended supplementaries archive.
 *.pdf binary
 *.zip binary
 
-# SHA256SUMS is calculated over LF-normalized deposit files. Keep those bytes
+# SHA256SUMS is calculated over LF-normalized archive files. Keep those bytes
 # stable across Windows and Unix checkouts; the binary rules above take priority.
-zenodo/floatsom_extended_supplementary/** text eol=lf
-zenodo/floatsom_extended_supplementary/**/*.pdf binary
+extended_supplementaries/** text eol=lf
+extended_supplementaries/**/*.pdf binary
