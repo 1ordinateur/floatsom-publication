@@ -129,7 +129,7 @@ dmypy.json
 
 # optuna git ignore
 benchmarks/optuna/optuna_results_analysis.old/
-data/
+# Keep data/ source modules trackable; datasets belong in ignored outputs/.
 benchmarks/gpu_scaling_cache/
 outputs/
 Results/
@@ -138,3 +138,19 @@ sklearn_data/
 *.pkz
 
 
+
+# Local and retired publication artifacts
+.DS_Store
+.agents/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+/tmlr_paper/build/
+/paper/assets/figures/*
+!/paper/assets/figures/.gitkeep
+/paper/assets_manual/figures/*
+!/paper/assets_manual/figures/.gitkeep

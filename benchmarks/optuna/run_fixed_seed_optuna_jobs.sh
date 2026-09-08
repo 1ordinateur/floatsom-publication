@@ -234,7 +234,7 @@ module use /g/data/dk92/apps/Modules/modulefiles/
 module load rapids/25.06
 cd /g/data/eu59/SIFEAN/sfa/
 
-python3 -m floatsom.benchmarks.optuna.run_optuna \\
+python3 -m floatsom_benchmarks.optuna.run_optuna \\
 --mode full \\
 --config ${CONFIG} \\
 --topology ${topology} \\

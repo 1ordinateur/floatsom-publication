@@ -298,7 +298,7 @@ module load rapids/25.06
 cd /g/data/eu59/SIFEAN/sfa/
 export SCIKIT_LEARN_DATA="${SKLEARN_DATA_HOME}"
 
-python3 -m floatsom.benchmarks.optuna.run_optuna \\
+python3 -m floatsom_benchmarks.optuna.run_optuna \\
 --mode full \\
 --config $CONFIG \\
 --topology ${TOPOLOGIES[*]} \\

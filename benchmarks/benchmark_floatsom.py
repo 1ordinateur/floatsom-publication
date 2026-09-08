@@ -36,7 +36,7 @@ from floatsom.processing.colors_processor import ColorsProcessor
 from floatsom.processing.batch_processor import BatchProcessor
 
 # Import evaluation metrics from sklearn_datasets
-from floatsom.benchmarks.evaluation.sklearn_datasets import (
+from floatsom_benchmarks.evaluation.sklearn_datasets import (
     generate_sklearn_dataset,
     get_available_datasets,
     get_dataset_info,
@@ -44,10 +44,10 @@ from floatsom.benchmarks.evaluation.sklearn_datasets import (
 )
 
 # Import standardized quantization error calculation
-from floatsom.benchmarks.evaluation.metrics import QuantizationError
+from floatsom_benchmarks.evaluation.metrics import QuantizationError
 
 # Import visualization utilities
-from floatsom.benchmarks.visualization import (
+from floatsom_benchmarks.visualization import (
     create_output_directory,
     visualize_som_grid_overlay,
     plot_quantization_error,
@@ -600,6 +600,7 @@ def run_benchmark(
     for config_name, sampling, processing, topology in configs:
         # Create a copy of params for this configuration
         config_params = FloatSOMParams(
+            defaults_profile="publication",
             input_dim=params.input_dim,
             total_iterations=params.total_iterations,
             initial_learning_rate=params.initial_learning_rate,
@@ -777,6 +778,7 @@ def main():
     
     # Create base FloatSOM parameters
     params = FloatSOMParams(
+        defaults_profile="publication",
         input_dim=input_dim,
         total_iterations=args.iterations,
         initial_learning_rate=args.learning_rate,

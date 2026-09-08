@@ -56,7 +56,7 @@ def load_default_runs_csv(
     topology_col = _resolve_column(df, ("architecture", "config_topology_type", "param_topology_type", "map_type"))
     sampling_col = _resolve_column(df, ("sampling_method", "sampling_method_final", "sampling_method_parsed"))
     seed_col = _resolve_column(df, ("seed", "config_seed", "random_seed", "seed_name", "config_seed_name"))
-    processing_col = _resolve_column(df, ("processing_type", "algorithm", "method", "config_processing_method"))
+    processing_col = _resolve_column(df, ("processing_type", "algorithm", "config_processing_method", "method"))
     batch_mode_col = _resolve_column(df, ("batch_mode", "config_batch_mode", "param_batch_mode"))
     split_col = _resolve_column(df, ("evaluation_split", "config_evaluation_split", "split"))
     trial_col = _resolve_column(df, ("trial_number", "trial_id", "number"))
@@ -88,6 +88,10 @@ def load_default_runs_csv(
 
     if processing_col:
         working["pair_processing"] = _normalize_text(working[processing_col])
+        if processing_col == "method":
+            # Benchmark "method" may identify the library, rather than its
+            # processing algorithm. These default FloatSOM runs use batch.
+            working["pair_processing"] = working["pair_processing"].replace({"floatsom": "batch"})
     else:
         working["pair_processing"] = "batch"
 

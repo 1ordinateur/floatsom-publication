@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "floatsom-publication"
 version = "0.1.0"
-description = "FloatSOM publication and benchmark snapshot"
+description = "FloatSOM publication benchmarks and analysis"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "floatsom>=0.1.0",
     "numpy>=1.24.0",
     "scipy>=1.10.0",
     "matplotlib>=3.7.0",
@@ -17,7 +18,7 @@ dependencies = [
     "Pillow>=10.0.0",
     "imageio>=2.31.0",
     "ray[default]>=2.6.0",
-    "zarr>=2.16.0",
+    "zarr>=3.0.0",
     "h5py>=3.9.0",
     "networkx>=3.1",
     "scikit-learn>=1.3.0",
@@ -28,84 +29,47 @@ dependencies = [
     "psutil>=5.9.0",
     "minisom>=2.3.0",
     "optuna>=3.3.0",
-    "cupy-cuda13x>=13.6.0",
-    "nvidia-nccl-cu13>=2.27.7,<3",
 ]
+
+[project.urls]
+Repository = "https://github.com/1ordinateur/floatsom-publication"
+Software = "https://github.com/1ordinateur/floatsom"
+
+[project.optional-dependencies]
+cuda12 = ["floatsom[cuda12]>=0.1.0"]
+cuda13 = ["floatsom[cuda13]>=0.1.0"]
+dev = ["pytest>=8", "build>=1.2"]
 
 [tool.setuptools]
 include-package-data = true
 packages = [
-    "floatsom",
-    "floatsom.adapters",
-    "floatsom.base",
-    "floatsom.benchmarks",
-    "floatsom.benchmarks.evaluation",
-    "floatsom.benchmarks.mst_comparison",
-    "floatsom.benchmarks.optuna",
-    "floatsom.benchmarks.optuna.analysis",
-    "floatsom.benchmarks.optuna.config",
-    "floatsom.benchmarks.optuna.core",
-    "floatsom.benchmarks.optuna.harmonization",
-    "floatsom.benchmarks.optuna.optuna_results_analysis",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.modules",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.scripts",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis",
-    "floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures",
-    "floatsom.benchmarks.optuna.orchestration",
-    "floatsom.benchmarks.optuna.utils",
-    "floatsom.benchmarks.speed_benchmarks",
-    "floatsom.benchmarks.speed_benchmarks.gpu_scaling",
-    "floatsom.data",
-    "floatsom.evaluation",
-    "floatsom.processing",
-    "floatsom.processing.colour_operations",
-    "floatsom.processing.ray_ops",
-    "floatsom.processing.ray_ops.workers",
-    "floatsom.sampling",
-    "floatsom.topology",
+    "floatsom_benchmarks",
+    "floatsom_benchmarks.evaluation",
+    "floatsom_benchmarks.mst_comparison",
+    "floatsom_benchmarks.optuna",
+    "floatsom_benchmarks.optuna.analysis",
+    "floatsom_benchmarks.optuna.config",
+    "floatsom_benchmarks.optuna.core",
+    "floatsom_benchmarks.optuna.harmonization",
+    "floatsom_benchmarks.optuna.optuna_results_analysis",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.modules",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.scripts",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.scripts.analysis",
+    "floatsom_benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures",
+    "floatsom_benchmarks.optuna.orchestration",
+    "floatsom_benchmarks.optuna.utils",
+    "floatsom_benchmarks.speed_benchmarks",
+    "floatsom_benchmarks.speed_benchmarks.gpu_scaling"
 ]
 
 [tool.setuptools.package-dir]
-floatsom = "."
-"floatsom.adapters" = "adapters"
-"floatsom.base" = "base"
-"floatsom.benchmarks" = "benchmarks"
-"floatsom.benchmarks.evaluation" = "benchmarks/evaluation"
-"floatsom.benchmarks.mst_comparison" = "benchmarks/mst_comparison"
-"floatsom.benchmarks.optuna" = "benchmarks/optuna"
-"floatsom.benchmarks.optuna.analysis" = "benchmarks/optuna/analysis"
-"floatsom.benchmarks.optuna.config" = "benchmarks/optuna/config"
-"floatsom.benchmarks.optuna.core" = "benchmarks/optuna/core"
-"floatsom.benchmarks.optuna.harmonization" = "benchmarks/optuna/harmonization"
-"floatsom.benchmarks.optuna.optuna_results_analysis" = "benchmarks/optuna/optuna_results_analysis"
-"floatsom.benchmarks.optuna.optuna_results_analysis.modules" = "benchmarks/optuna/optuna_results_analysis/modules"
-"floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis" = "benchmarks/optuna/optuna_results_analysis/modules/core_analysis"
-"floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis" = "benchmarks/optuna/optuna_results_analysis/modules/overall_score_analysis"
-"floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis" = "benchmarks/optuna/optuna_results_analysis/modules/parameter_analysis"
-"floatsom.benchmarks.optuna.optuna_results_analysis.scripts" = "benchmarks/optuna/optuna_results_analysis/scripts"
-"floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis" = "benchmarks/optuna/optuna_results_analysis/scripts/analysis"
-"floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures" = "benchmarks/optuna/optuna_results_analysis/scripts/analysis/publication_figures"
-"floatsom.benchmarks.optuna.orchestration" = "benchmarks/optuna/orchestration"
-"floatsom.benchmarks.optuna.utils" = "benchmarks/optuna/utils"
-"floatsom.benchmarks.speed_benchmarks" = "benchmarks/speed_benchmarks"
-"floatsom.benchmarks.speed_benchmarks.gpu_scaling" = "benchmarks/speed_benchmarks/gpu_scaling"
-"floatsom.data" = "data"
-"floatsom.evaluation" = "evaluation"
-"floatsom.processing" = "processing"
-"floatsom.processing.colour_operations" = "processing/colour_operations"
-"floatsom.processing.ray_ops" = "processing/ray_ops"
-"floatsom.processing.ray_ops.workers" = "processing/ray_ops/workers"
-"floatsom.sampling" = "sampling"
-"floatsom.topology" = "topology"
+floatsom_benchmarks = "benchmarks"
 
 [tool.setuptools.package-data]
-floatsom = [
-    "floatsom_min1000_tuned_defaults.json",
-    "floatsom_min1000_tuned_defaults_rng_mst_config.json",
-    "floatsom_min1000_tuned_defaults_rng_random.json",
-    "xpysom_untuned_defaults.json",
-    "benchmarks/optuna/config/presets/*.json",
-]
+floatsom_benchmarks = ["optuna/config/presets/*.json", "optuna/config/baselines/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

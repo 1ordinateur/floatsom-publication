@@ -53,7 +53,7 @@ for seed in "${SEEDS[@]}"; do
         for dataset in "${DATASETS[@]}"; do
             log_prefix="${LOGS_DIR}/optuna_seed_${seed}_${split}_${dataset}"
             echo "  -> split=${split} dataset=${dataset}"
-            python3 -m floatsom.benchmarks.optuna.run_optuna \
+            python3 -m floatsom_benchmarks.optuna.run_optuna \
                 --mode full \
                 --config full \
                 --topology "${TOPOLOGIES[@]}" \

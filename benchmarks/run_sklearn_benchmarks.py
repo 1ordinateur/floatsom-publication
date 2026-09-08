@@ -55,13 +55,13 @@ from floatsom.floatsom_params import FloatSOMParams, SamplingConfig, ProcessingC
 from floatsom.processing.processing_params import calculate_auto_chunk_size_for_method
 
 # Import evaluation framework from FloatSOM
-from floatsom.benchmarks.evaluation.sklearn_datasets import (
+from floatsom_benchmarks.evaluation.sklearn_datasets import (
     generate_sklearn_dataset, 
     get_available_datasets,
     get_dataset_info,
     SKLEARN_AVAILABLE
 )
-from floatsom.benchmarks.evaluation.metrics import (
+from floatsom_benchmarks.evaluation.metrics import (
     QuantizationError,
     TopographicError, 
     Trustworthiness, 
@@ -71,7 +71,7 @@ from floatsom.benchmarks.evaluation.metrics import (
 )
 
 # Import data generation utilities
-from floatsom.benchmarks.data_generation import (
+from floatsom_benchmarks.data_generation import (
     generate_2d_test_data,
     generate_3d_test_data,
     generate_test_data,
@@ -506,10 +506,10 @@ def _darken_hex_color(hex_color: str, factor: float = 0.58) -> str:
 def _load_representative_topology_colors() -> Dict[str, str]:
     """Load canonical topology colors from shared visualization configuration."""
     try:
-        from floatsom.benchmarks.visualization import TOPOLOGY_BASE_COLORS
+        from floatsom_benchmarks.visualization import TOPOLOGY_BASE_COLORS
     except Exception as exc:
         raise ImportError(
-            "Representative topology figure requires floatsom.benchmarks.visualization "
+            "Representative topology figure requires floatsom_benchmarks.visualization "
             "to load canonical topology colors."
         ) from exc
 
@@ -1241,11 +1241,12 @@ def train_floatsom(data: Union[cp.ndarray, np.ndarray, np.memmap], args, metadat
         # Create default configs for MiniSOM (not actually used but required for validation)
         sampling_config = SamplingConfig(method="full")
         # Use FloatSOM defaults to set a valid chunk_size for required parameter
-        default_chunk_size = FloatSOMParams().processing_config.chunk_size
+        default_chunk_size = FloatSOMParams(defaults_profile="publication", ).processing_config.chunk_size
         processing_config = ProcessingConfig(method="minisom", chunk_size=default_chunk_size)
         
         # Create parameters for MiniSOM adapter
         params = FloatSOMParams(
+            defaults_profile="publication",
             input_dim=input_dim,
             total_iterations=args.iterations,
             initial_learning_rate=args.learning_rate,
@@ -1365,6 +1366,8 @@ def train_floatsom(data: Union[cp.ndarray, np.ndarray, np.memmap], args, metadat
         topology_config = TopologyConfig(**topology_kwargs)
         
         params = FloatSOMParams(
+
+            defaults_profile="publication",
             input_dim=input_dim,
             total_iterations=args.iterations,
             initial_learning_rate=args.learning_rate,

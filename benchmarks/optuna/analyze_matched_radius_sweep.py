@@ -13,15 +13,6 @@ import sys
 import types
 from typing import Dict, List, Optional, Sequence, Tuple
 
-if __package__ in {None, ""} and "floatsom" not in sys.modules:
-    _repo_root = Path(__file__).resolve().parents[2]
-    _pkg = types.ModuleType("floatsom")
-    _pkg.__file__ = str(_repo_root / "__init__.py")
-    _pkg.__path__ = [str(_repo_root)]
-    _pkg.__package__ = "floatsom"
-    _pkg.__spec__ = importlib.machinery.ModuleSpec("floatsom", loader=None, is_package=True)
-    _pkg.__spec__.submodule_search_locations = _pkg.__path__
-    sys.modules["floatsom"] = _pkg
 
 import matplotlib
 

@@ -271,10 +271,10 @@ class Phase3BenchmarkConfig:
     def algorithm_variants(self) -> List[AlgorithmVariant]:
         """Get algorithm variant configurations using defaults from FloatSOMParams."""
         # Import FloatSOM parameter configs to get sensible defaults
-        from ....floatsom_params import ProcessingConfig, FloatSOMParams
+        from floatsom.floatsom_params import ProcessingConfig, FloatSOMParams
         
         # Derive a default chunk size from FloatSOM defaults to satisfy required param
-        default_chunk_size = FloatSOMParams().processing_config.chunk_size
+        default_chunk_size = FloatSOMParams(defaults_profile="publication", ).processing_config.chunk_size
 
         # Get default processing configs for each method with explicit chunk_size
         batch_config = ProcessingConfig(method='batch', chunk_size=default_chunk_size)

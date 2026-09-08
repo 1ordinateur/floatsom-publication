@@ -23,7 +23,7 @@ from typing import Dict, Any, List, Optional, Sequence, Set, Tuple
 from datetime import datetime
 import matplotlib.colors as mcolors
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures.constants import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures.constants import (
     MARKER_SIZE_SCALE as PUBLICATION_MARKER_SIZE_SCALE,
     TEXT_SIZE_SCALE as PUBLICATION_TEXT_SIZE_SCALE,
 )

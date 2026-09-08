@@ -508,6 +508,7 @@ def train_floatsom_with_zarr(zarr_path: str, args, metadata: Dict[str, Any]) -> 
     
     # Create FloatSOM parameters
     params = FloatSOMParams(
+        defaults_profile="publication",
         input_dim=input_dim,
         total_iterations=args.iterations,
         initial_learning_rate=args.learning_rate,

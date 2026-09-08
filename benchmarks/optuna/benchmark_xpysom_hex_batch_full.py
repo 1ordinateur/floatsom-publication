@@ -36,10 +36,10 @@ import pandas as pd
 from scipy import stats
 
 from floatsom.base.floatsom_factories import create_floatsom
-from floatsom.benchmarks.evaluation.sklearn_datasets import generate_sklearn_dataset
-from floatsom.benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
-from floatsom.benchmarks.optuna.core.objective import create_floatsom_params
-from floatsom.benchmarks.optuna.run_matched_default_floatsom_batch import (
+from floatsom_benchmarks.evaluation.sklearn_datasets import generate_sklearn_dataset
+from floatsom_benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
+from floatsom_benchmarks.optuna.core.objective import create_floatsom_params
+from floatsom_benchmarks.optuna.run_matched_default_floatsom_batch import (
     _resolve_effective_manual_fixed_params,
     _resolve_manual_fixed_params,
     _resolve_manual_fixed_params_by_sampling_topology,
@@ -1531,7 +1531,7 @@ def main() -> int:
         manual_fixed_params_by_sampling_topology=manual_fixed_params_by_sampling_topology,
     )
     _ensure_olivetti_cache_available(datasets, sklearn_data_home)
-    default_epochs = int(FloatSOMParams().total_iterations)
+    default_epochs = int(FloatSOMParams(defaults_profile="publication", ).total_iterations)
     training_epochs = int(args.epochs) if args.epochs is not None else default_epochs
     if training_epochs <= 0:
         raise ValueError(f"epochs must be positive, got {training_epochs}")

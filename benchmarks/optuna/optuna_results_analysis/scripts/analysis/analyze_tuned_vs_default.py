@@ -10,10 +10,10 @@ from pathlib import Path
 
 import pandas as pd
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.default_benchmark_adapter import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.default_benchmark_adapter import (
     load_default_runs_csv,
 )
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.tuned_vs_default import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.tuned_vs_default import (
     TunedDefaultMetric,
     build_tuned_vs_default_report,
     build_tuned_vs_external_default_report,

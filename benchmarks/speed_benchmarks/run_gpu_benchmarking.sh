@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-REPO_ROOT=$(cd "${SCRIPT_DIR}/../../.." && pwd)
+REPO_ROOT=$(cd "${SCRIPT_DIR}/../.." && pwd)
 RUN_TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 PROJECT_CODE="eu59"
@@ -12,11 +12,11 @@ STORAGE="gdata/eu59+gdata/dk92+scratch/eu59"
 EMAIL="tony.xu@anu.edu.au"
 MODULE_USE_PATH="/g/data/dk92/apps/Modules/modulefiles/"
 MODULE_LOAD="rapids/25.06"
-PYTHON_MODULE="floatsom.benchmarks.speed_benchmarks.run_gpu_scaling_benchmark"
+PYTHON_MODULE="floatsom_benchmarks.speed_benchmarks.run_gpu_scaling_benchmark"
 SEED=42
 
-CACHE_BASE="${REPO_ROOT}/floatsom/benchmarks/speed_benchmarks/cache"
-RUN_BASE="${REPO_ROOT}/floatsom/benchmarks/speed_benchmarks/runs"
+CACHE_BASE="${REPO_ROOT}/benchmarks/speed_benchmarks/cache"
+RUN_BASE="${REPO_ROOT}/benchmarks/speed_benchmarks/runs"
 mkdir -p "${CACHE_BASE}" "${RUN_BASE}"
 
 submit_job() {

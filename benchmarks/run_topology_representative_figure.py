@@ -127,7 +127,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 
 def _load_benchmark_module() -> Any:
     """Import the GPU benchmark only when training is requested."""
-    from floatsom.benchmarks import run_sklearn_benchmarks as benchmark
+    from floatsom_benchmarks import run_sklearn_benchmarks as benchmark
 
     return benchmark
 

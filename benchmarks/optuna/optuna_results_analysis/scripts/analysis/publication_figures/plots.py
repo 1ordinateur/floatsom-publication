@@ -19,7 +19,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from scipy import stats
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
 
 from .constants import *
 from .helpers import *

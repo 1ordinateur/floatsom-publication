@@ -31,20 +31,20 @@ import numpy as np
 import pandas as pd
 import zarr
 
-from floatsom.benchmarks.optuna.benchmark_xpysom_hex_batch_full import (
+from floatsom_benchmarks.optuna.benchmark_xpysom_hex_batch_full import (
     _create_xpysom_hex,
     _train_xpysom,
 )
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.config import BenchmarkConfig
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.large_dataset import (
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.config import BenchmarkConfig
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.large_dataset import (
     cleanup_staged_dataset,
     generate_or_load_data,
     stage_dataset_for_execution,
     train_floatsom_with_zarr,
 )
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.ray_utils import ensure_clean_ray_state
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.resume_state import ResumeManager
-from floatsom.benchmarks.visualization import plot_topology_comparison_scaling_benchmark
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.ray_utils import ensure_clean_ray_state
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.resume_state import ResumeManager
+from floatsom_benchmarks.visualization import plot_topology_comparison_scaling_benchmark
 from floatsom.processing.processing_params import get_visible_gpu_vram_mib
 
 MP_CONTEXT = multiprocessing.get_context("spawn")

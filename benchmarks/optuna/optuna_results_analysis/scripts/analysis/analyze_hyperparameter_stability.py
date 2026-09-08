@@ -11,7 +11,7 @@ from typing import List, Tuple
 
 import pandas as pd
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.hyperparameter_stability import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.hyperparameter_stability import (
     StabilityMetric,
     build_hyperparameter_stability_report,
 )

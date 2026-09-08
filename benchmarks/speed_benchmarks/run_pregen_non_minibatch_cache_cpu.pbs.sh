@@ -13,8 +13,8 @@
 
 module use /g/data/dk92/apps/Modules/modulefiles/; module load rapids/25.06; cd /g/data/eu59/SIFEAN/sfa/
 
-python3 -m floatsom.benchmarks.speed_benchmarks.pregen_gpu_scaling_non_minibatch_cache \
-  --from_pbs_script "/g/data/eu59/SIFEAN/sfa/floatsom/benchmarks/speed_benchmarks/run_gpu_benchmarking_8gpu.pbs.sh" \
+python3 -m floatsom_benchmarks.speed_benchmarks.pregen_gpu_scaling_non_minibatch_cache \
+  --from_pbs_script "/g/data/eu59/SIFEAN/sfa/floatsom-publication/benchmarks/speed_benchmarks/run_gpu_benchmarking_8gpu.pbs.sh" \
   --mode sample_scaling \
   --processing_methods batch \
   --max_workers 4 \

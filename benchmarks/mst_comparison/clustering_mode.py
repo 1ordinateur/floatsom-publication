@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 
 from floatsom.base.floatsom import FloatSOM
 # Use the benchmarks metrics implementation which does not rely on a missing Metric protocol
-from floatsom.benchmarks.evaluation.metrics import QuantizationError
+from floatsom_benchmarks.evaluation.metrics import QuantizationError
 
 logger = logging.getLogger(__name__)
 

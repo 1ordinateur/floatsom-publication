@@ -235,7 +235,7 @@ def _extract_benchmark_cli_tokens_from_pbs_script(pbs_script_path: str) -> List[
     command = commands[-1]
     tokens = shlex.split(command)
 
-    module_name = "floatsom.benchmarks.speed_benchmarks.run_gpu_scaling_benchmark"
+    module_name = "floatsom_benchmarks.speed_benchmarks.run_gpu_scaling_benchmark"
     if "-m" in tokens:
         try:
             module_idx = tokens.index(module_name)
@@ -256,7 +256,7 @@ def _extract_benchmark_cli_tokens_from_pbs_script(pbs_script_path: str) -> List[
 
 def _load_benchmark_params_from_pbs_script(pbs_script_path: str) -> argparse.Namespace:
     cli_tokens = _extract_benchmark_cli_tokens_from_pbs_script(pbs_script_path)
-    from floatsom.benchmarks.speed_benchmarks.gpu_scaling.cli import parse_args as parse_benchmark_args
+    from floatsom_benchmarks.speed_benchmarks.gpu_scaling.cli import parse_args as parse_benchmark_args
 
     previous_argv = sys.argv[:]
     try:
@@ -363,7 +363,7 @@ def _generate_or_load_dataset_for_spec(
     force_regenerate: bool,
     verbose: bool,
 ) -> str:
-    from floatsom.benchmarks.speed_benchmarks.gpu_scaling.large_dataset import generate_or_load_data
+    from floatsom_benchmarks.speed_benchmarks.gpu_scaling.large_dataset import generate_or_load_data
 
     dataset_args = SimpleNamespace(
         samples=spec.samples,

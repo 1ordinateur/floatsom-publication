@@ -20,7 +20,7 @@ from typing import Iterable, List, Optional, Sequence, Tuple
 
 import pandas as pd
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
 
 
 @dataclass(frozen=True)

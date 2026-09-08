@@ -17,7 +17,7 @@ from floatsom.base.floatsom_factories import create_floatsom
 from floatsom.floatsom_params import FloatSOMParams, SamplingConfig, ProcessingConfig, TopologyConfig
 
 # Evaluation metrics from existing benchmarks
-from floatsom.benchmarks.evaluation.metrics import (
+from floatsom_benchmarks.evaluation.metrics import (
     QuantizationError,
     MeanTiedRank,
     MTR_PERMUTATION_NULL_METRIC_NAMES,
@@ -31,7 +31,7 @@ from floatsom.benchmarks.evaluation.metrics import (
 )
 
 # sklearn datasets
-from floatsom.benchmarks.evaluation.sklearn_datasets import generate_sklearn_dataset
+from floatsom_benchmarks.evaluation.sklearn_datasets import generate_sklearn_dataset
 
 # Parameter configuration
 from ..config.parameters import PARAMETER_CONFIGS, get_conditional_parameters
@@ -74,6 +74,7 @@ def _build_default_floatsom_for_context(input_dim: int, params: Dict[str, Any]) 
         use_gpu=True,
     )
     return FloatSOMParams(
+        defaults_profile="publication",
         input_dim=int(input_dim),
         sampling_config=sampling_config,
         processing_config=processing_config,
@@ -454,6 +455,8 @@ def create_floatsom_params(data: cp.ndarray, params: Dict[str, Any]) -> FloatSOM
     )
 
     return FloatSOMParams(
+
+        defaults_profile="publication",
         input_dim=input_dim,
         total_iterations=params.get('iterations', 50),
         initial_learning_rate=params.get('learning_rate', default_params.initial_learning_rate),

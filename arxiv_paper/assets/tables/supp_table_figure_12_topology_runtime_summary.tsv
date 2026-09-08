@@ -1,4 +1,0 @@
-mode_name	mode_label	gpu_count	method	axis_value	hexagonal_runtime_mean_s	mst_runtime_mean_s	rng_runtime_mean_s	fastest_topology	fastest_runtime_mean_s	slowest_topology	slowest_runtime_mean_s	max_pairwise_runtime_spread_pct
-dimension_scaling	Dimension Scaling	8	batch	5000.0	404.1706420580546	423.1503255367279	409.9381302197774	hexagonal	404.1706420580546	mst	423.1503255367279	4.695957970135559
-sample_scaling	Sample Scaling	8	batch	1000000000.0	363.57851847012836	375.4408480326335	369.4120698769887	hexagonal	363.57851847012836	mst	375.4408480326335	3.262659634683487
-grid_size_scaling	Grid-Size Scaling	8	batch	64.0	32.54371372858683	266.4501368204753	880.8306202888489	hexagonal	32.54371372858683	rng	880.8306202888489	2606.6075729246463

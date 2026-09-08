@@ -41,7 +41,7 @@ scan_ray_logs() {
 
 trap 'scan_ray_logs' EXIT INT TERM
 
-python3 -m floatsom.benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
+python3 -m floatsom_benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
   --cache_dir "8gpu_scaling_cache" \
   --output_dir "2gpu_scaling/results" \
   --temp_dir $PBS_JOBFS \

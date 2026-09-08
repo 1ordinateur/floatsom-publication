@@ -36,7 +36,7 @@ from .config.parameters import (
     get_optimizable_parameters,
 )
 from .harmonization.pareto_utils import calculate_pareto_front_from_trials, calculate_pareto_front_from_ray_results
-from ...floatsom_params import FloatSOMParams
+from floatsom.floatsom_params import FloatSOMParams
 
 
 TUNABLE_HYPERPARAMETER_NAMES: Set[str] = set(get_optimizable_parameters()) | set(get_discrete_parameters())
@@ -62,7 +62,7 @@ NON_OBJECTIVE_ATTRIBUTE_KEYS: Set[str] = {
 
 def get_default_params() -> FloatSOMParams:
     """Get default FloatSOM parameters from floatsom_params.py"""
-    return FloatSOMParams()
+    return FloatSOMParams(defaults_profile="publication", )
 
 
 def resolve_dataset_config() -> Dict[str, Any]:
@@ -630,7 +630,7 @@ def run_full_mode(args) -> None:
             forced_combinations = get_default_forced_combinations(topology_types=args.topology)
             
             # Temporarily replace get_default_forced_combinations in benchmark_config
-            import floatsom.benchmarks.optuna.config.benchmark_config as bc_module
+            import floatsom_benchmarks.optuna.config.benchmark_config as bc_module
             original_get_forced = bc_module.get_default_forced_combinations
             bc_module.get_default_forced_combinations = lambda: forced_combinations
             

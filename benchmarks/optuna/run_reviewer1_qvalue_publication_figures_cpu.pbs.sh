@@ -77,7 +77,7 @@ echo "PYTHONPATH import shim: $IMPORT_SHIM_ROOT"
 echo "Checking Python dependencies..."
 "$PYTHON_BIN" - <<'PY'
 import floatsom
-import floatsom.benchmarks
+import floatsom_benchmarks
 import matplotlib
 import numpy
 import pandas

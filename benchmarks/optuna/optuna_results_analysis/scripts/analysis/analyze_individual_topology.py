@@ -10,11 +10,11 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Import required modules
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.clean import clean_data, remove_zero_topographic_error
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.filter_best import filter_top_performers
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.normalization import normalize_all_metrics
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.statistical_analysis import compare_groups
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.visualization_helpers import add_analysis_columns
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.clean import clean_data, remove_zero_topographic_error
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.filter_best import filter_top_performers
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.normalization import normalize_all_metrics
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.statistical_analysis import compare_groups
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.visualization_helpers import add_analysis_columns
 
 def analyze_individual_topology_metrics(percentile=10):
     """

@@ -1,7 +1,5 @@
 \documentclass[10pt]{article} % For LaTeX2e
-\usepackage{tmlr}
-% For an accepted camera-ready paper, use \usepackage[accepted]{tmlr} instead.
-% For a de-anonymized preprint, use \usepackage[preprint]{tmlr} instead.
+\usepackage[accepted]{tmlr}
 
 % Optional math commands from https://github.com/goodfeli/dlbook_notation.
 \input{math_commands.tex}
@@ -19,19 +17,44 @@
 \usepackage{hyperref}
 \usepackage{url}
 
-\title{FloatSOM: GPU Accelerated, Distributed, Topology-Flexible Self-Organizing Maps}
+\title{FloatSOM: GPU Accelerated, Distributed,\\Topology-Flexible Self-Organizing Maps}
 
-% Review-stage source: author names, affiliations, emails, and contribution
-% statements are deliberately omitted for double-blind review.
-\author{}
+% Author order, affiliations and equal co-last-author credit restored from
+% the preprint source (retained in Git history), using official TMLR macros.
+\author{\name Tony Xu \email tony.xu@anu.edu.au \\
+        \addr John Curtin School of Medical Research, Australian National University
+        \AND
+        \name Sarah Klamt \\
+        \addr Department of Information Technology and Electrical Engineering, ETH Z\"urich
+        \AND
+        \name Katherine Turner \\
+        \addr Mathematical Data Science Centre, Australian National University
+        \AND
+        \name Anne Br\"ustle \\
+        \addr John Curtin School of Medical Research, Australian National University
+        \AND
+        \name Felix Marsh-Wakefield\thanks{Felix Marsh-Wakefield and Givanna Putri contributed equally as co-last authors.} \\
+        \addr Centenary Institute of Cancer Medicine and Cell Biology\\
+        University of Sydney
+        \AND
+        \name Givanna Putri\footnotemark[1] \\
+        \addr Walter and Eliza Hall Institute}
 
-% TODO(TMLR CAMERA-READY): Replace all three placeholders only for the final
-% accepted version; they are unused in anonymous review mode.
+\hypersetup{
+  pdftitle={FloatSOM: GPU Accelerated, Distributed, Topology-Flexible Self-Organizing Maps},
+  pdfauthor={Tony Xu; Sarah Klamt; Katherine Turner; Anne Brüstle; Felix Marsh-Wakefield; Givanna Putri}
+}
+
+% TODO(TMLR CAMERA-READY): Confirm publication month/year and OpenReview forum URL.
+% These publisher-specific fields are pending author input; do not infer them.
 \def\month{MM}
 \def\year{YYYY}
 \def\openreview{\url{https://openreview.net/forum?id=XXXX}}
 
 \begin{document}
+
+% Keep spare page height below the text instead of stretching float gaps.
+\raggedbottom
 
 \maketitle
 
@@ -539,7 +562,7 @@ To examine parallel scaling, we benchmarked FloatSOM under full sampling across 
 \centering
 % SVG source: assets/figures/fig_13.svg
 \includegraphics[width=\linewidth]{assets/figures/fig_13.pdf}
-\caption{Multi-GPU scaling across $G\in\{1,2,4,8\}$ GPUs. Panels A-C show runtime (s) for dimension, sample, and grid size scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\% efficiency reference line indicates ideal linear scaling.}
+\caption{Multi-GPU scaling across $G\in\{1,2,3,4,8\}$ GPUs. Panels A-C show runtime (s) for dimension, sample, and grid size scaling workloads, respectively. Panels D-F show scaling efficiency for the same workloads, computed from the single-GPU baseline and the corresponding $G$-GPU runtime. Runtime error bars denote $\pm 1$ standard deviation across $n=3$ repeated runs per configuration; the 100\% efficiency reference line indicates ideal linear scaling.}
 \label{fig:13}
 \end{figure}
 
@@ -609,8 +632,17 @@ At grid size 64, hexagonal, MST, and RNG required 32.54, 266.45, and 880.83 s on
 
 FloatSOM brings these topology and systems choices together in a single large-scale SOM framework.
 
-% Acknowledgments and funding information are omitted from the anonymous
-% review source and must be restored only after acceptance and deanonymization.
+\subsubsection*{Code Availability}
+
+The FloatSOM source code is available at \url{https://github.com/1ordinateur/floatsom}. The manuscript sources, figure assets, benchmark code, and supporting analysis tables are available at \url{https://github.com/1ordinateur/floatsom-publication}.
+
+\subsubsection*{Acknowledgments}
+
+This work was supported by computational resources provided by the Australian Government through the National Computational Infrastructure (NCI) under the ANU Merit Allocation Scheme.
+
+We also acknowledge the computational services provided by the University of Bern, the University of Sydney, and the Walter and Eliza Hall Institute.
+
+We thank Prof. Hanna Suominen for her input and advice.
 
 \bibliography{main}
 \bibliographystyle{tmlr}
@@ -680,7 +712,7 @@ For any connected $P$-node graph, the exact permutation-null expectation is $P/2
 \centering
 % SVG source: assets/figures/supp_fig_s4.svg
 \includegraphics[width=\linewidth]{assets/figures/supp_fig_s4.pdf}
-\caption{Full GPU-count scaling context for MST and hexagonal under matched full sampling settings. A-C: MST dimension, sample, and grid-size scaling; D-F: hexagonal dimension, sample, and grid-size scaling. Curves correspond to $G\in\{1,2,4,8\}$ GPUs and report mean wall-clock runtime (s) with $\pm 1$ standard-deviation error bars across $n=3$ repeated runs per configuration.}
+\caption{Full GPU-count scaling context for MST and hexagonal under matched full sampling settings. A-C: MST dimension, sample, and grid-size scaling; D-F: hexagonal dimension, sample, and grid-size scaling. Curves correspond to $G\in\{1,2,3,4,8\}$ GPUs and report mean wall-clock runtime (s) with $\pm 1$ standard-deviation error bars across $n=3$ repeated runs per configuration.}
 \label{fig:s4}
 \end{figure}
 

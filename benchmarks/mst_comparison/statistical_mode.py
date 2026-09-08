@@ -31,7 +31,7 @@ FIXED_DATASETS = ['iris', 'diabetes', 'breast_cancer', 'wine', 'olivetti_faces',
 
 # Check sklearn availability
 try:
-    from floatsom.benchmarks.evaluation.sklearn_datasets import SKLEARN_AVAILABLE
+    from floatsom_benchmarks.evaluation.sklearn_datasets import SKLEARN_AVAILABLE
 except ImportError:
     SKLEARN_AVAILABLE = False
 

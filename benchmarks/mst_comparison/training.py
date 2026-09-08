@@ -37,6 +37,7 @@ def train_direct_mst_som(data: cp.ndarray, args) -> Tuple[FloatSOM, Dict[str, An
     
     # Create parameters
     params = FloatSOMParams(
+        defaults_profile="publication",
         input_dim=input_dim,
         total_iterations=args.iterations,
         initial_learning_rate=args.learning_rate,
@@ -108,6 +109,7 @@ def train_hexagonal_som(data: cp.ndarray, args) -> Tuple[FloatSOM, Dict[str, Any
     
     # Create parameters for hexagonal topology
     params = FloatSOMParams(
+        defaults_profile="publication",
         input_dim=input_dim,
         total_iterations=args.iterations,
         initial_learning_rate=args.learning_rate,

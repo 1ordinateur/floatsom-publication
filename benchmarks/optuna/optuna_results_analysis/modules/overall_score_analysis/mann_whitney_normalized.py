@@ -15,7 +15,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import the existing Mann-Whitney functions
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.statistical_analysis import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.statistical_analysis import (
     mann_whitney_u_test,
     write_results,
     create_summary_csv,
@@ -24,7 +24,7 @@ from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.st
 )
 
 # Import the normalized score calculation
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.calculate_normalized_overall_score import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.calculate_normalized_overall_score import (
     calculate_normalized_overall_score
 )
 

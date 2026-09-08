@@ -20,17 +20,17 @@ import uuid
 from datetime import datetime
 from typing import Dict, Optional
 
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.cli import parse_args
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.benchmark_types import (
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.cli import parse_args
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.benchmark_types import (
     DimensionScalingBenchmark,
     SampleScalingBenchmark,
     GridSizeScalingBenchmark,
 )
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.reporting import ReportGenerator
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.runners import BenchmarkTimeoutError
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.ray_utils import ensure_clean_ray_state
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.resume_state import ResumeManager
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.results import ResultsHandler
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.reporting import ReportGenerator
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.runners import BenchmarkTimeoutError
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.ray_utils import ensure_clean_ray_state
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.resume_state import ResumeManager
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.results import ResultsHandler
 
 SUPPLEMENTARY_MINIBATCH_SUBDIR = "supplementary_minibatch"
 
@@ -177,7 +177,7 @@ def _rewrite_all_outputs(
 ) -> None:
     """Rewrite persisted artifacts to reflect the final aggregate state."""
     try:
-        from floatsom.benchmarks.visualization import (
+        from floatsom_benchmarks.visualization import (
             plot_gpu_scaling_benchmark,
             plot_sample_scaling_benchmark,
         )
@@ -413,7 +413,7 @@ def main():
             dim_results = DimensionScalingBenchmark.run(args, args.output_dir)
 
             try:
-                from floatsom.benchmarks.visualization import plot_gpu_scaling_benchmark
+                from floatsom_benchmarks.visualization import plot_gpu_scaling_benchmark
 
                 dim_output_dir = os.path.join(args.output_dir, "dimension_scaling")
                 for topology, topology_results in (dim_results or {}).items():
@@ -480,7 +480,7 @@ def main():
             sample_results = SampleScalingBenchmark.run(args, args.output_dir)
 
             try:
-                from floatsom.benchmarks.visualization import plot_sample_scaling_benchmark
+                from floatsom_benchmarks.visualization import plot_sample_scaling_benchmark
 
                 sample_output_dir = os.path.join(args.output_dir, "sample_scaling")
                 for topology, topology_results in (sample_results or {}).items():
@@ -546,7 +546,7 @@ def main():
             grid_results = GridSizeScalingBenchmark.run(args, args.output_dir)
 
             try:
-                from floatsom.benchmarks.visualization import plot_gpu_scaling_benchmark
+                from floatsom_benchmarks.visualization import plot_gpu_scaling_benchmark
 
                 grid_output_dir = os.path.join(args.output_dir, "grid_size_scaling")
                 for topology, topology_results in (grid_results or {}).items():

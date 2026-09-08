@@ -146,7 +146,7 @@ for dataset in "${DATASETS[@]}"; do
     mkdir -p "$dataset_out"
 
     echo "=== Dataset: $dataset ==="
-    python3 -m floatsom.benchmarks.optuna.run_optuna \
+    python3 -m floatsom_benchmarks.optuna.run_optuna \
         --mode full \
         --config "$CONFIG" \
         --topology "${TOPOLOGIES[@]}" \

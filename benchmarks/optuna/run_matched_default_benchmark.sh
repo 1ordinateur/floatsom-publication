@@ -14,12 +14,12 @@
 
 module use /g/data/dk92/apps/Modules/modulefiles/; module load rapids/25.06; cd /g/data/eu59/SIFEAN/sfa/
 
-python3 -m floatsom.benchmarks.optuna.run_matched_default_floatsom_batch \
+python3 -m floatsom_benchmarks.optuna.run_matched_default_floatsom_batch \
 --output-dir tuned_default_comparison_10032026 \
 --run-both-profiles \
 --seeds 11780 24458 27760 33080 39252 48049 69281 88014 89580 90744 \
 --topologies hexagonal mst rng \
 --sampling-methods full random \
 --evaluation-split both \
---fixed-params-by-sampling-topology-json floatsom/floatsom_min1000_tuned_defaults \
+--fixed-params-by-sampling-topology-json publication \
 --resume

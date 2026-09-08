@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
 
 
 METRIC_LABELS: Dict[str, str] = {

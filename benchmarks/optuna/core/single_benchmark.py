@@ -19,7 +19,7 @@ from ..config.parameters import validate_forced_params, PARAMETER_CONFIGS, get_c
 from ..utils.utils import set_global_seed, save_study_results
 from ..utils.ray_tune_utils import run_ray_tune_optimization, is_ray_available
 from ..harmonization.pareto_utils import find_best_trial_by_distance
-from ....floatsom_params import FloatSOMParams, SamplingConfig, ProcessingConfig, TopologyConfig
+from floatsom.floatsom_params import FloatSOMParams, SamplingConfig, ProcessingConfig, TopologyConfig
 
 
 def _build_default_floatsom_for_context(forced_params: Dict[str, Any]) -> FloatSOMParams:
@@ -29,6 +29,8 @@ def _build_default_floatsom_for_context(forced_params: Dict[str, Any]) -> FloatS
     topology_type = str(forced_params.get('topology_type', 'grid')).strip().lower()
 
     return FloatSOMParams(
+
+        defaults_profile="publication",
         sampling_config=SamplingConfig(method=sampling_method),
         processing_config=ProcessingConfig(
             chunk_size=None,

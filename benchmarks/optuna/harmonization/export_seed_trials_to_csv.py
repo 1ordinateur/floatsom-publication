@@ -9,7 +9,7 @@ It exports trial-level rows without cross-seed harmonization, so downstream
 paired analysis can match Batch vs Colours within the same seed.
 
 Usage:
-    python -m floatsom.benchmarks.optuna.harmonization.export_seed_trials_to_csv \
+    python -m floatsom_benchmarks.optuna.harmonization.export_seed_trials_to_csv \
         --results-dir ../data_sifean/optuna_20251021/20251021 \
         --output ../data_sifean/optuna_20251021_seed_trials.csv
 """

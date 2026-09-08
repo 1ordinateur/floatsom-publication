@@ -42,7 +42,7 @@ python3 benchmarks/optuna/run_matched_default_floatsom_batch.py \
     --topologies hexagonal \
     --sampling-methods full \
     --evaluation-split both \
-    --fixed-params-by-sampling-topology-json xpysom_untuned_defaults.json \
+    --fixed-params-by-sampling-topology-json xpysom-untuned \
     --run-label untuned_floatsom_hex \
     --runs-csv-name matched_untuned_floatsom_hex_runs.csv \
     --mtr-null-permutations 1

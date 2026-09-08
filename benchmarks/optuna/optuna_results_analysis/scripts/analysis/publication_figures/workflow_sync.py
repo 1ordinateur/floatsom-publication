@@ -21,17 +21,17 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from scipy import stats
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.default_benchmark_adapter import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.default_benchmark_adapter import (
     load_default_runs_csv,
 )
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.hyperparameter_stability import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.hyperparameter_stability import (
     StabilityMetric,
     build_hyperparameter_stability_report,
     stability_table_filename,
 )
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.tuned_vs_default import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.tuned_vs_default import (
     TunedDefaultMetric,
     build_tuned_vs_external_default_report,
     summarize_paired_value_table,

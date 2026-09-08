@@ -20,7 +20,7 @@ from typing import Dict, List, Tuple, Any
 logger = logging.getLogger(__name__)
 
 # Import data generation utilities
-from floatsom.benchmarks.data_generation import (
+from floatsom_benchmarks.data_generation import (
     generate_2d_test_data,
     generate_3d_test_data,
     generate_test_data,
@@ -28,7 +28,7 @@ from floatsom.benchmarks.data_generation import (
 
 # Import sklearn dataset utilities
 try:
-    from floatsom.benchmarks.evaluation.sklearn_datasets import (
+    from floatsom_benchmarks.evaluation.sklearn_datasets import (
         generate_sklearn_dataset,
         SKLEARN_AVAILABLE
     )

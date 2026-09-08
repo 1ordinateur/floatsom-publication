@@ -15,7 +15,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.dataset_groups import dataset_group, ordered_dataset_labels
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.dataset_groups import dataset_group, ordered_dataset_labels
 
 
 @dataclass(frozen=True)

@@ -13,19 +13,19 @@ from pathlib import Path
 warnings.filterwarnings('ignore')
 
 # Import our modules
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.clean import clean_data, remove_zero_topographic_error
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.filter_best import filter_top_performers
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.normalization import normalize_all_metrics
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.visualization_helpers import add_analysis_columns, plot_algorithm_comparison, save_statistics, plot_pareto_fronts
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.statistical_analysis import perform_algorithm_comparisons
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.paired_analysis import (
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.clean import clean_data, remove_zero_topographic_error
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.filter_best import filter_top_performers
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.normalization import normalize_all_metrics
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.visualization_helpers import add_analysis_columns, plot_algorithm_comparison, save_statistics, plot_pareto_fronts
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.statistical_analysis import perform_algorithm_comparisons
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.paired_analysis import (
     generate_algorithm_paired_analysis_report,
     generate_topology_paired_analysis_report,
 )
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.mann_whitney_normalized import perform_normalized_comparisons
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.unified_summary import create_unified_summary
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.extract_best_performers import extract_best_performer_records, create_compact_summary
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.parameter_summary import build_parameter_summary, MetricConfig
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.mann_whitney_normalized import perform_normalized_comparisons
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.unified_summary import create_unified_summary
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.extract_best_performers import extract_best_performer_records, create_compact_summary
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.parameter_summary import build_parameter_summary, MetricConfig
 
 
 def _optional_columns_to_ignore_na(df):
@@ -112,7 +112,7 @@ def _coalesce_architecture_column(df):
     df.loc[~df['architecture'].isin(known_topologies), 'architecture'] = np.nan
 
 
-def run_analysis(data_file='results/pareto_front_results.csv', 
+def run_analysis(data_file='results/pareto_front_results.csv',
                  output_dir='results',
                  save_results=True,
                  perform_statistical_tests=True,
@@ -123,7 +123,7 @@ def run_analysis(data_file='results/pareto_front_results.csv',
                  colors=False):
     """
     Run complete analysis pipeline
-    
+
     Parameters:
     -----------
     data_file : str
@@ -143,7 +143,7 @@ def run_analysis(data_file='results/pareto_front_results.csv',
         Whether to calculate overall scores and identify best performers
     architecture_filter : str or None
         If specified, filter to only this architecture type (e.g., 'hexagonal', 'mst')
-        
+
     Returns:
     --------
     df_final : pandas DataFrame
@@ -153,30 +153,30 @@ def run_analysis(data_file='results/pareto_front_results.csv',
     mann_whitney_results : dict or None
         Results from Mann-Whitney U tests for each sampling method
     """
-    
+
     print("="*60)
     print("PARETO FRONT ANALYSIS PIPELINE")
     print("="*60)
-    
+
     # Create output directories - use subdirectory for architecture-specific analysis
     if architecture_filter:
         output_path = Path(output_dir) / architecture_filter.lower()
         print(f"Output directory: {output_path}")
     else:
         output_path = Path(output_dir)
-    
+
     output_path.mkdir(parents=True, exist_ok=True)
     (output_path / 'plots').mkdir(exist_ok=True)
     (output_path / 'tables').mkdir(exist_ok=True)
     (output_path / 'summary_outputs').mkdir(exist_ok=True)
-    
+
     # Step 1: Load and clean data
     print("\n1. Loading and cleaning data...")
     print("-"*40)
     df = pd.read_csv(data_file)
     _coalesce_processing_columns(df)
     print(f"Original shape: {df.shape}")
-    
+
     # Remove NaN and Inf
     df_clean = clean_data(df, ignore_na_columns=_optional_columns_to_ignore_na(df))
     _coalesce_distortion_columns(df_clean)
@@ -193,7 +193,7 @@ def run_analysis(data_file='results/pareto_front_results.csv',
     # Remove rows with topographic_error = 0
     df_clean = remove_zero_topographic_error(df_clean)
     print(f"Shape after removing zero TE: {df_clean.shape}")
-    
+
     # Step 2: Filter to top performers if requested
     if filter_top_percent is not None and filter_top_percent < 100:
         print(f"\n2. Filtering to top {filter_top_percent}% performers per dataset...")
@@ -207,18 +207,18 @@ def run_analysis(data_file='results/pareto_front_results.csv',
     else:
         df_filtered = df_clean
         print(f"\n2. No filtering applied - keeping all data")
-    
+
     # Step 3: Normalize
     print("\n3. Normalizing metrics...")
     print("-"*40)
     df_normalized = normalize_all_metrics(df_filtered)
     print(f"Shape after normalization: {df_normalized.shape}")
-    
+
     # Step 4: No PCA (legacy topology bundle not present)
     print("\n4. Skipping PCA - topology bundle not available in new schema")
     df_with_pca = df_normalized.copy()
     pca_info = None
-    
+
     # Step 5: Add analysis columns
     print("\n5. Parsing scenario information...")
     print("-"*40)
@@ -226,9 +226,9 @@ def run_analysis(data_file='results/pareto_front_results.csv',
     if not colors and 'algorithm' in df_final.columns:
         mask_colors = df_final['algorithm'].astype(str).str.lower().str.strip() == 'colors'
         df_final = df_final[~mask_colors].copy()
-    
+
     print(f"Algorithms found: {list(df_final['algorithm'].dropna().unique())}")
-    
+
     # Check which sampling column exists and use it
     if 'sampling_method' in df_final.columns:
         print(f"Sampling methods: {list(df_final['sampling_method'].dropna().unique())}")
@@ -236,26 +236,26 @@ def run_analysis(data_file='results/pareto_front_results.csv',
         print(f"Sampling methods: {list(df_final['sampling_method_final'].dropna().unique())}")
     else:
         print(f"Sampling methods: {list(df_final['sampling_method_parsed'].dropna().unique())}")
-    
+
     print(f"Datasets: {list(df_final['dataset'].unique())}")
     _coalesce_architecture_column(df_final)
     print(f"Architectures found: {list(df_final['architecture'].dropna().unique())}")
-    
+
     # Filter by architecture if specified
     if architecture_filter:
         print(f"\nFiltering to architecture: {architecture_filter}")
         df_final = df_final[df_final['architecture'] == architecture_filter]
         print(f"Shape after architecture filtering: {df_final.shape}")
-    
+
     # Step 6: Create visualizations and compute statistics
     print("\n6. Creating visualizations and computing statistics...")
     print("-"*40)
-    
+
     # Create plots
     fig = plot_algorithm_comparison(df_final, save_path=str(output_path / 'plots') + '/',
-                                   datasets_to_exclude=datasets_to_exclude, 
+                                   datasets_to_exclude=datasets_to_exclude,
                                    filename_suffix='')
-    
+
     # Create Pareto front plots (both normalized and raw versions)
     # If architecture_filter is specified, it's already filtered in df_final
     # Otherwise, create separate plots for each architecture if they exist
@@ -290,44 +290,44 @@ def run_analysis(data_file='results/pareto_front_results.csv',
                                                    datasets_to_exclude=datasets_to_exclude,
                                                    filename_suffix='',
                                                    use_raw=True)
-    
+
     # Save statistics
     stats_file = str(output_path / 'summary_outputs' / 'statistics.txt')
     save_statistics(df_final, output_file=stats_file)
-    
+
     # Step 7: Perform Mann-Whitney U tests if requested
     mann_whitney_results = None
     if perform_statistical_tests:
         print("\n7. Performing Mann-Whitney U Tests...")
         print("-"*40)
-        
+
         # Run the comparisons
-        mann_whitney_results = perform_algorithm_comparisons(df_final, 
+        mann_whitney_results = perform_algorithm_comparisons(df_final,
                                                             save_path=str(output_path / 'plots') + '/',
                                                             filename_suffix='')
-        
+
         # Results are now included in the unified summary at the end
-    
+
     print("\n8. Calculating Overall Scores and Best Performers...")
     print("-"*40)
-    
+
     # Import the functions we need
-    from floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.calculate_normalized_overall_score import (
+    from floatsom_benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.calculate_normalized_overall_score import (
         calculate_normalized_overall_score,
         update_best_performers_with_normalized_score
     )
-    
+
     # Calculate normalized overall score
     df_final = calculate_normalized_overall_score(df_final)
-    
+
     # Find best performers
     best_performers_df = update_best_performers_with_normalized_score(df_final)
-    
+
     # Display summary
     print("\n" + "="*60)
     print("BEST PERFORMERS BY ALGORITHM (Normalized Score)")
     print("="*60)
-    
+
     for algorithm in sorted(df_final['algorithm'].unique()):
         df_alg = df_final[df_final['algorithm'] == algorithm].sort_values('Normalized_Overall_Score')
         best = df_alg.iloc[0]
@@ -364,38 +364,38 @@ def run_analysis(data_file='results/pareto_front_results.csv',
     # Step 8b: Perform Mann-Whitney tests on normalized overall score
     print("\n8b. Performing Mann-Whitney U Tests on Normalized Overall Score...")
     print("-"*40)
-    
+
     mann_whitney_normalized_results = perform_normalized_comparisons(df_final)
-    
+
 
     print("\n9. Saving processed data...")
     print("-"*40)
-    
+
     # Save processed data (no suffix needed since we're using subdirectories)
     output_csv = output_path / 'processed_data_with_pca.csv'
     df_final.to_csv(output_csv, index=False)
     print(f"Saved processed data to {output_csv}")
-    
+
     output_csv_scores = output_path / 'processed_data_with_overall_score.csv'
     df_final.to_csv(output_csv_scores, index=False)
     print(f"Saved data with overall scores to {output_csv_scores}")
-    
+
     # Save best performers
     best_performers_csv = output_path / 'best_performers_by_sampling.csv'
     best_performers_df.to_csv(best_performers_csv, index=False)
     print(f"Saved best performers to {best_performers_csv}")
-    
+
     # Extract complete records for best performers
     print("\n9a. Extracting complete records for best performers...")
     print("-"*40)
     extracted_df = extract_best_performer_records(output_dir=str(output_path), architecture_suffix='')
     compact_df = create_compact_summary(extracted_df, output_dir=str(output_path), architecture_suffix='')
     print(f"Extracted {len(extracted_df)} best performer records")
-    
+
     # Step 10: Create unified summary report
     print("\n10. Creating Unified Summary Report...")
     print("-"*40)
-    
+
     # Create the comprehensive summary
     create_unified_summary(
         df_final=df_final,
@@ -439,26 +439,26 @@ def run_analysis(data_file='results/pareto_front_results.csv',
         per_dataset_top_k=10
     )
     print(f"Saved parameter summary markdown to {parameter_summary_path}")
-    
+
     print("\n" + "="*60)
     print("ANALYSIS COMPLETE!")
     print("="*60)
-    
+
     # Summary statistics
     print("\nSummary:")
     print(f"  Total rows processed: {len(df_final)}")
     print(f"  Number of datasets: {df_final['dataset'].nunique()}")
     print(f"  Number of algorithms: {df_final['algorithm'].nunique()}")
     print(f"  Number of sampling methods: {df_final['sampling_method_parsed'].nunique()}")
-    
+
     if mann_whitney_results:
         print(f"  Mann-Whitney U tests performed: {len(mann_whitney_results)}")
-        
+
         # Print quick summary
         print("\n" + "="*60)
         print("MANN-WHITNEY U TEST SUMMARY")
         print("="*60)
-        
+
         metric_names = {
             'quantization_error_holdout_normalized': 'Quantization Error (Holdout, normalized)',
             'quantization_error_train_normalized': 'Quantization Error (Train, normalized)',
@@ -478,7 +478,7 @@ def run_analysis(data_file='results/pareto_front_results.csv',
                     print(f"    P-value:     {result['p_value']:.6f}")
                     print(f"    Significant: {result['significance']}")
                     print(f"    Effect size: {result['effect_size']:.3f}")
-    
+
     return df_final, pca_info, mann_whitney_results
 
 
@@ -492,18 +492,18 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
                                 colors=False):
     """
     Detect all architectures in the data and run analysis for each separately
-    
+
     Parameters are the same as run_analysis()
-    
+
     Returns:
     --------
     dict : Dictionary with architecture as key and (df_final, pca_info, mann_whitney_results) as values
     """
-    
+
     print("\n" + "="*70)
     print("DETECTING ARCHITECTURES IN DATA")
     print("="*70)
-    
+
     # First, load and parse the data to detect architectures
     df_temp = pd.read_csv(data_file)
     _coalesce_processing_columns(df_temp)
@@ -515,20 +515,20 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
         mask_colors = df_temp['algorithm'].astype(str).str.lower().str.strip() == 'colors'
         df_temp = df_temp[~mask_colors].copy()
     _coalesce_architecture_column(df_temp)
-    
+
     # Get unique architectures
     architectures = df_temp['architecture'].dropna().unique()
     print(f"\nFound {len(architectures)} architecture(s): {list(architectures)}")
-    
+
     # Store results for each architecture
     results = {}
-    
+
     # Analyze each architecture separately
     for i, architecture in enumerate(architectures, 1):
         print("\n" + "="*70)
         print(f"ANALYZING ARCHITECTURE {i}/{len(architectures)}: {architecture.upper()}")
         print("="*70)
-        
+
         df_result, pca_info, mann_whitney_results = run_analysis(
             data_file=data_file,
             output_dir=output_dir,
@@ -540,13 +540,13 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
             architecture_filter=architecture,
             colors=colors,
         )
-        
+
         results[architecture] = (df_result, pca_info, mann_whitney_results)
-    
+
     print("\n" + "="*70)
     print("ALL ARCHITECTURES ANALYZED SUCCESSFULLY")
     print("="*70)
-    
+
     # Summary across all architectures
     print("\nSummary by Architecture:")
     for arch, (df, _, _) in results.items():
@@ -555,25 +555,25 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
         print(f"  Datasets: {df['dataset'].nunique()}")
         print(f"  Algorithms: {df['algorithm'].nunique()}")
         print(f"  Sampling methods: {df['sampling_method_parsed'].nunique()}")
-    
+
     # Create unified analysis if multiple architectures exist
     if len(results) > 1 and save_results:
         print("\n" + "="*70)
         print("CREATING UNIFIED ANALYSIS")
         print("="*70)
-        
+
         # Combine all dataframes with architecture column
         all_dfs = []
-        
+
         for arch, (df, pca_info, mann_whitney) in results.items():
             df_copy = df.copy()
             df_copy['architecture'] = arch
             all_dfs.append(df_copy)
-        
+
         # Create unified dataframe
         df_unified = pd.concat(all_dfs, ignore_index=True)
         print(f"Combined data shape: {df_unified.shape}")
-        
+
         # Create unified output directory
         unified_path = Path(output_dir) / 'unified'
         unified_path.mkdir(parents=True, exist_ok=True)
@@ -581,7 +581,7 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
         (unified_path / 'tables').mkdir(exist_ok=True)
         (unified_path / 'summary_outputs').mkdir(exist_ok=True)
         print(f"Unified output directory: {unified_path}")
-        
+
         # Normalize metrics (ensure consistency across merged architectures)
         df_unified_with_metrics = normalize_all_metrics(df_unified)
         df_unified_with_pca = df_unified_with_metrics.copy()
@@ -591,7 +591,7 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
         unified_best_performers = None
         unified_mann_whitney_norm = None
         print("\nCalculating overall scores for unified data...")
-        from floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.calculate_normalized_overall_score import (
+        from floatsom_benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.calculate_normalized_overall_score import (
             calculate_normalized_overall_score,
             update_best_performers_with_normalized_score
         )
@@ -599,11 +599,11 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
 
         if calculate_best_performers:
             unified_best_performers = update_best_performers_with_normalized_score(df_unified_with_pca)
-            
+
             # Perform Mann-Whitney on normalized score
-            from floatsom.benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.mann_whitney_normalized import perform_normalized_comparisons
+            from floatsom_benchmarks.optuna.optuna_results_analysis.modules.overall_score_analysis.mann_whitney_normalized import perform_normalized_comparisons
             unified_mann_whitney_norm = perform_normalized_comparisons(df_unified_with_pca)
-        
+
         # Perform Mann-Whitney tests on unified data if requested
         unified_mann_whitney = None
         if perform_statistical_tests:
@@ -613,28 +613,28 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
                 save_path=str(unified_path / 'plots') + '/',
                 filename_suffix=''
             )
-        
+
         # Save unified CSV files
         print("\nSaving unified data files...")
         df_unified_with_pca.to_csv(unified_path / 'processed_data_with_pca.csv', index=False)
         print(f"Saved: {unified_path / 'processed_data_with_pca.csv'}")
-        
+
         if calculate_best_performers:
             df_unified_with_pca.to_csv(unified_path / 'processed_data_with_overall_score.csv', index=False)
             unified_best_performers.to_csv(unified_path / 'best_performers_by_sampling.csv', index=False)
             print(f"Saved: {unified_path / 'processed_data_with_overall_score.csv'}")
             print(f"Saved: {unified_path / 'best_performers_by_sampling.csv'}")
-        
+
         # Create unified plots
         print("\nCreating unified visualizations...")
-        
+
         fig = plot_algorithm_comparison(
             df_unified_with_pca,
             save_path=str(unified_path / 'plots') + '/',
             datasets_to_exclude=datasets_to_exclude,
             filename_suffix=''
         )
-        
+
         # Create Pareto front plots for each architecture (both normalized and raw)
         for arch in sorted(df_unified_with_pca['architecture'].dropna().astype(str).unique()):
             arch_data = df_unified_with_pca[df_unified_with_pca['architecture'] == arch]
@@ -657,7 +657,7 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
                     filename_suffix=f'_{arch}',
                     use_raw=True
                 )
-        
+
         # Save unified statistics
         stats_file = str(unified_path / 'summary_outputs' / 'statistics.txt')
         save_statistics(df_unified_with_pca, output_file=stats_file)
@@ -675,7 +675,7 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
             output_file=unified_path / 'topo_comparison_paired.md'
         )
         print(f"Saved unified topology paired analysis report to {unified_topo_paired_path}")
-        
+
         # Create unified summary report
         print("\nCreating unified summary report...")
         create_unified_summary(
@@ -686,9 +686,9 @@ def run_analysis_by_architecture(data_file='results/pareto_front_results.csv',
             pca_info=unified_pca_info,
             output_file=str(unified_path / 'ANALYSIS_SUMMARY.md')
         )
-        
+
         print(f"\n✅ Unified analysis complete! Results saved to: {unified_path}")
-    
+
     return results
 
 
@@ -716,7 +716,7 @@ if __name__ == "__main__":
         help='Include colors runs in plots and statistical comparisons (default: false).',
     )
     args = parser.parse_args()
-    
+
     # Determine filter percentage
     if args.no_filter:
         filter_percent = 100 # Type compatibility change: none to int
@@ -724,13 +724,13 @@ if __name__ == "__main__":
     else:
         filter_percent = args.percentile
         print(f"Running analysis with {filter_percent}% percentile cutoff")
-    
+
     # Show what will be calculated
     print(f"Statistical tests: {'DISABLED' if args.no_stats else 'ENABLED'}")
     print(f"Best performers analysis: {'ENABLED' if args.best_performers else 'DISABLED'}")
     print(f"Architecture separation: {'ENABLED' if args.by_architecture else 'DISABLED'}")
     print()
-    
+
     if args.by_architecture:
         # Run analysis for each architecture separately
         results = run_analysis_by_architecture(
@@ -755,7 +755,7 @@ if __name__ == "__main__":
             calculate_best_performers=args.best_performers,
             colors=args.colors,
         )
-        
+
         print(f"\nFinal dataset shape: {df_result.shape}")
         print(f"\nColumns available:")
         for col in df_result.columns:

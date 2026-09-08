@@ -19,7 +19,7 @@ module use /g/data/dk92/apps/Modules/modulefiles/; module load rapids/25.06; cd 
 RUN_DATE=$(date +%Y%m%d)
 OUTPUT_DIR="/g/data/eu59/SIFEAN/sfa/3gpu_scaling/results_20260320_367f98f9"
 
-python3 -m floatsom.benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
+python3 -m floatsom_benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
   --mode all \
   --cache_dir "/g/data/eu59/SIFEAN/sfa/8gpu_scaling_cache" \
   --output_dir "${OUTPUT_DIR}" \

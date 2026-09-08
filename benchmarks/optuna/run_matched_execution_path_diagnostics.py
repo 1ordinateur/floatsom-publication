@@ -24,25 +24,15 @@ import time
 import types
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-if __package__ in {None, ""} and "floatsom" not in sys.modules:
-    # Support direct execution from a checkout named floatsom-publication.
-    _repo_root = Path(__file__).resolve().parents[2]
-    _pkg = types.ModuleType("floatsom")
-    _pkg.__file__ = str(_repo_root / "__init__.py")
-    _pkg.__path__ = [str(_repo_root)]
-    _pkg.__package__ = "floatsom"
-    _pkg.__spec__ = importlib.machinery.ModuleSpec("floatsom", loader=None, is_package=True)
-    _pkg.__spec__.submodule_search_locations = _pkg.__path__
-    sys.modules["floatsom"] = _pkg
 
 import cupy as cp
 import numpy as np
 import pandas as pd
 
 from floatsom.base.floatsom_factories import create_floatsom
-from floatsom.benchmarks.evaluation.sklearn_datasets import generate_sklearn_dataset
-from floatsom.benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
-from floatsom.benchmarks.optuna.core.objective import (
+from floatsom_benchmarks.evaluation.sklearn_datasets import generate_sklearn_dataset
+from floatsom_benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
+from floatsom_benchmarks.optuna.core.objective import (
     calculate_metrics,
     create_floatsom_params,
     get_metrics_config,
@@ -117,26 +107,20 @@ def _timestamp_utc() -> str:
 
 
 def _ensure_ray_worker_import_path(base_dir: Path) -> Path:
-    """
-    Make this checkout importable as `floatsom` inside Ray worker processes.
+    """Expose the installed library and benchmarks to fresh Ray workers."""
+    import floatsom
+    import floatsom_benchmarks
 
-    The publication checkout is the package root, not a directory literally named
-    `floatsom`. Direct scripts install a temporary module alias in the driver,
-    but Ray workers import serialized classes in fresh interpreters. A job-local
-    symlink gives those workers a normal package path without mutating the repo.
-    """
-    repo_root = Path(__file__).resolve().parents[2]
     import_root = Path(tempfile.mkdtemp(prefix="ray_pythonpath_", dir=str(base_dir)))
-    package_link = import_root / "floatsom"
-    os.symlink(repo_root, package_link, target_is_directory=True)
-
+    for package in (floatsom, floatsom_benchmarks):
+        os.symlink(Path(package.__file__).resolve().parent,
+                   import_root / package.__name__, target_is_directory=True)
     import_root_text = str(import_root)
     if import_root_text not in sys.path:
         sys.path.insert(0, import_root_text)
-    existing = os.environ.get("PYTHONPATH", "")
-    parts = [part for part in existing.split(os.pathsep) if part]
-    if import_root_text not in parts:
-        os.environ["PYTHONPATH"] = os.pathsep.join([import_root_text, *parts])
+    existing = [part for part in os.environ.get("PYTHONPATH", "").split(os.pathsep) if part]
+    if import_root_text not in existing:
+        os.environ["PYTHONPATH"] = os.pathsep.join([import_root_text, *existing])
     return import_root
 
 
@@ -199,14 +183,11 @@ def _resolve_seeds(args: argparse.Namespace) -> List[int]:
 
 
 def _resolve_json_path(path: str | Path) -> Path:
-    candidate = Path(path).expanduser()
-    if candidate.exists():
-        return candidate.resolve()
-    repo_root = Path(__file__).resolve().parents[2]
-    repo_candidate = repo_root / candidate
-    if repo_candidate.exists():
-        return repo_candidate.resolve()
-    raise FileNotFoundError(f"Fixed params JSON not found: {path}")
+    from floatsom_benchmarks.optuna.config.default_profiles import resolve_defaults_path
+    resolved = resolve_defaults_path(str(path))
+    if not resolved.is_file():
+        raise FileNotFoundError(f"Fixed params JSON not found: {path}")
+    return resolved
 
 
 def _load_fixed_params_by_sampling_topology(
@@ -885,7 +866,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--fixed-params-by-sampling-topology-json",
         type=str,
-        default="floatsom_min1000_tuned_defaults.json",
+        default="publication",
     )
     parser.add_argument("--ray-gpu-count", type=int, default=1)
     parser.add_argument("--ray-local-storage-path", type=str, default=None)

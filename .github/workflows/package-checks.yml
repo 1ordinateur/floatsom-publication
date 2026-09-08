@@ -1,0 +1,26 @@
+name: Package and CPU checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build pytest numpy scipy pandas zarr
+      - run: python -m build
+      - run: python tools/check_distribution.py dist/*.whl
+      - uses: actions/checkout@v4
+        with:
+          repository: 1ordinateur/floatsom
+          path: .ci-floatsom
+      - run: python -m pip install --no-deps ./.ci-floatsom dist/*.whl
+      - name: Publication and CPU utility tests
+        run: >-
+          python -m pytest
+          tests/benchmarks/test_xpysom_figure2_wiring.py
+          tests/benchmarks/test_paired_analysis_stats.py
+          tests/test_default_profiles.py

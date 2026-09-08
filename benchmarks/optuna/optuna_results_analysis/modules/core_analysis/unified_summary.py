@@ -7,7 +7,7 @@ from pathlib import Path
 from collections import defaultdict
 import pandas as pd
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis import dataset_groups
 
 
 def _resolve(df, candidates):

@@ -23,23 +23,13 @@ import sys
 import types
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-if __package__ in {None, ""} and "floatsom" not in sys.modules:
-    # Support direct execution from a checkout named floatsom-publication.
-    _repo_root = Path(__file__).resolve().parents[2]
-    _pkg = types.ModuleType("floatsom")
-    _pkg.__file__ = str(_repo_root / "__init__.py")
-    _pkg.__path__ = [str(_repo_root)]
-    _pkg.__package__ = "floatsom"
-    _pkg.__spec__ = importlib.machinery.ModuleSpec("floatsom", loader=None, is_package=True)
-    _pkg.__spec__.submodule_search_locations = _pkg.__path__
-    sys.modules["floatsom"] = _pkg
 
 import numpy as np
 import optuna
 import pandas as pd
 
-from floatsom.benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
-from floatsom.benchmarks.optuna.config.parameters import PARAMETER_CONFIGS
+from floatsom_benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
+from floatsom_benchmarks.optuna.config.parameters import PARAMETER_CONFIGS
 
 
 SUPPORTED_TOPOLOGIES: Tuple[str, ...] = ("hexagonal", "mst", "rng")
@@ -68,7 +58,7 @@ KNOWN_RUNS_CSV_NAMES: Tuple[str, ...] = (
     "matched_default_topology_diagnostics_runs.csv",
     "matched_tuned_topology_diagnostics_runs.csv",
 )
-DEFAULT_TRUE_DEFAULT_FIXED_PARAMS_JSON = "xpysom_untuned_defaults.json"
+DEFAULT_TRUE_DEFAULT_FIXED_PARAMS_JSON = "xpysom-untuned"
 MATCHED_TOPOLOGY_DIAGNOSTIC_REQUESTS: Tuple[str, ...] = (
     "mean_tied_rank_permutation_null",
     "node_utilization",
@@ -217,13 +207,13 @@ def _create_scenario_id(dataset_name: str, forced_params: Dict[str, Any]) -> str
 
 
 def _run_single_benchmark_lazy(**kwargs: Any) -> optuna.Study:
-    from floatsom.benchmarks.optuna.core.single_benchmark import run_single_benchmark
+    from floatsom_benchmarks.optuna.core.single_benchmark import run_single_benchmark
 
     return run_single_benchmark(**kwargs)
 
 
 def _save_study_json_lazy(**kwargs: Any) -> None:
-    from floatsom.benchmarks.optuna.run_optuna import save_study_json
+    from floatsom_benchmarks.optuna.run_optuna import save_study_json
 
     save_study_json(**kwargs)
 
@@ -456,14 +446,8 @@ def _parse_fixed_param_entries(entries: Optional[Sequence[str]]) -> Dict[str, ob
 
 
 def _resolve_json_path(path: str) -> Path:
-    raw_path = Path(path).expanduser()
-    candidates = [raw_path]
-    if not raw_path.is_absolute():
-        candidates.append(Path(__file__).resolve().parents[2] / raw_path)
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate.resolve()
-    return raw_path.resolve()
+    from floatsom_benchmarks.optuna.config.default_profiles import resolve_defaults_path
+    return resolve_defaults_path(path)
 
 
 def _load_fixed_params_json(path: Optional[str]) -> Dict[str, object]:
@@ -854,7 +838,7 @@ def _generate_comparison_report(
     if not reference_csv.exists():
         raise FileNotFoundError(f"Reference CSV for comparison not found: {reference_csv}")
 
-    from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.tuned_vs_default import (
+    from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.tuned_vs_default import (
         TunedDefaultMetric,
         build_tuned_vs_external_default_report_from_csv,
     )

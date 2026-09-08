@@ -14,7 +14,7 @@
 
 module use /g/data/dk92/apps/Modules/modulefiles/; module load rapids/25.06; cd /g/data/eu59/SIFEAN/sfa/
 
-python3 -m floatsom.benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
+python3 -m floatsom_benchmarks.speed_benchmarks.run_gpu_scaling_benchmark \
   --mode sample_scaling \
   --cache_dir "sample_scaling_4gpu_cache" \
   --output_dir "sample_scaling_4gpu/results" \

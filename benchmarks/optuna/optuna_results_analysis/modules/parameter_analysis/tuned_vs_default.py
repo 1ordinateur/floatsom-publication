@@ -18,8 +18,8 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.core_analysis.dataset_groups import dataset_group, ordered_dataset_labels
-from floatsom.benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.default_benchmark_adapter import load_default_runs_csv
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.core_analysis.dataset_groups import dataset_group, ordered_dataset_labels
+from floatsom_benchmarks.optuna.optuna_results_analysis.modules.parameter_analysis.default_benchmark_adapter import load_default_runs_csv
 
 
 @dataclass(frozen=True)

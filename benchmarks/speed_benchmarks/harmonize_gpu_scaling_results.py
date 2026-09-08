@@ -3,7 +3,7 @@
 Harmonize GPU scaling benchmark results produced in separate run directories.
 
 Example:
-  python -m floatsom.benchmarks.speed_benchmarks.harmonize_gpu_scaling_results \
+  python -m floatsom_benchmarks.speed_benchmarks.harmonize_gpu_scaling_results \
     --inputs /g/data/eu59/SIFEAN/sfa \
     --output_dir /g/data/eu59/SIFEAN/sfa/harmonized_gpu_scaling
 
@@ -30,7 +30,7 @@ from typing import Dict, Iterable, List, MutableMapping, Optional, Sequence, Set
 
 import numpy as np
 
-from floatsom.benchmarks.speed_benchmarks.gpu_scaling.results import ResultsHandler
+from floatsom_benchmarks.speed_benchmarks.gpu_scaling.results import ResultsHandler
 
 NumericKey = Union[int, float]
 StatsDict = Dict[str, Union[float, int, List[float]]]
@@ -750,7 +750,7 @@ def _write_mode_outputs(
         return
 
     try:
-        from floatsom.benchmarks.visualization import (
+        from floatsom_benchmarks.visualization import (
             plot_gpu_scaling_benchmark,
             plot_sample_scaling_benchmark,
         )
@@ -1553,7 +1553,7 @@ def _compose_panel_matrix_svg(
     panel_caption_font_size_override: Optional[float] = None,
     show_panel_annotations: bool = True,
 ) -> bool:
-    from floatsom.benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures.composition import (
+    from floatsom_benchmarks.optuna.optuna_results_analysis.scripts.analysis.publication_figures.composition import (
         _compose_panel_matrix_from_images,
     )
 
@@ -1713,7 +1713,7 @@ def _write_publication_panel_outputs(
     panel_output_root = publication_dir / "figure_8_tripanel_panels"
     if all(gpu_count in figure_8_tripanel_results_dirs for gpu_count in FIGURE_8_TRIPANEL_GPU_COUNTS):
         try:
-            from floatsom.benchmarks.visualization import (
+            from floatsom_benchmarks.visualization import (
                 plot_topology_comparison_scaling_benchmark,
             )
         except Exception as exc:
@@ -2064,7 +2064,7 @@ def _write_topology_comparison_outputs(
         return generated
 
     try:
-        from floatsom.benchmarks.visualization import (
+        from floatsom_benchmarks.visualization import (
             plot_topology_comparison_scaling_benchmark,
         )
     except Exception as exc:
@@ -2156,7 +2156,7 @@ def _write_random_comparison_outputs(
         return generated
 
     try:
-        from floatsom.benchmarks.visualization import (
+        from floatsom_benchmarks.visualization import (
             plot_topology_comparison_scaling_benchmark,
         )
     except Exception as exc:

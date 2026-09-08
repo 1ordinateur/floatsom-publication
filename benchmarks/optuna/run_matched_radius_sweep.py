@@ -16,22 +16,13 @@ import tempfile
 import types
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-if __package__ in {None, ""} and "floatsom" not in sys.modules:
-    _repo_root = Path(__file__).resolve().parents[2]
-    _pkg = types.ModuleType("floatsom")
-    _pkg.__file__ = str(_repo_root / "__init__.py")
-    _pkg.__path__ = [str(_repo_root)]
-    _pkg.__package__ = "floatsom"
-    _pkg.__spec__ = importlib.machinery.ModuleSpec("floatsom", loader=None, is_package=True)
-    _pkg.__spec__.submodule_search_locations = _pkg.__path__
-    sys.modules["floatsom"] = _pkg
 
 import numpy as np
 import pandas as pd
 
-from floatsom.benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
-from floatsom.benchmarks.optuna.config.parameters import PARAMETER_CONFIGS
-from floatsom.benchmarks.optuna import run_matched_default_floatsom_batch as matched
+from floatsom_benchmarks.optuna.config.benchmark_config import Phase3BenchmarkConfig
+from floatsom_benchmarks.optuna.config.parameters import PARAMETER_CONFIGS
+from floatsom_benchmarks.optuna import run_matched_default_floatsom_batch as matched
 
 
 SUPPORTED_TOPOLOGIES: Tuple[str, ...] = ("hexagonal", "mst", "rng")
@@ -279,10 +270,14 @@ def _git_commit() -> Optional[str]:
 
 
 def _ensure_ray_worker_import_path(base_dir: Path) -> Path:
-    """Expose this checkout as ``floatsom`` to fresh Ray worker interpreters."""
-    repo_root = Path(__file__).resolve().parents[2]
-    import_root = Path(tempfile.mkdtemp(prefix="radius_sweep_ray_pythonpath_", dir=str(base_dir)))
-    os.symlink(repo_root, import_root / "floatsom", target_is_directory=True)
+    """Expose the installed library and benchmarks to fresh Ray workers."""
+    import floatsom
+    import floatsom_benchmarks
+
+    import_root = Path(tempfile.mkdtemp(prefix="ray_pythonpath_", dir=str(base_dir)))
+    for package in (floatsom, floatsom_benchmarks):
+        os.symlink(Path(package.__file__).resolve().parent,
+                   import_root / package.__name__, target_is_directory=True)
     import_root_text = str(import_root)
     if import_root_text not in sys.path:
         sys.path.insert(0, import_root_text)
